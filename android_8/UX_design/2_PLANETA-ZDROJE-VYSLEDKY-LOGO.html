@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NANOSOLVE - Vliv na Planetu Zemi</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #020205;
+            --text-main: #ffffff;
+            --text-muted: #b0b0b0;
+            /* Původní neonové barvy pro planetu */
+            --neon-ocean: #00b4d8;
+            --neon-atmos: #90e0ef;
+            --neon-bio: #4ade80;
+            --neon-magma: #d946ef;
+            --neon-source: #fbbf24;
+            --neon-physics: #e5e7eb;
+            --active-macro-color: #48cae4;
+
+            /* --- NOVÉ PASTELOVÉ AKCENTY PRO FOOTER --- */
+            --pastel-aqua: #AEEEEE;     /* Pro Zdroje (Knižní/Info) */
+            --pastel-mint: #98FB98;     /* Pro Výsledky */
+            --footer-btn-bg: rgba(20, 30, 50, 0.8); /* Mírně tmavší sklo pro vesmírné pozadí */
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+
+        body {
+            background-color: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .app-frame {
+            width: 100%;
+            max-width: 400px;
+            height: 850px;
+            background-color: #0a0a12;
+            border-radius: 30px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 0 0 10px #05050a;
+            display: flex;
+            flex-direction: column;
+
+            /* Původní pozadí planety */
+            background-image: url('https://images.unsplash.com/photo-1451187580500-d81b322439a0?q=80&w=1000&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            background-blend-mode: hard-light; 
+            background-color: rgba(0, 5, 20, 0.85);
+        }
+
+        /* --- HORNÍ PŘEPÍNAČ (Původní) --- */
+        .top-nav {
+            display: flex;
+            margin: 20px 20px 5px 20px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 15px;
+            padding: 4px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            z-index: 5;
+        }
+        .nav-tab {
+            flex: 1; text-align: center; padding: 12px 5px;
+            font-size: 0.75rem; font-weight: 800; text-transform: uppercase;
+            border-radius: 12px; cursor: pointer; transition: 0.3s;
+        }
+        .nav-tab.inactive-micro { color: var(--text-muted); }
+        .nav-tab.inactive-micro:hover { color: #fff; }
+        .nav-tab.active-macro {
+            background: rgba(72, 202, 228, 0.15);
+            color: var(--active-macro-color);
+            border: 1px solid var(--active-macro-color);
+            box-shadow: 0 0 15px rgba(72, 202, 228, 0.3);
+        }
+
+
+        /* --- HLAVIČKA S NOVÝM LOGEM --- */
+        header {
+            padding: 15px 25px 10px 25px;
+            z-index: 5;
+            position: relative;
+        }
+
+        /* Styl pro nové SVG Logo */
+        .header-logo-svg {
+            width: 160px; height: auto;
+            display: block; margin-bottom: 15px;
+            /* Jemná záře do modra, aby logo zapadlo do vesmírného prostředí */
+            filter: drop-shadow(0 0 8px rgba(144, 224, 239, 0.3));
+        }
+        
+        .title-block h1 {
+            font-size: 1.6rem; font-weight: 800; line-height: 1.2; 
+            color: #fff; text-transform: uppercase; letter-spacing: 0.5px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+        }
+        .title-block p {
+            color: var(--active-macro-color); font-size: 0.8rem; font-weight: 700;
+            margin-top: 5px; text-transform: uppercase; letter-spacing: 1px;
+        }
+
+
+        /* --- MŘÍŽKA KARET (Původní) --- */
+        .dashboard-grid {
+            padding: 20px;
+            display: grid; grid-template-columns: 1fr 1fr; gap: 15px;
+            flex: 1; overflow-y: auto; z-index: 2;
+            scrollbar-width: none; -ms-overflow-style: none;
+        }
+        .dashboard-grid::-webkit-scrollbar { display: none; }
+
+        .card {
+            background: rgba(10, 15, 30, 0.7); border-radius: 20px; padding: 20px 15px;
+            display: flex; flex-direction: column; justify-content: space-between;
+            border: 1px solid rgba(255,255,255,0.1); transition: 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            cursor: pointer; backdrop-filter: blur(5px); position: relative; overflow: hidden;
+        }
+        .card:hover {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 25px var(--glow-color), inset 0 0 10px var(--glow-color);
+            transform: translateY(-3px) scale(1.02); background: rgba(20, 25, 40, 0.8);
+        }
+        .card::before {
+            content: ''; position: absolute; top: -50px; right: -50px; width: 100px; height: 100px;
+            background: var(--accent-color); filter: blur(70px); opacity: 0.15; transition: 0.5s;
+        }
+        .card:hover::before { opacity: 0.3; }
+
+        .card-icon {
+            width: 44px; height: 44px; color: var(--accent-color); margin-bottom: 15px;
+            filter: drop-shadow(0 0 8px var(--glow-color));
+        }
+        .card h3 { font-size: 0.85rem; font-weight: 700; margin-bottom: 5px; color: #fff; line-height: 1.3; }
+        .card p { font-size: 0.65rem; color: var(--text-muted); line-height: 1.4; }
+
+        /* Přiřazení barev (Původní neonové) */
+        .c-ocean { --accent-color: var(--neon-ocean); --glow-color: rgba(0, 180, 216, 0.4); }
+        .c-atmos { --accent-color: var(--neon-atmos); --glow-color: rgba(144, 224, 239, 0.4); }
+        .c-bio { --accent-color: var(--neon-bio); --glow-color: rgba(74, 222, 128, 0.4); }
+        .c-magma { --accent-color: var(--neon-magma); --glow-color: rgba(217, 70, 239, 0.4); }
+        .c-source { --accent-color: var(--neon-source); --glow-color: rgba(251, 191, 36, 0.4); }
+        .c-physics { --accent-color: var(--neon-physics); --glow-color: rgba(229, 231, 235, 0.3); }
+
+
+        /* --- NOVÁ SPODNÍ NAVIGACE (FOOTER BUTTONS) --- */
+        .bottom-nav-container {
+            padding: 15px 20px 25px 20px;
+            display: flex; gap: 15px;
+            /* Gradient zespodu nahoru, aby plynule navazoval na pozadí */
+            background: linear-gradient(to top, #05050a 30%, transparent);
+            z-index: 5;
+            margin-top: auto; /* Tlačí footer dolů */
+            font-family: 'Montserrat', sans-serif; /* Použití nového fontu */
+        }
+
+        .footer-btn {
+            flex: 1;
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+            padding: 16px;
+            border-radius: 18px;
+            background: var(--footer-btn-bg);
+            border: 1px solid rgba(255,255,255,0.1);
+            font-weight: 700; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px;
+            cursor: pointer; transition: 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            color: var(--text-main);
+            backdrop-filter: blur(10px);
+        }
+        .footer-btn svg { width: 26px; height: 26px; filter: drop-shadow(0 0 5px rgba(255,255,255,0.3)); transition: 0.3s; }
+
+        /* Tlačítko ZDROJE (Vlevo - Aqua/Knižní) */
+        .btn-resources {
+            border-color: rgba(174, 238, 238, 0.3);
+            color: var(--pastel-aqua);
+        }
+        .btn-resources svg { color: var(--pastel-aqua); }
+        .btn-resources:hover {
+            background: rgba(174, 238, 238, 0.15);
+            box-shadow: 0 5px 15px -5px rgba(174, 238, 238, 0.4);
+            transform: translateY(-2px);
+        }
+        .btn-resources:hover svg { filter: drop-shadow(0 0 10px var(--pastel-aqua)); transform: scale(1.1); }
+
+        /* Tlačítko VÝSLEDKY (Vpravo - Mint/Akce) */
+        .btn-results {
+            border-color: rgba(152, 251, 152, 0.3);
+            color: var(--pastel-mint);
+        }
+        .btn-results svg { color: var(--pastel-mint); }
+        .btn-results:hover {
+            background: rgba(152, 251, 152, 0.15);
+            box-shadow: 0 5px 15px -5px rgba(152, 251, 152, 0.4);
+            transform: translateY(-2px);
+        }
+        .btn-results:hover svg { filter: drop-shadow(0 0 10px var(--pastel-mint)); transform: scale(1.1); }
+
+    </style>
+</head>
+<body>
+
+    <div class="app-frame">
+        
+        <nav class="top-nav">
+            <div class="nav-tab inactive-micro">VLIV NA ČLOVĚKA</div>
+            <div class="nav-tab active-macro">VLIV NA PLANETU ZEMI</div>
+        </nav>
+
+        <header>
+             <svg class="header-logo-svg" viewBox="0 0 400 100" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <linearGradient id="nanoGradH" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#D8DFFF;stop-opacity:1"/><stop offset="100%" style="stop-color:#C4FFFF;stop-opacity:1"/></linearGradient>
+                    <linearGradient id="solveGradH" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#C4FFFF;stop-opacity:1"/><stop offset="100%" style="stop-color:#B5FFB5;stop-opacity:1"/></linearGradient>
+                </defs>
+                <g transform="translate(20, 10)">
+                     <circle cx="10" cy="30" r="5" fill="url(#nanoGradH)" opacity="0.7" /><circle cx="25" cy="15" r="4" fill="url(#nanoGradH)" opacity="0.8" /><circle cx="30" cy="50" r="6" fill="url(#nanoGradH)" opacity="0.6" /><circle cx="15" cy="65" r="5" fill="url(#nanoGradH)" opacity="0.9" /><circle cx="45" cy="40" r="7" fill="url(#nanoGradH)" /><path d="M45 40 L70 25 M45 40 L75 55 M70 25 L90 40 M75 55 L90 40" stroke="url(#solveGradH)" stroke-width="3" stroke-linecap="round" /><circle cx="70" cy="25" r="7" fill="url(#solveGradH)" /><circle cx="75" cy="55" r="7" fill="url(#solveGradH)" /><circle cx="90" cy="40" r="9" fill="url(#solveGradH)" />
+                </g>
+                <text x="130" y="65" style="font-family: 'Montserrat', sans-serif;">
+                    <tspan fill="#e2e8f0" font-weight="400" font-size="48">NANO</tspan><tspan fill="#ffffff" font-weight="800" font-size="48">SOLVE</tspan>
+                </text>
+            </svg>
+
+            <div class="title-block">
+                <h1>VLIV NA PLANETU ZEMI</h1>
+                <p>NANOPLASTY A JEJICH VLIV NA BIOSFÉRU</p>
+            </div>
+        </header>
+
+        <div class="dashboard-grid">
+            <div class="card c-ocean" onclick="window.location.href='2-1_detail-ocean.html'">
+                <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.69l5.74 5.88a5.84 5.84 0 0 1 1.63 4.3c0 3.13-2.54 5.68-5.68 5.68-1.5 0-3.07-1.25-4.23-2.47-1.14 1.21-2.69 2.47-4.18 2.47-3.13 0-5.68-2.54-5.68-5.68 0-1.51.57-2.95 1.62-4.28L12 2.69z"></path><path d="M5 15.4a6 6 0 0 1-3-3"></path><path d="M19 15.4a6 6 0 0 0 3-3"></path></svg>
+                <div><h3>Světový oceán<br>a hydrosféra</h3><p>Fyzikálně-chemická sabotáž a akumulace tepla.</p></div>
+            </div>
+            <div class="card c-atmos" onclick="window.location.href='2-2_detail-atmosfera.html'">
+                <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17.5 19H9a7 7 0 1 1 6.7-10.2c.7.5 1.1 1.3 1.3 2.2h2a4 4 0 1 1 0 8h-1.5"></path><path d="M20.4 14.6 18 17l2.4 2.4"></path><path d="M3.6 14.6 6 17l-2.4 2.4"></path></svg>
+                <div><h3>Atmosféra a globální<br>vodní cyklus</h3><p>Atmosférický a hydrologický rozvrat.</p></div>
+            </div>
+            <div class="card c-bio" onclick="window.location.href='2-3_detail-biosfera.html'">
+                <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 22h20"></path><path d="M12 22v-8"></path><path d="M12 18c-1.66 0-3-1.34-3-3 0-1.66 1.34-3 3-3"></path><path d="M12 14c1.66 0 3-1.34 3-3 0-1.66-1.34-3-3-3"></path><path d="M12 14s-6-4.5-6-9c0-2.49 2.01-4.5 4.5-4.5 2.48 0 4.5 2.01 4.5 4.5 0 2.49 2.01 4.5 4.5 4.5-2.49 0-4.5-2.01-4.5-4.5 0-2.49 2.01-4.5 4.5v0z"></path></svg>
+                <div><h3>Flora, fauna<br>a půdní biota</h3><p>Biologický a potravní kolaps ekosystémů.</p></div>
+            </div>
+            <div class="card c-magma" onclick="window.location.href='2-4_detail-jadro.html'">
+                <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><path d="M12 2a14.5 14.5 0 0 0 0 20"></path><path d="M12 2a14.5 14.5 0 0 1 0 20"></path><path d="M2 12a14.5 14.5 0 0 1 20 0"></path><path d="M2 12a14.5 14.5 0 0 0 20 0"></path><path d="M12 7v10"></path></svg>
+                <div><h3>Magnetické pole<br>a zemské jádro</h3><p>Geodynamická a magnetická destabilizace.</p></div>
+            </div>
+            <div class="card c-source" onclick="window.location.href='2-5_detail-zdroje.html'">
+                <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line><path d="M2 2l20 20"></path></svg>
+                <div><h3>Vstupní<br>brány krize</h3><p>Selhání plastového systému, skládky, vody.</p></div>
+            </div>
+            <div class="card c-physics" onclick="window.location.href='2-6_detail-fyzika-makro.html'">
+                <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
+                <div><h3>Fyzikální<br>vlastnosti</h3><p>Klíčové mechanismy kolapsu (vazby, signály).</p></div>
+            </div>
+        </div>
+
+        <div class="bottom-nav-container">
+            
+            <button class="footer-btn btn-resources">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.203 0-2.406.412-3.609 1.244-1.029.713-1.641 1.857-1.641 3.136v10.5c0 2.153 1.316 3.785 2.179 4.613.07.049.143.095.212.143C4.923 23.738 6.126 24.15 7.329 24.15c1.203 0 2.406-.412 3.609-1.244.069-.048.141-.094.212-.143.863-.828 2.179-2.46 2.179-4.613V7.292c0-2.153-1.316-3.785-2.179-4.613-.07-.049-.143-.095-.212-.143C14.22 2.09 15.423 1.678 16.626 1.678c1.203 0 2.406.412 3.609 1.244V13.422c0-1.279.612-2.423 1.641-3.136C23.02 9.588 24.223 10 25.426 10c1.203 0 2.406.412 3.609 1.244v10.5c0 2.153-1.316 3.785-2.179 4.613-.07.049-.143.095-.212.143C27.69 26.838 28.893 27.25 30.096 27.25c1.203 0 2.406-.412 3.609-1.244v-10.5c0-2.153-1.316-3.785-2.179-4.613-.07-.049-.143-.095-.212-.143-.863-.828-2.179-2.46-2.179-4.613V6.042z" />
+                </svg>
+                ZDROJE
+            </button>
+
+            <button class="footer-btn btn-results">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M16 21h4.5V16.5" opacity="0.5" />
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M20.5 21l-6-6" opacity="0.5" />
+                </svg>
+                VÝSLEDKY
+            </button>
+
+        </div>
+
+    </div>
+
+</body>
+</html>

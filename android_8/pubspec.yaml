@@ -1,0 +1,35 @@
+name: nanoplastics_app
+description: NanoSolve Hive - Crowdsourcing R&D solutions for nanoplastic pollution
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # No external dependencies required for this prototype!
+  # Everything is built with Flutter's built-in widgets
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+
+flutter:
+  uses-material-design: true
+
+  # Future: Add custom fonts here
+  # fonts:
+  #   - family: SFProDisplay
+  #     fonts:
+  #       - asset: fonts/SFProDisplay-Regular.ttf
+  #       - asset: fonts/SFProDisplay-Bold.ttf
+  #         weight: 700
+
+  # Future: Add app icons and images here
+  assets:
+    - assets/bg/
+    - assets/icons/

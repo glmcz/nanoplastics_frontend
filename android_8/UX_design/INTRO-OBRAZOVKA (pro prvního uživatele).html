@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NANOSOLVE - Vítejte</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* --- PASTELOVÁ PALETA --- */
+            --bg-dark: #0a0a12;
+            --glass-bg: rgba(20, 25, 40, 0.85);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --text-light: #ffffff;
+            --text-muted: #a0aec0;
+            --pastel-aqua: #AEEEEE;
+            --pastel-mint: #98FB98;
+            --pastel-lavender: #C7CEFF;
+            --btn-gradient: linear-gradient(135deg, var(--pastel-aqua), var(--pastel-mint));
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Montserrat', sans-serif; background-color: var(--bg-dark); height: 100vh; overflow: hidden; }
+
+        /* --- SIMULACE POZADÍ APLIKACE (Aby bylo vidět, co je pod tím) --- */
+        .app-background-simulation {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: radial-gradient(circle at 50% 50%, rgba(174, 238, 238, 0.1) 0%, transparent 50%);
+            display: flex; justify-content: center; align-items: center; color: var(--text-muted); font-size: 1.5rem; font-weight: 800; z-index: 0;
+            filter: blur(5px); /* Rozmazání pozadí */
+        }
+
+        /* --- ONBOARDING OVERLAY (Celoplošné překrytí) --- */
+        .onboarding-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(10, 10, 18, 0.6); /* Ztmavení pozadí */
+            backdrop-filter: blur(15px); /* Efekt rozmazání skla */
+            z-index: 9999;
+            display: flex; justify-content: center; align-items: center;
+            padding: 20px;
+            opacity: 0; pointer-events: none; transition: opacity 0.5s ease;
+        }
+        /* Třída pro zobrazení */
+        .onboarding-overlay.is-visible { opacity: 1; pointer-events: auto; }
+
+        /* --- MODÁLNÍ OKNO --- */
+        .onboarding-modal {
+            width: 100%; max-width: 550px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 30px;
+            padding: 30px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+            position: relative;
+            display: flex; flex-direction: column;
+            transform: translateY(30px); transition: transform 0.5s ease;
+        }
+        .onboarding-overlay.is-visible .onboarding-modal { transform: translateY(0); }
+
+        /* --- HEADER: LOGO + CLOSE --- */
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
+        .modal-logo svg { height: 50px; width: auto; filter: drop-shadow(0 0 8px rgba(174, 238, 238, 0.3)); }
+        .close-btn {
+            background: none; border: none; color: var(--text-muted); font-size: 2rem; line-height: 1; cursor: pointer; transition: 0.3s; padding: 0 10px;
+        }
+        .close-btn:hover { color: var(--pastel-aqua); transform: scale(1.1); }
+
+        /* --- SLIDESHOW CONTENT --- */
+        .slides-container { position: relative; overflow: hidden; min-height: 350px; /* Fixní výška pro konzistenci */ }
+        .slide {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            opacity: 0; transform: translateX(50px); transition: all 0.5s ease;
+            display: flex; flex-direction: column;
+            pointer-events: none;
+        }
+        .slide.active { opacity: 1; transform: translateX(0); pointer-events: auto; z-index: 2; }
+
+        /* --- MEDIA PLACEHOLDER (Video/Screenshot area) --- */
+        .media-placeholder {
+            width: 100%; aspect-ratio: 16/9; /* Poměr stran pro video */
+            background: rgba(255,255,255,0.05); border-radius: 20px;
+            border: 1px dashed rgba(255,255,255,0.2);
+            display: flex; justify-content: center; align-items: center;
+            margin-bottom: 25px; position: relative; overflow: hidden;
+        }
+        /* Příklad statického obrázku na pozadí placeholderu */
+        .media-bg-1 { background-image: url('https://images.unsplash.com/photo-1618477461853-cf6ed80faba5?q=80&w=500&auto=format&fit=crop'); background-size: cover; background-blend-mode: overlay; background-color: rgba(0,0,0,0.5);}
+        .media-bg-2 { background-image: url('https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=500&auto=format&fit=crop'); background-size: cover; background-blend-mode: overlay; background-color: rgba(0,0,0,0.5);}
+        .media-bg-3 { background-image: url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=500&auto=format&fit=crop'); background-size: cover; background-blend-mode: overlay; background-color: rgba(0,0,0,0.5);}
+
+        .play-icon { width: 60px; height: 60px; background: rgba(174, 238, 238, 0.8); border-radius: 50%; display: flex; justify-content: center; align-items: center; color: var(--bg-dark); font-size: 2rem; box-shadow: 0 0 20px var(--pastel-aqua); cursor: pointer; transition: 0.3s;}
+        .play-icon:hover { transform: scale(1.1); background: var(--pastel-mint); }
+
+        /* --- TEXT CONTENT --- */
+        .slide h2 { color: var(--text-light); font-size: 1.4rem; margin-bottom: 15px; font-weight: 800; }
+        .text-highlight { background: linear-gradient(to right, var(--pastel-aqua), var(--pastel-mint)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .slide p { color: var(--text-muted); font-size: 1rem; line-height: 1.6; }
+
+        /* --- FOOTER: NAVIGACE --- */
+        .modal-footer { display: flex; justify-content: space-between; align-items: center; margin-top: auto; padding-top: 20px; }
+        
+        /* Indikátory (tečky) */
+        .dots-container { display: flex; gap: 10px; }
+        .dot { width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,0.2); transition: 0.3s; }
+        .dot.active { background: var(--pastel-aqua); width: 25px; border-radius: 5px; }
+
+        /* Tlačítka */
+        .nav-btn { padding: 12px 25px; border-radius: 12px; font-weight: 700; cursor: pointer; transition: 0.3s; border: none; font-size: 1rem;}
+        .btn-skip { background: transparent; color: var(--text-muted); }
+        .btn-skip:hover { color: var(--text-light); }
+        .btn-next { background: var(--btn-gradient); color: var(--bg-dark); box-shadow: 0 5px 15px -5px rgba(174, 238, 238, 0.5); }
+        .btn-next:hover { transform: translateY(-2px); box-shadow: 0 10px 20px -5px rgba(174, 238, 238, 0.7); }
+
+    </style>
+</head>
+<body>
+
+    <div class="app-background-simulation">
+        [ ZDE BĚŽÍ HLAVNÍ APLIKACE NANOSOLVE... ]
+    </div>
+
+
+    <div class="onboarding-overlay" id="onboardingOverlay">
+        <div class="onboarding-modal">
+            
+            <div class="modal-header">
+                <div class="modal-logo">
+                    <svg viewBox="0 0 400 100" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="nanoGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#D8DFFF;stop-opacity:1"/><stop offset="100%" style="stop-color:#C4FFFF;stop-opacity:1"/></linearGradient>
+                            <linearGradient id="solveGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#C4FFFF;stop-opacity:1"/><stop offset="100%" style="stop-color:#B5FFB5;stop-opacity:1"/></linearGradient>
+                        </defs>
+                        <g transform="translate(20, 10) scale(0.8)">
+                             <circle cx="10" cy="30" r="5" fill="url(#nanoGrad)" opacity="0.7" /><circle cx="25" cy="15" r="4" fill="url(#nanoGrad)" opacity="0.8" /><circle cx="30" cy="50" r="6" fill="url(#nanoGrad)" opacity="0.6" /><circle cx="15" cy="65" r="5" fill="url(#nanoGrad)" opacity="0.9" /><circle cx="45" cy="40" r="7" fill="url(#nanoGrad)" /><path d="M45 40 L70 25 M45 40 L75 55 M70 25 L90 40 M75 55 L90 40" stroke="url(#solveGrad)" stroke-width="3" stroke-linecap="round" /><circle cx="70" cy="25" r="7" fill="url(#solveGrad)" /><circle cx="75" cy="55" r="7" fill="url(#solveGrad)" /><circle cx="90" cy="40" r="9" fill="url(#solveGrad)" />
+                        </g>
+                        <text x="110" y="55" style="font-family: 'Montserrat', sans-serif; font-size: 36px;">
+                            <tspan fill="#e2e8f0" font-weight="400">NANO</tspan><tspan fill="#ffffff" font-weight="800">SOLVE</tspan>
+                        </text>
+                    </svg>
+                </div>
+                <button class="close-btn" id="closeBtn">&times;</button>
+            </div>
+
+            <div class="slides-container">
+                
+                <div class="slide active" data-slide="1">
+                    <div class="media-placeholder media-bg-1">
+                        <div class="play-icon">▶</div>
+                    </div>
+                    <h2>Odhalte <span class="text-highlight">neviditelné</span></h2>
+                    <p>Mikro a nanoplasty jsou všude. Prozkoumejte v naší interaktivní databázi, jak ovlivňují lidské tělo a planetu Zemi na buněčné úrovni.</p>
+                </div>
+
+                <div class="slide" data-slide="2">
+                     <div class="media-placeholder media-bg-2">
+                        <div class="play-icon" style="background: var(--pastel-lavender); box-shadow: 0 0 20px var(--pastel-lavender);">💡</div>
+                    </div>
+                    <h2>Staňte se <span class="text-highlight" style="background: linear-gradient(to right, var(--pastel-lavender), var(--pastel-aqua)); -webkit-background-clip: text;">řešitelem</span></h2>
+                    <p>Tato aplikace není jen o datech. Je to nástroj pro brainstorming. Vaše nápady a postřehy jsou sbírány a matematicky vyhodnocovány pro nalezení reálných řešení.</p>
+                </div>
+
+                 <div class="slide" data-slide="3">
+                     <div class="media-placeholder media-bg-3">
+                         <img src="https://cdn-icons-png.flaticon.com/512/1946/1946488.png" style="width: 80px; height: 80px; filter: drop-shadow(0 0 10px var(--pastel-mint)); opacity: 0.8;" alt="Knowledge">
+                    </div>
+                    <h2>Znalostní <span class="text-highlight" style="background: linear-gradient(to right, var(--pastel-mint), var(--pastel-aqua)); -webkit-background-clip: text;">databáze</span></h2>
+                    <p>Získejte přístup k nejnovějším videím, vědeckým článkům a ověřeným informacím. Vzdělávejte se a buďte součástí změny.</p>
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+                <div class="dots-container">
+                    <div class="dot active" data-slide="1"></div>
+                    <div class="dot" data-slide="2"></div>
+                    <div class="dot" data-slide="3"></div>
+                </div>
+                <div>
+                    <button class="nav-btn btn-skip" id="prevBtn" style="display: none;">Zpět</button>
+                    <button class="nav-btn btn-next" id="nextBtn">Pokračovat</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const overlay = document.getElementById('onboardingOverlay');
+            const closeBtn = document.getElementById('closeBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const prevBtn = document.getElementById('prevBtn');
+            const slides = document.querySelectorAll('.slide');
+            const dots = document.querySelectorAll('.dot');
+            
+            let currentSlide = 0;
+            const totalSlides = slides.length;
+            const localStorageKey = 'nanosolve_onboarding_seen_v1'; // Klíč pro uložení stavu
+
+            // 1. KONTROLA: Zobrazit onboarding pouze pokud nebyl viděn
+            if (!localStorage.getItem(localStorageKey)) {
+                // Malé zpoždění pro hezčí efekt nástupu
+                setTimeout(() => {
+                    overlay.classList.add('is-visible');
+                }, 500);
+            } else {
+                // Pokud už byl viděn, odstraníme ho z DOMu (volitelné, ale čistší)
+                overlay.style.display = 'none';
+            }
+
+            // Funkce pro zavření a uložení stavu
+            function closeOnboarding() {
+                overlay.classList.remove('is-visible');
+                localStorage.setItem(localStorageKey, 'true');
+                setTimeout(() => { overlay.style.display = 'none'; }, 500); // Počkát na animaci
+            }
+
+            closeBtn.addEventListener('click', closeOnboarding);
+
+            // --- LOGIKA SLIDESHOW ---
+            function updateSlides(index) {
+                // Reset všech
+                slides.forEach(s => s.classList.remove('active'));
+                dots.forEach(d => d.classList.remove('active'));
+                
+                // Aktivace aktuálního
+                slides[index].classList.add('active');
+                dots[index].classList.add('active');
+
+                // Logika tlačítek
+                if (index === 0) {
+                    prevBtn.style.display = 'none';
+                    nextBtn.innerText = 'Pokračovat';
+                } else if (index === totalSlides - 1) {
+                    prevBtn.style.display = 'inline-block';
+                    nextBtn.innerText = 'Začít řešit! 🚀'; // Finální tlačítko
+                } else {
+                    prevBtn.style.display = 'inline-block';
+                    nextBtn.innerText = 'Pokračovat';
+                }
+            }
+
+            nextBtn.addEventListener('click', () => {
+                if (currentSlide < totalSlides - 1) {
+                    currentSlide++;
+                    updateSlides(currentSlide);
+                } else {
+                    // Na posledním slidu tlačítko zavře onboarding
+                    closeOnboarding();
+                }
+            });
+
+            prevBtn.addEventListener('click', () => {
+                if (currentSlide > 0) {
+                    currentSlide--;
+                    updateSlides(currentSlide);
+                }
+            });
+
+        });
+    </script>
+
+</body>
+</html>

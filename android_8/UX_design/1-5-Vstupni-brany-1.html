@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NANOSOLVE - Detail Způsoby Vniku</title>
+    <style>
+        :root {
+            /* --- SPECIFICKÁ PALETA PRO TUTO SEKCI (NEON ORANGE) --- */
+            --bg-color: #080400; /* Velmi tmavá oranžovo-černá */
+            --text-main: #ffffff;
+            
+            /* Hlavní neonová barva (Oranžová) */
+            --theme-color: #f97316; 
+            /* Světlejší varianta pro textové zvýraznění */
+            --theme-bright: #fdba74;
+            /* Barva pozadí informačního panelu */
+            --theme-panel: rgba(36, 12, 0, 0.95); 
+            /* Barva záře */
+            --theme-glow: rgba(249, 115, 22, 0.6);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+
+        body {
+            background-color: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .app-frame {
+            width: 100%;
+            max-width: 400px;
+            height: 850px;
+            background-color: var(--bg-color);
+            border-radius: 30px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 0 0 10px #0a0a0a;
+            display: flex;
+            flex-direction: column;
+
+            /* --- POZADÍ PRO DETAIL (Vstupní brány) --- */
+            background-image: 
+                /* Horní vrstva: Tmavě oranžový gradient pro obarvení */
+                linear-gradient(to bottom, rgba(36, 12, 0, 0.85), rgba(20, 5, 0, 0.95)),
+                /* Spodní vrstva: Historický nákres dýchacích cest a jícnu (Grayova anatomie) */
+                url('https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Gray963.png/800px-Gray963.png');
+            
+            background-size: cover;
+            background-position: center top; /* Zaměřeno na horní část (hlavu) */
+        }
+
+        /* --- HLAVIČKA --- */
+        header {
+            padding: 40px 30px 20px 30px;
+            z-index: 5;
+        }
+        .back-button {
+            display: block;
+            color: var(--theme-color);
+            font-weight: 800; font-size: 0.85rem;
+            margin-bottom: 20px; cursor: pointer; text-decoration: none;
+            text-transform: uppercase; letter-spacing: 1px;
+            transition: 0.3s;
+        }
+        .back-button:hover {
+            text-shadow: 0 0 10px var(--theme-color);
+            transform: translateX(-3px);
+        }
+
+        h1 {
+            font-size: 1.6rem;
+            font-weight: 900; line-height: 1.2;
+            color: #fff; text-transform: uppercase;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.8);
+            margin-bottom: 5px;
+        }
+
+        /* --- HERO IKONA --- */
+        .hero-container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 5;
+        }
+        .hero-icon {
+            width: 140px; height: 140px;
+            color: var(--theme-color);
+            /* Záře v barvě tématu */
+            filter: drop-shadow(0 0 30px var(--theme-glow));
+            /* Rychlejší, "alarmující" pulzování pro tuto sekci */
+            animation: pulse-fast 3s infinite ease-in-out;
+        }
+        @keyframes pulse-fast {
+            0%, 100% { transform: scale(1); filter: drop-shadow(0 0 30px var(--theme-glow)); opacity: 0.9; }
+            50% { transform: scale(1.03); filter: drop-shadow(0 0 45px var(--theme-glow)); opacity: 1; }
+        }
+
+        /* --- INFORMAČNÍ PANEL (Ten spodní box) --- */
+        .info-panel {
+            background: var(--theme-panel); /* Tmavé pozadí panelu */
+            border-top-left-radius: 30px;
+            border-top-right-radius: 30px;
+            padding: 35px;
+            /* Horní okraj svítí barvou tématu */
+            border-top: 2px solid rgba(249, 115, 22, 0.3);
+            z-index: 5;
+            box-shadow: 0 -10px 40px rgba(0,0,0,0.6);
+            max-height: 60%;
+            overflow-y: auto;
+        }
+
+        /* Styly pro seznam */
+        .entry-list {
+            list-style: none; /* Odstranění standardních odrážek */
+        }
+        .entry-item {
+            margin-bottom: 25px;
+            position: relative;
+            padding-left: 25px; /* Místo pro vlastní odrážku */
+        }
+        /* Vlastní neonová odrážka */
+        .entry-item::before {
+            content: '•';
+            color: var(--theme-color);
+            font-size: 2rem;
+            position: absolute;
+            left: 0; top: -5px;
+            text-shadow: 0 0 10px var(--theme-glow);
+        }
+
+        .description {
+            font-size: 0.95rem; line-height: 1.7; color: #e0e0e0;
+        }
+
+        /* Styly pro zvýraznění v textu */
+        .txt-theme { color: var(--theme-bright); font-weight: 800; text-shadow: 0 0 8px var(--theme-glow); text-transform: uppercase; letter-spacing: 1px;}
+        strong { color: #fff; font-weight: 800; }
+
+    </style>
+</head>
+<body>
+
+    <div class="app-frame">
+        
+        <header>
+            <a class="back-button">← ZPĚT NA PŘEHLED</a>
+            <h1>NANOPLASTY A JEJICH ZPŮSOBY VNIKU DO ČLOVĚKA</h1>
+        </header>
+
+        <div class="hero-container">
+            <svg class="hero-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M16 20a5 5 0 0 0 0-10h-2"></path>
+                <path d="M14 10V6a4 4 0 0 0-4-4H9"></path>
+                <path d="M9 2v6l-2 2"></path>
+                <path d="M3 8h6"></path>
+                <path d="M6 8l-2-2"></path>
+                <path d="M6 8l-2 2"></path>
+                <path d="M3 14h5"></path>
+                <path d="M6 14l-2-2"></path>
+                <path d="M6 14l-2 2"></path>
+            </svg>
+        </div>
+
+        <div class="info-panel">
+            <ul class="entry-list description">
+                <li class="entry-item">
+                    <span class="txt-theme">Inhalace (vdechování):</span><br>
+                    Nejrychlejší cesta – průnik přes plíce přímo do krevního oběhu.
+                </li>
+                <li class="entry-item">
+                    <span class="txt-theme">Ingesce (požití):</span><br>
+                    Vstup skrze kontaminovanou vodu, potraviny a nápoje.
+                </li>
+                <li class="entry-item">
+                    <span class="txt-theme">Absorpce (kůže):</span><br>
+                    Průnik přes kožní póry při kontaktu s vodou nebo vzduchem.
+                </li>
+            </ul>
+        </div>
+
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NANOSOLVE - Detail Fyzikální Makro-vlastnosti (+Brainstorm)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* --- PŮVODNÍ PALETA SEKCE (NEON SILVER PHYSICS) --- */
+            --bg-color: #080a10;
+            --theme-color: #e5e7eb; 
+            --theme-bright: #ffffff;
+            --theme-panel: rgba(15, 20, 30, 0.95); 
+            --theme-glow: rgba(229, 231, 235, 0.5);
+
+            /* --- NOVÉ PASTELOVÉ AKCENTY PRO BRAINSTORMING --- */
+            --pastel-aqua: #AEEEEE;
+            --pastel-mint: #98FB98;
+            --pastel-lavender: #C7CEFF;
+            --btn-gradient: linear-gradient(135deg, var(--pastel-aqua), var(--pastel-mint));
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Montserrat', sans-serif; }
+
+        body {
+            background-color: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .app-frame {
+            width: 100%;
+            max-width: 400px;
+            height: 850px;
+            background-color: var(--bg-color);
+            border-radius: 30px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 0 0 10px #0a0a0a;
+            display: flex;
+            flex-direction: column;
+
+            /* POZADÍ (Abstract Science) */
+            background-image: url('https://images.unsplash.com/photo-1633355579040-933844359090?q=80&w=1000&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            background-blend-mode: hard-light; 
+            background-color: rgba(10, 15, 25, 0.85);
+        }
+
+        /* --- HLAVIČKA S NOVÝM LOGEM --- */
+        header {
+            padding: 30px 25px 10px 25px;
+            z-index: 5;
+        }
+        .back-button {
+            display: inline-block;
+            color: var(--theme-color);
+            font-weight: 800; font-size: 0.8rem;
+            margin-bottom: 15px; cursor: pointer; text-decoration: none;
+            text-transform: uppercase; letter-spacing: 1px;
+            transition: 0.3s;
+        }
+        .back-button:hover {
+            text-shadow: 0 0 10px var(--theme-color);
+            transform: translateX(-3px);
+        }
+
+        /* Styl pro SVG Logo v hlavičce */
+        .header-logo-svg {
+            width: 180px; height: auto;
+            display: block; margin-bottom: 10px;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+        }
+
+        h1 {
+            font-size: 1.2rem; /* Menší písmo pro dlouhý nadpis pod logem */
+            font-weight: 800; line-height: 1.3;
+            color: #fff; text-transform: uppercase;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.8);
+            margin-bottom: 5px; letter-spacing: 0.5px;
+        }
+
+        /* --- HERO IKONA --- */
+        .hero-container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 5;
+            min-height: 150px; /* Zajištění prostoru */
+        }
+        .hero-icon {
+            width: 120px; height: 120px;
+            color: var(--theme-color);
+            filter: drop-shadow(0 0 30px var(--theme-glow));
+            animation: electric-pulse-macro 3s infinite ease-in-out;
+        }
+        @keyframes electric-pulse-macro {
+            0%, 100% { transform: scale(1); filter: drop-shadow(0 0 25px var(--theme-glow)); opacity: 0.9; }
+            10% { transform: scale(1.02); filter: drop-shadow(0 0 50px var(--theme-bright)); opacity: 1; }
+            20% { transform: scale(1); filter: drop-shadow(0 0 30px var(--theme-glow)); opacity: 1; }
+        }
+
+        /* --- INFORMAČNÍ PANEL (Scrollable) --- */
+        .info-panel-container {
+            flex: 2; /* Zabere více místa */
+            overflow-y: auto;
+            padding: 0 20px 30px 20px;
+            z-index: 5;
+            /* Skrytí scrollbaru */
+            scrollbar-width: none; -ms-overflow-style: none;
+        }
+        .info-panel-container::-webkit-scrollbar { display: none; }
+
+        .info-panel {
+            background: var(--theme-panel);
+            border-radius: 25px;
+            padding: 25px;
+            border: 1px solid rgba(229, 231, 235, 0.2);
+            box-shadow: 0 -10px 40px rgba(0,0,0,0.5);
+        }
+
+        .intro-subtitle {
+            font-size: 0.9rem; color: var(--theme-bright); font-weight: 700; margin-bottom: 20px;
+            text-transform: uppercase; letter-spacing: 0.5px;
+            border-bottom: 1px solid rgba(229, 231, 235, 0.3); padding-bottom: 10px;
+        }
+
+        /* STYLY OBSAHU (Původní) */
+        .entry-list { list-style: none; }
+        .entry-item { margin-bottom: 20px; position: relative; padding-left: 20px; }
+        .entry-item::before { content: '•'; color: var(--theme-bright); font-size: 1.5rem; position: absolute; left: 0; top: -2px; text-shadow: 0 0 10px var(--theme-glow); }
+        .description { font-size: 0.9rem; line-height: 1.6; color: #e0e0e0; }
+        .txt-highlight { color: var(--theme-bright); font-weight: 800; text-shadow: 0 0 8px var(--theme-glow); text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 5px; font-size: 0.95rem;}
+        .txt-box { background: rgba(229, 231, 235, 0.15); padding: 2px 6px; border-radius: 6px; color: var(--theme-bright); font-weight: 800; border: 1px solid rgba(229, 231, 235, 0.4); white-space: nowrap; }
+        strong { color: #fff; font-weight: 800; }
+
+        /* ========================================= */
+        /* --- NOVÉ BRAINSTORMING OKNO (Trendy) --- */
+        /* ========================================= */
+        .brainstorm-divider {
+            height: 2px;
+            background: linear-gradient(to right, transparent, var(--pastel-aqua), transparent);
+            margin: 30px 0 20px 0;
+            opacity: 0.5;
+        }
+
+        .brainstorm-box {
+            /* Moderní "Glass" vzhled s pastelovým nádechem */
+            background: rgba(174, 238, 238, 0.05); /* Velmi jemný aqua tint */
+            border: 1px solid rgba(174, 238, 238, 0.2);
+            border-radius: 20px;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+        
+        /* Jemná záře na pozadí boxu */
+        .brainstorm-box::before {
+            content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+            background: radial-gradient(circle, rgba(152, 251, 152, 0.1) 0%, transparent 60%);
+            pointer-events: none; opacity: 0.5;
+        }
+
+        .brainstorm-header {
+            display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;
+        }
+        .brainstorm-title {
+            font-size: 1rem; font-weight: 800; color: var(--pastel-aqua);
+            display: flex; align-items: center; gap: 8px;
+        }
+        .brainstorm-user {
+            font-size: 0.75rem; color: var(--pastel-lavender); font-weight: 600;
+            background: rgba(199, 206, 255, 0.1); padding: 4px 8px; border-radius: 12px;
+        }
+
+        .brainstorm-textarea {
+            width: 100%;
+            background: rgba(0,0,0,0.2);
+            border: none;
+            border-bottom: 2px solid rgba(174, 238, 238, 0.3);
+            border-radius: 8px 8px 0 0;
+            padding: 12px;
+            color: #fff; font-family: inherit; font-size: 0.9rem;
+            resize: vertical; min-height: 80px;
+            transition: 0.3s;
+        }
+        .brainstorm-textarea:focus {
+            outline: none;
+            border-bottom-color: var(--pastel-aqua);
+            background: rgba(0,0,0,0.3);
+        }
+        .brainstorm-textarea::placeholder { color: rgba(255,255,255,0.5); }
+
+        .brainstorm-submit-btn {
+            width: 100%; margin-top: 15px;
+            padding: 12px;
+            background: var(--btn-gradient);
+            border: none; border-radius: 12px;
+            color: #0a0a12; font-weight: 800; font-size: 0.9rem; letter-spacing: 1px;
+            cursor: pointer; transition: 0.3s;
+            box-shadow: 0 5px 15px -5px rgba(174, 238, 238, 0.5);
+            display: flex; justify-content: center; align-items: center; gap: 8px;
+        }
+        .brainstorm-submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px -5px rgba(174, 238, 238, 0.7);
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="app-frame">
+        
+        <header>
+            <a class="back-button">← ZPĚT NA PŘEHLED</a>
+            
+            <svg class="header-logo-svg" viewBox="0 0 400 100" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <linearGradient id="nanoGradH" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#D8DFFF;stop-opacity:1"/><stop offset="100%" style="stop-color:#C4FFFF;stop-opacity:1"/></linearGradient>
+                    <linearGradient id="solveGradH" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#C4FFFF;stop-opacity:1"/><stop offset="100%" style="stop-color:#B5FFB5;stop-opacity:1"/></linearGradient>
+                </defs>
+                <g transform="translate(20, 10)">
+                     <circle cx="10" cy="30" r="5" fill="url(#nanoGradH)" opacity="0.7" /><circle cx="25" cy="15" r="4" fill="url(#nanoGradH)" opacity="0.8" /><circle cx="30" cy="50" r="6" fill="url(#nanoGradH)" opacity="0.6" /><circle cx="15" cy="65" r="5" fill="url(#nanoGradH)" opacity="0.9" /><circle cx="45" cy="40" r="7" fill="url(#nanoGradH)" /><path d="M45 40 L70 25 M45 40 L75 55 M70 25 L90 40 M75 55 L90 40" stroke="url(#solveGradH)" stroke-width="3" stroke-linecap="round" /><circle cx="70" cy="25" r="7" fill="url(#solveGradH)" /><circle cx="75" cy="55" r="7" fill="url(#solveGradH)" /><circle cx="90" cy="40" r="9" fill="url(#solveGradH)" />
+                </g>
+                <text x="130" y="65" style="font-family: 'Montserrat', sans-serif;">
+                    <tspan fill="#e2e8f0" font-weight="400" font-size="48">NANO</tspan><tspan fill="#ffffff" font-weight="800" font-size="48">SOLVE</tspan>
+                </text>
+            </svg>
+
+            <h1>PLASTY A JEJICH FYZIKÁLNÍ MAKRO-DESTRUKTIVNÍ VLASTNOSTI</h1>
+        </header>
+
+        <div class="hero-container">
+            <svg class="hero-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+            </svg>
+        </div>
+
+        <div class="info-panel-container">
+            <div class="info-panel">
+                <div class="intro-subtitle">Klíčové fyzikální mechanismy kolapsu</div>
+
+                <ul class="entry-list description">
+                    <li class="entry-item">
+                        <span class="txt-highlight">Narušení vodíkových vazeb vody</span>
+                        Nanoplasty se vážou na molekuly vody a vytvářejí hydratační obaly, které „znehybňují“ velké objemy vody → prudký pokles schopnosti oceánů <strong>odvádět teplo</strong>.
+                    </li>
+                    <li class="entry-item">
+                        <span class="txt-highlight">Nízké a „těžké“ mraky</span>
+                        Nanoplasty fungují jako <span class="txt-box">agresivní kondenzační jádra</span> → vznik nízkých, hustých mraků, které zadržují teplo a destabilizují klima.
+                    </li>
+                    <li class="entry-item">
+                        <span class="txt-highlight">Rušení bioelektrických signálů</span>
+                        Elektrostaticky nabité nanoplasty vytvářejí <span class="txt-box">„šum“</span>, který narušuje komunikaci rostlin (kořenové sítě) i hmyzu → ztráta adaptace ekosystémů.
+                    </li>
+                    <li class="entry-item">
+                        <span class="txt-highlight">Poškození fotosyntézy</span>
+                        Nanoplasty fyzicky poškozují chloroplasty → pokles produkce energie a kyslíku, <strong>oslabení primárních producentů</strong>.
+                    </li>
+                </ul>
+
+                <div class="brainstorm-divider"></div>
+
+                <div class="brainstorm-box">
+                    <div class="brainstorm-header">
+                        <div class="brainstorm-title">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-1.2 1.5-2.7 1.5-4.3 0-3.2-2.5-5.7-5.7-5.7C9 1.5 6.5 4 6.5 7.3c0 1.6.5 3.1 1.5 4.3.8.8 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>
+                            Váš nápad k tomuto tématu
+                        </div>
+                        <div class="brainstorm-user">👤 @NanoRešitel</div>
+                    </div>
+
+                    <textarea class="brainstorm-textarea" placeholder="Zde popište svůj nápad, hypotézu nebo postřeh k fyzikálním vlastnostem..."></textarea>
+                    
+                    <button class="brainstorm-submit-btn">
+                        ODESLAT K VYHODNOCENÍ 🚀
+                    </button>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>

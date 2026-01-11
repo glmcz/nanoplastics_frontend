@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NANOSOLVE - Vliv na člověka</title>
+    <style>
+        :root {
+            --bg-color: #050505;
+            --text-main: #ffffff;
+            --text-muted: #b0b0b0;
+            
+            /* --- NÁVRAT K NEONOVÉ PALETĚ (V1) --- */
+            --neon-cyan: #06b6d4;   /* Plíce/Mozek */
+            --neon-lime: #a3e635;   /* Játra/Střeva */
+            --neon-crimson: #f43f5e;/* Srdce/Krev */
+            --neon-violet: #a855f7; /* Reprodukce */
+            --neon-orange: #f97316; /* Vstup */
+            --neon-white: #e2e8f0;  /* Útok */
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+
+        body {
+            background-color: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .app-frame {
+            width: 100%;
+            max-width: 400px;
+            height: 850px;
+            background-color: #1a1a1a; /* Základní tmavá barva */
+            border-radius: 30px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 0 0 10px #0a0a0a;
+            display: flex;
+            flex-direction: column;
+
+            /* --- NOVÉ POZADÍ NA CELOU VÝŠKU (Da Vinci Styl) --- */
+            /* Používám placeholder obrázek anatomické studie ve starém stylu */
+            background-image: url('https://img.freepik.com/free-photo/vintage-grungy-paper-background-with-anatomy-engravings_1368-7155.jpg?w=800');
+            background-size: cover;
+            background-position: center;
+            /* Klíčové pro ztmavení obrázku, aby text zůstal čitelný */
+            background-blend-mode: multiply; 
+        }
+
+        /* --- HORNÍ NAVIGACE (Přejmenované záložky) --- */
+        .top-nav {
+            display: flex;
+            margin: 20px 20px 5px 20px;
+            background: rgba(0, 0, 0, 0.4); /* Tmavší pozadí navigace */
+            border-radius: 15px;
+            padding: 4px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            z-index: 5;
+        }
+        .nav-tab {
+            flex: 1;
+            text-align: center;
+            padding: 12px 5px;
+            font-size: 0.75rem;
+            font-weight: 800; /* Tučnější písmo */
+            text-transform: uppercase;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        /* Aktivní tab využívá neonovou barvu pro zvýraznění */
+        .nav-tab.active-micro {
+            background: rgba(6, 182, 212, 0.15); /* Jemný Cyan podklad */
+            color: var(--neon-cyan);
+            border: 1px solid var(--neon-cyan);
+            box-shadow: 0 0 15px rgba(6, 182, 212, 0.2);
+        }
+        .nav-tab.inactive-macro { color: var(--text-muted); }
+        .nav-tab.inactive-macro:hover { color: #fff; }
+
+
+        /* --- HLAVIČKA (Nový název) --- */
+        header {
+            padding: 25px 25px 15px 25px;
+            z-index: 5;
+            position: relative;
+        }
+        .app-name {
+            font-size: 0.9rem; font-weight: 900; letter-spacing: 2px; color: var(--text-muted); margin-bottom: 10px;
+        }
+        .title-block h1 {
+            font-size: 1.6rem; /* Mírně zmenšeno, aby se vešlo na řádek */
+            font-weight: 800; 
+            line-height: 1.2; 
+            color: #fff;
+            text-transform: uppercase; 
+            letter-spacing: 0.5px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8); /* Stín pro lepší čitelnost na pozadí */
+        }
+
+
+        /* --- MŘÍŽKA TLAČÍTEK --- */
+        .dashboard-grid {
+            padding: 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            flex: 1;
+            overflow-y: auto;
+            z-index: 2;
+        }
+
+        /* --- DESIGN KARET (Neonový styl) --- */
+        .card {
+            /* Tmavší, poloprůhledné pozadí, aby vynikl neon i kresba pod tím */
+            background: rgba(20, 20, 20, 0.7); 
+            border-radius: 20px;
+            padding: 20px 15px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            cursor: pointer;
+            backdrop-filter: blur(5px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Efekt při najetí myší - Neonová záře */
+        .card:hover {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 25px var(--glow-color), inset 0 0 10px var(--glow-color);
+            transform: translateY(-3px) scale(1.02);
+            background: rgba(30, 30, 30, 0.8);
+        }
+
+        /* Jemná záře v rohu karty */
+        .card::before {
+            content: '';
+            position: absolute; top: -50px; right: -50px; width: 100px; height: 100px;
+            background: var(--accent-color);
+            filter: blur(70px); opacity: 0.15; transition: 0.5s;
+        }
+        .card:hover::before { opacity: 0.3; }
+
+        .card-icon {
+            width: 44px; height: 44px;
+            color: var(--accent-color); /* Ikona dědí neonovou barvu */
+            margin-bottom: 15px;
+            /* Silnější neonová záře kolem ikony */
+            filter: drop-shadow(0 0 8px var(--glow-color));
+        }
+
+        .card h3 { font-size: 0.9rem; font-weight: 700; margin-bottom: 5px; color: #fff; }
+        .card p { font-size: 0.7rem; color: var(--text-muted); line-height: 1.3; }
+
+        /* Přiřazení Neonových Barev */
+        .c-vital  { --accent-color: var(--neon-cyan);    --glow-color: rgba(6, 182, 212, 0.4); }
+        .c-detox  { --accent-color: var(--neon-lime);    --glow-color: rgba(163, 230, 53, 0.4); }
+        .c-muscle { --accent-color: var(--neon-crimson); --glow-color: rgba(244, 63, 94, 0.4); }
+        .c-life   { --accent-color: var(--neon-violet);  --glow-color: rgba(168, 85, 247, 0.4); }
+        .c-entry  { --accent-color: var(--neon-orange);  --glow-color: rgba(249, 115, 22, 0.4); }
+        .c-attack { --accent-color: var(--neon-white);   --glow-color: rgba(226, 232, 240, 0.3); }
+
+    </style>
+</head>
+<body>
+
+    <div class="app-frame">
+        
+        <nav class="top-nav">
+            <div class="nav-tab active-micro">VLIV NA ČLOVĚKA</div>
+            <div class="nav-tab inactive-macro">VLIV NA PLANETU ZEMI</div>
+        </nav>
+
+        <header>
+            <div class="app-name">NANOSOLVE</div>
+            <div class="title-block">
+                <h1>NANOPLASTY A JEJICH VLIV NA ČLOVĚKA</h1>
+            </div>
+        </header>
+
+        <div class="dashboard-grid">
+            
+            <div class="card c-vital">
+                <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a4 4 0 0 1 4 4c0 1.5-.5 2.5-2 3.5v2"></path><path d="M8 7a4 4 0 0 1 4-4"></path><path d="M12 12.5v3"></path><path d="M12 15.5l-3 2a4 4 0 0 0-1 5h3"></path><path d="M12 15.5l3 2a4 4 0 0 1 1 5h-3"></path><path d="M9.5 7.5a2 2 0 0 1 5 0"></path></svg>
+                <div>
+                    <h3>Centrální<br>Systémy</h3>
+                    <p>Plíce, krevní řečiště a mozek.</p>
+                </div>
+            </div>
+
+            <div class="card c-detox">
+                <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h-3a4 4 0 0 0-4 4v2a2 2 0 0 0 2 2h3a3 3 0 0 0 3-3V5a1 1 0 0 0-1-1z"></path><path d="M7 13v2a3 3 0 0 0 6 0v-1a2 2 0 1 1 4 0v3a4 4 0 0 1-8 0"></path><path d="M6 19a2 2 0 0 1 2-2"></path></svg>
+                <div>
+                    <h3>Filtrace<br>& Detox</h3>
+                    <p>Střeva, játra, slezina, ledviny.</p>
+                </div>
+            </div>
+
+            <div class="card c-muscle">
+                <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 6.5a4.5 4.5 0 0 0-8 1.5 4.5 4.5 0 0 0-8-1.5C3 11 7 16 11.5 19.5 16 16 21 11 21 6.5z"></path><line x1="12" y1="8" x2="12" y2="19"></line><line x1="8" y1="9" x2="16" y2="14"></line><line x1="16" y1="9" x2="8" y2="14"></line></svg>
+                <div>
+                    <h3>Vitalita<br>& Tkáně</h3>
+                    <p>Srdce, svaly a vnitřní tkáně.</p>
+                </div>
+            </div>
+
+            <div class="card c-life">
+                <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 8a3.5 3.5 0 0 1 3 3c0 2.5-2 4-3 5-1.5-1-3-2.5-3-5a3.5 3.5 0 0 1 3-3z"></path><circle cx="12" cy="11" r="1" fill="currentColor"></circle></svg>
+                <div>
+                    <h3>Původ<br>& Ochrana</h3>
+                    <p>Placenta, embrya, reprodukce.</p>
+                </div>
+            </div>
+
+            <div class="card c-entry">
+                <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 20a5 5 0 0 0 0-10h-2"></path><path d="M14 10V6a4 4 0 0 0-4-4H9"></path><path d="M9 2v6l-2 2"></path><path d="M3 8h6"></path><path d="M6 8l-2-2"></path><path d="M6 8l-2 2"></path><path d="M3 14h5"></path><path d="M6 14l-2-2"></path><path d="M6 14l-2 2"></path></svg>
+                <div>
+                    <h3>Vstupní<br>Brány</h3>
+                    <p>Způsoby vniku do organismu.</p>
+                </div>
+            </div>
+
+            <div class="card c-attack">
+                <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21a9 9 0 0 0 9-9 9 9 0 0 0-9-9 9 9 0 0 0-3.5.7"></path><path d="M4.5 16.5A9 9 0 0 0 12 21"></path><path d="M2 12l10-4-3 10z"></path><path d="M8 12l2 2"></path></svg>
+                <div>
+                    <h3>Fyzikální<br>Narušení</h3>
+                    <p>Mechanický útok na buňky.</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+</html>

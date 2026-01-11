@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NANOSOLVE - Vliv na Planetu Zemi</title>
+    <style>
+        :root {
+            --bg-color: #020205; /* Velmi tmavá vesmírná černá */
+            --text-main: #ffffff;
+            --text-muted: #b0b0b0;
+            
+            /* --- NOVÁ PLANETÁRNÍ NEONOVÁ PALETA (MAKRO) --- */
+            --neon-ocean: #00b4d8;   /* Oceán (Hluboká modrá) */
+            --neon-atmos: #90e0ef;   /* Atmosféra (Nebeská modrá) */
+            --neon-bio: #4ade80;     /* Biosféra (Živá zelená) */
+            --neon-magma: #d946ef;   /* Jádro/Magma (Purpurová/Magenta) */
+            --neon-source: #fbbf24;  /* Zdroje (Varovná žlutá/oranžová) */
+            --neon-physics: #e5e7eb; /* Fyzika (Chladná stříbrná) */
+
+            /* Barva pro aktivní planetární tab */
+            --active-macro-color: #48cae4;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+
+        body {
+            background-color: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .app-frame {
+            width: 100%;
+            max-width: 400px;
+            height: 850px;
+            background-color: #0a0a12; /* Tmavý podklad */
+            border-radius: 30px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 0 0 10px #05050a;
+            display: flex;
+            flex-direction: column;
+
+            /* --- NOVÉ POZADÍ NA CELOU VÝŠKU (Planeta Země) --- */
+            /* Používám dramatický pohled na Zemi z vesmíru (NASA) */
+            background-image: url('https://images.unsplash.com/photo-1451187580500-d81b322439a0?q=80&w=1000&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            /* Dramatické ztmavení a zvýraznění světel */
+            background-blend-mode: hard-light; 
+            background-color: rgba(0, 5, 20, 0.85); /* Tmavě modrý filtr */
+        }
+
+        /* --- HORNÍ NAVIGACE (Upraveno pro aktivní Makro) --- */
+        .top-nav {
+            display: flex;
+            margin: 20px 20px 5px 20px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 15px;
+            padding: 4px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            z-index: 5;
+        }
+        .nav-tab {
+            flex: 1;
+            text-align: center;
+            padding: 12px 5px;
+            font-size: 0.75rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        
+        /* Neaktivní Mikro tab */
+        .nav-tab.inactive-micro { color: var(--text-muted); }
+        .nav-tab.inactive-micro:hover { color: #fff; }
+
+        /* Aktivní Makro tab (Modrá záře) */
+        .nav-tab.active-macro {
+            background: rgba(72, 202, 228, 0.15); /* Jemný modrý podklad */
+            color: var(--active-macro-color);
+            border: 1px solid var(--active-macro-color);
+            box-shadow: 0 0 15px rgba(72, 202, 228, 0.3);
+        }
+
+
+        /* --- HLAVIČKA (Nový název a podtitul) --- */
+        header {
+            padding: 25px 25px 15px 25px;
+            z-index: 5;
+            position: relative;
+        }
+        .app-name {
+            font-size: 0.9rem; font-weight: 900; letter-spacing: 2px; color: var(--text-muted); margin-bottom: 10px;
+        }
+        .title-block h1 {
+            font-size: 1.6rem;
+            font-weight: 800; 
+            line-height: 1.2; 
+            color: #fff;
+            text-transform: uppercase; 
+            letter-spacing: 0.5px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+        }
+        .title-block p {
+            color: var(--active-macro-color); /* Podtitul v barvě sekce */
+            font-size: 0.8rem;
+            font-weight: 700;
+            margin-top: 5px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+
+        /* --- MŘÍŽKA TLAČÍTEK --- */
+        .dashboard-grid {
+            padding: 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            flex: 1;
+            overflow-y: auto;
+            z-index: 2;
+        }
+
+        /* --- DESIGN KARET (Konzistentní s předchozím) --- */
+        .card {
+            background: rgba(10, 15, 30, 0.7); /* Mírně modřejší nádech pozadí */
+            border-radius: 20px;
+            padding: 20px 15px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            cursor: pointer;
+            backdrop-filter: blur(5px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 25px var(--glow-color), inset 0 0 10px var(--glow-color);
+            transform: translateY(-3px) scale(1.02);
+            background: rgba(20, 25, 40, 0.8);
+        }
+
+        .card::before {
+            content: '';
+            position: absolute; top: -50px; right: -50px; width: 100px; height: 100px;
+            background: var(--accent-color);
+            filter: blur(70px); opacity: 0.15; transition: 0.5s;
+        }
+        .card:hover::before { opacity: 0.3; }
+
+        .card-icon {
+            width: 44px; height: 44px;
+            color: var(--accent-color);
+            margin-bottom: 15px;
+            filter: drop-shadow(0 0 8px var(--glow-color));
+        }
+
+        .card h3 { font-size: 0.85rem; font-weight: 700; margin-bottom: 5px; color: #fff; line-height: 1.3; }
+        .card p { font-size: 0.65rem; color: var(--text-muted); line-height: 1.4; }
+
+        /* Přiřazení Nových Planetárních Barev */
+        .c-ocean    { --accent-color: var(--neon-ocean);   --glow-color: rgba(0, 180, 216, 0.4); }
+        .c-atmos    { --accent-color: var(--neon-atmos);   --glow-color: rgba(144, 224, 239, 0.4); }
+        .c-bio      { --accent-color: var(--neon-bio);     --glow-color: rgba(74, 222, 128, 0.4); }
+        .c-magma    { --accent-color: var(--neon-magma);   --glow-color: rgba(217, 70, 239, 0.4); }
+        .c-source   { --accent-color: var(--neon-source);  --glow-color: rgba(251, 191, 36, 0.4); }
+        .c-physics  { --accent-color: var(--neon-physics); --glow-color: rgba(229, 231, 235, 0.3); }
+
+    </style>
+</head>
+<body>
+
+    <div class="app-frame">
+        
+        <nav class="top-nav">
+            <div class="nav-tab inactive-micro">VLIV NA ČLOVĚKA</div>
+            <div class="nav-tab active-macro">VLIV NA PLANETU ZEMI</div>
+        </nav>
+
+        <header>
+            <div class="app-name">NANOSOLVE</div>
+            <div class="title-block">
+                <h1>VLIV NA PLANETU ZEMI</h1>
+                <p>NANOPLASTY A JEJICH VLIV NA BIOSFÉRU</p>
+            </div>
+        </header>
+
+        <div class="dashboard-grid">
+            
+            <div class="card c-ocean">
+                <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.69l5.74 5.88a5.84 5.84 0 0 1 1.63 4.3c0 3.13-2.54 5.68-5.68 5.68-1.5 0-3.07-1.25-4.23-2.47-1.14 1.21-2.69 2.47-4.18 2.47-3.13 0-5.68-2.54-5.68-5.68 0-1.51.57-2.95 1.62-4.28L12 2.69z"></path><path d="M5 15.4a6 6 0 0 1-3-3"></path><path d="M19 15.4a6 6 0 0 0 3-3"></path></svg>
+                <div>
+                    <h3>Světový oceán<br>a hydrosféra</h3>
+                    <p>Fyzikálně-chemická sabotáž a akumulace tepla.</p>
+                </div>
+            </div>
+
+            <div class="card c-atmos">
+                <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17.5 19H9a7 7 0 1 1 6.7-10.2c.7.5 1.1 1.3 1.3 2.2h2a4 4 0 1 1 0 8h-1.5"></path><path d="M20.4 14.6 18 17l2.4 2.4"></path><path d="M3.6 14.6 6 17l-2.4 2.4"></path></svg>
+                <div>
+                    <h3>Atmosféra a globální<br>vodní cyklus</h3>
+                    <p>Atmosférický a hydrologický rozvrat.</p>
+                </div>
+            </div>
+
+            <div class="card c-bio">
+                <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 22h20"></path><path d="M12 22v-8"></path><path d="M12 18c-1.66 0-3-1.34-3-3 0-1.66 1.34-3 3-3"></path><path d="M12 14c1.66 0 3-1.34 3-3 0-1.66-1.34-3-3-3"></path><path d="M12 14s-6-4.5-6-9c0-2.49 2.01-4.5 4.5-4.5 2.48 0 4.5 2.01 4.5 4.5 0 2.49 2.01 4.5 4.5 4.5-2.49 0-4.5-2.01-4.5-4.5 0-2.49 2.01-4.5 4.5-4.5 2.49 0 4.5 2.01 4.5 4.5v0z"></path></svg>
+                <div>
+                    <h3>Flora, fauna<br>a půdní biota</h3>
+                    <p>Biologický a potravní kolaps ekosystémů.</p>
+                </div>
+            </div>
+
+            <div class="card c-magma">
+                <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><path d="M12 2a14.5 14.5 0 0 0 0 20"></path><path d="M12 2a14.5 14.5 0 0 1 0 20"></path><path d="M2 12a14.5 14.5 0 0 1 20 0"></path><path d="M2 12a14.5 14.5 0 0 0 20 0"></path><path d="M12 7v10"></path></svg>
+                <div>
+                    <h3>Magnetické pole<br>a zemské jádro</h3>
+                    <p>Geodynamická a magnetická destabilizace.</p>
+                </div>
+            </div>
+
+            <div class="card c-source">
+                <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line><path d="M2 2l20 20"></path> </svg>
+                <div>
+                    <h3>Vstupní<br>brány krize</h3>
+                    <p>Selhání plastového systému, skládky, vody.</p>
+                </div>
+            </div>
+
+            <div class="card c-physics">
+                <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
+                <div>
+                    <h3>Fyzikální<br>vlastnosti</h3>
+                    <p>Klíčové mechanismy kolapsu (vazby, signály).</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NANOSOLVE - Detail Reprodukce</title>
+    <style>
+        :root {
+            /* --- SPECIFICKÁ PALETA PRO TUTO SEKCI (NEON VIOLET) --- */
+            --bg-color: #050008; /* Velmi tmavá fialovo-černá */
+            --text-main: #ffffff;
+            
+            /* Hlavní neonová barva (Fialová) */
+            --theme-color: #a855f7; 
+            /* Světlejší varianta pro textové zvýraznění */
+            --theme-bright: #d8b4fe;
+            /* Barva pozadí informačního panelu */
+            --theme-panel: rgba(26, 6, 36, 0.95); 
+            /* Barva záře */
+            --theme-glow: rgba(168, 85, 247, 0.5);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+
+        body {
+            background-color: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .app-frame {
+            width: 100%;
+            max-width: 400px;
+            height: 850px;
+            background-color: var(--bg-color);
+            border-radius: 30px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 0 0 10px #0a0a0a;
+            display: flex;
+            flex-direction: column;
+
+            /* --- POZADÍ PRO DETAIL (Reprodukce) --- */
+            background-image: 
+                /* Horní vrstva: Tmavě fialový gradient pro obarvení */
+                linear-gradient(to bottom, rgba(26, 6, 36, 0.85), rgba(20, 0, 30, 0.95)),
+                /* Spodní vrstva: Historický nákres dělohy a embrya (Grayova anatomie) */
+                url('https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Gray38.png/800px-Gray38.png');
+            
+            background-size: cover;
+            background-position: center;
+        }
+
+        /* --- HLAVIČKA --- */
+        header {
+            padding: 40px 30px 20px 30px;
+            z-index: 5;
+        }
+        .back-button {
+            display: block;
+            color: var(--theme-color);
+            font-weight: 800; font-size: 0.85rem;
+            margin-bottom: 20px; cursor: pointer; text-decoration: none;
+            text-transform: uppercase; letter-spacing: 1px;
+            transition: 0.3s;
+        }
+        .back-button:hover {
+            text-shadow: 0 0 10px var(--theme-color);
+            transform: translateX(-3px);
+        }
+
+        h1 {
+            font-size: 1.5rem; /* Menší písmo kvůli dlouhému názvu */
+            font-weight: 900; line-height: 1.2;
+            color: #fff; text-transform: uppercase;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.8);
+            margin-bottom: 5px;
+        }
+
+        /* --- HERO IKONA --- */
+        .hero-container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 5;
+        }
+        .hero-icon {
+            width: 140px; height: 140px;
+            color: var(--theme-color);
+            /* Záře v barvě tématu */
+            filter: drop-shadow(0 0 30px var(--theme-glow));
+            animation: pulse-slow 6s infinite ease-in-out;
+        }
+        /* Pomalá, "dýchající" animace pro tuto sekci */
+        @keyframes pulse-slow {
+            0%, 100% { transform: scale(1); filter: drop-shadow(0 0 30px var(--theme-glow)); opacity: 0.9; }
+            50% { transform: scale(1.05); filter: drop-shadow(0 0 50px var(--theme-glow)); opacity: 1; }
+        }
+
+        /* --- INFORMAČNÍ PANEL (Ten spodní box) --- */
+        .info-panel {
+            background: var(--theme-panel); /* Tmavé pozadí panelu */
+            border-top-left-radius: 30px;
+            border-top-right-radius: 30px;
+            padding: 35px;
+            /* Horní okraj svítí barvou tématu */
+            border-top: 2px solid rgba(168, 85, 247, 0.3);
+            z-index: 5;
+            box-shadow: 0 -10px 40px rgba(0,0,0,0.6);
+            max-height: 65%; /* O něco vyšší panel kvůli delšímu textu */
+            overflow-y: auto;
+        }
+
+        .highlight-title {
+            color: var(--theme-bright);
+            font-weight: 900; font-size: 1rem;
+            margin-bottom: 20px;
+        }
+
+        .description {
+            font-size: 0.95rem; line-height: 1.7; color: #e0e0e0;
+        }
+
+        /* Styly pro zvýraznění v textu */
+        .txt-theme { color: var(--theme-bright); font-weight: 800; text-shadow: 0 0 10px var(--theme-glow); }
+        
+        /* Styly pro boxované zvýraznění (mutace, DNA) */
+        .txt-box {
+            background: rgba(168, 85, 247, 0.15);
+            padding: 2px 6px; border-radius: 6px;
+            color: var(--theme-bright); font-weight: 800;
+            border: 1px solid rgba(168, 85, 247, 0.4);
+        }
+        strong { color: #fff; font-weight: 800; }
+
+    </style>
+</head>
+<body>
+
+    <div class="app-frame">
+        
+        <header>
+            <a class="back-button">← ZPĚT NA PŘEHLED</a>
+            <h1>VLIV NA REPRODUKCI, JAKO VARLATA (SPERMIE), VAJEČNÍKY, PLACENTU A EMBRYA</h1>
+        </header>
+
+        <div class="hero-container">
+            <svg class="hero-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="9"></circle>
+                <path d="M12 8a3.5 3.5 0 0 1 3 3c0 2.5-2 4-3 5-1.5-1-3-2.5-3-5a3.5 3.5 0 0 1 3-3z"></path>
+                <circle cx="12" cy="11" r="1" fill="currentColor"></circle>
+            </svg>
+        </div>
+
+        <div class="info-panel">
+            <div class="highlight-title">Agresivita: reprodukční a genetické poškození.</div>
+            <p class="description">
+                Nanoplasty mohou pronikat <strong>placentární bariérou</strong> i do mateřského mléka.
+                <br><br>
+                V buňkách vyvolávají <span class="txt-theme">poškození DNA a mutace</span>, což je spojováno s poklesem plodnosti a nárůstem vývojových vad.
+                <br><br>
+                Částice se mohou přenášet při buněčném dělení mezi generacemi, což při dlouhodobém působení představuje riziko <span class="txt-box">postupného zániku populace</span>.
+            </p>
+        </div>
+
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NANOSOLVE - Detail Mozek</title>
+    <style>
+        :root {
+            --bg-color: #050505;
+            --text-main: #ffffff;
+            --text-muted: #b0b0b0;
+            
+            /* --- SPECIFICKÁ PALETA PRO TUTO SEKCI (CYAN) --- */
+            --theme-color: #06b6d4;   /* Hlavní neonová barva */
+            --theme-glow: rgba(6, 182, 212, 0.5); /* Záře */
+            --theme-glow-subtle: rgba(6, 182, 212, 0.2);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+
+        body {
+            background-color: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .app-frame {
+            width: 100%;
+            max-width: 400px;
+            height: 850px;
+            background-color: #1a1a1a;
+            border-radius: 30px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 0 0 10px #0a0a0a;
+            display: flex;
+            flex-direction: column;
+
+            /* --- NOVÉ POZADÍ PRO DETAIL (Mozek + Cévy) --- */
+            /* Používám dobový anatomický nákres mozku a cév */
+            background-image: url('https://i.pinimg.com/736x/df/81/65/df81653312115eb64e36eb38dc031d74.jpg');
+            background-size: cover;
+            background-position: center;
+            /* Ztmavení a tónování do modra, aby ladilo s tématem */
+            background-blend-mode: multiply; 
+            background-color: rgba(6, 182, 212, 0.1); /* Jemný modrý tón přes obrázek */
+        }
+
+        /* --- HLAVIČKA DETAILU --- */
+        .detail-header {
+            padding: 30px 25px 20px 25px;
+            z-index: 5;
+            position: relative;
+        }
+
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            color: var(--theme-color);
+            font-weight: 700;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+        .back-button:hover {
+            text-shadow: 0 0 10px var(--theme-glow);
+            transform: translateX(-3px);
+        }
+
+        .title-block h1 {
+            font-size: 1.8rem; 
+            font-weight: 900; 
+            line-height: 1.1; 
+            color: #fff;
+            text-transform: uppercase; 
+            letter-spacing: 0.5px;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.8);
+        }
+
+        /* --- HERO IKONA (Velká verze) --- */
+        .hero-icon-container {
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+            z-index: 5;
+        }
+        
+        .hero-icon {
+            width: 120px;
+            height: 120px;
+            color: var(--theme-color);
+            /* Masivní neonová záře */
+            filter: drop-shadow(0 0 20px var(--theme-glow));
+            animation: subtlePulse 4s infinite ease-in-out;
+        }
+
+        @keyframes subtlePulse {
+            0%, 100% { filter: drop-shadow(0 0 20px var(--theme-glow)); transform: scale(1); }
+            50% { filter: drop-shadow(0 0 35px var(--theme-glow)); transform: scale(1.02); }
+        }
+
+
+        /* --- INFORMAČNÍ PANEL (Skleněný efekt) --- */
+        .content-scroll {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0 25px 40px 25px;
+            z-index: 5;
+        }
+
+        .info-panel {
+            /* Výrazně skleněné pozadí pro čitelnost textu */
+            background: rgba(20, 25, 35, 0.75);
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--theme-glow-subtle);
+            border-radius: 24px;
+            padding: 25px;
+            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5);
+            border-top: 2px solid var(--theme-glow-subtle);
+        }
+
+        .description-text {
+            font-size: 0.95rem;
+            line-height: 1.7;
+            color: #e2e8f0;
+        }
+
+        /* Zvýraznění klíčových slov v textu */
+        .highlight {
+            color: var(--theme-color);
+            font-weight: 700;
+            text-shadow: 0 0 10px var(--theme-glow-subtle);
+        }
+        .alert {
+            color: #fff;
+            font-weight: 700;
+            background: rgba(6, 182, 212, 0.2);
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="app-frame">
+        
+        <header class="detail-header">
+            <a class="back-button">
+                ← ZPĚT NA PŘEHLED
+            </a>
+            <div class="title-block">
+                <h1>VLIV NA KREVNÍ ŘEČIŠTĚ A MOZEK</h1>
+            </div>
+        </header>
+
+        <div class="hero-icon-container">
+            <svg class="hero-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 3a4 4 0 0 1 4 4c0 1.5-.5 2.5-2 3.5v2"></path> <path d="M8 7a4 4 0 0 1 4-4"></path>
+                <path d="M12 12.5v3"></path> <path d="M12 15.5l-3 2a4 4 0 0 0-1 5h3"></path> <path d="M12 15.5l3 2a4 4 0 0 1 1 5h-3"></path> <path d="M9.5 7.5a2 2 0 0 1 5 0"></path>
+                <path d="M20 10c0 4-4 8-8 8s-8-4-8-8" opacity="0.5" stroke-dasharray="2 2"></path>
+            </svg>
+        </div>
+
+        <div class="content-scroll">
+            <div class="info-panel">
+                <p class="description-text">
+                    <span class="highlight">Agresivita: do 2 hodin.</span>
+                    <br><br>
+                    Nanoplasty vdechnutím se rychle dostávají do krve, nesou <span class="highlight">elektrostatický náboj</span>.
+                    <br><br>
+                    V krvi se obalí biomolekulami (cholesterol, proteiny), čímž vytvoří tzv. <span class="alert">bio-koronu</span>, která slouží jako maskování (efekt Trojského koně).
+                    <br><br>
+                    Podle výzkumů překonávají <strong>hematoencefalickou bariéru</strong>, pronikají do mozku a narušují funkci neuronů a nervové signály.
+                </p>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>
