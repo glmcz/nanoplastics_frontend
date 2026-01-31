@@ -32,18 +32,25 @@ class PDFViewerScreen extends StatefulWidget {
 }
 
 class _PDFViewerScreenState extends State<PDFViewerScreen> {
-  late PdfController _pdfController;
+  late PdfControllerPinch _pdfController;
   late PdfDocument _pdfDocument;
-  late TransformationController _transformationController;
   bool _isLoading = true;
   String? _error;
   int _currentPage = 1;
-  double _scale = 1.0;
-
+  Orientation? _lastOrientation;
+  double _lastScale = 1.0;
+  bool _isRotating = false;
+  
   @override
   void initState() {
     super.initState();
-    _transformationController = TransformationController();
+    // Allow all orientations for PDF reading
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.landscapeRight,
+    ]);
     LoggerService().logScreenNavigation('PDFViewerScreen', params: {
       'title': widget.title,
       'startPage': widget.startPage,
@@ -61,7 +68,7 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
       final document = await PdfDocument.openAsset(pdfPath);
 
       // Create controller and initialize at start page
-      _pdfController = PdfController(
+      _pdfController = PdfControllerPinch(
         document: Future.value(document),
         initialPage: widget.startPage,
       );
@@ -99,13 +106,90 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
 
   @override
   void dispose() {
-    _transformationController.dispose();
+    // Restore portrait-only orientation for the rest of the app
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
     // Close document before disposing controller, only if successfully loaded
     if (!_isLoading && _error == null) {
       _pdfDocument.close();
       _pdfController.dispose();
     }
     super.dispose();
+  }
+
+  void _handleOrientationChange() {
+    if (_isRotating) return;
+    
+    final int pageToPreserve = _currentPage;
+    _isRotating = true; // Lock the listener
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      // 1. HARD RESET: Clear the matrix immediately to identity.
+      // This stops the 'blank page' stretching instantly.
+      _pdfController.value = Matrix4.identity();
+
+      // 2. FIRST JUMP: Snap to page at 1.0 scale to establish new layout coordinates
+      _pdfController.jumpToPage(pageToPreserve);
+
+      // 3. SCALE IN: After a short delay to let the screen resize...
+      Future.delayed(const Duration(milliseconds: 150), () {
+        if (!mounted) return;
+        
+        final currentMatrix = _pdfController.value.clone();
+        currentMatrix.storage[0] = _lastScale;
+        currentMatrix.storage[5] = _lastScale;
+        
+        // Inject the zoom. We don't touch storage[12]/[13] here 
+        // so we keep the page alignment from the first jump.
+        _pdfController.value = currentMatrix;
+
+        // 4. FINAL CALIBRATION: The "Double-Jump" 
+        _pdfController.jumpToPage(pageToPreserve);
+
+        Future.delayed(const Duration(milliseconds: 150), () {
+          if (!mounted) return;        
+          // Final micro-adjustment
+          _pdfController.jumpToPage(pageToPreserve-1);
+          
+          setState(() {
+            _currentPage = pageToPreserve;
+            _isRotating = false; // Release lock
+          });
+        });
+      });
+    });
+  }
+
+  void _applyZoom(double delta) {
+    final matrix = _pdfController.value.clone();
+    final double oldScale = matrix.storage[0];
+    final double newScale = (oldScale + delta).clamp(1.0, 5.0);
+    
+    // If scale didn't change (e.g. hitting min/max), do nothing
+    if (newScale == oldScale) return;
+
+    final double ratio = newScale / oldScale;
+
+    // Get the center of the viewer to use as the "Eye of the Spiral"
+    final RenderBox? box = context.findRenderObject() as RenderBox?;
+    if (box == null) return;
+    
+    final double centerX = box.size.width / 2;
+    final double centerY = box.size.height / 2;
+
+    // Transform translations relative to the center focal point
+    matrix.storage[12] = centerX - (centerX - matrix.storage[12]) * ratio;
+    matrix.storage[13] = centerY - (centerY - matrix.storage[13]) * ratio;
+
+    // Apply new scale
+    matrix.storage[0] = newScale;
+    matrix.storage[5] = newScale;
+
+    _pdfController.value = matrix;
+    _lastScale = newScale; // Sync for rotation handling
   }
 
   Future<void> _downloadAndSharePDF() async {
@@ -246,15 +330,25 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
           ),
         ),
         child: SafeArea(
-          child: Column(
-            children: [
-              _buildHeader(),
-              _buildInfoCard(),
-              Expanded(
-                child: _buildPDFViewer(),
-              ),
-              _buildFooter(),
-            ],
+          child: OrientationBuilder(
+            builder: (context, orientation) {
+              if (_lastOrientation != null && _lastOrientation != orientation) {
+                _handleOrientationChange();
+              }
+              _lastOrientation = orientation;
+
+              final isPortrait = orientation == Orientation.portrait;
+              return Column(
+                children: [
+                  _buildHeader(),
+                  if (isPortrait) _buildInfoCard(),
+                  Expanded(
+                    child: _buildPDFViewer(isPortrait: isPortrait),
+                  ),
+                  _buildFooter(),
+                ],
+              );
+            },
           ),
         ),
       ),
@@ -263,7 +357,7 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
 
   Widget _buildHeader() {
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
         color: const Color(0xFF141928).withValues(alpha: 0.9),
         border: Border(
@@ -310,8 +404,8 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
 
   Widget _buildInfoCard() {
     return Container(
-      margin: const EdgeInsets.all(16),
-      padding: const EdgeInsets.all(16),
+      margin: const EdgeInsets.all(5),
+      padding: const EdgeInsets.all(5),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topLeft,
@@ -322,23 +416,13 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
           ],
         ),
         border: Border.all(color: AppColors.pastelAqua.withValues(alpha: 0.3)),
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(8),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            widget.title,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 14,
-              fontWeight: FontWeight.w800,
-              height: 1.3,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            '${widget.description} • str. ${widget.startPage}-${widget.endPage}',
+            '${widget.title} • str. ${widget.startPage}-${widget.endPage}',
             style: TextStyle(
               color: AppColors.pastelLavender,
               fontSize: 11,
@@ -350,7 +434,15 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
     );
   }
 
-  Widget _buildPDFViewer() {
+  Widget _buildZoomButton({required IconData icon, required VoidCallback onPressed}) {
+    return IconButton(
+      icon: Icon(icon, color: Colors.black),
+      onPressed: onPressed,
+      constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
+    );
+  }
+
+  Widget _buildPDFViewer({bool isPortrait = true}) {
     if (_isLoading) {
       return Center(
         child: Column(
@@ -403,44 +495,76 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
       );
     }
 
+    final radius = isPortrait ? 0.0 : 16.0;
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16),
+      margin: isPortrait
+          ? EdgeInsets.zero
+          : const EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.pastelAqua.withValues(alpha: 0.2),
-            blurRadius: 20,
-            offset: const Offset(0, 10),
-          ),
-        ],
+        borderRadius: BorderRadius.circular(radius),
+        boxShadow: isPortrait
+            ? null
+            : [
+                BoxShadow(
+                  color: AppColors.pastelAqua.withValues(alpha: 0.2),
+                  blurRadius: 20,
+                  offset: const Offset(0, 10),
+                ),
+              ],
       ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(16),
-        child: InteractiveViewer(
-          transformationController: _transformationController,
-          minScale: 1.0,
-          maxScale: 3.0,
-          onInteractionUpdate: (details) {
-            setState(() {
-              _scale = details.scale.clamp(1.0, 3.0);
-            });
-          },
-          child: PdfView(
-            controller: _pdfController,
-            onPageChanged: (page) {
-              setState(() {
-                _currentPage = page;
-              });
-              LoggerService().logPDFInteraction(
-                'page_changed',
-                page: page,
-              );
-            },
-            scrollDirection: Axis.vertical,
+      child: Stack(
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(radius),
+            child: PdfViewPinch(
+              controller: _pdfController,
+              onPageChanged: (page) {
+                if (_isRotating) return; // Ignore updates while we are repositioning
+
+                setState(() {
+                  _currentPage = page;
+                });
+                LoggerService().logPDFInteraction(
+                  'page_changed',
+                  page: page,
+                );
+              },
+              scrollDirection: Axis.vertical,
+              padding: 0,
+              backgroundDecoration:
+                  const BoxDecoration(color: Color(0xFFFFFFFF)),
+            ),
           ),
-        ),
+
+          Positioned(
+            right: 20,
+            bottom: 20,
+            child: Material(
+              elevation: 4,
+              color: Colors.white.withValues(alpha: 0.9),
+              borderRadius: BorderRadius.circular(8),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  _buildZoomButton(
+                    icon: Icons.add, 
+                    onPressed: () => _applyZoom(0.25),
+                  ),
+                  Container(
+                    width: 24,
+                    height: 1,
+                    color: Colors.black.withValues(alpha: 0.1), // Subtle divider
+                  ),
+                  _buildZoomButton(
+                    icon: Icons.remove, 
+                    onPressed: () => _applyZoom(-0.25),
+                  ),
+                ],
+              ),
+            ),
+          )
+        ],
       ),
     );
   }
@@ -484,7 +608,7 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
               ),
             ),
           ),
-          Column(
+          Row(
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
@@ -495,79 +619,14 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              const SizedBox(height: 4),
-              Row(
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      final currentScale =
-                          _transformationController.value.getMaxScaleOnAxis();
-                      final newScale = (currentScale - 0.2).clamp(1.0, 3.0);
-                      _transformationController.value = Matrix4.identity()
-                        ..scale(newScale);
-                      setState(() {
-                        _scale = newScale;
-                      });
-                      LoggerService().logPDFInteraction(
-                        'zoom_out',
-                        page: _currentPage,
-                        zoomLevel: newScale,
-                      );
-                    },
-                    child: Icon(
-                      Icons.zoom_out,
-                      size: 18,
-                      color: AppColors.pastelLavender.withValues(alpha: 0.7),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
-                    '${(_scale * 100).toStringAsFixed(0)}%',
-                    style: TextStyle(
-                      color: AppColors.pastelLavender,
-                      fontSize: 10,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  GestureDetector(
-                    onTap: () {
-                      final currentScale =
-                          _transformationController.value.getMaxScaleOnAxis();
-                      final newScale = (currentScale + 0.2).clamp(1.0, 3.0);
-                      _transformationController.value = Matrix4.identity()
-                        ..scale(newScale);
-                      setState(() {
-                        _scale = newScale;
-                      });
-                      LoggerService().logPDFInteraction(
-                        'zoom_in',
-                        page: _currentPage,
-                        zoomLevel: newScale,
-                      );
-                    },
-                    child: Icon(
-                      Icons.zoom_in,
-                      size: 18,
-                      color: AppColors.pastelLavender.withValues(alpha: 0.7),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Container(
-                    height: 20,
-                    width: 1,
-                    color: Colors.white.withValues(alpha: 0.1),
-                  ),
-                  const SizedBox(width: 12),
-                  GestureDetector(
-                    onTap: _downloadAndSharePDF,
-                    child: Icon(
-                      Icons.download,
-                      size: 18,
-                      color: AppColors.pastelMint.withValues(alpha: 0.7),
-                    ),
-                  ),
-                ],
+              const SizedBox(width: 16),
+              GestureDetector(
+                onTap: _downloadAndSharePDF,
+                child: Icon(
+                  Icons.download,
+                  size: 20,
+                  color: AppColors.pastelMint.withValues(alpha: 0.7),
+                ),
               ),
             ],
           ),

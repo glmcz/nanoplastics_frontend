@@ -487,8 +487,8 @@ class _CategoryCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              width: 42,
-              height: 42,
+              width: 48,
+              height: 48,
               margin: const EdgeInsets.only(bottom: 8),
               decoration: BoxDecoration(
                 color: category.color.withValues(alpha: 0.2),
@@ -496,11 +496,10 @@ class _CategoryCard extends StatelessWidget {
               ),
               child: Icon(
                 category.icon,
-                size: 23,
+                size: 28,
                 color: category.color,
               ),
             ),
-            const SizedBox(height: 4),
             Text(
               category.title,
               style: const TextStyle(
@@ -509,17 +508,21 @@ class _CategoryCard extends StatelessWidget {
                 color: Colors.white,
                 height: 1.25,
               ),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              category.description,
-              style: TextStyle(
-                fontSize: 10,
-                color: AppColors.textMuted,
-                height: 1.3,
-              ),
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
+            ),
+            const SizedBox(height: 4),
+            Expanded(
+              child: Text(
+                category.description,
+                style: TextStyle(
+                  fontSize: 16,
+                  color: AppColors.textMuted,
+                  height: 1.3,
+                ),
+                overflow: TextOverflow.ellipsis,
+                maxLines: 3,
+              ),
             ),
           ],
         ),

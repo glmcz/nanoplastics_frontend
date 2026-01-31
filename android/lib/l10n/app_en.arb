@@ -40,11 +40,11 @@
   "onboardingHighlight1": "",
   "onboardingDescription1": "",
 
-  "onboardingTitle2": "Choose one of the battlefields, join in, and find a solution.",
+  "onboardingTitle2": "Choose one of the battlefields, join in and find a solution.",
   "onboardingHighlight2": "",
   "onboardingDescription2": "",
 
-  "onboardingTitle3": "Be one of us, and inspire others.",
+  "onboardingTitle3": "Be one of us and inspire others.",
   "onboardingHighlight3": "",
   "onboardingDescription3": "",
 
@@ -60,10 +60,10 @@
   "categoryDetailResults": "Results",
 
   "sourcesTitle": "Sources",
-  "sourcesSubtitle": "Library and educational materials",
+  "sourcesSubtitle": "Library & educational materials",
 
   "resultsTitle": "Results",
-  "resultsSubtitle": "Evaluation and solutions",
+  "resultsSubtitle": "Evaluation & solutions",
 
   "sourcesMainReportLabel": "⭐ MAIN REPORT (2025)",
   "sourcesMainReportTitle": "NANOPLASTICS IN THE BIOSPHERE, FROM MOLECULAR IMPACT TO PLANETARY CRISIS",
@@ -71,10 +71,10 @@
   "sourcesBack": "← BACK",
   "sourcesTabWeb": "A. WEB LINKS",
   "sourcesTabVideo": "B. VIDEO LINKS",
-  "sourcesSectionHumanHealth": "Section I: Nanoplastics and Human Health",
-  "sourcesSectionEarthPollution": "Section II: Earth and Plastic Pollution",
+  "sourcesSectionHumanHealth": "Section I: Nanoplastics & Human Health",
+  "sourcesSectionEarthPollution": "Section II: Earth & Plastic Pollution",
   "sourcesSectionWaterAbilities": "Section III: Specific Water Abilities",
-  "sourcesSectionVideoContent": "B. Documentary and Expert Content",
+  "sourcesSectionVideoContent": "B. Documentary & Expert Content",
 
   "videoLink1Title": "Nanoplastics. Threat to Life | ALLATRA Documentary",
   "videoLink1Source": "ALLATRA Documentary",
@@ -96,7 +96,7 @@
   "videoLink5Source": "Documentary",
   "videoLink5Url": "https://youtu.be/qsarcxl1jls",
 
-  "videoLink6Title": "ALLATRA at UN Summit COP16 | Climate Crisis and Ocean Pollution Documentary",
+  "videoLink6Title": "ALLATRA at UN Summit COP16 | Climate Crisis & Ocean Pollution Documentary",
   "videoLink6Source": "Climate Crisis Documentary",
   "videoLink6Url": "https://youtu.be/0DNempKykno?list=PL4b5lQBqqnUGsIhduDunOHm0gcSnrr8AT"
 }
