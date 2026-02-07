@@ -1,9 +1,6 @@
 import 'dart:io';
-import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import '../widgets/nanosolve_logo.dart';
 
 Future<void> generateLogoPNG({
   required String outputPath,

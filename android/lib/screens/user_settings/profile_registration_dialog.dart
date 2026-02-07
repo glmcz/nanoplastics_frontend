@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../config/app_colors.dart';
+import '../../config/app_constants.dart';
 import '../../services/settings_manager.dart';
 
 class ProfileRegistrationDialog extends StatefulWidget {
@@ -121,11 +122,11 @@ class _ProfileRegistrationDialogState extends State<ProfileRegistrationDialog> {
   Widget build(BuildContext context) {
     return Dialog(
       backgroundColor: Colors.transparent,
-      insetPadding: const EdgeInsets.all(20),
+      insetPadding: const EdgeInsets.all(AppConstants.space20),
       child: Container(
         decoration: BoxDecoration(
           color: const Color(0xFF141928),
-          borderRadius: BorderRadius.circular(24),
+          borderRadius: BorderRadius.circular(AppConstants.space24),
           border: Border.all(
             color: AppColors.pastelMint.withValues(alpha: 0.3),
           ),
@@ -137,7 +138,7 @@ class _ProfileRegistrationDialogState extends State<ProfileRegistrationDialog> {
             ),
           ],
         ),
-        padding: const EdgeInsets.all(24),
+        padding: const EdgeInsets.all(AppConstants.space24),
         child: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -150,17 +151,20 @@ class _ProfileRegistrationDialogState extends State<ProfileRegistrationDialog> {
                       color: Colors.white,
                       fontWeight: FontWeight.w900,
                     ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: AppConstants.space8),
               Text(
                 'Share your profile to get recognized on the leaderboard',
-                style: TextStyle(
-                  fontSize: 13,
-                  color: AppColors.textMuted,
-                  height: 1.4,
-                ),
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: AppColors.textMuted,
+                      height: 1.4,
+                    ),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: AppConstants.space24),
 
               // Name Field
               _buildTextField(
@@ -169,7 +173,7 @@ class _ProfileRegistrationDialogState extends State<ProfileRegistrationDialog> {
                 hint: 'Enter your name',
                 icon: Icons.person_outline,
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: AppConstants.space16),
 
               // Email Field
               _buildTextField(
@@ -178,7 +182,7 @@ class _ProfileRegistrationDialogState extends State<ProfileRegistrationDialog> {
                 hint: 'Enter your email',
                 icon: Icons.email_outlined,
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: AppConstants.space16),
 
               // Specialty Field
               _buildTextField(
@@ -187,14 +191,14 @@ class _ProfileRegistrationDialogState extends State<ProfileRegistrationDialog> {
                 hint: 'e.g., Environmental Science',
                 icon: Icons.science_outlined,
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: AppConstants.space24),
 
               // Info Box
               Container(
-                padding: const EdgeInsets.all(12),
+                padding: const EdgeInsets.all(AppConstants.space12),
                 decoration: BoxDecoration(
                   color: AppColors.pastelMint.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(AppConstants.radiusMedium),
                   border: Border.all(
                     color: AppColors.pastelMint.withValues(alpha: 0.2),
                   ),
@@ -202,26 +206,27 @@ class _ProfileRegistrationDialogState extends State<ProfileRegistrationDialog> {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Icon(
+                    const Icon(
                       Icons.lock_outline,
-                      size: 16,
+                      size: AppConstants.iconSmall,
                       color: AppColors.pastelMint,
                     ),
-                    const SizedBox(width: 10),
+                    const SizedBox(width: AppConstants.space8),
                     Expanded(
                       child: Text(
                         'Your data is secure and will only be used for the leaderboard',
-                        style: TextStyle(
-                          fontSize: 11,
-                          color: AppColors.textMuted,
-                          height: 1.3,
-                        ),
+                        style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                              color: AppColors.textMuted,
+                              height: 1.3,
+                            ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
                   ],
                 ),
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: AppConstants.space24),
 
               // Buttons
               Row(
@@ -231,9 +236,9 @@ class _ProfileRegistrationDialogState extends State<ProfileRegistrationDialog> {
                       onPressed:
                           _isLoading ? null : () => Navigator.of(context).pop(),
                       style: TextButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        padding: const EdgeInsets.symmetric(vertical: AppConstants.space12),
                       ),
-                      child: Text(
+                      child: const Text(
                         'Skip',
                         style: TextStyle(
                           color: AppColors.textMuted,
@@ -243,16 +248,16 @@ class _ProfileRegistrationDialogState extends State<ProfileRegistrationDialog> {
                       ),
                     ),
                   ),
-                  const SizedBox(width: 12),
+                  const SizedBox(width: AppConstants.space12),
                   Expanded(
                     child: ElevatedButton(
                       onPressed: _isLoading ? null : _saveProfile,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.pastelMint,
                         padding: const EdgeInsets.symmetric(
-                            vertical: 12, horizontal: 8),
+                            vertical: AppConstants.space12, horizontal: AppConstants.space8),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: BorderRadius.circular(AppConstants.radiusMedium),
                         ),
                       ),
                       child: _isLoading
@@ -266,9 +271,9 @@ class _ProfileRegistrationDialogState extends State<ProfileRegistrationDialog> {
                                 ),
                               ),
                             )
-                          : Text(
+                          : const Text(
                               'Register',
-                              style: const TextStyle(
+                              style: TextStyle(
                                 color: Color(0xFF0A0A12),
                                 fontWeight: FontWeight.w700,
                               ),
@@ -296,35 +301,36 @@ class _ProfileRegistrationDialogState extends State<ProfileRegistrationDialog> {
       children: [
         Text(
           label,
-          style: const TextStyle(
-            fontSize: 12,
-            fontWeight: FontWeight.w600,
-            color: Colors.white,
-          ),
+          style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                fontWeight: FontWeight.w600,
+                color: Colors.white,
+              ),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: AppConstants.space8),
         TextField(
           controller: controller,
           enabled: !_isLoading,
           style: const TextStyle(color: Colors.white),
           decoration: InputDecoration(
             hintText: hint,
-            hintStyle: TextStyle(
+            hintStyle: const TextStyle(
               color: AppColors.textMuted,
             ),
             prefixIcon: Icon(
               icon,
-              size: 18,
+              size: AppConstants.iconSmall,
               color: AppColors.pastelMint.withValues(alpha: 0.6),
             ),
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(AppConstants.radiusMedium),
               borderSide: BorderSide(
                 color: Colors.white.withValues(alpha: 0.1),
               ),
             ),
             focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(AppConstants.radiusMedium),
               borderSide: BorderSide(
                 color: AppColors.pastelMint.withValues(alpha: 0.5),
               ),
@@ -332,8 +338,8 @@ class _ProfileRegistrationDialogState extends State<ProfileRegistrationDialog> {
             filled: true,
             fillColor: const Color(0xFF0F1419).withValues(alpha: 0.6),
             contentPadding: const EdgeInsets.symmetric(
-              horizontal: 16,
-              vertical: 12,
+              horizontal: AppConstants.space16,
+              vertical: AppConstants.space12,
             ),
           ),
         ),

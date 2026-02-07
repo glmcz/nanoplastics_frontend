@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'dart:ui';
+import '../../l10n/app_localizations.dart';
 import '../../config/app_colors.dart';
+import '../../config/app_constants.dart';
+import '../../utils/responsive_config.dart';
 import '../../services/settings_manager.dart';
 import '../../widgets/nanosolve_logo.dart';
 
@@ -15,7 +18,6 @@ class _PrivacySecurityScreenState extends State<PrivacySecurityScreen> {
   final _settingsManager = SettingsManager();
 
   bool _analyticsEnabled = true;
-  bool _dataCollectionEnabled = false;
 
   @override
   void initState() {
@@ -25,17 +27,11 @@ class _PrivacySecurityScreenState extends State<PrivacySecurityScreen> {
 
   void _loadSettings() {
     _analyticsEnabled = _settingsManager.analyticsEnabled;
-    _dataCollectionEnabled = _settingsManager.dataCollectionEnabled;
   }
 
   Future<void> _updateAnalytics(bool value) async {
     setState(() => _analyticsEnabled = value);
     await _settingsManager.setAnalyticsEnabled(value);
-  }
-
-  Future<void> _updateDataCollection(bool value) async {
-    setState(() => _dataCollectionEnabled = value);
-    await _settingsManager.setDataCollectionEnabled(value);
   }
 
   @override
@@ -67,8 +63,11 @@ class _PrivacySecurityScreenState extends State<PrivacySecurityScreen> {
   }
 
   Widget _buildHeader() {
+    final responsive = ResponsiveConfig.fromMediaQuery(context);
+    final header = responsive.getSecondaryHeaderConfig();
+
     return Container(
-      padding: const EdgeInsets.all(25),
+      padding: EdgeInsets.all(header.padding),
       decoration: BoxDecoration(
         color: const Color(0xFF141928).withValues(alpha: 0.9),
         border: Border(
@@ -85,20 +84,19 @@ class _PrivacySecurityScreenState extends State<PrivacySecurityScreen> {
                 GestureDetector(
                   onTap: () => Navigator.of(context).pop(),
                   child: Text(
-                    'Back',
-                    style: TextStyle(
+                    AppLocalizations.of(context)!.settingsBack,
+                    style: header.backStyle?.copyWith(
                       color: AppColors.pastelMint,
-                      fontWeight: FontWeight.w700,
-                      fontSize: 12,
                       letterSpacing: 1,
                     ),
                   ),
                 ),
-                Icon(Icons.lock_outline, size: 24, color: AppColors.pastelMint),
+                Icon(Icons.lock_outline,
+                    size: header.iconSize, color: AppColors.pastelMint),
               ],
             ),
-            const SizedBox(height: 15),
-            const NanosolveLogo(height: 50),
+            SizedBox(height: header.spacing),
+            NanosolveLogo(height: header.logoHeight),
           ],
         ),
       ),
@@ -106,66 +104,77 @@ class _PrivacySecurityScreenState extends State<PrivacySecurityScreen> {
   }
 
   Widget _buildContent() {
+    final responsive = ResponsiveConfig.fromMediaQuery(context);
+    final config = responsive.getSettingsScreenConfig();
+
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(25),
+      padding: EdgeInsets.all(config.contentPadding),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildTitleSection(),
-          const SizedBox(height: 30),
-          _buildSectionTitle('Data & Analytics', AppColors.pastelMint),
-          const SizedBox(height: 15),
+          _buildTitleSection(config),
+          SizedBox(height: config.cardSpacing * 2),
+          _buildSectionTitle(AppLocalizations.of(context)!.privacyDataAnalytics,
+              AppColors.pastelMint, config),
+          SizedBox(height: config.cardSpacing),
           _buildToggleItem(
-            title: 'Analytics',
-            subtitle: 'Help us improve by sharing anonymous usage data',
+            title: AppLocalizations.of(context)!.privacyAnalytics,
+            subtitle: AppLocalizations.of(context)!.privacyAnalyticsDesc,
             icon: Icons.analytics_outlined,
             value: _analyticsEnabled,
             color: AppColors.pastelMint,
+            config: config,
             onChanged: _updateAnalytics,
           ),
-          const SizedBox(height: 30),
-          _buildSectionTitle('Security', AppColors.pastelLavender),
-          const SizedBox(height: 15),
+          SizedBox(height: config.cardSpacing * 2),
+          _buildSectionTitle(AppLocalizations.of(context)!.privacySecurity,
+              AppColors.pastelLavender, config),
+          SizedBox(height: config.cardSpacing),
           _buildInfoItem(
-            title: 'Data Encryption',
-            subtitle: 'All your data is encrypted in transit and at rest',
+            title: AppLocalizations.of(context)!.privacyDataEncryption,
+            subtitle: AppLocalizations.of(context)!.privacyDataEncryptionDesc,
             icon: Icons.enhanced_encryption_outlined,
             color: AppColors.pastelLavender,
+            config: config,
           ),
-          const SizedBox(height: 15),
+          SizedBox(height: config.cardSpacing),
           _buildInfoItem(
-            title: 'Local Storage',
-            subtitle: 'Your preferences are stored securely on your device',
+            title: AppLocalizations.of(context)!.privacyLocalStorage,
+            subtitle: AppLocalizations.of(context)!.privacyLocalStorageDesc,
             icon: Icons.phone_android_outlined,
             color: AppColors.pastelLavender,
+            config: config,
           ),
-          const SizedBox(height: 30),
-          _buildSectionTitle('Legal', AppColors.pastelAqua),
-          const SizedBox(height: 15),
+          SizedBox(height: config.cardSpacing * 2),
+          _buildSectionTitle(AppLocalizations.of(context)!.privacyLegal,
+              AppColors.pastelAqua, config),
+          SizedBox(height: config.cardSpacing),
           _buildLinkItem(
-            title: 'Privacy Policy',
+            title: AppLocalizations.of(context)!.privacyPolicy,
             icon: Icons.policy_outlined,
             color: AppColors.pastelAqua,
+            config: config,
             onTap: () {
               // Open privacy policy
             },
           ),
-          const SizedBox(height: 15),
+          SizedBox(height: config.cardSpacing),
           _buildLinkItem(
-            title: 'Terms of Service',
+            title: AppLocalizations.of(context)!.privacyTermsOfService,
             icon: Icons.description_outlined,
             color: AppColors.pastelAqua,
+            config: config,
             onTap: () {
               // Open terms of service
             },
           ),
-          const SizedBox(height: 40),
+          SizedBox(height: config.cardSpacing * 2),
         ],
       ),
     );
   }
 
-  Widget _buildTitleSection() {
+  Widget _buildTitleSection(SettingsScreenConfig config) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -173,30 +182,29 @@ class _PrivacySecurityScreenState extends State<PrivacySecurityScreen> {
           shaderCallback: (bounds) => const LinearGradient(
             colors: [AppColors.pastelMint, AppColors.pastelLavender],
           ).createShader(bounds),
-          child: const Text(
-            'Privacy & Security',
-            style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.w900,
+          child: Text(
+            AppLocalizations.of(context)!.privacyTitle,
+            style: config.titleStyle?.copyWith(
               color: Colors.white,
               letterSpacing: 0.5,
             ),
           ),
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: AppConstants.space8),
         Text(
-          'Manage your privacy preferences',
-          style: TextStyle(
-            fontSize: 13,
+          AppLocalizations.of(context)!.privacySubtitle,
+          style: config.subtitleStyle?.copyWith(
             color: AppColors.textMuted,
-            fontWeight: FontWeight.w600,
           ),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
         ),
       ],
     );
   }
 
-  Widget _buildSectionTitle(String title, Color color) {
+  Widget _buildSectionTitle(
+      String title, Color color, SettingsScreenConfig config) {
     return Row(
       children: [
         Container(
@@ -207,15 +215,16 @@ class _PrivacySecurityScreenState extends State<PrivacySecurityScreen> {
             borderRadius: BorderRadius.circular(2),
           ),
         ),
-        const SizedBox(width: 10),
+        const SizedBox(width: AppConstants.space8),
         Text(
           title,
-          style: TextStyle(
-            fontSize: 16,
+          style: config.cardTitleStyle?.copyWith(
             fontWeight: FontWeight.w700,
             color: color,
             letterSpacing: 0.5,
           ),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
         ),
       ],
     );
@@ -227,43 +236,49 @@ class _PrivacySecurityScreenState extends State<PrivacySecurityScreen> {
     required IconData icon,
     required bool value,
     required Color color,
+    required SettingsScreenConfig config,
     required ValueChanged<bool> onChanged,
   }) {
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: EdgeInsets.all(config.cardPadding),
       decoration: BoxDecoration(
         color: const Color(0xFF141928).withValues(alpha: 0.8),
-        borderRadius: BorderRadius.circular(18),
+        borderRadius: BorderRadius.circular(AppConstants.radiusLarge),
         border: Border.all(color: color.withValues(alpha: 0.2)),
       ),
       child: Row(
         children: [
           Container(
-            width: 45,
-            height: 45,
+            width: config.iconContainerSize,
+            height: config.iconContainerSize,
             decoration: BoxDecoration(
               color: color.withValues(alpha: 0.15),
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(AppConstants.radiusMedium),
             ),
-            child: Icon(icon, size: 22, color: color),
+            child: Icon(icon, size: config.iconSize, color: color),
           ),
-          const SizedBox(width: 15),
+          SizedBox(width: config.cardSpacing),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   title,
-                  style: const TextStyle(
-                    fontSize: 14,
+                  style: config.cardTitleStyle?.copyWith(
                     fontWeight: FontWeight.w600,
                     color: Colors.white,
                   ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: AppConstants.space4),
                 Text(
                   subtitle,
-                  style: TextStyle(fontSize: 12, color: AppColors.textMuted),
+                  style: config.subtitleStyle?.copyWith(
+                    color: AppColors.textMuted,
+                  ),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ],
             ),
@@ -286,47 +301,54 @@ class _PrivacySecurityScreenState extends State<PrivacySecurityScreen> {
     required String subtitle,
     required IconData icon,
     required Color color,
+    required SettingsScreenConfig config,
   }) {
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: EdgeInsets.all(config.cardPadding),
       decoration: BoxDecoration(
         color: const Color(0xFF141928).withValues(alpha: 0.8),
-        borderRadius: BorderRadius.circular(18),
+        borderRadius: BorderRadius.circular(AppConstants.radiusLarge),
         border: Border.all(color: color.withValues(alpha: 0.2)),
       ),
       child: Row(
         children: [
           Container(
-            width: 45,
-            height: 45,
+            width: config.iconContainerSize,
+            height: config.iconContainerSize,
             decoration: BoxDecoration(
               color: color.withValues(alpha: 0.15),
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(AppConstants.radiusMedium),
             ),
-            child: Icon(icon, size: 22, color: color),
+            child: Icon(icon, size: config.iconSize, color: color),
           ),
-          const SizedBox(width: 15),
+          SizedBox(width: config.cardSpacing),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   title,
-                  style: const TextStyle(
-                    fontSize: 14,
+                  style: config.cardTitleStyle?.copyWith(
                     fontWeight: FontWeight.w600,
                     color: Colors.white,
                   ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: AppConstants.space4),
                 Text(
                   subtitle,
-                  style: TextStyle(fontSize: 12, color: AppColors.textMuted),
+                  style: config.subtitleStyle?.copyWith(
+                    color: AppColors.textMuted,
+                  ),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ],
             ),
           ),
-          Icon(Icons.check_circle, size: 22, color: color.withValues(alpha: 0.6)),
+          Icon(Icons.check_circle,
+              size: config.iconSize, color: color.withValues(alpha: 0.6)),
         ],
       ),
     );
@@ -336,40 +358,41 @@ class _PrivacySecurityScreenState extends State<PrivacySecurityScreen> {
     required String title,
     required IconData icon,
     required Color color,
+    required SettingsScreenConfig config,
     required VoidCallback onTap,
   }) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.all(20),
+        padding: EdgeInsets.all(config.cardPadding),
         decoration: BoxDecoration(
           color: const Color(0xFF141928).withValues(alpha: 0.8),
-          borderRadius: BorderRadius.circular(18),
+          borderRadius: BorderRadius.circular(AppConstants.radiusLarge),
           border: Border.all(color: color.withValues(alpha: 0.2)),
         ),
         child: Row(
           children: [
             Container(
-              width: 45,
-              height: 45,
+              width: config.iconContainerSize,
+              height: config.iconContainerSize,
               decoration: BoxDecoration(
                 color: color.withValues(alpha: 0.15),
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(AppConstants.radiusMedium),
               ),
-              child: Icon(icon, size: 22, color: color),
+              child: Icon(icon, size: config.iconSize, color: color),
             ),
-            const SizedBox(width: 15),
+            SizedBox(width: config.cardSpacing),
             Expanded(
               child: Text(
                 title,
-                style: const TextStyle(
-                  fontSize: 14,
+                style: config.cardTitleStyle?.copyWith(
                   fontWeight: FontWeight.w600,
                   color: Colors.white,
                 ),
               ),
             ),
-            Icon(Icons.arrow_forward_ios, size: 18, color: color.withValues(alpha: 0.6)),
+            Icon(Icons.arrow_forward_ios,
+                size: config.arrowSize, color: color.withValues(alpha: 0.6)),
           ],
         ),
       ),

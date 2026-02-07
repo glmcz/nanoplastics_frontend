@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_custom_tabs/flutter_custom_tabs.dart';
 import '../config/app_colors.dart';
+import '../config/app_constants.dart';
+import '../utils/responsive_config.dart';
 import '../widgets/nanosolve_logo.dart';
 import '../widgets/brainstorm_box.dart';
 import '../models/category_detail_data.dart';
 import '../l10n/app_localizations.dart';
 import 'pdf_viewer_screen.dart';
 import '../services/logger_service.dart';
+import '../services/idea_service.dart';
 
 class CategoryDetailNewScreen extends StatefulWidget {
   final CategoryDetailData categoryData;
@@ -127,42 +130,48 @@ class _CategoryDetailNewScreenState extends State<CategoryDetailNewScreen>
 
   Widget _buildHeader() {
     final l10n = AppLocalizations.of(context)!;
+    final responsive = ResponsiveConfig.fromMediaQuery(context);
+    final config = responsive.getCategoryDetailHeaderConfig();
+
     return Padding(
-      padding: const EdgeInsets.all(25),
+      padding: EdgeInsets.all(config.padding),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Row(
-            children: [
-              IconButton(
-                onPressed: () => Navigator.of(context).pop(),
-                icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
-                tooltip: l10n.categoryDetailBack,
+          SizedBox(
+            width: double.infinity,
+            child: InkWell(
+              onTap: () => Navigator.of(context).pop(),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Icon(Icons.arrow_back_ios,
+                      color: Colors.white, size: config.backIconSize),
+                  const SizedBox(width: AppConstants.space4),
+                  Flexible(
+                    child: Text(
+                      l10n.categoryDetailBackToOverview,
+                      style: config.backTextStyle?.copyWith(
+                        color: Colors.white,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.fade,
+                      softWrap: true,
+                    ),
+                  ),
+                ],
               ),
-              const SizedBox(width: 10),
-              Text(
-                l10n.categoryDetailBackToOverview,
-                style: const TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w800,
-                  color: Colors.white,
-                  letterSpacing: 1,
-                ),
-              ),
-            ],
+            ),
           ),
-          const SizedBox(height: 15),
-          const NanosolveLogo(height: 60),
-          const SizedBox(height: 15),
+          SizedBox(height: config.spacing),
+          NanosolveLogo(height: config.logoHeight),
+          SizedBox(height: config.spacing),
           Text(
             widget.categoryData.title.toUpperCase(),
-            style: const TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w800,
+            style: config.titleStyle?.copyWith(
               color: Colors.white,
-              letterSpacing: 0.5,
-              height: 1.3,
             ),
+            textAlign: TextAlign.center,
           ),
         ],
       ),
@@ -170,16 +179,20 @@ class _CategoryDetailNewScreenState extends State<CategoryDetailNewScreen>
   }
 
   Widget _buildHeroIcon() {
+    final responsive = ResponsiveConfig.fromMediaQuery(context);
+    final config = responsive.heroIconConfig;
+
     return AnimatedBuilder(
       animation: _animationController,
       builder: (context, child) {
         return Container(
-          padding: const EdgeInsets.symmetric(vertical: 20),
+          padding: EdgeInsets.symmetric(vertical: config.verticalPadding),
           child: Container(
-            width: 120,
-            height: 120,
+            width: config.iconSize,
+            height: config.iconSize,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
+              color: widget.categoryData.themeColor.withValues(alpha: 0.1),
               boxShadow: [
                 BoxShadow(
                   color: widget.categoryData.glowColor,
@@ -190,7 +203,7 @@ class _CategoryDetailNewScreenState extends State<CategoryDetailNewScreen>
             ),
             child: Icon(
               widget.categoryData.icon,
-              size: 60,
+              size: config.iconSize * 0.55,
               color: widget.categoryData.themeColor,
             ),
           ),
@@ -201,21 +214,23 @@ class _CategoryDetailNewScreenState extends State<CategoryDetailNewScreen>
 
   Widget _buildScrollableContent() {
     return SingleChildScrollView(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
+      padding: const EdgeInsets.symmetric(horizontal: AppConstants.space20),
       child: Column(
         children: [
           _buildInfoPanel(),
-          const SizedBox(height: 30),
+          const SizedBox(height: AppConstants.space30),
         ],
       ),
     );
   }
 
   Widget _buildInfoPanel() {
+    final subtitleStyle = Theme.of(context).textTheme.headlineSmall;
+
     return Container(
       decoration: BoxDecoration(
         color: const Color(0xFF0F141E).withValues(alpha: 0.95),
-        borderRadius: BorderRadius.circular(25),
+        borderRadius: BorderRadius.circular(AppConstants.radiusXXL),
         border: Border.all(
           color: widget.categoryData.themeColor.withValues(alpha: 0.2),
         ),
@@ -227,21 +242,19 @@ class _CategoryDetailNewScreenState extends State<CategoryDetailNewScreen>
           ),
         ],
       ),
-      padding: const EdgeInsets.all(25),
+      padding: const EdgeInsets.all(AppConstants.space24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             widget.categoryData.subtitle.toUpperCase(),
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w700,
+            style: subtitleStyle?.copyWith(
               color: widget.categoryData.themeColor,
-              letterSpacing: 0.5,
             ),
           ),
           Container(
-            margin: const EdgeInsets.only(top: 10, bottom: 20),
+            margin: const EdgeInsets.only(
+                top: AppConstants.space8, bottom: AppConstants.space20),
             height: 1,
             decoration: BoxDecoration(
               gradient: LinearGradient(
@@ -255,27 +268,43 @@ class _CategoryDetailNewScreenState extends State<CategoryDetailNewScreen>
           ...widget.categoryData.entries.map((entry) => _buildEntry(entry)),
           if (widget.categoryData.sourceLinks != null &&
               widget.categoryData.sourceLinks!.isNotEmpty) ...[
-            const SizedBox(height: 20),
+            const SizedBox(height: AppConstants.space20),
             _buildDivider(),
-            const SizedBox(height: 20),
+            const SizedBox(height: AppConstants.space20),
             _buildSourcesSection(),
           ],
-          const SizedBox(height: 20),
+          const SizedBox(height: AppConstants.space20),
           _buildDivider(),
-          const SizedBox(height: 20),
+          const SizedBox(height: AppConstants.space20),
           BrainstormBox(
             title: AppLocalizations.of(context)!.categoryDetailBrainstormTitle,
             username:
                 AppLocalizations.of(context)!.categoryDetailBrainstormUser,
             placeholder: AppLocalizations.of(context)!
                 .categoryDetailBrainstormPlaceholder,
-            onSubmit: (text) {
-              // Handle brainstorm submission
+            category: widget.categoryData.title,
+            onSubmit: (text) async {
+              // Log the submission attempt
               LoggerService().logIdeaSubmission(
                 category: widget.categoryData.title,
                 title: text,
                 contentLength: text.length,
               );
+
+              // Submit to backend
+              final result = await IdeaService.submitIdea(
+                description: text,
+                category: widget.categoryData.title,
+              );
+
+              if (!result['success']) {
+                // Log error if submission failed
+                LoggerService().logError(
+                  'idea_submission_failed_in_ui',
+                  result['message'],
+                );
+                throw Exception(result['message']);
+              }
             },
           ),
         ],
@@ -299,50 +328,47 @@ class _CategoryDetailNewScreenState extends State<CategoryDetailNewScreen>
             }
           },
           child: Container(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(AppConstants.space16),
             decoration: BoxDecoration(
               color: const Color(0xFF141928).withValues(alpha: 0.85),
               border: Border.all(
                 color: AppColors.pastelAqua.withValues(alpha: 0.3),
               ),
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(AppConstants.radiusLarge),
             ),
             child: Row(
               children: [
                 Container(
-                  padding: const EdgeInsets.all(12),
+                  padding: const EdgeInsets.all(AppConstants.space12),
                   decoration: BoxDecoration(
                     color: AppColors.pastelAqua.withValues(alpha: 0.15),
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius:
+                        BorderRadius.circular(AppConstants.radiusSmall),
                   ),
-                  child: Icon(
+                  child: const Icon(
                     Icons.menu_book_outlined,
-                    size: 24,
+                    size: AppConstants.iconMedium,
                     color: AppColors.pastelAqua,
                   ),
                 ),
-                const SizedBox(width: 12),
+                const SizedBox(width: AppConstants.space12),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         l10n.categoryDetailSourcesTitle.toUpperCase(),
-                        style: const TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w800,
-                          color: Colors.white,
-                          letterSpacing: 0.5,
-                        ),
+                        style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                              color: Colors.white,
+                            ),
                       ),
-                      const SizedBox(height: 4),
+                      const SizedBox(height: AppConstants.space4),
                       Text(
                         '${widget.categoryData.sourceLinks!.length} ${l10n.categoryDetailSourcesCount}',
-                        style: TextStyle(
-                          fontSize: 11,
-                          color: AppColors.textMuted,
-                          fontWeight: FontWeight.w600,
-                        ),
+                        style:
+                            Theme.of(context).textTheme.labelMedium?.copyWith(
+                                  color: AppColors.textMuted,
+                                ),
                       ),
                     ],
                   ),
@@ -352,14 +378,14 @@ class _CategoryDetailNewScreenState extends State<CategoryDetailNewScreen>
                       ? Icons.keyboard_arrow_up
                       : Icons.keyboard_arrow_down,
                   color: AppColors.pastelAqua,
-                  size: 24,
+                  size: AppConstants.iconMedium,
                 ),
               ],
             ),
           ),
         ),
         if (_isSourcesExpanded) ...[
-          const SizedBox(height: 12),
+          const SizedBox(height: AppConstants.space12),
           ...widget.categoryData.sourceLinks!.asMap().entries.map((entry) {
             return _buildSourceLinkCard(
               number: entry.key + 1,
@@ -379,12 +405,12 @@ class _CategoryDetailNewScreenState extends State<CategoryDetailNewScreen>
       onTap: () => _handleSourceLink(sourceLink),
       child: Container(
         width: double.infinity,
-        margin: const EdgeInsets.only(bottom: 12),
-        padding: const EdgeInsets.all(15),
+        margin: const EdgeInsets.only(bottom: AppConstants.space12),
+        padding: const EdgeInsets.all(AppConstants.space16),
         decoration: BoxDecoration(
           color: const Color(0xFF141928).withValues(alpha: 0.85),
           border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(AppConstants.radiusLarge),
         ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -395,42 +421,35 @@ class _CategoryDetailNewScreenState extends State<CategoryDetailNewScreen>
                 children: [
                   Text(
                     sourceLink.title,
-                    style: const TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w700,
-                      color: Colors.white,
-                      height: 1.3,
-                    ),
+                    style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                          color: Colors.white,
+                        ),
                   ),
-                  const SizedBox(height: 5),
+                  const SizedBox(height: AppConstants.space4),
                   Text(
                     sourceLink.source,
-                    style: TextStyle(
-                      fontSize: 11,
-                      color: AppColors.pastelLavender,
-                      fontWeight: FontWeight.w600,
-                    ),
+                    style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                          color: AppColors.pastelLavender,
+                        ),
                   ),
                 ],
               ),
             ),
-            const SizedBox(width: 10),
+            const SizedBox(width: AppConstants.space8),
             Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Text(
                   '#$number',
-                  style: TextStyle(
-                    fontSize: 10,
-                    color: AppColors.textMuted.withValues(alpha: 0.5),
-                    fontWeight: FontWeight.w700,
-                  ),
+                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                        color: AppColors.textMuted.withValues(alpha: 0.5),
+                      ),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: AppConstants.space20),
                 Icon(
                   Icons.open_in_new,
-                  size: 18,
+                  size: AppConstants.iconSmall,
                   color: AppColors.pastelAqua.withValues(alpha: 0.8),
                 ),
               ],
@@ -512,8 +531,13 @@ class _CategoryDetailNewScreenState extends State<CategoryDetailNewScreen>
   }
 
   Widget _buildEntry(DetailEntry entry) {
+    const bulletSize = 6.0;
+    final highlightStyle = Theme.of(context).textTheme.titleSmall;
+    final descStyle = Theme.of(context).textTheme.headlineMedium;
+    const pdfIconSize = AppConstants.iconSmall;
+
     return Padding(
-      padding: const EdgeInsets.only(bottom: 20),
+      padding: const EdgeInsets.only(bottom: AppConstants.space20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -545,60 +569,66 @@ class _CategoryDetailNewScreenState extends State<CategoryDetailNewScreen>
               }
             },
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              padding: const EdgeInsets.symmetric(
+                  horizontal: AppConstants.space8,
+                  vertical: AppConstants.space4),
               decoration: BoxDecoration(
                 color: widget.categoryData.themeColor.withValues(alpha: 0.15),
-                borderRadius: BorderRadius.circular(6),
+                borderRadius: BorderRadius.circular(AppConstants.radiusSmall),
                 border: Border.all(
                   color: widget.categoryData.themeColor.withValues(alpha: 0.4),
                 ),
               ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    entry.highlight.toUpperCase(),
-                    style: TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w800,
-                      color: widget.categoryData.themeColor,
-                      letterSpacing: 0.5,
+              child: IntrinsicHeight(
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Flexible(
+                      child: Text(
+                        entry.highlight.toUpperCase(),
+                        style: highlightStyle?.copyWith(
+                          color: widget.categoryData.themeColor,
+                        ),
+                      ),
                     ),
-                  ),
-                  if (entry.pdfStartPage != null &&
-                      entry.pdfEndPage != null) ...[
-                    const SizedBox(width: 8),
-                    Icon(
-                      Icons.picture_as_pdf,
-                      size: 14,
-                      color:
-                          widget.categoryData.themeColor.withValues(alpha: 0.7),
-                    ),
+                    if (entry.pdfStartPage != null &&
+                        entry.pdfEndPage != null) ...[
+                      const SizedBox(width: AppConstants.space4),
+                      Icon(
+                        Icons.picture_as_pdf,
+                        size: pdfIconSize,
+                        color: widget.categoryData.themeColor
+                            .withValues(alpha: 0.7),
+                      ),
+                    ],
                   ],
-                ],
+                ),
               ),
             ),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: AppConstants.space8),
           Text(
             entry.description,
-            style: const TextStyle(
-              fontSize: 14,
-              color: Color(0xFFE0E0E0),
-              height: 1.6,
+            style: descStyle?.copyWith(
+              color: const Color(0xFFE0E0E0),
+              fontWeight: FontWeight.normal,
             ),
           ),
           if (entry.bulletPoints != null && entry.bulletPoints!.isNotEmpty) ...[
-            const SizedBox(height: 10),
+            const SizedBox(height: AppConstants.space8),
             ...entry.bulletPoints!.map((point) => Padding(
-                  padding: const EdgeInsets.only(left: 15, bottom: 5),
+                  padding: const EdgeInsets.only(
+                      left: AppConstants.space16, bottom: AppConstants.space4),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Container(
-                        margin: const EdgeInsets.only(top: 8, right: 10),
-                        width: 6,
-                        height: 6,
+                        margin: const EdgeInsets.only(
+                            top: AppConstants.space8,
+                            right: AppConstants.space8),
+                        width: bulletSize,
+                        height: bulletSize,
                         decoration: BoxDecoration(
                           color: widget.categoryData.themeColor,
                           shape: BoxShape.circle,
@@ -613,11 +643,10 @@ class _CategoryDetailNewScreenState extends State<CategoryDetailNewScreen>
                       Expanded(
                         child: Text(
                           point,
-                          style: const TextStyle(
-                            fontSize: 13,
-                            color: Color(0xFFB0B0B0),
-                            height: 1.5,
-                          ),
+                          style:
+                              Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                    color: const Color(0xFFB0B0B0),
+                                  ),
                         ),
                       ),
                     ],

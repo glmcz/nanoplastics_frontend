@@ -119,13 +119,13 @@ abstract class AppLocalizations {
   /// No description provided for @tabHuman.
   ///
   /// In en, this message translates to:
-  /// **'IMPACT ON HUMANS'**
+  /// **'IMPACT ON HUMAN'**
   String get tabHuman;
 
   /// No description provided for @tabPlanet.
   ///
   /// In en, this message translates to:
-  /// **'IMPACT ON PLANET EARTH'**
+  /// **'IMPACT ON EARTH'**
   String get tabPlanet;
 
   /// No description provided for @navSources.
@@ -215,7 +215,7 @@ abstract class AppLocalizations {
   /// No description provided for @planetCategoryWorldOcean.
   ///
   /// In en, this message translates to:
-  /// **'World Ocean and Hydrosphere'**
+  /// **'Hydrosphere'**
   String get planetCategoryWorldOcean;
 
   /// No description provided for @planetCategoryWorldOceanDesc.
@@ -227,7 +227,7 @@ abstract class AppLocalizations {
   /// No description provided for @planetCategoryAtmosphere.
   ///
   /// In en, this message translates to:
-  /// **'Atmosphere and Global water cycle'**
+  /// **'Atmosphere'**
   String get planetCategoryAtmosphere;
 
   /// No description provided for @planetCategoryAtmosphereDesc.
@@ -257,7 +257,7 @@ abstract class AppLocalizations {
   /// No description provided for @planetCategoryMagneticFieldDesc.
   ///
   /// In en, this message translates to:
-  /// **'Protective shield'**
+  /// **'Core abnormalities'**
   String get planetCategoryMagneticFieldDesc;
 
   /// No description provided for @planetCategoryEntryGates.
@@ -377,7 +377,7 @@ abstract class AppLocalizations {
   /// No description provided for @categoryDetailBackToOverview.
   ///
   /// In en, this message translates to:
-  /// **'← BACK TO OVERVIEW'**
+  /// **'← BACK'**
   String get categoryDetailBackToOverview;
 
   /// No description provided for @categoryDetailBrainstorm.
@@ -433,6 +433,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Idea submitted for evaluation!'**
   String get categoryDetailBrainstormSuccess;
+
+  /// No description provided for @categoryDetailBrainstormError.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to submit (due to internet issue). Your idea has been saved as a draft.'**
+  String get categoryDetailBrainstormError;
 
   /// No description provided for @categoryDetailBrainstormEditUsername.
   ///
@@ -533,25 +539,25 @@ abstract class AppLocalizations {
   /// No description provided for @sourcesSectionHumanHealth.
   ///
   /// In en, this message translates to:
-  /// **'Section I: Nanoplastics and Human Health'**
+  /// **'I: Nanoplastics & Human Health'**
   String get sourcesSectionHumanHealth;
 
   /// No description provided for @sourcesSectionEarthPollution.
   ///
   /// In en, this message translates to:
-  /// **'Section II: Earth and Plastic Pollution'**
+  /// **'II: Earth & Plastic Pollution'**
   String get sourcesSectionEarthPollution;
 
   /// No description provided for @sourcesSectionWaterAbilities.
   ///
   /// In en, this message translates to:
-  /// **'Section III: Specific Water Abilities'**
+  /// **'III: Specific Water Abilities'**
   String get sourcesSectionWaterAbilities;
 
   /// No description provided for @sourcesSectionVideoContent.
   ///
   /// In en, this message translates to:
-  /// **'B. Documentary and Expert Content'**
+  /// **'B. Documentary & Expert Content'**
   String get sourcesSectionVideoContent;
 
   /// No description provided for @videoLink1Title.
@@ -725,7 +731,7 @@ abstract class AppLocalizations {
   /// No description provided for @detailFiltrationDetoxSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'Filter overload and metabolic collapse'**
+  /// **'Filter overload & metabolic collapse'**
   String get detailFiltrationDetoxSubtitle;
 
   /// No description provided for @detailFiltrationDetoxEntry1Highlight.
@@ -833,7 +839,7 @@ abstract class AppLocalizations {
   /// No description provided for @detailReproductionEntry1Highlight.
   ///
   /// In en, this message translates to:
-  /// **'Reproductive and genetic damage'**
+  /// **'Reproductive & genetic damage'**
   String get detailReproductionEntry1Highlight;
 
   /// No description provided for @detailReproductionEntry1Desc.
@@ -971,7 +977,7 @@ abstract class AppLocalizations {
   /// No description provided for @detailWorldOceanSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'Physicochemical sabotage and heat accumulation'**
+  /// **'Physicochemical sabotage & heat accumulation'**
   String get detailWorldOceanSubtitle;
 
   /// No description provided for @detailWorldOceanEntry1Highlight.
@@ -983,7 +989,7 @@ abstract class AppLocalizations {
   /// No description provided for @detailWorldOceanEntry1Desc.
   ///
   /// In en, this message translates to:
-  /// **'Nanoplastics bind to water molecules and create hydration shells that \'immobilize\' large volumes of water.'**
+  /// **'Nanoplastics bind to water molecules & create hydration shells that \'immobilize\' large volumes of water.'**
   String get detailWorldOceanEntry1Desc;
 
   /// No description provided for @detailWorldOceanEntry1Bullet1.
@@ -1001,19 +1007,19 @@ abstract class AppLocalizations {
   /// No description provided for @detailAtmosphereTitle.
   ///
   /// In en, this message translates to:
-  /// **'Atmosphere and Global Water Cycle'**
+  /// **'Atmosphere & Global Water Cycle'**
   String get detailAtmosphereTitle;
 
   /// No description provided for @detailAtmosphereSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'Atmospheric and hydrological disruption'**
+  /// **'Atmospheric & hydrological disruption'**
   String get detailAtmosphereSubtitle;
 
   /// No description provided for @detailAtmosphereEntry1Highlight.
   ///
   /// In en, this message translates to:
-  /// **'Low and \'heavy\' clouds'**
+  /// **'Low & \'heavy\' clouds'**
   String get detailAtmosphereEntry1Highlight;
 
   /// No description provided for @detailAtmosphereEntry1Desc.
@@ -1025,13 +1031,13 @@ abstract class AppLocalizations {
   /// No description provided for @detailFloraFaunaTitle.
   ///
   /// In en, this message translates to:
-  /// **'Flora, Fauna and Soil Biota'**
+  /// **'Flora, Fauna & Soil Biota'**
   String get detailFloraFaunaTitle;
 
   /// No description provided for @detailFloraFaunaSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'Biological and food chain ecosystem collapse'**
+  /// **'Biological & food chain ecosystem collapse'**
   String get detailFloraFaunaSubtitle;
 
   /// No description provided for @detailFloraFaunaEntry1Highlight.
@@ -1073,13 +1079,13 @@ abstract class AppLocalizations {
   /// No description provided for @detailMagneticFieldTitle.
   ///
   /// In en, this message translates to:
-  /// **'Magnetic Field and Earth\'s Core'**
+  /// **'Magnetic Field & Earth\'s Core'**
   String get detailMagneticFieldTitle;
 
   /// No description provided for @detailMagneticFieldSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'Geodynamic and magnetic destabilization'**
+  /// **'Geodynamic & magnetic destabilization'**
   String get detailMagneticFieldSubtitle;
 
   /// No description provided for @detailMagneticFieldEntry1Highlight.
@@ -1351,6 +1357,432 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Leading contributors to nanoplastic solutions'**
   String get leaderboardSubtitle;
+
+  /// No description provided for @settingsBack.
+  ///
+  /// In en, this message translates to:
+  /// **'Back'**
+  String get settingsBack;
+
+  /// No description provided for @settingsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get settingsTitle;
+
+  /// No description provided for @settingsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage your preferences'**
+  String get settingsSubtitle;
+
+  /// No description provided for @settingsProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile'**
+  String get settingsProfile;
+
+  /// No description provided for @settingsLanguage.
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get settingsLanguage;
+
+  /// No description provided for @settingsPrivacySecurity.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy & Security'**
+  String get settingsPrivacySecurity;
+
+  /// No description provided for @settingsAbout.
+  ///
+  /// In en, this message translates to:
+  /// **'About'**
+  String get settingsAbout;
+
+  /// No description provided for @profileTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile Settings'**
+  String get profileTitle;
+
+  /// No description provided for @profileSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Customize your profile and preferences'**
+  String get profileSubtitle;
+
+  /// No description provided for @profilePersonalInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Personal Information'**
+  String get profilePersonalInfo;
+
+  /// No description provided for @profileDisplayName.
+  ///
+  /// In en, this message translates to:
+  /// **'Display Name'**
+  String get profileDisplayName;
+
+  /// No description provided for @profileDisplayNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your full name or nickname'**
+  String get profileDisplayNameHint;
+
+  /// No description provided for @profileEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get profileEmail;
+
+  /// No description provided for @profileEmailHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your email'**
+  String get profileEmailHint;
+
+  /// No description provided for @profileBio.
+  ///
+  /// In en, this message translates to:
+  /// **'Bio'**
+  String get profileBio;
+
+  /// No description provided for @profileBioHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Tell us about yourself'**
+  String get profileBioHint;
+
+  /// No description provided for @profileAppearance.
+  ///
+  /// In en, this message translates to:
+  /// **'Appearance'**
+  String get profileAppearance;
+
+  /// No description provided for @profileDarkMode.
+  ///
+  /// In en, this message translates to:
+  /// **'Dark Mode'**
+  String get profileDarkMode;
+
+  /// No description provided for @profileDarkModeDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Use dark theme throughout the app'**
+  String get profileDarkModeDesc;
+
+  /// No description provided for @profileNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications'**
+  String get profileNotifications;
+
+  /// No description provided for @profilePushNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Push Notifications'**
+  String get profilePushNotifications;
+
+  /// No description provided for @profilePushNotificationsDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Receive push notifications on your device'**
+  String get profilePushNotificationsDesc;
+
+  /// No description provided for @profileEmailNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Email Notifications'**
+  String get profileEmailNotifications;
+
+  /// No description provided for @profileEmailNotificationsDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Receive updates via email'**
+  String get profileEmailNotificationsDesc;
+
+  /// No description provided for @profilePrivacy.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy'**
+  String get profilePrivacy;
+
+  /// No description provided for @profileAnalytics.
+  ///
+  /// In en, this message translates to:
+  /// **'Analytics'**
+  String get profileAnalytics;
+
+  /// No description provided for @profileAnalyticsDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Help us improve by sharing usage data'**
+  String get profileAnalyticsDesc;
+
+  /// No description provided for @profileDangerZone.
+  ///
+  /// In en, this message translates to:
+  /// **'Danger Zone'**
+  String get profileDangerZone;
+
+  /// No description provided for @profileDeleteAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Account'**
+  String get profileDeleteAccount;
+
+  /// No description provided for @profileDeleteAccountDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Permanently remove your account and data'**
+  String get profileDeleteAccountDesc;
+
+  /// No description provided for @profileChangeAvatar.
+  ///
+  /// In en, this message translates to:
+  /// **'Change Avatar'**
+  String get profileChangeAvatar;
+
+  /// No description provided for @languageTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get languageTitle;
+
+  /// No description provided for @languageSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose your preferred language'**
+  String get languageSubtitle;
+
+  /// No description provided for @languageChanged.
+  ///
+  /// In en, this message translates to:
+  /// **'Language changed to'**
+  String get languageChanged;
+
+  /// No description provided for @languageInfoMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'The app will update to your selected language. Some content may require an app restart.'**
+  String get languageInfoMessage;
+
+  /// No description provided for @privacyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy & Security'**
+  String get privacyTitle;
+
+  /// No description provided for @privacySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage your privacy preferences'**
+  String get privacySubtitle;
+
+  /// No description provided for @privacyDataAnalytics.
+  ///
+  /// In en, this message translates to:
+  /// **'Data & Analytics'**
+  String get privacyDataAnalytics;
+
+  /// No description provided for @privacyAnalytics.
+  ///
+  /// In en, this message translates to:
+  /// **'Analytics'**
+  String get privacyAnalytics;
+
+  /// No description provided for @privacyAnalyticsDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Help us improve by sharing anonymous usage data'**
+  String get privacyAnalyticsDesc;
+
+  /// No description provided for @privacySecurity.
+  ///
+  /// In en, this message translates to:
+  /// **'Security'**
+  String get privacySecurity;
+
+  /// No description provided for @privacyDataEncryption.
+  ///
+  /// In en, this message translates to:
+  /// **'Data Encryption'**
+  String get privacyDataEncryption;
+
+  /// No description provided for @privacyDataEncryptionDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'All your data is encrypted in transit and at rest'**
+  String get privacyDataEncryptionDesc;
+
+  /// No description provided for @privacyLocalStorage.
+  ///
+  /// In en, this message translates to:
+  /// **'Local Storage'**
+  String get privacyLocalStorage;
+
+  /// No description provided for @privacyLocalStorageDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Your preferences are stored securely on your device'**
+  String get privacyLocalStorageDesc;
+
+  /// No description provided for @privacyLegal.
+  ///
+  /// In en, this message translates to:
+  /// **'Legal'**
+  String get privacyLegal;
+
+  /// No description provided for @privacyPolicy.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy Policy'**
+  String get privacyPolicy;
+
+  /// No description provided for @privacyTermsOfService.
+  ///
+  /// In en, this message translates to:
+  /// **'Terms of Service'**
+  String get privacyTermsOfService;
+
+  /// No description provided for @aboutTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'About'**
+  String get aboutTitle;
+
+  /// No description provided for @aboutAppName.
+  ///
+  /// In en, this message translates to:
+  /// **'NanoSolve Hive'**
+  String get aboutAppName;
+
+  /// No description provided for @aboutVersion.
+  ///
+  /// In en, this message translates to:
+  /// **'Version'**
+  String get aboutVersion;
+
+  /// No description provided for @aboutSection.
+  ///
+  /// In en, this message translates to:
+  /// **'About NanoSolve'**
+  String get aboutSection;
+
+  /// No description provided for @aboutDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'NanoSolve Hive is your gateway to understanding nanoplastics and their impact on human health and the environment. We provide science-backed information to help you make informed decisions.'**
+  String get aboutDescription;
+
+  /// No description provided for @aboutConnect.
+  ///
+  /// In en, this message translates to:
+  /// **'Connect'**
+  String get aboutConnect;
+
+  /// No description provided for @aboutWebsite.
+  ///
+  /// In en, this message translates to:
+  /// **'Website'**
+  String get aboutWebsite;
+
+  /// No description provided for @aboutWebsiteUrl.
+  ///
+  /// In en, this message translates to:
+  /// **'nanosolve.io'**
+  String get aboutWebsiteUrl;
+
+  /// No description provided for @aboutContactUs.
+  ///
+  /// In en, this message translates to:
+  /// **'Contact Us'**
+  String get aboutContactUs;
+
+  /// No description provided for @aboutContactUsDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Get in touch with our team'**
+  String get aboutContactUsDesc;
+
+  /// No description provided for @aboutLegal.
+  ///
+  /// In en, this message translates to:
+  /// **'Legal'**
+  String get aboutLegal;
+
+  /// No description provided for @aboutPrivacyPolicy.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy Policy'**
+  String get aboutPrivacyPolicy;
+
+  /// No description provided for @aboutPrivacyPolicyDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'How we handle your data'**
+  String get aboutPrivacyPolicyDesc;
+
+  /// No description provided for @aboutTermsOfService.
+  ///
+  /// In en, this message translates to:
+  /// **'Terms of Service'**
+  String get aboutTermsOfService;
+
+  /// No description provided for @aboutTermsOfServiceDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Terms and conditions'**
+  String get aboutTermsOfServiceDesc;
+
+  /// No description provided for @aboutOpenSourceLicenses.
+  ///
+  /// In en, this message translates to:
+  /// **'Open Source Licenses'**
+  String get aboutOpenSourceLicenses;
+
+  /// No description provided for @aboutOpenSourceLicensesDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Third-party libraries we use'**
+  String get aboutOpenSourceLicensesDesc;
+
+  /// No description provided for @aboutShare.
+  ///
+  /// In en, this message translates to:
+  /// **'Share'**
+  String get aboutShare;
+
+  /// No description provided for @aboutShareTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Share NanoSolve'**
+  String get aboutShareTitle;
+
+  /// No description provided for @aboutShareDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan this QR code to download the app'**
+  String get aboutShareDesc;
+
+  /// No description provided for @aboutShareAppLink.
+  ///
+  /// In en, this message translates to:
+  /// **'App Download Link'**
+  String get aboutShareAppLink;
+
+  /// No description provided for @aboutFooterMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Made with care for a cleaner planet'**
+  String get aboutFooterMessage;
+
+  /// No description provided for @aboutCopyright.
+  ///
+  /// In en, this message translates to:
+  /// **'2024 NanoSolve. All rights reserved.'**
+  String get aboutCopyright;
 }
 
 class _AppLocalizationsDelegate

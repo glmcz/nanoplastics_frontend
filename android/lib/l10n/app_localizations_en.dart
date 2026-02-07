@@ -15,10 +15,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get appSubtitle => 'SCIENCE, SOCIETY, FUTURE';
 
   @override
-  String get tabHuman => 'IMPACT ON HUMANS';
+  String get tabHuman => 'IMPACT ON HUMAN';
 
   @override
-  String get tabPlanet => 'IMPACT ON PLANET EARTH';
+  String get tabPlanet => 'IMPACT ON EARTH';
 
   @override
   String get navSources => 'Sources';
@@ -64,13 +64,13 @@ class AppLocalizationsEn extends AppLocalizations {
       'Known forms of destruction';
 
   @override
-  String get planetCategoryWorldOcean => 'World Ocean and Hydrosphere';
+  String get planetCategoryWorldOcean => 'Hydrosphere';
 
   @override
   String get planetCategoryWorldOceanDesc => 'Marine life, water';
 
   @override
-  String get planetCategoryAtmosphere => 'Atmosphere and Global water cycle';
+  String get planetCategoryAtmosphere => 'Atmosphere';
 
   @override
   String get planetCategoryAtmosphereDesc => 'Air, climate';
@@ -85,7 +85,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get planetCategoryMagneticField => 'Magnetic Field and Earth core';
 
   @override
-  String get planetCategoryMagneticFieldDesc => 'Protective shield';
+  String get planetCategoryMagneticFieldDesc => 'Core abnormalities';
 
   @override
   String get planetCategoryEntryGates => 'Entry Gates';
@@ -147,7 +147,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get categoryDetailBack => 'Back';
 
   @override
-  String get categoryDetailBackToOverview => '← BACK TO OVERVIEW';
+  String get categoryDetailBackToOverview => '← BACK';
 
   @override
   String get categoryDetailBrainstorm => 'Brainstorm';
@@ -177,6 +177,10 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get categoryDetailBrainstormSuccess =>
       'Idea submitted for evaluation!';
+
+  @override
+  String get categoryDetailBrainstormError =>
+      'Failed to submit (due to internet issue). Your idea has been saved as a draft.';
 
   @override
   String get categoryDetailBrainstormEditUsername => 'Edit username';
@@ -230,19 +234,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get sourcesTabVideo => 'B. VIDEO LINKS';
 
   @override
-  String get sourcesSectionHumanHealth =>
-      'Section I: Nanoplastics and Human Health';
+  String get sourcesSectionHumanHealth => 'I: Nanoplastics & Human Health';
 
   @override
-  String get sourcesSectionEarthPollution =>
-      'Section II: Earth and Plastic Pollution';
+  String get sourcesSectionEarthPollution => 'II: Earth & Plastic Pollution';
 
   @override
-  String get sourcesSectionWaterAbilities =>
-      'Section III: Specific Water Abilities';
+  String get sourcesSectionWaterAbilities => 'III: Specific Water Abilities';
 
   @override
-  String get sourcesSectionVideoContent => 'B. Documentary and Expert Content';
+  String get sourcesSectionVideoContent => 'B. Documentary & Expert Content';
 
   @override
   String get videoLink1Title =>
@@ -346,7 +347,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get detailFiltrationDetoxSubtitle =>
-      'Filter overload and metabolic collapse';
+      'Filter overload & metabolic collapse';
 
   @override
   String get detailFiltrationDetoxEntry1Highlight =>
@@ -414,7 +415,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get detailReproductionEntry1Highlight =>
-      'Reproductive and genetic damage';
+      'Reproductive & genetic damage';
 
   @override
   String get detailReproductionEntry1Desc =>
@@ -495,7 +496,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get detailWorldOceanSubtitle =>
-      'Physicochemical sabotage and heat accumulation';
+      'Physicochemical sabotage & heat accumulation';
 
   @override
   String get detailWorldOceanEntry1Highlight =>
@@ -503,7 +504,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get detailWorldOceanEntry1Desc =>
-      'Nanoplastics bind to water molecules and create hydration shells that \'immobilize\' large volumes of water.';
+      'Nanoplastics bind to water molecules & create hydration shells that \'immobilize\' large volumes of water.';
 
   @override
   String get detailWorldOceanEntry1Bullet1 =>
@@ -514,25 +515,25 @@ class AppLocalizationsEn extends AppLocalizations {
       'Changes in physical properties of seawater';
 
   @override
-  String get detailAtmosphereTitle => 'Atmosphere and Global Water Cycle';
+  String get detailAtmosphereTitle => 'Atmosphere & Global Water Cycle';
 
   @override
   String get detailAtmosphereSubtitle =>
-      'Atmospheric and hydrological disruption';
+      'Atmospheric & hydrological disruption';
 
   @override
-  String get detailAtmosphereEntry1Highlight => 'Low and \'heavy\' clouds';
+  String get detailAtmosphereEntry1Highlight => 'Low & \'heavy\' clouds';
 
   @override
   String get detailAtmosphereEntry1Desc =>
       'Nanoplastics act as aggressive condensation nuclei → formation of low, dense clouds that trap heat and destabilize climate.';
 
   @override
-  String get detailFloraFaunaTitle => 'Flora, Fauna and Soil Biota';
+  String get detailFloraFaunaTitle => 'Flora, Fauna & Soil Biota';
 
   @override
   String get detailFloraFaunaSubtitle =>
-      'Biological and food chain ecosystem collapse';
+      'Biological & food chain ecosystem collapse';
 
   @override
   String get detailFloraFaunaEntry1Highlight =>
@@ -556,11 +557,11 @@ class AppLocalizationsEn extends AppLocalizations {
       'Nanoplastics physically damage chloroplasts → decreased energy and oxygen production, weakening of primary producers.';
 
   @override
-  String get detailMagneticFieldTitle => 'Magnetic Field and Earth\'s Core';
+  String get detailMagneticFieldTitle => 'Magnetic Field & Earth\'s Core';
 
   @override
   String get detailMagneticFieldSubtitle =>
-      'Geodynamic and magnetic destabilization';
+      'Geodynamic & magnetic destabilization';
 
   @override
   String get detailMagneticFieldEntry1Highlight =>
@@ -725,4 +726,224 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get leaderboardSubtitle =>
       'Leading contributors to nanoplastic solutions';
+
+  @override
+  String get settingsBack => 'Back';
+
+  @override
+  String get settingsTitle => 'Settings';
+
+  @override
+  String get settingsSubtitle => 'Manage your preferences';
+
+  @override
+  String get settingsProfile => 'Profile';
+
+  @override
+  String get settingsLanguage => 'Language';
+
+  @override
+  String get settingsPrivacySecurity => 'Privacy & Security';
+
+  @override
+  String get settingsAbout => 'About';
+
+  @override
+  String get profileTitle => 'Profile Settings';
+
+  @override
+  String get profileSubtitle => 'Customize your profile and preferences';
+
+  @override
+  String get profilePersonalInfo => 'Personal Information';
+
+  @override
+  String get profileDisplayName => 'Display Name';
+
+  @override
+  String get profileDisplayNameHint => 'Enter your full name or nickname';
+
+  @override
+  String get profileEmail => 'Email';
+
+  @override
+  String get profileEmailHint => 'Enter your email';
+
+  @override
+  String get profileBio => 'Bio';
+
+  @override
+  String get profileBioHint => 'Tell us about yourself';
+
+  @override
+  String get profileAppearance => 'Appearance';
+
+  @override
+  String get profileDarkMode => 'Dark Mode';
+
+  @override
+  String get profileDarkModeDesc => 'Use dark theme throughout the app';
+
+  @override
+  String get profileNotifications => 'Notifications';
+
+  @override
+  String get profilePushNotifications => 'Push Notifications';
+
+  @override
+  String get profilePushNotificationsDesc =>
+      'Receive push notifications on your device';
+
+  @override
+  String get profileEmailNotifications => 'Email Notifications';
+
+  @override
+  String get profileEmailNotificationsDesc => 'Receive updates via email';
+
+  @override
+  String get profilePrivacy => 'Privacy';
+
+  @override
+  String get profileAnalytics => 'Analytics';
+
+  @override
+  String get profileAnalyticsDesc => 'Help us improve by sharing usage data';
+
+  @override
+  String get profileDangerZone => 'Danger Zone';
+
+  @override
+  String get profileDeleteAccount => 'Delete Account';
+
+  @override
+  String get profileDeleteAccountDesc =>
+      'Permanently remove your account and data';
+
+  @override
+  String get profileChangeAvatar => 'Change Avatar';
+
+  @override
+  String get languageTitle => 'Language';
+
+  @override
+  String get languageSubtitle => 'Choose your preferred language';
+
+  @override
+  String get languageChanged => 'Language changed to';
+
+  @override
+  String get languageInfoMessage =>
+      'The app will update to your selected language. Some content may require an app restart.';
+
+  @override
+  String get privacyTitle => 'Privacy & Security';
+
+  @override
+  String get privacySubtitle => 'Manage your privacy preferences';
+
+  @override
+  String get privacyDataAnalytics => 'Data & Analytics';
+
+  @override
+  String get privacyAnalytics => 'Analytics';
+
+  @override
+  String get privacyAnalyticsDesc =>
+      'Help us improve by sharing anonymous usage data';
+
+  @override
+  String get privacySecurity => 'Security';
+
+  @override
+  String get privacyDataEncryption => 'Data Encryption';
+
+  @override
+  String get privacyDataEncryptionDesc =>
+      'All your data is encrypted in transit and at rest';
+
+  @override
+  String get privacyLocalStorage => 'Local Storage';
+
+  @override
+  String get privacyLocalStorageDesc =>
+      'Your preferences are stored securely on your device';
+
+  @override
+  String get privacyLegal => 'Legal';
+
+  @override
+  String get privacyPolicy => 'Privacy Policy';
+
+  @override
+  String get privacyTermsOfService => 'Terms of Service';
+
+  @override
+  String get aboutTitle => 'About';
+
+  @override
+  String get aboutAppName => 'NanoSolve Hive';
+
+  @override
+  String get aboutVersion => 'Version';
+
+  @override
+  String get aboutSection => 'About NanoSolve';
+
+  @override
+  String get aboutDescription =>
+      'NanoSolve Hive is your gateway to understanding nanoplastics and their impact on human health and the environment. We provide science-backed information to help you make informed decisions.';
+
+  @override
+  String get aboutConnect => 'Connect';
+
+  @override
+  String get aboutWebsite => 'Website';
+
+  @override
+  String get aboutWebsiteUrl => 'nanosolve.io';
+
+  @override
+  String get aboutContactUs => 'Contact Us';
+
+  @override
+  String get aboutContactUsDesc => 'Get in touch with our team';
+
+  @override
+  String get aboutLegal => 'Legal';
+
+  @override
+  String get aboutPrivacyPolicy => 'Privacy Policy';
+
+  @override
+  String get aboutPrivacyPolicyDesc => 'How we handle your data';
+
+  @override
+  String get aboutTermsOfService => 'Terms of Service';
+
+  @override
+  String get aboutTermsOfServiceDesc => 'Terms and conditions';
+
+  @override
+  String get aboutOpenSourceLicenses => 'Open Source Licenses';
+
+  @override
+  String get aboutOpenSourceLicensesDesc => 'Third-party libraries we use';
+
+  @override
+  String get aboutShare => 'Share';
+
+  @override
+  String get aboutShareTitle => 'Share NanoSolve';
+
+  @override
+  String get aboutShareDesc => 'Scan this QR code to download the app';
+
+  @override
+  String get aboutShareAppLink => 'App Download Link';
+
+  @override
+  String get aboutFooterMessage => 'Made with care for a cleaner planet';
+
+  @override
+  String get aboutCopyright => '2024 NanoSolve. All rights reserved.';
 }

@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'dart:ui';
-// Removed unused app_localizations import
+import '../../l10n/app_localizations.dart';
 import '../../config/app_colors.dart';
+import '../../config/app_constants.dart';
+import '../../utils/responsive_config.dart';
 import '../../widgets/nanosolve_logo.dart';
 import 'user_profile.dart';
 import 'language_screen.dart';
 import 'privacy_security_screen.dart';
 import 'about_screen.dart';
-// Removed unused imports for legal screens
 
 class UserSettingsScreen extends StatefulWidget {
   const UserSettingsScreen({super.key});
@@ -48,9 +49,11 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
   }
 
   Widget _buildHeader() {
-    // final l10n = AppLocalizations.of(context)!; // Removed unused variable
+    final responsive = ResponsiveConfig.fromMediaQuery(context);
+    final header = responsive.getSecondaryHeaderConfig();
+
     return Container(
-      padding: const EdgeInsets.all(25),
+      padding: EdgeInsets.all(header.padding),
       decoration: BoxDecoration(
         color: const Color(0xFF141928).withValues(alpha: 0.9),
         border: Border(
@@ -69,24 +72,22 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
                 GestureDetector(
                   onTap: () => Navigator.of(context).pop(),
                   child: Text(
-                    'Back',
-                    style: TextStyle(
+                    AppLocalizations.of(context)!.settingsBack,
+                    style: header.backStyle?.copyWith(
                       color: AppColors.pastelMint,
-                      fontWeight: FontWeight.w700,
-                      fontSize: 12,
                       letterSpacing: 1,
                     ),
                   ),
                 ),
                 Icon(
                   Icons.settings,
-                  size: 24,
+                  size: header.iconSize,
                   color: AppColors.pastelMint,
                 ),
               ],
             ),
-            const SizedBox(height: 15),
-            const NanosolveLogo(height: 50),
+            SizedBox(height: header.spacing),
+            NanosolveLogo(height: header.logoHeight),
           ],
         ),
       ),
@@ -94,56 +95,62 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
   }
 
   Widget _buildContent() {
+    final responsive = ResponsiveConfig.fromMediaQuery(context);
+    final config = responsive.getSettingsScreenConfig();
+
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(25),
+      padding: EdgeInsets.all(config.contentPadding),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildTitleSection(),
-          const SizedBox(height: 30),
+          _buildTitleSection(config),
+          SizedBox(height: config.cardSpacing * 2),
           _buildSettingItem(
-            title: 'Profile',
+            title: AppLocalizations.of(context)!.settingsProfile,
             icon: Icons.person_outline,
             color: AppColors.pastelMint,
+            config: config,
             onTap: () => Navigator.of(context).push(
               MaterialPageRoute(builder: (_) => const UserProfileScreen()),
             ),
           ),
-          const SizedBox(height: 15),
+          SizedBox(height: config.cardSpacing),
           _buildSettingItem(
-            title: 'Language',
+            title: AppLocalizations.of(context)!.settingsLanguage,
             icon: Icons.language,
             color: AppColors.pastelAqua,
+            config: config,
             onTap: () => Navigator.of(context).push(
               MaterialPageRoute(builder: (_) => const LanguageScreen()),
             ),
           ),
-          const SizedBox(height: 15),
+          SizedBox(height: config.cardSpacing),
           _buildSettingItem(
-            title: 'Privacy & Security',
+            title: AppLocalizations.of(context)!.settingsPrivacySecurity,
             icon: Icons.lock_outline,
             color: AppColors.pastelMint,
+            config: config,
             onTap: () => Navigator.of(context).push(
               MaterialPageRoute(builder: (_) => const PrivacySecurityScreen()),
             ),
           ),
-          const SizedBox(height: 15),
+          SizedBox(height: config.cardSpacing),
           _buildSettingItem(
-            title: 'About',
+            title: AppLocalizations.of(context)!.settingsAbout,
             icon: Icons.info_outline,
             color: AppColors.pastelLavender,
+            config: config,
             onTap: () => Navigator.of(context).push(
               MaterialPageRoute(builder: (_) => const AboutScreen()),
             ),
           ),
-          const SizedBox(height: 15),
-          // ...existing code...
+          SizedBox(height: config.cardSpacing),
         ],
       ),
     );
   }
 
-  Widget _buildTitleSection() {
+  Widget _buildTitleSection(SettingsScreenConfig config) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -151,24 +158,20 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
           shaderCallback: (bounds) => const LinearGradient(
             colors: [AppColors.pastelMint, AppColors.pastelAqua],
           ).createShader(bounds),
-          child: const Text(
-            'Settings',
-            style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.w900,
+          child: Text(
+            AppLocalizations.of(context)!.settingsTitle,
+            style: config.titleStyle?.copyWith(
               color: Colors.white,
               letterSpacing: 0.5,
             ),
           ),
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: AppConstants.space8),
         Text(
-          'Manage your preferences',
-          style: TextStyle(
-            fontSize: 13,
-            color: AppColors.textMuted,
-            fontWeight: FontWeight.w600,
-          ),
+          AppLocalizations.of(context)!.settingsSubtitle,
+          style: config.subtitleStyle,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
         ),
       ],
     );
@@ -178,15 +181,16 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
     required String title,
     required IconData icon,
     required Color color,
+    required SettingsScreenConfig config,
     VoidCallback? onTap,
   }) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.all(20),
+        padding: EdgeInsets.all(config.cardPadding),
         decoration: BoxDecoration(
           color: const Color(0xFF141928).withValues(alpha: 0.8),
-          borderRadius: BorderRadius.circular(18),
+          borderRadius: BorderRadius.circular(AppConstants.radiusLarge),
           border: Border.all(color: color.withValues(alpha: 0.3)),
           boxShadow: [
             BoxShadow(
@@ -199,32 +203,32 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
         child: Row(
           children: [
             Container(
-              width: 50,
-              height: 50,
+              width: config.iconContainerSize,
+              height: config.iconContainerSize,
               decoration: BoxDecoration(
                 color: color.withValues(alpha: 0.2),
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(AppConstants.radiusMedium),
               ),
               child: Icon(
                 icon,
-                size: 26,
+                size: config.iconSize,
                 color: color,
               ),
             ),
-            const SizedBox(width: 15),
+            SizedBox(width: config.cardSpacing),
             Expanded(
               child: Text(
                 title,
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
+                style: config.cardTitleStyle?.copyWith(
                   color: Colors.white,
                 ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ),
             ),
             Icon(
               Icons.arrow_forward,
-              size: 20,
+              size: config.arrowSize,
               color: color.withValues(alpha: 0.6),
             ),
           ],

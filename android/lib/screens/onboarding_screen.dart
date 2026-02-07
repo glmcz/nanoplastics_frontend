@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'dart:ui';
 import '../config/app_colors.dart';
+import '../config/app_constants.dart';
+import '../utils/responsive_config.dart';
 import '../widgets/nanosolve_logo.dart';
 import '../l10n/app_localizations.dart';
 import '../models/onboarding_slide.dart';
@@ -140,14 +142,14 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                 color: const Color(0xFF0A0A12).withValues(alpha: 0.6),
                 child: Center(
                   child: Container(
-                    margin: const EdgeInsets.all(20),
+                    margin: const EdgeInsets.all(AppConstants.space20),
                     constraints: const BoxConstraints(maxWidth: 550),
                     decoration: BoxDecoration(
                       color: const Color(0xFF141928).withValues(alpha: 0.85),
                       border: Border.all(
                         color: Colors.white.withValues(alpha: 0.1),
                       ),
-                      borderRadius: BorderRadius.circular(30),
+                      borderRadius: BorderRadius.circular(AppConstants.radiusXXL),
                       boxShadow: [
                         BoxShadow(
                           color: Colors.black.withValues(alpha: 0.5),
@@ -158,12 +160,12 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                       ],
                     ),
                     child: ClipRRect(
-                      borderRadius: BorderRadius.circular(30),
+                      borderRadius: BorderRadius.circular(AppConstants.radiusXXL),
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           _buildModalHeader(),
-                          _buildSlidesContainer(),
+                          Flexible(child: _buildSlidesContainer()),
                           _buildModalFooter(),
                         ],
                       ),
@@ -180,11 +182,17 @@ class _OnboardingScreenState extends State<OnboardingScreen>
 
   Widget _buildModalHeader() {
     return Padding(
-      padding: const EdgeInsets.all(30),
+      padding: const EdgeInsets.all(AppConstants.space30),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const NanosolveLogo(height: 50),
+          const Flexible(
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              alignment: Alignment.centerLeft,
+              child: NanosolveLogo(height: AppConstants.logoMedium),
+            ),
+          ),
           IconButton(
             onPressed: _closeOnboarding,
             icon: const Icon(Icons.close, size: 32),
@@ -199,109 +207,134 @@ class _OnboardingScreenState extends State<OnboardingScreen>
   Widget _buildSlidesContainer() {
     final l10n = AppLocalizations.of(context)!;
     final slides = _getSlides(l10n);
-    return SizedBox(
-      height: 400,
-      child: PageView.builder(
-        controller: _pageController,
-        onPageChanged: _onPageChanged,
-        itemCount: slides.length,
-        itemBuilder: (context, index) {
-          return _buildSlide(slides[index]);
-        },
-      ),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        const minHeight = 280.0;
+        final slideHeight =
+            (constraints.maxHeight * 0.5).clamp(minHeight, 450.0);
+        return SizedBox(
+          height: slideHeight,
+          child: PageView.builder(
+            controller: _pageController,
+            onPageChanged: _onPageChanged,
+            itemCount: slides.length,
+            itemBuilder: (context, index) {
+              return _buildSlide(slides[index]);
+            },
+          ),
+        );
+      },
     );
   }
 
   Widget _buildSlide(OnboardingSlide slide) {
+    final responsive = ResponsiveConfig.fromMediaQuery(context);
+    final config = responsive.getOnboardingSlideConfig();
+
+    final screenHeight = MediaQuery.of(context).size.height;
+    final imageHeight = screenHeight * config.imageHeightPercent;
+    final iconContainerSize = imageHeight * config.iconRatio;
+    final iconSize = iconContainerSize * config.iconSizeMultiplier;
+
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
+      padding: const EdgeInsets.symmetric(horizontal: AppConstants.space12),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
         children: [
           // Media - Image or Icon
-          Container(
-            width: double.infinity,
-            height: 200,
-            decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.05),
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(
-                color: Colors.white.withValues(alpha: 0.2),
-                style: BorderStyle.solid,
-                width: 1,
+          Flexible(
+            flex: 3,
+            child: ConstrainedBox(
+              constraints: BoxConstraints(maxHeight: imageHeight),
+              child: Container(
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: 0.05),
+                  borderRadius: BorderRadius.circular(AppConstants.radiusLarge),
+                  border: Border.all(
+                    color: Colors.white.withValues(alpha: 0.2),
+                    style: BorderStyle.solid,
+                    width: 1,
+                  ),
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(AppConstants.radiusLarge),
+                  child: slide.imagePath != null
+                      ? Image.asset(
+                          slide.imagePath!,
+                          fit: BoxFit.cover,
+                        )
+                      : Center(
+                          child: Container(
+                            width: iconContainerSize,
+                            height: iconContainerSize,
+                            decoration: BoxDecoration(
+                              color:
+                                  AppColors.pastelAqua.withValues(alpha: 0.8),
+                              shape: BoxShape.circle,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: AppColors.pastelAqua
+                                      .withValues(alpha: 0.5),
+                                  blurRadius: 15,
+                                ),
+                              ],
+                            ),
+                            child: slide.icon != null
+                                ? Icon(
+                                    slide.icon,
+                                    size: iconSize,
+                                    color: const Color(0xFF0A0A12),
+                                  )
+                                : null,
+                          ),
+                        ),
+                ),
               ),
             ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(20),
-              child: slide.imagePath != null
-                  ? Image.asset(
-                      slide.imagePath!,
-                      fit: BoxFit.cover,
-                    )
-                  : Center(
-                      child: Container(
-                        width: 60,
-                        height: 60,
-                        decoration: BoxDecoration(
-                          color: AppColors.pastelAqua.withValues(alpha: 0.8),
-                          shape: BoxShape.circle,
-                          boxShadow: [
-                            BoxShadow(
-                              color:
-                                  AppColors.pastelAqua.withValues(alpha: 0.5),
-                              blurRadius: 20,
-                            ),
-                          ],
-                        ),
-                        child: slide.icon != null
-                            ? Icon(
-                                slide.icon,
-                                size: 30,
-                                color: const Color(0xFF0A0A12),
-                              )
-                            : null,
-                      ),
-                    ),
-            ),
           ),
-          const SizedBox(height: 25),
+          SizedBox(height: config.spacing),
 
           // Title with highlight using ShaderMask
-          ShaderMask(
-            shaderCallback: (bounds) => const LinearGradient(
-              colors: [AppColors.pastelAqua, AppColors.pastelMint],
-            ).createShader(bounds),
-            child: RichText(
-              textAlign: TextAlign.center,
-              text: TextSpan(
-                style: const TextStyle(
-                  fontSize: 30,
-                  fontWeight: FontWeight.w800,
+          Flexible(
+            child: ShaderMask(
+              shaderCallback: (bounds) => const LinearGradient(
+                colors: [AppColors.pastelAqua, AppColors.pastelMint],
+              ).createShader(bounds),
+              child: RichText(
+                textAlign: TextAlign.center,
+                overflow: TextOverflow.ellipsis,
+                maxLines: 2,
+                text: TextSpan(
+                  style: config.titleStyle,
+                  children: [
+                    TextSpan(
+                      text: '${slide.title} ',
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                    TextSpan(
+                      text: slide.titleHighlight,
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                  ],
                 ),
-                children: [
-                  TextSpan(
-                    text: '${slide.title} ',
-                    style: const TextStyle(color: Colors.white),
-                  ),
-                  TextSpan(
-                    text: slide.titleHighlight,
-                    style: const TextStyle(color: Colors.white),
-                  ),
-                ],
               ),
             ),
           ),
-          const SizedBox(height: 25),
+          SizedBox(height: config.spacing),
 
           // Description
-          Text(
-            slide.description,
-            textAlign: TextAlign.center,
-            style: const TextStyle(
-              fontSize: 25,
-              color: AppColors.textRed,
-              fontWeight: FontWeight.w700,
+          Flexible(
+            child: Text(
+              slide.description,
+              textAlign: TextAlign.center,
+              style: config.descStyle?.copyWith(
+                color: AppColors.textRed,
+              ),
+              maxLines: screenHeight < 400 ? 3 : 5,
+              overflow: TextOverflow.ellipsis,
             ),
           ),
         ],
@@ -313,7 +346,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
     final l10n = AppLocalizations.of(context)!;
     final slides = _getSlides(l10n);
     return Padding(
-      padding: const EdgeInsets.all(30),
+      padding: const EdgeInsets.all(AppConstants.space30),
       child: Column(
         children: [
           // Dots indicator
@@ -323,19 +356,19 @@ class _OnboardingScreenState extends State<OnboardingScreen>
               slides.length,
               (index) => AnimatedContainer(
                 duration: const Duration(milliseconds: 300),
-                margin: const EdgeInsets.symmetric(horizontal: 5),
-                width: _currentPage == index ? 25 : 10,
-                height: 10,
+                margin: const EdgeInsets.symmetric(horizontal: AppConstants.space4),
+                width: _currentPage == index ? 25.0 : 10.0,
+                height: 10.0,
                 decoration: BoxDecoration(
                   color: _currentPage == index
                       ? AppColors.pastelAqua
                       : Colors.white.withValues(alpha: 0.2),
-                  borderRadius: BorderRadius.circular(5),
+                  borderRadius: BorderRadius.circular(AppConstants.radiusSmall),
                 ),
               ),
             ),
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: AppConstants.space20),
 
           // Navigation buttons
           Row(
@@ -346,11 +379,9 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                   onPressed: _previousPage,
                   child: Text(
                     l10n.onboardingBack,
-                    style: const TextStyle(
-                      color: AppColors.textMuted,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w700,
-                    ),
+                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                          color: AppColors.textMuted,
+                        ),
                   ),
                 )
               else
@@ -363,30 +394,31 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                   shadowColor: AppColors.pastelAqua.withValues(alpha: 0.5),
                   elevation: 3,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius:
+                        BorderRadius.circular(AppConstants.radiusMedium),
                   ),
                 ),
                 child: Ink(
                   decoration: BoxDecoration(
-                    gradient: LinearGradient(
+                    gradient: const LinearGradient(
                       colors: [AppColors.pastelAqua, AppColors.pastelMint],
                     ),
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius:
+                        BorderRadius.circular(AppConstants.radiusMedium),
                   ),
                   child: Container(
                     padding: const EdgeInsets.symmetric(
-                      horizontal: 25,
-                      vertical: 12,
+                      horizontal: AppConstants.space24,
+                      vertical: AppConstants.space12,
                     ),
                     child: Text(
                       _currentPage == slides.length - 1
                           ? l10n.onboardingStart
                           : l10n.onboardingNext,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w700,
-                        color: Color(0xFF0A0A12),
-                      ),
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                            fontWeight: FontWeight.w700,
+                            color: const Color(0xFF0A0A12),
+                          ),
                     ),
                   ),
                 ),

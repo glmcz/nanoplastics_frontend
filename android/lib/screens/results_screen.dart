@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'dart:ui';
 import '../l10n/app_localizations.dart';
 import '../config/app_colors.dart';
+import '../config/app_constants.dart';
+import '../utils/responsive_config.dart';
 import '../widgets/nanosolve_logo.dart';
 import 'solvers_leaderboard_screen.dart';
 import 'user_settings/user_settings_screen.dart';
@@ -56,8 +58,11 @@ class _ResultsScreenState extends State<ResultsScreen> {
 
   Widget _buildHeader() {
     final l10n = AppLocalizations.of(context)!;
+    final responsive = ResponsiveConfig.fromMediaQuery(context);
+    final header = responsive.getSecondaryHeaderConfig();
+
     return Container(
-      padding: const EdgeInsets.all(25),
+      padding: EdgeInsets.all(header.padding),
       decoration: BoxDecoration(
         color: const Color(0xFF141928).withValues(alpha: 0.9),
         border: Border(
@@ -77,10 +82,8 @@ class _ResultsScreenState extends State<ResultsScreen> {
                   onTap: () => Navigator.of(context).pop(),
                   child: Text(
                     l10n.resultsBackButton,
-                    style: TextStyle(
+                    style: header.backStyle?.copyWith(
                       color: AppColors.pastelMint,
-                      fontWeight: FontWeight.w700,
-                      fontSize: 12,
                       letterSpacing: 1,
                     ),
                   ),
@@ -89,10 +92,10 @@ class _ResultsScreenState extends State<ResultsScreen> {
                   children: [
                     Icon(
                       Icons.auto_graph_outlined,
-                      size: 24,
+                      size: header.iconSize,
                       color: AppColors.pastelMint,
                     ),
-                    const SizedBox(width: 15),
+                    SizedBox(width: header.spacing),
                     GestureDetector(
                       onTap: () {
                         Navigator.of(context).push(
@@ -103,7 +106,7 @@ class _ResultsScreenState extends State<ResultsScreen> {
                       },
                       child: Icon(
                         Icons.settings,
-                        size: 24,
+                        size: header.iconSize,
                         color: AppColors.pastelMint,
                       ),
                     ),
@@ -111,8 +114,8 @@ class _ResultsScreenState extends State<ResultsScreen> {
                 ),
               ],
             ),
-            const SizedBox(height: 15),
-            const NanosolveLogo(height: 50),
+            SizedBox(height: header.spacing),
+            NanosolveLogo(height: header.logoHeight),
           ],
         ),
       ),
@@ -121,20 +124,26 @@ class _ResultsScreenState extends State<ResultsScreen> {
 
   Widget _buildContent() {
     final l10n = AppLocalizations.of(context)!;
+    final responsive = ResponsiveConfig.fromMediaQuery(context);
+    final config = responsive.getResultsScreenConfig();
+
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(25),
+      padding: EdgeInsets.symmetric(
+          horizontal: config.contentHorizontalPadding,
+          vertical: config.contentVerticalPadding),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          _buildTitleSection(l10n),
-          const SizedBox(height: 30),
+          _buildTitleSection(l10n, config),
+          SizedBox(height: config.sectionSpacing),
           _buildStatsCard(
             title: l10n.resultsStatsTotalIdeas,
             value: '7',
             icon: Icons.lightbulb_outline,
             color: AppColors.pastelLavender,
+            config: config,
           ),
-          const SizedBox(height: 15),
+          SizedBox(height: config.cardSpacing),
           GestureDetector(
             onTap: () {
               Navigator.of(context).push(
@@ -148,16 +157,17 @@ class _ResultsScreenState extends State<ResultsScreen> {
               value: '22',
               icon: Icons.people_outline,
               color: AppColors.pastelMint,
+              config: config,
             ),
           ),
-          const SizedBox(height: 30),
-          _buildInfoPanel(l10n),
+          SizedBox(height: config.sectionSpacing),
+          _buildInfoPanel(l10n, config),
         ],
       ),
     );
   }
 
-  Widget _buildTitleSection(AppLocalizations l10n) {
+  Widget _buildTitleSection(AppLocalizations l10n, ResultsScreenConfig config) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -167,22 +177,22 @@ class _ResultsScreenState extends State<ResultsScreen> {
           ).createShader(bounds),
           child: Text(
             l10n.resultsTitle,
-            style: const TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.w900,
+            style: config.titleStyle?.copyWith(
               color: Colors.white,
               letterSpacing: 0.5,
             ),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
           ),
         ),
-        const SizedBox(height: 8),
+        SizedBox(height: config.titleSpacing),
         Text(
           l10n.resultsSubtitle,
-          style: TextStyle(
-            fontSize: 13,
-            color: AppColors.textMuted,
+          style: config.subtitleStyle?.copyWith(
             fontWeight: FontWeight.w600,
           ),
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
         ),
       ],
     );
@@ -193,12 +203,15 @@ class _ResultsScreenState extends State<ResultsScreen> {
     required String value,
     required IconData icon,
     required Color color,
+    required ResultsScreenConfig config,
   }) {
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: EdgeInsets.symmetric(
+          horizontal: config.contentHorizontalPadding * 0.8,
+          vertical: config.contentVerticalPadding * 0.8),
       decoration: BoxDecoration(
         color: const Color(0xFF141928).withValues(alpha: 0.8),
-        borderRadius: BorderRadius.circular(18),
+        borderRadius: BorderRadius.circular(AppConstants.radiusLarge),
         border: Border.all(color: color.withValues(alpha: 0.3)),
         boxShadow: [
           BoxShadow(
@@ -211,37 +224,35 @@ class _ResultsScreenState extends State<ResultsScreen> {
       child: Row(
         children: [
           Container(
-            width: 50,
-            height: 50,
+            width: config.statsIconContainer,
+            height: config.statsIconContainer,
             decoration: BoxDecoration(
               color: color.withValues(alpha: 0.2),
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(AppConstants.radiusMedium),
             ),
             child: Icon(
               icon,
-              size: 26,
+              size: config.statsIconSize,
               color: color,
             ),
           ),
-          const SizedBox(width: 15),
+          const SizedBox(width: AppConstants.space16),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   title,
-                  style: TextStyle(
-                    fontSize: 12,
+                  style: config.statsTitleStyle?.copyWith(
                     color: AppColors.textMuted,
-                    fontWeight: FontWeight.w600,
                   ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
-                const SizedBox(height: 5),
+                const SizedBox(height: AppConstants.space4),
                 Text(
                   value,
-                  style: TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.w900,
+                  style: config.statsValueStyle?.copyWith(
                     color: color,
                   ),
                 ),
@@ -253,9 +264,11 @@ class _ResultsScreenState extends State<ResultsScreen> {
     );
   }
 
-  Widget _buildInfoPanel(AppLocalizations l10n) {
+  Widget _buildInfoPanel(AppLocalizations l10n, ResultsScreenConfig config) {
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: EdgeInsets.symmetric(
+          horizontal: config.contentHorizontalPadding * 0.8,
+          vertical: config.contentVerticalPadding * 0.8),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topLeft,
@@ -265,7 +278,7 @@ class _ResultsScreenState extends State<ResultsScreen> {
             AppColors.pastelAqua.withValues(alpha: 0.08),
           ],
         ),
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(AppConstants.radiusXL),
         border: Border.all(
           color: AppColors.pastelMint.withValues(alpha: 0.3),
         ),
@@ -277,38 +290,43 @@ class _ResultsScreenState extends State<ResultsScreen> {
             children: [
               Icon(
                 Icons.info_outline,
-                size: 20,
+                size: config.infoIconSize,
                 color: AppColors.pastelMint,
               ),
-              const SizedBox(width: 10),
-              Text(
-                l10n.resultsEvaluationSystemTitle,
-                style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w800,
-                  color: AppColors.pastelMint,
-                  letterSpacing: 0.5,
+              const SizedBox(width: AppConstants.space12),
+              Expanded(
+                child: Text(
+                  l10n.resultsEvaluationSystemTitle,
+                  style: config.infoTitleStyle?.copyWith(
+                    fontWeight: FontWeight.w800,
+                    color: AppColors.pastelMint,
+                    letterSpacing: 0.5,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 15),
+          const SizedBox(height: AppConstants.space16),
           Text(
             l10n.resultsEvaluationSystemDesc1,
-            style: const TextStyle(
-              fontSize: 13,
+            style: config.infoBodyStyle?.copyWith(
               color: Colors.white70,
               height: 1.6,
             ),
+            maxLines: 5,
+            overflow: TextOverflow.ellipsis,
           ),
-          const SizedBox(height: 15),
+          const SizedBox(height: AppConstants.space16),
           Text(
             l10n.resultsEvaluationSystemDesc2,
-            style: const TextStyle(
-              fontSize: 13,
+            style: config.infoBodyStyle?.copyWith(
               color: Colors.white70,
               height: 1.6,
             ),
+            maxLines: 5,
+            overflow: TextOverflow.ellipsis,
           ),
         ],
       ),

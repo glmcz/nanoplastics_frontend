@@ -1,107 +1,80 @@
+import 'dart:convert';
+import 'dart:io';
+import 'dart:async';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:uuid/uuid.dart';
 import '../models/solver.dart';
+import 'logger_service.dart';
 
 class SolverService {
-  /// Fetch top solvers from API or database
-  /// This is a mock implementation - replace with actual API call
+  // TODO: Replace with your actual backend URL
+  static const String baseUrl = 'http://10.0.2.2:3000'; // For local testing
+
+  /// Get or create user UUID for consistent identification across submissions
+  static Future<String> getUserId() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? userId = prefs.getString('user_id');
+
+    if (userId == null) {
+      userId = const Uuid().v4();
+      await prefs.setString('user_id', userId);
+    }
+
+    return userId;
+  }
+
+  /// Fetch top solvers from backend API
   static Future<List<Solver>> getTopSolvers() async {
-    // Simulate API delay
-    await Future.delayed(const Duration(milliseconds: 500));
+    try {
+      final response = await http.get(
+        Uri.parse('$baseUrl/api/solvers'),
+        headers: {'Content-Type': 'application/json'},
+      ).timeout(const Duration(seconds: 10));
 
-    // Mock data - replace with actual backend API call
-    const solversData = [
-      {
-        'rank': 1,
-        'name': 'Dr. Sarah Chen',
-        'contributions': 42,
-        'rating': 4.8,
-        'specialty': 'Water Treatment',
-        'isRegistered': true,
-      },
-      {
-        'rank': 2,
-        'name': 'Alex Rivera',
-        'contributions': 38,
-        'rating': 4.7,
-        'specialty': 'Environmental Chemistry',
-        'isRegistered': true,
-      },
-      {
-        'rank': 3,
-        'name': 'Prof. James Watson',
-        'contributions': 35,
-        'rating': 4.6,
-        'specialty': 'Polymer Science',
-        'isRegistered': true,
-      },
-      {
-        'rank': 4,
-        'name': 'Maria Kowalski',
-        'contributions': 29,
-        'rating': 4.5,
-        'specialty': 'Marine Biology',
-        'isRegistered': true,
-      },
-      {
-        'rank': 5,
-        'name': 'Ahmed Hassan',
-        'contributions': 27,
-        'rating': 4.4,
-        'specialty': 'Material Science',
-        'isRegistered': true,
-      },
-      {
-        'rank': 6,
-        'name': 'Yuki Tanaka',
-        'contributions': 24,
-        'rating': 4.3,
-        'specialty': 'Environmental Science',
-        'isRegistered': true,
-      },
-      {
-        'rank': 7,
-        'name': 'Dr. Robert Patel',
-        'contributions': 21,
-        'rating': 4.2,
-        'specialty': 'Chemistry',
-        'isRegistered': true,
-      },
-      {
-        'rank': 8,
-        'name': 'Jessica Brown',
-        'contributions': 19,
-        'rating': 4.1,
-        'specialty': 'Research',
-        'isRegistered': true,
-      },
-      {
-        'rank': 9,
-        'name': 'Dr. Emily Stone',
-        'contributions': 17,
-        'rating': 4.0,
-        'specialty': 'Environmental Chemistry',
-        'isRegistered': true,
-      },
-      {
-        'rank': 10,
-        'name': 'Klaus Mueller',
-        'contributions': 15,
-        'rating': 3.9,
-        'specialty': 'Polymer Analysis',
-        'isRegistered': true,
-      },
-    ];
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body) as Map<String, dynamic>;
+        final solvers = data['solvers'] as List<dynamic>;
 
-    return solversData
-        .map(
-          (data) => Solver(
-            rank: data['rank'] as int,
-            name: data['name'] as String,
-            solutionsCount: data['contributions'] as int,
-            rating: data['rating'] as double,
-            specialty: data['specialty'] as String,
-            isRegistered: data['isRegistered'] as bool,
-          ),
-        )
-        .toList();
+        return solvers
+            .map((solverData) => Solver(
+                  rank: solverData['rank'] as int,
+                  name: solverData['name'] as String,
+                  solutionsCount: solverData['contributions'] as int,
+                  rating: (solverData['rating'] as num).toDouble(),
+                  specialty: solverData['specialty'] as String? ?? 'General',
+                  isRegistered: solverData['is_registered'] as bool,
+                ))
+            .toList();
+      } else {
+        LoggerService().logError(
+          'Failed to load solvers: ${response.statusCode}', '');
+        return [];
+      }
+    } on SocketException catch (e, stackTrace) {
+      // No internet connection - warn but don't crash
+      LoggerService().logError(
+        'No internet connection',
+        e,
+        stackTrace,
+      );
+      return [];
+    } on TimeoutException catch (e, stackTrace) {
+      // Request timeout - warn but don't crash
+      LoggerService().logError(
+        'Request timeout',
+        e,
+        stackTrace,
+      );
+      return [];
+    } catch (e, stackTrace) {
+      // Other errors - warn but don't crash
+      LoggerService().logError(
+        'Failed to fetch solvers',
+        e,
+        stackTrace,
+      );
+      return [];
+    }
   }
 }

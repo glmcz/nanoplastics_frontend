@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'dart:ui';
 import '../l10n/app_localizations.dart';
 import '../config/app_colors.dart';
+import '../config/app_constants.dart';
+import '../utils/responsive_config.dart';
 import '../widgets/nanosolve_logo.dart';
 import '../services/settings_manager.dart';
 import '../services/solver_service.dart';
@@ -20,11 +22,19 @@ class _SolversLeaderboardScreenState extends State<SolversLeaderboardScreen> {
   late bool _userIsRegistered;
   late bool _userHasEmailAndBio;
   final _settingsManager = SettingsManager();
+  Future<List<Solver>>? _solversFuture;
 
   @override
   void initState() {
     super.initState();
     _checkUserRegistration();
+    _loadSolvers();
+  }
+
+  void _loadSolvers() {
+    setState(() {
+      _solversFuture = SolverService.getTopSolvers();
+    });
   }
 
   void _checkUserRegistration() {
@@ -82,7 +92,7 @@ class _SolversLeaderboardScreenState extends State<SolversLeaderboardScreen> {
   Widget _buildHeader(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     return Container(
-      padding: const EdgeInsets.all(25),
+      padding: const EdgeInsets.all(AppConstants.space24),
       decoration: BoxDecoration(
         color: const Color(0xFF141928).withValues(alpha: 0.9),
         border: Border(
@@ -102,33 +112,37 @@ class _SolversLeaderboardScreenState extends State<SolversLeaderboardScreen> {
                   onTap: () => Navigator.of(context).pop(),
                   child: Row(
                     children: [
-                      Icon(
+                      const Icon(
                         Icons.arrow_back_ios,
-                        size: 16,
+                        size: AppConstants.iconSmall,
                         color: AppColors.pastelMint,
                       ),
-                      const SizedBox(width: 5),
+                      const SizedBox(width: AppConstants.space4),
                       Text(
                         l10n.resultsBackButton,
-                        style: TextStyle(
-                          color: AppColors.pastelMint,
-                          fontWeight: FontWeight.w700,
-                          fontSize: 12,
-                          letterSpacing: 1,
-                        ),
+                        style: Theme.of(context).textTheme.labelLarge!.copyWith(
+                              color: AppColors.pastelMint,
+                              letterSpacing: 1,
+                            ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ],
                   ),
                 ),
-                Icon(
+                const Icon(
                   Icons.emoji_events,
-                  size: 24,
+                  size: AppConstants.iconMedium,
                   color: AppColors.pastelMint,
                 ),
               ],
             ),
-            const SizedBox(height: 15),
-            const NanosolveLogo(height: 50),
+            const SizedBox(height: AppConstants.space16),
+            NanosolveLogo(
+              height: ResponsiveConfig.fromMediaQuery(context)
+                  .getSecondaryHeaderConfig()
+                  .logoHeight,
+            ),
           ],
         ),
       ),
@@ -143,96 +157,131 @@ class _SolversLeaderboardScreenState extends State<SolversLeaderboardScreen> {
       return _buildRestrictedAccessView(context, l10n);
     }
 
-    return FutureBuilder<List<Solver>>(
-      future: SolverService.getTopSolvers(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(
-            child: CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(
-                AppColors.pastelMint,
-              ),
-            ),
-          );
-        }
-
-        if (snapshot.hasError) {
-          return Center(
-            child: Text(
-              'Error loading solvers: ${snapshot.error}',
-              style: const TextStyle(color: Colors.white),
-            ),
-          );
-        }
-
-        final solvers = snapshot.data ?? [];
-
-        return SingleChildScrollView(
-          padding: const EdgeInsets.all(25),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildTitleSection(context),
-              const SizedBox(height: 25),
-              ...solvers.map((solver) => _buildSolverCard(solver)),
-            ],
-          ),
-        );
+    return RefreshIndicator(
+      color: AppColors.pastelMint,
+      backgroundColor: const Color(0xFF1A1F2E),
+      onRefresh: () async {
+        _loadSolvers();
+        await _solversFuture;
       },
+      child: FutureBuilder<List<Solver>>(
+        future: _solversFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(
+                  AppColors.pastelMint,
+                ),
+              ),
+            );
+          }
+
+          if (snapshot.hasError) {
+            return Center(
+              child: Padding(
+                padding: const EdgeInsets.all(AppConstants.space24),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.wifi_off,
+                      size: AppConstants.iconLarge,
+                      color: AppColors.pastelMint.withValues(alpha: 0.5),
+                    ),
+                    const SizedBox(height: AppConstants.space16),
+                    Text(
+                      '${snapshot.error}',
+                      style: const TextStyle(color: Colors.white),
+                      textAlign: TextAlign.center,
+                      maxLines: 3,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: AppConstants.space24),
+                    ElevatedButton.icon(
+                      onPressed: _loadSolvers,
+                      icon: const Icon(Icons.refresh),
+                      label: Text(l10n.resultsBackButton),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.pastelMint,
+                        foregroundColor: Colors.black,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          }
+
+          final solvers = snapshot.data ?? [];
+
+          return SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            padding: const EdgeInsets.all(AppConstants.space24),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildTitleSection(context),
+                const SizedBox(height: AppConstants.space24),
+                ...solvers.map((solver) => _buildSolverCard(solver)),
+              ],
+            ),
+          );
+        },
+      ),
     );
   }
 
   Widget _buildRestrictedAccessView(
       BuildContext context, AppLocalizations l10n) {
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(25),
+      padding: const EdgeInsets.all(AppConstants.space24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildTitleSection(context),
-          const SizedBox(height: 60),
+          const SizedBox(height: AppConstants.space40),
           // Locked icon
           Center(
             child: Container(
-              width: 100,
-              height: 100,
+              width: AppConstants.avatarMedium,
+              height: AppConstants.avatarMedium,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 color: AppColors.pastelMint.withValues(alpha: 0.1),
               ),
-              child: Icon(
+              child: const Icon(
                 Icons.lock,
-                size: 50,
+                size: AppConstants.iconLarge,
                 color: AppColors.pastelMint,
               ),
             ),
           ),
-          const SizedBox(height: 30),
+          const SizedBox(height: AppConstants.space30),
           // Main message
           Center(
             child: Text(
               'Leaderboard Access Restricted',
-              style: const TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.w900,
-                color: Colors.white,
-              ),
+              style: Theme.of(context).textTheme.displaySmall,
               textAlign: TextAlign.center,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
             ),
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: AppConstants.space12),
           // Description
           Center(
             child: Text(
               'Register with your email and name to view the top 10 leaderboard and be recognized for your solutions.',
-              style: TextStyle(
-                fontSize: 14,
-                color: AppColors.textMuted,
-              ),
+              style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                    color: AppColors.textMuted,
+                  ),
               textAlign: TextAlign.center,
+              maxLines: 3,
+              overflow: TextOverflow.ellipsis,
             ),
           ),
-          const SizedBox(height: 40),
+          const SizedBox(height: AppConstants.space40),
           // CTA Button
           SizedBox(
             width: double.infinity,
@@ -240,22 +289,23 @@ class _SolversLeaderboardScreenState extends State<SolversLeaderboardScreen> {
               onPressed: _showRegistrationDialog,
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.pastelMint,
-                padding: const EdgeInsets.symmetric(vertical: 16),
+                padding: const EdgeInsets.symmetric(vertical: AppConstants.space16),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius:
+                      BorderRadius.circular(AppConstants.radiusMedium),
                 ),
               ),
               icon: const Icon(
                 Icons.app_registration,
                 color: Colors.black,
               ),
-              label: const Text(
+              label: Text(
                 'Register Now',
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w700,
-                  color: Colors.black,
-                ),
+                style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                      color: Colors.black,
+                    ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ),
             ),
           ),
@@ -275,22 +325,23 @@ class _SolversLeaderboardScreenState extends State<SolversLeaderboardScreen> {
           ).createShader(bounds),
           child: Text(
             l10n.leaderboardTitle,
-            style: const TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.w900,
-              color: Colors.white,
-              letterSpacing: 0.5,
-            ),
+            style: Theme.of(context).textTheme.displayMedium!.copyWith(
+                  color: Colors.white,
+                  letterSpacing: 0.5,
+                ),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
           ),
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: AppConstants.space8),
         Text(
           l10n.leaderboardSubtitle,
-          style: TextStyle(
-            fontSize: 13,
-            color: AppColors.textMuted,
-            fontWeight: FontWeight.w600,
-          ),
+          style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                color: AppColors.textMuted,
+                fontWeight: FontWeight.w600,
+              ),
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
         ),
       ],
     );
@@ -325,11 +376,11 @@ class _SolversLeaderboardScreenState extends State<SolversLeaderboardScreen> {
     }
 
     return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(18),
+      margin: const EdgeInsets.only(bottom: AppConstants.space12),
+      padding: const EdgeInsets.all(AppConstants.space16),
       decoration: BoxDecoration(
         color: const Color(0xFF141928).withValues(alpha: 0.8),
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppConstants.radiusLarge),
         border: Border.all(
           color: isTopThree
               ? getRankColor().withValues(alpha: 0.5)
@@ -350,11 +401,11 @@ class _SolversLeaderboardScreenState extends State<SolversLeaderboardScreen> {
         children: [
           // Rank badge
           Container(
-            width: 45,
-            height: 45,
+            width: AppConstants.avatarXS,
+            height: AppConstants.avatarXS,
             decoration: BoxDecoration(
               color: getRankColor().withValues(alpha: 0.2),
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(AppConstants.radiusMedium),
               border: Border.all(
                 color: getRankColor().withValues(alpha: 0.5),
               ),
@@ -362,31 +413,32 @@ class _SolversLeaderboardScreenState extends State<SolversLeaderboardScreen> {
             child: Center(
               child: Text(
                 '#$rank',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w900,
-                  color: getRankColor(),
-                ),
+                style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                      fontWeight: FontWeight.w900,
+                      color: getRankColor(),
+                    ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ),
             ),
           ),
-          const SizedBox(width: 15),
+          const SizedBox(width: AppConstants.space16),
           // Avatar
           Container(
-            width: 45,
-            height: 45,
+            width: AppConstants.avatarXS,
+            height: AppConstants.avatarXS,
             decoration: BoxDecoration(
               color: AppColors.pastelLavender.withValues(alpha: 0.2),
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(AppConstants.radiusMedium),
             ),
             child: Center(
               child: Text(
                 getAvatar(),
-                style: const TextStyle(fontSize: 24),
+                style: Theme.of(context).textTheme.displayMedium,
               ),
             ),
           ),
-          const SizedBox(width: 15),
+          const SizedBox(width: AppConstants.space16),
           // Name and contributions
           Expanded(
             child: Column(
@@ -397,43 +449,46 @@ class _SolversLeaderboardScreenState extends State<SolversLeaderboardScreen> {
                     Expanded(
                       child: Text(
                         solver.name,
-                        style: const TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w700,
-                          color: Colors.white,
-                        ),
+                        style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                              color: Colors.white,
+                            ),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: AppConstants.space4),
+                Row(
+                  children: [
+                    const Icon(
+                      Icons.verified_outlined,
+                      size: AppConstants.iconSmall,
+                      color: AppColors.pastelAqua,
+                    ),
+                    const SizedBox(width: AppConstants.space4),
+                    Expanded(
+                      child: Text(
+                        '${solver.solutionsCount} realized solutions',
+                        style: Theme.of(context).textTheme.labelLarge!.copyWith(
+                              color: AppColors.textMuted,
+                              fontWeight: FontWeight.w600,
+                            ),
+                        maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 4),
-                Row(
-                  children: [
-                    Icon(
-                      Icons.verified_outlined,
-                      size: 14,
-                      color: AppColors.pastelAqua,
-                    ),
-                    const SizedBox(width: 5),
-                    Text(
-                      '${solver.solutionsCount} realized solutions',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: AppColors.textMuted,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 4),
+                const SizedBox(height: AppConstants.space4),
                 Text(
                   solver.specialty,
-                  style: TextStyle(
-                    fontSize: 11,
-                    color: AppColors.pastelMint.withValues(alpha: 0.7),
-                    fontStyle: FontStyle.italic,
-                  ),
+                  style: Theme.of(context).textTheme.labelMedium!.copyWith(
+                        color: AppColors.pastelMint.withValues(alpha: 0.7),
+                        fontStyle: FontStyle.italic,
+                      ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ],
             ),
@@ -442,7 +497,7 @@ class _SolversLeaderboardScreenState extends State<SolversLeaderboardScreen> {
           if (isTopThree)
             Icon(
               Icons.emoji_events,
-              size: 28,
+              size: AppConstants.iconMedium,
               color: getRankColor(),
             ),
         ],

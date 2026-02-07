@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:ui';
 import '../../config/app_colors.dart';
+import '../../config/app_constants.dart';
 
 class PrivacyPolicyScreen extends StatelessWidget {
   const PrivacyPolicyScreen({super.key});
@@ -25,7 +26,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
           child: Column(
             children: [
               _buildHeader(context),
-              Expanded(child: _buildContent()),
+              Expanded(child: _buildContent(context)),
             ],
           ),
         ),
@@ -35,7 +36,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
 
   Widget _buildHeader(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(25),
+      padding: const EdgeInsets.all(AppConstants.space24),
       decoration: BoxDecoration(
         color: const Color(0xFF141928).withValues(alpha: 0.9),
         border: Border(
@@ -53,27 +54,23 @@ class PrivacyPolicyScreen extends StatelessWidget {
                   onTap: () => Navigator.of(context).pop(),
                   child: Text(
                     'Back',
-                    style: TextStyle(
+                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
                       color: AppColors.pastelAqua,
-                      fontWeight: FontWeight.w700,
-                      fontSize: 12,
                       letterSpacing: 1,
                     ),
                   ),
                 ),
-                Icon(Icons.privacy_tip_outlined,
-                    size: 24, color: AppColors.pastelAqua),
+                const Icon(Icons.privacy_tip_outlined,
+                    size: AppConstants.iconMedium, color: AppColors.pastelAqua),
               ],
             ),
-            const SizedBox(height: 15),
+            const SizedBox(height: AppConstants.space16),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   'PRIVACY POLICY',
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w800,
+                  style: Theme.of(context).textTheme.headlineLarge?.copyWith(
                     color: Colors.white,
                     letterSpacing: 1.5,
                   ),
@@ -86,93 +83,90 @@ class PrivacyPolicyScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildContent() {
+  Widget _buildContent(BuildContext context) {
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(25),
+      padding: const EdgeInsets.all(AppConstants.space24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildSection('1. Introduction', [
+          _buildSection(context, '1. Introduction', [
             'This Privacy Policy explains how NanoSolve Hive ("App", "we", "our", or "us") collects, uses, discloses, and otherwise handles your information when you use our mobile application.',
           ]),
-          _buildSection('2. Information We Collect', [
+          _buildSection(context, '2. Information We Collect', [
             '• Device Information: Device type, operating system, unique identifiers, and mobile network information',
             '• Usage Information: Features accessed, interactions with content, and time spent in the App',
             '• Analytics Data: App performance metrics, crash reports, and error logs',
             '• Optional Information: Profile data you voluntarily provide for community features',
           ]),
-          _buildSection('3. How We Use Your Information', [
+          _buildSection(context, '3. How We Use Your Information', [
             '• Improve and maintain the App functionality',
             '• Analyze usage patterns to enhance user experience',
             '• Diagnose and fix technical issues',
             '• Send you important updates or notices',
             '• Comply with legal obligations',
           ]),
-          _buildSection('4. Data Storage and Security', [
+          _buildSection(context, '4. Data Storage and Security', [
             '• We implement industry-standard security measures',
             '• Data is stored securely on our servers',
             '• We never share personal data with third parties without consent',
             '• You can request data deletion at any time',
           ]),
-          _buildSection('5. Third-Party Services', [
+          _buildSection(context, '5. Third-Party Services', [
             '• Firebase: Used for crash reporting and analytics',
             '• These services have their own privacy policies',
             '• We do not share personal identifiable information',
           ]),
-          _buildSection('6. Your Rights', [
+          _buildSection(context, '6. Your Rights', [
             '• Access: Request a copy of your data',
             '• Correction: Update inaccurate information',
             '• Deletion: Request removal of your data',
             '• Opt-Out: Disable analytics in app settings',
           ]),
-          _buildSection('7. Children\'s Privacy', [
+          _buildSection(context, '7. Children\'s Privacy', [
             'This App is not intended for users under 13 years old. We do not knowingly collect information from children.',
           ]),
-          _buildSection('8. Changes to This Policy', [
+          _buildSection(context, '8. Changes to This Policy', [
             'We may update this Privacy Policy periodically. Changes will be posted here with an updated date.',
           ]),
-          _buildSection('9. Contact Us', [
+          _buildSection(context, '9. Contact Us', [
             'For privacy concerns or data requests, please contact us through the App settings or visit our website.',
           ]),
-          const SizedBox(height: 20),
+          const SizedBox(height: AppConstants.space20),
           Text(
             'Last Updated: January 2026',
-            style: TextStyle(
-              fontSize: 10,
+            style: Theme.of(context).textTheme.labelSmall?.copyWith(
               color: AppColors.textMuted,
               fontStyle: FontStyle.italic,
             ),
           ),
-          const SizedBox(height: 40),
+          const SizedBox(height: AppConstants.space40),
         ],
       ),
     );
   }
 
-  Widget _buildSection(String title, List<String> content) {
+  Widget _buildSection(BuildContext context, String title, List<String> content) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 24),
+      padding: const EdgeInsets.only(bottom: AppConstants.space24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             title,
-            style: const TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w800,
+            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
               color: Colors.white,
               letterSpacing: 0.5,
             ),
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: AppConstants.space8),
           ...content.map((text) => Padding(
-                padding: const EdgeInsets.only(bottom: 8),
+                padding: const EdgeInsets.only(bottom: AppConstants.space8),
                 child: Text(
                   text,
-                  style: TextStyle(
-                    fontSize: 12,
+                  style: Theme.of(context).textTheme.labelLarge?.copyWith(
                     color: AppColors.textMuted,
                     height: 1.6,
+                    fontWeight: FontWeight.normal,
                   ),
                 ),
               )),

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'dart:ui';
 import 'dart:async';
+import '../../l10n/app_localizations.dart';
 import '../../config/app_colors.dart';
+import '../../config/app_constants.dart';
+import '../../utils/responsive_config.dart';
 import '../../services/settings_manager.dart';
 import '../../widgets/nanosolve_logo.dart';
 
@@ -35,7 +38,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   }
 
   void _loadSettings() {
-    _displayNameController = TextEditingController(text: _settingsManager.displayName);
+    _displayNameController =
+        TextEditingController(text: _settingsManager.displayName);
     _emailController = TextEditingController(text: _settingsManager.email);
     _bioController = TextEditingController(text: _settingsManager.bio);
 
@@ -96,8 +100,10 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     await _settingsManager.setDarkModeEnabled(_darkModeEnabled);
     await _settingsManager.setDataCollectionEnabled(_dataCollectionEnabled);
     await _settingsManager.setAnalyticsEnabled(_analyticsEnabled);
-    await _settingsManager.setEmailNotificationsEnabled(_emailNotificationsEnabled);
-    await _settingsManager.setPushNotificationsEnabled(_pushNotificationsEnabled);
+    await _settingsManager
+        .setEmailNotificationsEnabled(_emailNotificationsEnabled);
+    await _settingsManager
+        .setPushNotificationsEnabled(_pushNotificationsEnabled);
 
     if (mounted) {
       setState(() => _hasChanges = false);
@@ -135,8 +141,11 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   }
 
   Widget _buildHeader() {
+    final responsive = ResponsiveConfig.fromMediaQuery(context);
+    final header = responsive.getSecondaryHeaderConfig();
+
     return Container(
-      padding: const EdgeInsets.all(25),
+      padding: EdgeInsets.all(header.padding),
       decoration: BoxDecoration(
         color: const Color(0xFF141928).withValues(alpha: 0.9),
         border: Border(
@@ -155,24 +164,22 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                 GestureDetector(
                   onTap: () => Navigator.of(context).pop(),
                   child: Text(
-                    'Back',
-                    style: TextStyle(
+                    AppLocalizations.of(context)!.settingsBack,
+                    style: header.backStyle?.copyWith(
                       color: AppColors.pastelMint,
-                      fontWeight: FontWeight.w700,
-                      fontSize: 12,
                       letterSpacing: 1,
                     ),
                   ),
                 ),
-                  Icon(
+                Icon(
                   Icons.person,
-                  size: 24,
+                  size: header.iconSize,
                   color: AppColors.pastelMint,
                 ),
               ],
             ),
-            const SizedBox(height: 15),
-            const NanosolveLogo(height: 50),
+            SizedBox(height: header.spacing),
+            NanosolveLogo(height: header.logoHeight),
           ],
         ),
       ),
@@ -180,48 +187,57 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   }
 
   Widget _buildContent() {
+    final responsive = ResponsiveConfig.fromMediaQuery(context);
+    final config = responsive.getSettingsScreenConfig();
+
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(25),
+      padding: EdgeInsets.all(config.contentPadding),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildTitleSection(),
-          const SizedBox(height: 30),
-          _buildAvatarSection(),
-          const SizedBox(height: 30),
-          _buildSectionTitle('Personal Information', AppColors.pastelMint),
-          const SizedBox(height: 15),
+          _buildTitleSection(config),
+          const SizedBox(height: AppConstants.space30),
+          _buildAvatarSection(config),
+          const SizedBox(height: AppConstants.space30),
+          _buildSectionTitle(AppLocalizations.of(context)!.profilePersonalInfo,
+              AppColors.pastelMint, config),
+          const SizedBox(height: AppConstants.space16),
           _buildTextField(
             controller: _displayNameController,
-            label: 'Display Name',
-            hint: 'Enter your full name or nickname',
+            label: AppLocalizations.of(context)!.profileDisplayName,
+            hint: AppLocalizations.of(context)!.profileDisplayNameHint,
             icon: Icons.person_outline,
+            config: config,
           ),
-          const SizedBox(height: 15),
+          const SizedBox(height: AppConstants.space16),
           _buildTextField(
             controller: _emailController,
-            label: 'Email',
-            hint: 'Enter your email',
+            label: AppLocalizations.of(context)!.profileEmail,
+            hint: AppLocalizations.of(context)!.profileEmailHint,
             icon: Icons.email_outlined,
             keyboardType: TextInputType.emailAddress,
+            config: config,
           ),
-          const SizedBox(height: 15),
+          const SizedBox(height: AppConstants.space16),
           _buildTextField(
             controller: _bioController,
-            label: 'Bio',
-            hint: 'Tell us about yourself',
+            label: AppLocalizations.of(context)!.profileBio,
+            hint: AppLocalizations.of(context)!.profileBioHint,
             icon: Icons.description_outlined,
             maxLines: 3,
+            config: config,
           ),
-          const SizedBox(height: 30),
-          _buildSectionTitle('Appearance', AppColors.pastelLavender),
-          const SizedBox(height: 15),
+          const SizedBox(height: AppConstants.space30),
+          _buildSectionTitle(AppLocalizations.of(context)!.profileAppearance,
+              AppColors.pastelLavender, config),
+          const SizedBox(height: AppConstants.space16),
           _buildToggleItem(
-            title: 'Dark Mode',
-            subtitle: 'Use dark theme throughout the app',
+            title: AppLocalizations.of(context)!.profileDarkMode,
+            subtitle: AppLocalizations.of(context)!.profileDarkModeDesc,
             icon: Icons.dark_mode_outlined,
             value: _darkModeEnabled,
             color: AppColors.pastelLavender,
+            config: config,
             onChanged: (value) {
               setState(() {
                 _darkModeEnabled = value;
@@ -230,15 +246,18 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               _scheduleAutoSave();
             },
           ),
-          const SizedBox(height: 30),
-          _buildSectionTitle('Notifications', AppColors.pastelAqua),
-          const SizedBox(height: 15),
+          const SizedBox(height: AppConstants.space30),
+          _buildSectionTitle(AppLocalizations.of(context)!.profileNotifications,
+              AppColors.pastelAqua, config),
+          const SizedBox(height: AppConstants.space16),
           _buildToggleItem(
-            title: 'Push Notifications',
-            subtitle: 'Receive push notifications on your device',
+            title: AppLocalizations.of(context)!.profilePushNotifications,
+            subtitle:
+                AppLocalizations.of(context)!.profilePushNotificationsDesc,
             icon: Icons.notifications_outlined,
             value: _pushNotificationsEnabled,
             color: AppColors.pastelAqua,
+            config: config,
             onChanged: (value) {
               setState(() {
                 _pushNotificationsEnabled = value;
@@ -247,13 +266,15 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               _scheduleAutoSave();
             },
           ),
-          const SizedBox(height: 15),
+          const SizedBox(height: AppConstants.space16),
           _buildToggleItem(
-            title: 'Email Notifications',
-            subtitle: 'Receive updates via email',
+            title: AppLocalizations.of(context)!.profileEmailNotifications,
+            subtitle:
+                AppLocalizations.of(context)!.profileEmailNotificationsDesc,
             icon: Icons.email_outlined,
             value: _emailNotificationsEnabled,
             color: AppColors.pastelAqua,
+            config: config,
             onChanged: (value) {
               setState(() {
                 _emailNotificationsEnabled = value;
@@ -262,15 +283,17 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               _scheduleAutoSave();
             },
           ),
-          const SizedBox(height: 30),
-          _buildSectionTitle('Privacy', AppColors.pastelMint),
-          const SizedBox(height: 15),
+          const SizedBox(height: AppConstants.space30),
+          _buildSectionTitle(AppLocalizations.of(context)!.profilePrivacy,
+              AppColors.pastelMint, config),
+          const SizedBox(height: AppConstants.space16),
           _buildToggleItem(
-            title: 'Analytics',
-            subtitle: 'Help us improve by sharing usage data',
+            title: AppLocalizations.of(context)!.profileAnalytics,
+            subtitle: AppLocalizations.of(context)!.profileAnalyticsDesc,
             icon: Icons.analytics_outlined,
             value: _analyticsEnabled,
             color: AppColors.pastelMint,
+            config: config,
             onChanged: (value) {
               setState(() {
                 _analyticsEnabled = value;
@@ -279,30 +302,15 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               _scheduleAutoSave();
             },
           ),
-          const SizedBox(height: 15),
-          _buildToggleItem(
-            title: 'Data Collection',
-            subtitle: 'Allow personalized content recommendations',
-            icon: Icons.data_usage_outlined,
-            value: _dataCollectionEnabled,
-            color: AppColors.pastelMint,
-            onChanged: (value) {
-              setState(() {
-                _dataCollectionEnabled = value;
-                _hasChanges = true;
-              });
-              _scheduleAutoSave();
-            },
-          ),
-          const SizedBox(height: 30),
-          _buildDangerZone(),
-          const SizedBox(height: 40),
+          const SizedBox(height: AppConstants.space16),
+          _buildDangerZone(config),
+          const SizedBox(height: AppConstants.space40),
         ],
       ),
     );
   }
 
-  Widget _buildTitleSection() {
+  Widget _buildTitleSection(SettingsScreenConfig config) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -310,21 +318,18 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
           shaderCallback: (bounds) => const LinearGradient(
             colors: [AppColors.pastelMint, AppColors.pastelAqua],
           ).createShader(bounds),
-          child: const Text(
-            'Profile Settings',
-            style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.w900,
+          child: Text(
+            AppLocalizations.of(context)!.profileTitle,
+            style: config.titleStyle?.copyWith(
               color: Colors.white,
               letterSpacing: 0.5,
             ),
           ),
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: AppConstants.space8),
         Text(
-          'Customize your profile and preferences',
-          style: TextStyle(
-            fontSize: 13,
+          AppLocalizations.of(context)!.profileSubtitle,
+          style: config.subtitleStyle?.copyWith(
             color: AppColors.textMuted,
             fontWeight: FontWeight.w600,
           ),
@@ -333,7 +338,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     );
   }
 
-  Widget _buildAvatarSection() {
+  Widget _buildAvatarSection(SettingsScreenConfig config) {
     return Center(
       child: Column(
         children: [
@@ -342,14 +347,14 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               // Avatar selection logic
             },
             child: Container(
-              width: 100,
-              height: 100,
+              width: config.avatarSize,
+              height: config.avatarSize,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 color: const Color(0xFF141928),
                 border: Border.all(
                   color: AppColors.pastelMint.withValues(alpha: 0.5),
-                  width: 3,
+                  width: config.avatarBorderWidth!,
                 ),
                 boxShadow: [
                   BoxShadow(
@@ -361,16 +366,15 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               ),
               child: Icon(
                 Icons.person,
-                size: 50,
+                size: config.avatarSize! * 0.5,
                 color: AppColors.pastelMint.withValues(alpha: 0.7),
               ),
             ),
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: AppConstants.space12),
           Text(
-            'Tap to change avatar',
-            style: TextStyle(
-              fontSize: 12,
+            AppLocalizations.of(context)!.profileChangeAvatar,
+            style: config.avatarHintStyle?.copyWith(
               color: AppColors.textMuted,
               fontWeight: FontWeight.w500,
             ),
@@ -380,22 +384,22 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     );
   }
 
-  Widget _buildSectionTitle(String title, Color color) {
+  Widget _buildSectionTitle(
+      String title, Color color, SettingsScreenConfig config) {
     return Row(
       children: [
         Container(
-          width: 4,
-          height: 20,
+          width: config.sectionBarWidth,
+          height: config.sectionBarHeight,
           decoration: BoxDecoration(
             color: color,
             borderRadius: BorderRadius.circular(2),
           ),
         ),
-        const SizedBox(width: 10),
+        const SizedBox(width: AppConstants.space8),
         Text(
           title,
-          style: TextStyle(
-            fontSize: 16,
+          style: config.sectionTitleStyle?.copyWith(
             fontWeight: FontWeight.w700,
             color: color,
             letterSpacing: 0.5,
@@ -410,14 +414,15 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     required String label,
     required String hint,
     required IconData icon,
+    required SettingsScreenConfig config,
     TextInputType keyboardType = TextInputType.text,
     int maxLines = 1,
   }) {
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: EdgeInsets.all(config.fieldPadding ?? 0),
       decoration: BoxDecoration(
         color: const Color(0xFF141928).withValues(alpha: 0.8),
-        borderRadius: BorderRadius.circular(18),
+        borderRadius: BorderRadius.circular(AppConstants.radiusLarge),
         border: Border.all(color: AppColors.pastelMint.withValues(alpha: 0.2)),
       ),
       child: Column(
@@ -425,41 +430,41 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
         children: [
           Row(
             children: [
-              Icon(icon, size: 18, color: AppColors.pastelMint),
-              const SizedBox(width: 8),
+              Icon(icon,
+                  size: AppConstants.iconSmall, color: AppColors.pastelMint),
+              const SizedBox(width: AppConstants.space8),
               Text(
                 label,
-                style: TextStyle(
-                  fontSize: 13,
+                style: config.fieldLabelStyle?.copyWith(
                   fontWeight: FontWeight.w600,
                   color: AppColors.textMuted,
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: AppConstants.space12),
           TextField(
             controller: controller,
             keyboardType: keyboardType,
             maxLines: maxLines,
-            style: const TextStyle(
+            style: config.fieldInputStyle?.copyWith(
               color: Colors.white,
-              fontSize: 15,
               fontWeight: FontWeight.w500,
             ),
             decoration: InputDecoration(
               hintText: hint,
-              hintStyle: TextStyle(
+              hintStyle: config.fieldInputStyle?.copyWith(
                 color: AppColors.textDark,
-                fontSize: 15,
               ),
               filled: true,
               fillColor: const Color(0xFF0A0A12).withValues(alpha: 0.5),
               border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(AppConstants.radiusMedium),
                 borderSide: BorderSide.none,
               ),
-              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+              contentPadding: const EdgeInsets.symmetric(
+                  horizontal: AppConstants.space16,
+                  vertical: AppConstants.space12),
             ),
           ),
         ],
@@ -473,44 +478,43 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     required IconData icon,
     required bool value,
     required Color color,
+    required SettingsScreenConfig config,
     required ValueChanged<bool> onChanged,
   }) {
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: EdgeInsets.all(config.fieldPadding ?? 0),
       decoration: BoxDecoration(
         color: const Color(0xFF141928).withValues(alpha: 0.8),
-        borderRadius: BorderRadius.circular(18),
+        borderRadius: BorderRadius.circular(AppConstants.radiusLarge),
         border: Border.all(color: color.withValues(alpha: 0.2)),
       ),
       child: Row(
         children: [
           Container(
-            width: 45,
-            height: 45,
+            width: config.toggleIconContainer,
+            height: config.toggleIconContainer,
             decoration: BoxDecoration(
               color: color.withValues(alpha: 0.15),
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(AppConstants.radiusMedium),
             ),
-            child: Icon(icon, size: 22, color: color),
+            child: Icon(icon, size: config.toggleIconSize, color: color),
           ),
-          const SizedBox(width: 15),
+          const SizedBox(width: AppConstants.space16),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   title,
-                  style: const TextStyle(
-                    fontSize: 14,
+                  style: config.toggleTitleStyle?.copyWith(
                     fontWeight: FontWeight.w600,
                     color: Colors.white,
                   ),
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: AppConstants.space4),
                 Text(
                   subtitle,
-                  style: TextStyle(
-                    fontSize: 12,
+                  style: config.toggleSubStyle?.copyWith(
                     color: AppColors.textMuted,
                   ),
                 ),
@@ -530,18 +534,19 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     );
   }
 
-  Widget _buildDangerZone() {
+  Widget _buildDangerZone(SettingsScreenConfig config) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildSectionTitle('Danger Zone', AppColors.neonCrimson),
-        const SizedBox(height: 15),
+        _buildSectionTitle('Danger Zone', AppColors.neonCrimson, config),
+        const SizedBox(height: AppConstants.space16),
         Container(
-          padding: const EdgeInsets.all(20),
+          padding: EdgeInsets.all(config.dangerPadding ?? 0),
           decoration: BoxDecoration(
             color: const Color(0xFF141928).withValues(alpha: 0.8),
-            borderRadius: BorderRadius.circular(18),
-            border: Border.all(color: AppColors.neonCrimson.withValues(alpha: 0.3)),
+            borderRadius: BorderRadius.circular(AppConstants.radiusXL),
+            border:
+                Border.all(color: AppColors.neonCrimson.withValues(alpha: 0.3)),
           ),
           child: Column(
             children: [
@@ -549,13 +554,15 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                 title: 'Reset Settings',
                 subtitle: 'Reset all settings to default values',
                 icon: Icons.refresh,
+                config: config,
                 onTap: _showResetConfirmation,
               ),
-              const SizedBox(height: 15),
+              const SizedBox(height: AppConstants.space16),
               _buildDangerButton(
                 title: 'Delete Account',
                 subtitle: 'Permanently delete your account and data',
                 icon: Icons.delete_forever,
+                config: config,
                 onTap: _showDeleteConfirmation,
               ),
             ],
@@ -569,38 +576,39 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     required String title,
     required String subtitle,
     required IconData icon,
+    required SettingsScreenConfig config,
     required VoidCallback onTap,
   }) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.all(15),
+        padding: EdgeInsets.all(config.dangerButtonPadding ?? 0),
         decoration: BoxDecoration(
           color: AppColors.neonCrimson.withValues(alpha: 0.1),
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: AppColors.neonCrimson.withValues(alpha: 0.2)),
+          borderRadius: BorderRadius.circular(AppConstants.radiusMedium),
+          border:
+              Border.all(color: AppColors.neonCrimson.withValues(alpha: 0.2)),
         ),
         child: Row(
           children: [
-            Icon(icon, size: 22, color: AppColors.neonCrimson),
-            const SizedBox(width: 12),
+            Icon(icon,
+                size: config.dangerIconSize, color: AppColors.neonCrimson),
+            const SizedBox(width: AppConstants.space12),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     title,
-                    style: TextStyle(
-                      fontSize: 14,
+                    style: config.dangerTitleStyle?.copyWith(
                       fontWeight: FontWeight.w600,
                       color: AppColors.neonCrimson,
                     ),
                   ),
-                  const SizedBox(height: 2),
+                  const SizedBox(height: AppConstants.space4),
                   Text(
                     subtitle,
-                    style: TextStyle(
-                      fontSize: 11,
+                    style: config.dangerSubStyle?.copyWith(
                       color: AppColors.textMuted,
                     ),
                   ),
@@ -609,7 +617,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
             ),
             Icon(
               Icons.arrow_forward_ios,
-              size: 16,
+              size: config.dangerArrowSize,
               color: AppColors.neonCrimson.withValues(alpha: 0.5),
             ),
           ],
@@ -623,19 +631,22 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       context: context,
       builder: (context) => AlertDialog(
         backgroundColor: const Color(0xFF141928),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
-        title: Text(
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(AppConstants.radiusXL)),
+        title: const Text(
           'Reset Settings?',
-          style: TextStyle(color: AppColors.neonCrimson, fontWeight: FontWeight.w700),
+          style: TextStyle(
+              color: AppColors.neonCrimson, fontWeight: FontWeight.w700),
         ),
-        content: Text(
+        content: const Text(
           'This will reset all settings to their default values. This action cannot be undone.',
           style: TextStyle(color: AppColors.textMuted),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text('Cancel', style: TextStyle(color: AppColors.textMuted)),
+            child: const Text('Cancel',
+                style: TextStyle(color: AppColors.textMuted)),
           ),
           TextButton(
             onPressed: () async {
@@ -646,7 +657,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                 setState(() {});
               }
             },
-            child: Text('Reset', style: TextStyle(color: AppColors.neonCrimson)),
+            child: const Text('Reset',
+                style: TextStyle(color: AppColors.neonCrimson)),
           ),
         ],
       ),
@@ -658,26 +670,30 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       context: context,
       builder: (context) => AlertDialog(
         backgroundColor: const Color(0xFF141928),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
-        title: Text(
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(AppConstants.radiusXL)),
+        title: const Text(
           'Delete Account?',
-          style: TextStyle(color: AppColors.neonCrimson, fontWeight: FontWeight.w700),
+          style: TextStyle(
+              color: AppColors.neonCrimson, fontWeight: FontWeight.w700),
         ),
-        content: Text(
+        content: const Text(
           'This will permanently delete your account and all associated data. This action cannot be undone.',
           style: TextStyle(color: AppColors.textMuted),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text('Cancel', style: TextStyle(color: AppColors.textMuted)),
+            child: const Text('Cancel',
+                style: TextStyle(color: AppColors.textMuted)),
           ),
           TextButton(
             onPressed: () {
               Navigator.pop(context);
               // Delete account logic would go here
             },
-            child: Text('Delete', style: TextStyle(color: AppColors.neonCrimson)),
+            child: const Text('Delete',
+                style: TextStyle(color: AppColors.neonCrimson)),
           ),
         ],
       ),

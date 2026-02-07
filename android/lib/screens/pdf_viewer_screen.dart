@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter/services.dart';
 import 'dart:ui';
 import 'package:pdfx/pdfx.dart';
 import '../config/app_colors.dart';
+import '../config/app_constants.dart';
 import '../widgets/nanosolve_logo.dart';
 import '../l10n/app_localizations.dart';
 import '../services/logger_service.dart';
 import 'dart:async';
 import 'dart:io';
-import 'package:flutter/services.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:share_plus/share_plus.dart';
 
 class PDFViewerScreen extends StatefulWidget {
   final String title;
@@ -37,10 +39,11 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
   bool _isLoading = true;
   String? _error;
   int _currentPage = 1;
+  int _stablePageBeforeRotation = 1; // Stores page before rotation starts
   Orientation? _lastOrientation;
-  double _lastScale = 1.0;
   bool _isRotating = false;
-  
+  bool _initialPageSet = false; // Track if initial page has been set
+
   @override
   void initState() {
     super.initState();
@@ -80,6 +83,15 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
       setState(() {
         _isLoading = false;
         _currentPage = widget.startPage;
+        _stablePageBeforeRotation = widget.startPage;
+      });
+
+      // Jump to start page once the viewer has laid out its pages.
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          _safeJumpToPage(widget.startPage);
+          _initialPageSet = true;
+        }
       });
 
       // Log PDF performance
@@ -119,44 +131,42 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
     super.dispose();
   }
 
-  void _handleOrientationChange() {
+  /// Attempts jumpToPage, retrying on next frame if page rects
+  /// aren't ready yet (e.g. right after orientation change).
+  void _safeJumpToPage(int page, {int retries = 3}) {
+    try {
+      _pdfController.jumpToPage(page);
+    } catch (e) {
+      if (retries > 0) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (mounted) _safeJumpToPage(page, retries: retries - 1);
+        });
+      }
+    }
+  }
+
+  void _handleOrientationChange(int pageToPreserve) {
     if (_isRotating) return;
-    
-    final int pageToPreserve = _currentPage;
-    _isRotating = true; // Lock the listener
+    _isRotating = true;
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
-      // 1. HARD RESET: Clear the matrix immediately to identity.
-      // This stops the 'blank page' stretching instantly.
+
       _pdfController.value = Matrix4.identity();
 
-      // 2. FIRST JUMP: Snap to page at 1.0 scale to establish new layout coordinates
-      _pdfController.jumpToPage(pageToPreserve);
-
-      // 3. SCALE IN: After a short delay to let the screen resize...
-      Future.delayed(const Duration(milliseconds: 150), () {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
         if (!mounted) return;
-        
-        final currentMatrix = _pdfController.value.clone();
-        currentMatrix.storage[0] = _lastScale;
-        currentMatrix.storage[5] = _lastScale;
-        
-        // Inject the zoom. We don't touch storage[12]/[13] here 
-        // so we keep the page alignment from the first jump.
-        _pdfController.value = currentMatrix;
 
-        // 4. FINAL CALIBRATION: The "Double-Jump" 
-        _pdfController.jumpToPage(pageToPreserve);
+        // jumpToPage(N) lands on onPageChanged(N+1), so subtract 1
+        // to restore the exact _currentPage value from before rotation.
+        _safeJumpToPage(pageToPreserve - 1);
 
-        Future.delayed(const Duration(milliseconds: 150), () {
-          if (!mounted) return;        
-          // Final micro-adjustment
-          _pdfController.jumpToPage(pageToPreserve-1);
-          
+        Future.delayed(const Duration(milliseconds: 200), () {
+          if (!mounted) return;
           setState(() {
             _currentPage = pageToPreserve;
-            _isRotating = false; // Release lock
+            _stablePageBeforeRotation = pageToPreserve;
+            _isRotating = false;
           });
         });
       });
@@ -167,7 +177,7 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
     final matrix = _pdfController.value.clone();
     final double oldScale = matrix.storage[0];
     final double newScale = (oldScale + delta).clamp(1.0, 5.0);
-    
+
     // If scale didn't change (e.g. hitting min/max), do nothing
     if (newScale == oldScale) return;
 
@@ -176,7 +186,7 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
     // Get the center of the viewer to use as the "Eye of the Spiral"
     final RenderBox? box = context.findRenderObject() as RenderBox?;
     if (box == null) return;
-    
+
     final double centerX = box.size.width / 2;
     final double centerY = box.size.height / 2;
 
@@ -189,7 +199,59 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
     matrix.storage[5] = newScale;
 
     _pdfController.value = matrix;
-    _lastScale = newScale; // Sync for rotation handling
+  }
+
+  void _jumpToPage(String pageText) {
+    if (pageText.isEmpty) return;
+
+    try {
+      final int pageNumber = int.parse(pageText);
+
+      // Validate page number is within range
+      if (pageNumber < widget.startPage || pageNumber > widget.endPage) {
+        return;
+      }
+
+      // Jump to the specified page
+      _pdfController.jumpToPage(pageNumber);
+
+      LoggerService().logUserAction('pdf_page_jump', params: {
+        'from_page': _currentPage,
+        'to_page': pageNumber,
+        'title': widget.title,
+      });
+    } catch (e) {
+      // Invalid input, ignore
+    }
+  }
+
+  Future<void> _sharePDF() async {
+    if (kIsWeb) return;
+
+    try {
+      final pdfPath = widget.pdfAssetPath ??
+          'assets/docs/Nanoplastics_in_the_Biosphere_Report.pdf';
+      final data = await rootBundle.load(pdfPath);
+      final bytes = data.buffer.asUint8List();
+
+      final sanitizedTitle = widget.title
+          .replaceAll(RegExp(r'[^\w\s-]'), '')
+          .replaceAll(' ', '_');
+      final tempDir = Directory.systemTemp;
+      final tempFile = File('${tempDir.path}/Nanoplastics_$sanitizedTitle.pdf');
+      await tempFile.writeAsBytes(bytes);
+
+      await Share.shareXFiles(
+        [XFile(tempFile.path)],
+        subject: widget.title,
+      );
+
+      LoggerService().logUserAction('pdf_shared', params: {
+        'title': widget.title,
+      });
+    } catch (e) {
+      LoggerService().logError('PDFShareFailed', e);
+    }
   }
 
   Future<void> _downloadAndSharePDF() async {
@@ -278,41 +340,6 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
     }
   }
 
-  Future<void> _openFile(String filePath) async {
-    try {
-      final file = File(filePath);
-      if (await file.exists()) {
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('File saved successfully and ready to open'),
-              backgroundColor: Colors.green,
-            ),
-          );
-        }
-      } else {
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('File no longer exists'),
-              backgroundColor: Colors.orange,
-            ),
-          );
-        }
-      }
-    } catch (e) {
-      LoggerService().logError('OpenFileFailed', e);
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Error: $e'),
-            backgroundColor: Colors.orange,
-          ),
-        );
-      }
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -332,8 +359,9 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
         child: SafeArea(
           child: OrientationBuilder(
             builder: (context, orientation) {
+              // Use stable page that was captured before any rotation events
               if (_lastOrientation != null && _lastOrientation != orientation) {
-                _handleOrientationChange();
+                _handleOrientationChange(_stablePageBeforeRotation);
               }
               _lastOrientation = orientation;
 
@@ -357,7 +385,7 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
 
   Widget _buildHeader() {
     return Container(
-      padding: const EdgeInsets.all(8),
+      padding: const EdgeInsets.all(AppConstants.space8),
       decoration: BoxDecoration(
         color: const Color(0xFF141928).withValues(alpha: 0.9),
         border: Border(
@@ -375,24 +403,34 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
               onTap: () => Navigator.of(context).pop(),
               child: Text(
                 AppLocalizations.of(context)!.sourcesBack,
-                style: TextStyle(
-                  color: AppColors.pastelAqua,
-                  fontWeight: FontWeight.w700,
-                  fontSize: 12,
-                  letterSpacing: 1,
-                ),
+                style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                      color: AppColors.pastelAqua,
+                    ),
               ),
             ),
-            const NanosolveLogo(height: 40),
+            const NanosolveLogo(height: AppConstants.logoXS),
             SizedBox(
               width: 50,
-              child: Text(
-                'p. $_currentPage',
+              child: TextField(
                 textAlign: TextAlign.right,
-                style: TextStyle(
-                  color: AppColors.pastelAqua,
-                  fontWeight: FontWeight.w700,
-                  fontSize: 12,
+                keyboardType: TextInputType.number,
+                inputFormatters: [
+                  FilteringTextInputFormatter.digitsOnly,
+                ],
+                onSubmitted: _jumpToPage,
+                controller: TextEditingController(text: '$_currentPage'),
+                style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                      color: AppColors.pastelAqua,
+                    ),
+                decoration: InputDecoration(
+                  prefix: Text(
+                    'p. ',
+                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                          color: AppColors.pastelAqua,
+                        ),
+                  ),
+                  border: InputBorder.none,
+                  contentPadding: EdgeInsets.zero,
                 ),
               ),
             ),
@@ -404,8 +442,8 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
 
   Widget _buildInfoCard() {
     return Container(
-      margin: const EdgeInsets.all(5),
-      padding: const EdgeInsets.all(5),
+      margin: const EdgeInsets.all(AppConstants.space4),
+      padding: const EdgeInsets.all(AppConstants.space4),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topLeft,
@@ -416,25 +454,24 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
           ],
         ),
         border: Border.all(color: AppColors.pastelAqua.withValues(alpha: 0.3)),
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(AppConstants.radiusMedium),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             '${widget.title} • str. ${widget.startPage}-${widget.endPage}',
-            style: TextStyle(
-              color: AppColors.pastelLavender,
-              fontSize: 11,
-              fontWeight: FontWeight.w600,
-            ),
+            style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                  color: AppColors.pastelLavender,
+                ),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildZoomButton({required IconData icon, required VoidCallback onPressed}) {
+  Widget _buildZoomButton(
+      {required IconData icon, required VoidCallback onPressed}) {
     return IconButton(
       icon: Icon(icon, color: Colors.black),
       onPressed: onPressed,
@@ -444,7 +481,7 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
 
   Widget _buildPDFViewer({bool isPortrait = true}) {
     if (_isLoading) {
-      return Center(
+      return const Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -453,7 +490,7 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
                 AppColors.pastelAqua,
               ),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
             Text(
               'Loading PDF...',
               style: TextStyle(
@@ -483,7 +520,7 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
                 child: Text(
                   _error!,
                   textAlign: TextAlign.center,
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: AppColors.textMuted,
                     fontSize: 14,
                   ),
@@ -520,10 +557,16 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
             child: PdfViewPinch(
               controller: _pdfController,
               onPageChanged: (page) {
-                if (_isRotating) return; // Ignore updates while we are repositioning
+                if (_isRotating || !_initialPageSet) return;
+
+                // When zoomed in, the viewport can drift across page
+                // boundaries producing unreliable page numbers.
+                final scale = _pdfController.value.storage[0];
+                if (scale > 1.05) return;
 
                 setState(() {
                   _currentPage = page;
+                  _stablePageBeforeRotation = page;
                 });
                 LoggerService().logPDFInteraction(
                   'page_changed',
@@ -536,7 +579,6 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
                   const BoxDecoration(color: Color(0xFFFFFFFF)),
             ),
           ),
-
           Positioned(
             right: 20,
             bottom: 20,
@@ -548,16 +590,17 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   _buildZoomButton(
-                    icon: Icons.add, 
+                    icon: Icons.add,
                     onPressed: () => _applyZoom(0.25),
                   ),
                   Container(
                     width: 24,
                     height: 1,
-                    color: Colors.black.withValues(alpha: 0.1), // Subtle divider
+                    color:
+                        Colors.black.withValues(alpha: 0.1), // Subtle divider
                   ),
                   _buildZoomButton(
-                    icon: Icons.remove, 
+                    icon: Icons.remove,
                     onPressed: () => _applyZoom(-0.25),
                   ),
                 ],
@@ -601,7 +644,7 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
                   color: AppColors.pastelAqua.withValues(alpha: 0.3),
                 ),
               ),
-              child: Icon(
+              child: const Icon(
                 Icons.arrow_back,
                 size: 20,
                 color: AppColors.pastelAqua,
@@ -612,14 +655,23 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                'Page ${_currentPage}/${widget.endPage}',
-                style: TextStyle(
+                'Page $_currentPage/${widget.endPage}',
+                style: const TextStyle(
                   color: AppColors.textMuted,
                   fontSize: 12,
                   fontWeight: FontWeight.w600,
                 ),
               ),
               const SizedBox(width: 16),
+              GestureDetector(
+                onTap: _sharePDF,
+                child: Icon(
+                  Icons.share,
+                  size: 20,
+                  color: AppColors.pastelMint.withValues(alpha: 0.7),
+                ),
+              ),
+              const SizedBox(width: 12),
               GestureDetector(
                 onTap: _downloadAndSharePDF,
                 child: Icon(
@@ -648,7 +700,7 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
                   color: AppColors.pastelAqua.withValues(alpha: 0.3),
                 ),
               ),
-              child: Icon(
+              child: const Icon(
                 Icons.arrow_forward,
                 size: 20,
                 color: AppColors.pastelAqua,

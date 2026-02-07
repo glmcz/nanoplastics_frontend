@@ -154,6 +154,27 @@ class SettingsManager {
     await clearAll();
   }
 
+  // Draft idea persistence (per category)
+
+  String? getDraftIdea(String category) {
+    _checkInitialized();
+    return _prefs.getString('draft_idea_$category');
+  }
+
+  Future<void> setDraftIdea(String category, String text) async {
+    _checkInitialized();
+    if (text.isEmpty) {
+      await _prefs.remove('draft_idea_$category');
+    } else {
+      await _prefs.setString('draft_idea_$category', text);
+    }
+  }
+
+  Future<void> clearDraftIdea(String category) async {
+    _checkInitialized();
+    await _prefs.remove('draft_idea_$category');
+  }
+
   // Profile settings getters and setters
 
   /// Get display name

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'dart:ui';
+import '../../l10n/app_localizations.dart';
 import '../../config/app_colors.dart';
+import '../../config/app_constants.dart';
+import '../../utils/responsive_config.dart';
 import '../../services/settings_manager.dart';
 import '../../widgets/nanosolve_logo.dart';
 import '../../main.dart';
@@ -19,15 +22,15 @@ class _LanguageScreenState extends State<LanguageScreen> {
   late String _selectedLanguage;
 
   final List<LanguageOption> _languages = [
-    LanguageOption(
+    const LanguageOption(
         code: 'en', name: 'English', nativeName: 'English', flag: '🇺🇸'),
-    LanguageOption(
+    const LanguageOption(
         code: 'cs', name: 'Czech', nativeName: 'Čeština', flag: '🇨🇿'),
-    LanguageOption(
+    const LanguageOption(
         code: 'es', name: 'Spanish', nativeName: 'Español', flag: '🇪🇸'),
-    LanguageOption(
+    const LanguageOption(
         code: 'fr', name: 'French', nativeName: 'Français', flag: '🇫🇷'),
-    LanguageOption(
+    const LanguageOption(
         code: 'ru', name: 'Russian', nativeName: 'Русский', flag: '🇷🇺'),
   ];
 
@@ -57,8 +60,8 @@ class _LanguageScreenState extends State<LanguageScreen> {
               'Language changed to ${_languages.firstWhere((l) => l.code == code).name}'),
           backgroundColor: AppColors.pastelAqua.withValues(alpha: 0.9),
           behavior: SnackBarBehavior.floating,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(AppConstants.radiusMedium)),
         ),
       );
     }
@@ -93,8 +96,11 @@ class _LanguageScreenState extends State<LanguageScreen> {
   }
 
   Widget _buildHeader() {
+    final responsive = ResponsiveConfig.fromMediaQuery(context);
+    final header = responsive.getSecondaryHeaderConfig();
+
     return Container(
-      padding: const EdgeInsets.all(25),
+      padding: EdgeInsets.all(header.padding),
       decoration: BoxDecoration(
         color: const Color(0xFF141928).withValues(alpha: 0.9),
         border: Border(
@@ -111,20 +117,19 @@ class _LanguageScreenState extends State<LanguageScreen> {
                 GestureDetector(
                   onTap: () => Navigator.of(context).pop(),
                   child: Text(
-                    'Back',
-                    style: TextStyle(
+                    AppLocalizations.of(context)!.settingsBack,
+                    style: header.backStyle?.copyWith(
                       color: AppColors.pastelAqua,
-                      fontWeight: FontWeight.w700,
-                      fontSize: 12,
                       letterSpacing: 1,
                     ),
                   ),
                 ),
-                Icon(Icons.language, size: 24, color: AppColors.pastelAqua),
+                Icon(Icons.language,
+                    size: header.iconSize, color: AppColors.pastelAqua),
               ],
             ),
-            const SizedBox(height: 15),
-            const NanosolveLogo(height: 50),
+            SizedBox(height: header.spacing),
+            NanosolveLogo(height: header.logoHeight),
           ],
         ),
       ),
@@ -132,26 +137,29 @@ class _LanguageScreenState extends State<LanguageScreen> {
   }
 
   Widget _buildContent() {
+    final responsive = ResponsiveConfig.fromMediaQuery(context);
+    final config = responsive.getSettingsScreenConfig();
+
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(25),
+      padding: EdgeInsets.all(config.contentPadding),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildTitleSection(),
-          const SizedBox(height: 30),
+          _buildTitleSection(config),
+          SizedBox(height: config.cardSpacing * 2),
           ..._languages.map((lang) => Padding(
-                padding: const EdgeInsets.only(bottom: 15),
-                child: _buildLanguageItem(lang),
+                padding: EdgeInsets.only(bottom: config.cardSpacing),
+                child: _buildLanguageItem(lang, config),
               )),
-          const SizedBox(height: 20),
-          _buildInfoCard(),
-          const SizedBox(height: 40),
+          SizedBox(height: config.cardSpacing),
+          _buildInfoCard(config),
+          SizedBox(height: config.cardSpacing * 2),
         ],
       ),
     );
   }
 
-  Widget _buildTitleSection() {
+  Widget _buildTitleSection(SettingsScreenConfig config) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -159,42 +167,42 @@ class _LanguageScreenState extends State<LanguageScreen> {
           shaderCallback: (bounds) => const LinearGradient(
             colors: [AppColors.pastelAqua, AppColors.pastelMint],
           ).createShader(bounds),
-          child: const Text(
-            'Language',
-            style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.w900,
+          child: Text(
+            AppLocalizations.of(context)!.languageTitle,
+            style: config.titleStyle?.copyWith(
               color: Colors.white,
               letterSpacing: 0.5,
             ),
           ),
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: AppConstants.space8),
         Text(
-          'Choose your preferred language',
-          style: TextStyle(
-            fontSize: 13,
+          AppLocalizations.of(context)!.languageSubtitle,
+          style: config.subtitleStyle?.copyWith(
             color: AppColors.textMuted,
             fontWeight: FontWeight.w600,
           ),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
         ),
       ],
     );
   }
 
-  Widget _buildLanguageItem(LanguageOption language) {
+  Widget _buildLanguageItem(
+      LanguageOption language, SettingsScreenConfig config) {
     final isSelected = _selectedLanguage == language.code;
 
     return GestureDetector(
       onTap: () => _selectLanguage(language.code),
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.all(20),
+        padding: EdgeInsets.all(config.cardPadding),
         decoration: BoxDecoration(
           color: isSelected
               ? AppColors.pastelAqua.withValues(alpha: 0.15)
               : const Color(0xFF141928).withValues(alpha: 0.8),
-          borderRadius: BorderRadius.circular(18),
+          borderRadius: BorderRadius.circular(AppConstants.radiusLarge),
           border: Border.all(
             color: isSelected
                 ? AppColors.pastelAqua.withValues(alpha: 0.5)
@@ -215,17 +223,16 @@ class _LanguageScreenState extends State<LanguageScreen> {
           children: [
             Text(
               language.flag,
-              style: const TextStyle(fontSize: 28),
+              style: TextStyle(fontSize: config.iconSize + 6),
             ),
-            const SizedBox(width: 15),
+            SizedBox(width: config.cardSpacing),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     language.name,
-                    style: TextStyle(
-                      fontSize: 15,
+                    style: config.cardTitleStyle?.copyWith(
                       fontWeight: FontWeight.w700,
                       color: isSelected ? AppColors.pastelAqua : Colors.white,
                     ),
@@ -233,8 +240,7 @@ class _LanguageScreenState extends State<LanguageScreen> {
                   const SizedBox(height: 4),
                   Text(
                     language.nativeName,
-                    style: TextStyle(
-                      fontSize: 13,
+                    style: config.subtitleStyle?.copyWith(
                       color: isSelected
                           ? AppColors.pastelAqua.withValues(alpha: 0.7)
                           : AppColors.textMuted,
@@ -246,8 +252,8 @@ class _LanguageScreenState extends State<LanguageScreen> {
             ),
             AnimatedContainer(
               duration: const Duration(milliseconds: 200),
-              width: 24,
-              height: 24,
+              width: config.iconSize,
+              height: config.iconSize,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 color: isSelected ? AppColors.pastelAqua : Colors.transparent,
@@ -257,7 +263,9 @@ class _LanguageScreenState extends State<LanguageScreen> {
                 ),
               ),
               child: isSelected
-                  ? const Icon(Icons.check, size: 16, color: Color(0xFF0A0A12))
+                  ? Icon(Icons.check,
+                      size: config.iconSize * 0.65,
+                      color: const Color(0xFF0A0A12))
                   : null,
             ),
           ],
@@ -266,27 +274,26 @@ class _LanguageScreenState extends State<LanguageScreen> {
     );
   }
 
-  Widget _buildInfoCard() {
+  Widget _buildInfoCard(SettingsScreenConfig config) {
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: EdgeInsets.all(config.cardPadding),
       decoration: BoxDecoration(
         color: AppColors.pastelAqua.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(18),
+        borderRadius: BorderRadius.circular(AppConstants.radiusLarge),
         border: Border.all(color: AppColors.pastelAqua.withValues(alpha: 0.2)),
       ),
       child: Row(
         children: [
           Icon(
             Icons.info_outline,
-            size: 20,
+            size: config.iconSize,
             color: AppColors.pastelAqua,
           ),
-          const SizedBox(width: 12),
+          SizedBox(width: config.cardSpacing),
           Expanded(
             child: Text(
-              'The app will update to your selected language. Some content may require an app restart.',
-              style: TextStyle(
-                fontSize: 12,
+              AppLocalizations.of(context)!.languageInfoMessage,
+              style: config.subtitleStyle?.copyWith(
                 color: AppColors.textMuted,
                 height: 1.4,
               ),

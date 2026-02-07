@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../config/app_colors.dart';
+import '../config/app_constants.dart';
+import '../utils/responsive_config.dart';
 import '../widgets/nanosolve_logo.dart';
 import '../l10n/app_localizations.dart';
 import '../models/category_data.dart';
@@ -20,9 +22,11 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   ImpactType _selectedTab = ImpactType.human;
+  late ResponsiveConfig responsive;
 
   @override
   Widget build(BuildContext context) {
+    responsive = ResponsiveConfig.fromMediaQuery(context);
     return Scaffold(
       body: Stack(
         children: [
@@ -81,12 +85,14 @@ class _MainScreenState extends State<MainScreen> {
 
   Widget _buildTopNavigation() {
     final l10n = AppLocalizations.of(context)!;
+    final config = responsive.getTabBarConfig();
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      padding: const EdgeInsets.all(3),
+      margin: EdgeInsets.symmetric(
+          horizontal: config.marginH, vertical: config.marginV),
+      padding: EdgeInsets.all(config.innerPadding),
       decoration: BoxDecoration(
         color: Colors.black.withValues(alpha: 0.4),
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(AppConstants.radiusMedium),
         border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
       ),
       child: Row(
@@ -96,6 +102,7 @@ class _MainScreenState extends State<MainScreen> {
               label: l10n.tabHuman,
               isActive: _selectedTab == ImpactType.human,
               activeColor: AppColors.neonCyan,
+              config: config,
               onTap: () {
                 setState(() => _selectedTab = ImpactType.human);
                 LoggerService()
@@ -108,6 +115,7 @@ class _MainScreenState extends State<MainScreen> {
               label: l10n.tabPlanet,
               isActive: _selectedTab == ImpactType.planet,
               activeColor: const Color(0xFF48CAE4),
+              config: config,
               onTap: () {
                 setState(() => _selectedTab = ImpactType.planet);
                 LoggerService()
@@ -125,16 +133,19 @@ class _MainScreenState extends State<MainScreen> {
     required bool isActive,
     required Color activeColor,
     required VoidCallback onTap,
+    required TabBarConfig config,
   }) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 6),
+        padding: EdgeInsets.symmetric(
+            vertical: config.buttonPaddingV,
+            horizontal: config.buttonPaddingH),
         decoration: BoxDecoration(
           color: isActive
               ? Colors.black.withValues(alpha: 0.3)
               : Colors.transparent,
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(AppConstants.radiusSmall),
           border: isActive ? Border.all(color: activeColor) : null,
           boxShadow: isActive
               ? [
@@ -146,12 +157,9 @@ class _MainScreenState extends State<MainScreen> {
         child: Text(
           label,
           textAlign: TextAlign.center,
-          style: TextStyle(
-            fontSize: 10,
-            fontWeight: FontWeight.w800,
-            color: isActive ? activeColor : AppColors.textMuted,
-            letterSpacing: 0.3,
-          ),
+          style: config.textStyle?.copyWith(
+                color: isActive ? activeColor : AppColors.textMuted,
+              ),
         ),
       ),
     );
@@ -159,29 +167,27 @@ class _MainScreenState extends State<MainScreen> {
 
   Widget _buildHeader() {
     final l10n = AppLocalizations.of(context)!;
+    final config = responsive.getMainScreenHeaderConfig();
+
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 6),
+      padding: EdgeInsets.symmetric(
+          horizontal: config.horizontalPadding,
+          vertical: config.verticalPadding),
       child: Column(
         children: [
-          const NanosolveLogo(height: 35),
-          const SizedBox(height: 8),
+          NanosolveLogo(height: config.logoHeight),
+          const SizedBox(height: AppConstants.space4),
           Text(
             _selectedTab == ImpactType.human ? l10n.tabHuman : l10n.tabPlanet,
-            style: const TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w900,
+            style: config.titleStyle?.copyWith(
               color: Colors.white,
-              letterSpacing: 0.4,
             ),
           ),
-          const SizedBox(height: 3),
+          const SizedBox(height: AppConstants.space4),
           Text(
             l10n.appSubtitle,
-            style: TextStyle(
-              fontSize: 10,
-              fontWeight: FontWeight.w700,
+            style: config.subtitleStyle?.copyWith(
               color: AppColors.textMuted,
-              letterSpacing: 0.8,
             ),
           ),
         ],
@@ -289,32 +295,55 @@ class _MainScreenState extends State<MainScreen> {
         ? _getHumanCategories(l10n)
         : _getPlanetCategories(l10n);
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      child: GridView.builder(
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          crossAxisSpacing: 12,
-          mainAxisSpacing: 12,
-          childAspectRatio: 1.0, // category boxes size regulator/adjuster
-        ),
-        itemCount: categories.length,
-        itemBuilder: (context, index) {
-          return _CategoryCard(
-            category: categories[index],
-            onTap: () => _navigateToCategoryDetail(categories[index]),
-          );
-        },
-      ),
+    // Build pairs of cards in rows so each row sizes to its content
+    final rowCount = (categories.length / 2).ceil();
+    final config = responsive.getCategoryCardConfig();
+
+    return ListView.separated(
+      padding: EdgeInsets.only(
+          left: config.padding,
+          right: config.padding,
+          top: config.padding,
+          bottom: config.gridBottomPadding),
+      itemCount: rowCount,
+      separatorBuilder: (_, __) => SizedBox(height: config.gridRowSpacing),
+      itemBuilder: (context, rowIndex) {
+        final first = rowIndex * 2;
+        final second = first + 1;
+        return IntrinsicHeight(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Expanded(
+                child: _CategoryCard(
+                  category: categories[first],
+                  onTap: () => _navigateToCategoryDetail(categories[first]),
+                ),
+              ),
+              SizedBox(width: config.gridColumnSpacing),
+              if (second < categories.length)
+                Expanded(
+                  child: _CategoryCard(
+                    category: categories[second],
+                    onTap: () => _navigateToCategoryDetail(categories[second]),
+                  ),
+                )
+              else
+                const Expanded(child: SizedBox()),
+            ],
+          ),
+        );
+      },
     );
   }
 
   Widget _buildBottomNavigation() {
     final l10n = AppLocalizations.of(context)!;
+    final config = responsive.bottomNavConfig;
+
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      padding: EdgeInsets.symmetric(
+          horizontal: config.horizontalPadding, vertical: config.verticalPadding),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topCenter,
@@ -333,15 +362,17 @@ class _MainScreenState extends State<MainScreen> {
               icon: Icons.menu_book_outlined,
               color: AppColors.pastelAqua,
               onTap: () => _navigateToResources(null),
+              responsive: responsive,
             ),
           ),
-          const SizedBox(width: 12),
+          SizedBox(width: config.spacing),
           Expanded(
             child: _buildBottomButton(
               label: l10n.navResults,
               icon: Icons.auto_graph_outlined,
               color: AppColors.pastelMint,
               onTap: () => _navigateToResults(),
+              responsive: responsive,
             ),
           ),
         ],
@@ -354,28 +385,36 @@ class _MainScreenState extends State<MainScreen> {
     required IconData icon,
     required Color color,
     required VoidCallback onTap,
+    required ResponsiveConfig responsive,
   }) {
+    final config = responsive.getBottomButtonConfig();
+
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+        padding: EdgeInsets.symmetric(
+            vertical: config.verticalPadding,
+            horizontal: config.horizontalPadding),
         decoration: BoxDecoration(
           color: const Color(0xFF141928).withValues(alpha: 0.8),
-          borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: color.withValues(alpha: 0.3)),
+          borderRadius: BorderRadius.circular(AppConstants.radiusSmall),
+          border: Border.all(color: color.withValues(alpha: 0.3), width: 0),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.max,
           children: [
-            Icon(icon, size: 22, color: color),
-            const SizedBox(width: 8),
-            Text(
-              label,
-              style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w700,
-                color: color,
-                letterSpacing: 0.8,
+            Icon(icon, size: config.iconSize, color: color),
+            SizedBox(width: config.spacing),
+            Expanded(
+              child: Text(
+                label,
+                style: config.textStyle?.copyWith(
+                  color: color,
+                ),
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
+                textAlign: TextAlign.center,
               ),
             ),
           ],
@@ -474,55 +513,47 @@ class _CategoryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final responsive = ResponsiveConfig.fromMediaQuery(context);
+    final config = responsive.getCategoryCardConfig();
+
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.all(14),
+        padding: EdgeInsets.all(config.padding),
         decoration: BoxDecoration(
           color: Colors.black.withValues(alpha: 0.7),
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(AppConstants.radiusLarge),
           border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              width: 48,
-              height: 48,
-              margin: const EdgeInsets.only(bottom: 8),
+              width: config.iconContainerSize,
+              height: config.iconContainerSize,
               decoration: BoxDecoration(
                 color: category.color.withValues(alpha: 0.2),
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(AppConstants.radiusSmall),
               ),
               child: Icon(
                 category.icon,
-                size: 28,
+                size: config.iconSize,
                 color: category.color,
               ),
             ),
+            SizedBox(height: config.spacing),
             Text(
               category.title,
-              style: const TextStyle(
-                fontSize: 19.5,
-                fontWeight: FontWeight.w800,
+              style: config.titleStyle?.copyWith(
                 color: Colors.white,
-                height: 1.25,
               ),
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
             ),
-            const SizedBox(height: 4),
-            Expanded(
-              child: Text(
-                category.description,
-                style: TextStyle(
-                  fontSize: 16,
-                  color: AppColors.textMuted,
-                  height: 1.3,
-                ),
-                overflow: TextOverflow.ellipsis,
-                maxLines: 3,
-              ),
+            const SizedBox(height: AppConstants.space4),
+            Text(
+              category.description,
+              style: config.descStyle,
+              maxLines: 3,
+              overflow: TextOverflow.ellipsis,
             ),
           ],
         ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../config/app_colors.dart';
+import '../config/app_constants.dart';
 import '../l10n/app_localizations.dart';
 import '../services/settings_manager.dart';
 
@@ -9,6 +10,7 @@ class BrainstormBox extends StatefulWidget {
   final String placeholder;
   final String? submitText;
   final Function(String)? onSubmit;
+  final String? category;
 
   const BrainstormBox({
     super.key,
@@ -17,6 +19,7 @@ class BrainstormBox extends StatefulWidget {
     required this.placeholder,
     this.submitText,
     this.onSubmit,
+    this.category,
   });
 
   @override
@@ -29,6 +32,7 @@ class _BrainstormBoxState extends State<BrainstormBox> {
 
   @override
   void dispose() {
+    _controller.removeListener(_saveDraft);
     _controller.dispose();
     super.dispose();
   }
@@ -37,6 +41,8 @@ class _BrainstormBoxState extends State<BrainstormBox> {
   void initState() {
     super.initState();
     _loadUsername();
+    _loadDraft();
+    _controller.addListener(_saveDraft);
   }
 
   void _loadUsername() {
@@ -47,6 +53,21 @@ class _BrainstormBoxState extends State<BrainstormBox> {
     });
   }
 
+  void _loadDraft() {
+    if (widget.category != null) {
+      final draft = SettingsManager().getDraftIdea(widget.category!);
+      if (draft != null && draft.isNotEmpty) {
+        _controller.text = draft;
+      }
+    }
+  }
+
+  void _saveDraft() {
+    if (widget.category != null) {
+      SettingsManager().setDraftIdea(widget.category!, _controller.text);
+    }
+  }
+
   Future<void> _saveUsername(String value) async {
     final settings = SettingsManager();
     await settings.setDisplayName(value);
@@ -55,21 +76,40 @@ class _BrainstormBoxState extends State<BrainstormBox> {
     });
   }
 
-  void _handleSubmit() {
-    if (_controller.text.trim().isNotEmpty) {
-      widget.onSubmit?.call(_controller.text);
-      _controller.clear();
+  Future<void> _handleSubmit() async {
+    if (_controller.text.trim().isEmpty) return;
 
-      final l10n = AppLocalizations.of(context)!;
-      // Show success feedback
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('${l10n.categoryDetailBrainstormSuccess} 🚀'),
-          backgroundColor: AppColors.pastelMint,
-          behavior: SnackBarBehavior.floating,
-          duration: const Duration(seconds: 2),
-        ),
-      );
+    final text = _controller.text;
+    final l10n = AppLocalizations.of(context)!;
+
+    try {
+      await widget.onSubmit?.call(text);
+      _controller.clear();
+      if (widget.category != null) {
+        SettingsManager().clearDraftIdea(widget.category!);
+      }
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('${l10n.categoryDetailBrainstormSuccess} 🚀'),
+            backgroundColor: AppColors.pastelMint,
+            behavior: SnackBarBehavior.floating,
+            duration: const Duration(seconds: 2),
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(l10n.categoryDetailBrainstormError),
+            backgroundColor: Colors.red,
+            behavior: SnackBarBehavior.floating,
+            duration: const Duration(seconds: 3),
+          ),
+        );
+      }
     }
   }
 
@@ -112,10 +152,10 @@ class _BrainstormBoxState extends State<BrainstormBox> {
         border: Border.all(
           color: AppColors.pastelAqua.withValues(alpha: 0.2),
         ),
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(AppConstants.radiusXL),
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(AppConstants.radiusXL),
         child: Stack(
           children: [
             // Subtle glow background
@@ -135,7 +175,7 @@ class _BrainstormBoxState extends State<BrainstormBox> {
             ),
             // Content
             Padding(
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.all(AppConstants.space20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -145,34 +185,35 @@ class _BrainstormBoxState extends State<BrainstormBox> {
                       const Icon(
                         Icons.lightbulb_outline,
                         color: AppColors.pastelAqua,
-                        size: 20,
+                        size: AppConstants.iconMedium,
                       ),
-                      const SizedBox(width: 8),
+                      const SizedBox(width: AppConstants.space8),
                       Expanded(
                         child: Text(
                           widget.title,
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w800,
-                            color: AppColors.pastelAqua,
-                          ),
+                          style:
+                              Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                    fontWeight: FontWeight.w800,
+                                    color: AppColors.pastelAqua,
+                                  ),
                         ),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: AppConstants.space8),
 
                   // Username under the title; tappable to edit
                   InkWell(
                     onTap: _showEditDialog,
                     child: Container(
                       padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 4,
+                        horizontal: AppConstants.space8,
+                        vertical: AppConstants.space4,
                       ),
                       decoration: BoxDecoration(
                         color: AppColors.pastelLavender.withValues(alpha: 0.1),
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius:
+                            BorderRadius.circular(AppConstants.radiusMedium),
                       ),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
@@ -180,33 +221,35 @@ class _BrainstormBoxState extends State<BrainstormBox> {
                           Flexible(
                             child: Text(
                               _username ?? widget.username,
-                              style: const TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w600,
-                                color: AppColors.pastelLavender,
-                              ),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .labelLarge
+                                  ?.copyWith(
+                                    color: AppColors.pastelLavender,
+                                    fontWeight: FontWeight.w600,
+                                  ),
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
-                          const SizedBox(width: 6),
+                          const SizedBox(width: AppConstants.space4),
                           const Icon(
                             Icons.edit,
-                            size: 14,
+                            size: AppConstants.iconSmall,
                             color: AppColors.pastelLavender,
                           ),
                         ],
                       ),
                     ),
                   ),
-                  const SizedBox(height: 15),
+                  const SizedBox(height: AppConstants.space16),
 
                   // Textarea
                   Container(
                     decoration: BoxDecoration(
                       color: Colors.black.withValues(alpha: 0.2),
                       borderRadius: const BorderRadius.only(
-                        topLeft: Radius.circular(8),
-                        topRight: Radius.circular(8),
+                        topLeft: Radius.circular(AppConstants.radiusMedium),
+                        topRight: Radius.circular(AppConstants.radiusMedium),
                       ),
                       border: Border(
                         bottom: BorderSide(
@@ -218,21 +261,20 @@ class _BrainstormBoxState extends State<BrainstormBox> {
                     child: TextField(
                       controller: _controller,
                       maxLines: 4,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 14,
-                      ),
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            color: Colors.white,
+                          ),
                       decoration: InputDecoration(
                         hintText: widget.placeholder,
                         hintStyle: TextStyle(
                           color: Colors.white.withValues(alpha: 0.5),
                         ),
                         border: InputBorder.none,
-                        contentPadding: const EdgeInsets.all(12),
+                        contentPadding: const EdgeInsets.all(AppConstants.space12),
                       ),
                     ),
                   ),
-                  const SizedBox(height: 15),
+                  const SizedBox(height: AppConstants.space16),
 
                   // Submit button
                   SizedBox(
@@ -240,14 +282,15 @@ class _BrainstormBoxState extends State<BrainstormBox> {
                     child: ElevatedButton(
                       onPressed: _handleSubmit,
                       style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.all(12),
+                        padding: const EdgeInsets.all(AppConstants.space12),
                         backgroundColor: Colors.transparent,
                         foregroundColor: const Color(0xFF0A0A12),
                         shadowColor:
                             AppColors.pastelAqua.withValues(alpha: 0.5),
                         elevation: 5,
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius:
+                              BorderRadius.circular(AppConstants.radiusMedium),
                         ),
                       ).copyWith(
                         backgroundColor: WidgetStateProperty.resolveWith<Color>(
@@ -266,10 +309,11 @@ class _BrainstormBoxState extends State<BrainstormBox> {
                               AppColors.pastelMint,
                             ],
                           ),
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius:
+                              BorderRadius.circular(AppConstants.radiusMedium),
                         ),
                         child: Container(
-                          padding: const EdgeInsets.all(12),
+                          padding: const EdgeInsets.all(AppConstants.space12),
                           alignment: Alignment.center,
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -284,19 +328,22 @@ class _BrainstormBoxState extends State<BrainstormBox> {
                                       widget.submitText ??
                                           AppLocalizations.of(context)!
                                               .categoryDetailBrainstormSubmit,
-                                      style: const TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w800,
-                                        letterSpacing: 1,
-                                        color: Color(0xFF0A0A12),
-                                      ),
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium
+                                          ?.copyWith(
+                                            fontWeight: FontWeight.w800,
+                                            letterSpacing: 1,
+                                            color: const Color(0xFF0A0A12),
+                                          ),
                                       textAlign: TextAlign.center,
                                     ),
                                   ),
-                                  const SizedBox(width: 8),
-                                  const Text(
+                                  const SizedBox(width: AppConstants.space8),
+                                  Text(
                                     '🚀',
-                                    style: TextStyle(fontSize: 14),
+                                    style:
+                                        Theme.of(context).textTheme.bodyMedium,
                                   ),
                                 ],
                               ),

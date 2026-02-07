@@ -18,7 +18,7 @@ class AppLocalizationsCs extends AppLocalizations {
   String get tabHuman => 'VLIV NA ČLOVĚKA';
 
   @override
-  String get tabPlanet => 'VLIV NA PLANETU ZEMI';
+  String get tabPlanet => 'VLIV NA ZEMI';
 
   @override
   String get navSources => 'Zdroje';
@@ -63,13 +63,13 @@ class AppLocalizationsCs extends AppLocalizations {
   String get humanCategoryWaysOfDesctructionDesc => 'Známé formy destrukce';
 
   @override
-  String get planetCategoryWorldOcean => 'Světový oceán a hydrosféra';
+  String get planetCategoryWorldOcean => 'Hydrosféra';
 
   @override
   String get planetCategoryWorldOceanDesc => 'Mořský život, voda';
 
   @override
-  String get planetCategoryAtmosphere => 'Atmosféra a globální vodní cyklus';
+  String get planetCategoryAtmosphere => 'Atmosféra';
 
   @override
   String get planetCategoryAtmosphereDesc => 'Vzduch, klima';
@@ -144,7 +144,7 @@ class AppLocalizationsCs extends AppLocalizations {
   String get categoryDetailBack => 'Zpět';
 
   @override
-  String get categoryDetailBackToOverview => '← ZPĚT NA PŘEHLED';
+  String get categoryDetailBackToOverview => '← ZPĚT';
 
   @override
   String get categoryDetailBrainstorm => 'Brainstorm';
@@ -174,6 +174,10 @@ class AppLocalizationsCs extends AppLocalizations {
   @override
   String get categoryDetailBrainstormSuccess =>
       'Nápad byl odeslán k vyhodnocení!';
+
+  @override
+  String get categoryDetailBrainstormError =>
+      'Odeslání se nezdařilo (zkontrolujte internetové přípojení). Váš nápad byl uložen jako koncept.';
 
   @override
   String get categoryDetailBrainstormEditUsername =>
@@ -716,4 +720,225 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get leaderboardSubtitle => 'Vedoucí přispěvatelé řešením nanoplastů';
+
+  @override
+  String get settingsBack => 'Zpět';
+
+  @override
+  String get settingsTitle => 'Nastavení';
+
+  @override
+  String get settingsSubtitle => 'Spravujte své předvolby';
+
+  @override
+  String get settingsProfile => 'Profil';
+
+  @override
+  String get settingsLanguage => 'Jazyk';
+
+  @override
+  String get settingsPrivacySecurity => 'Soukromí & Bezpečnost';
+
+  @override
+  String get settingsAbout => 'O aplikaci';
+
+  @override
+  String get profileTitle => 'Nastavení profilu';
+
+  @override
+  String get profileSubtitle => 'Přizpůsobte svůj profil a předvolby';
+
+  @override
+  String get profilePersonalInfo => 'Osobní údaje';
+
+  @override
+  String get profileDisplayName => 'Zobrazované jméno';
+
+  @override
+  String get profileDisplayNameHint => 'Zadejte své celé jméno nebo přezdívku';
+
+  @override
+  String get profileEmail => 'E-mail';
+
+  @override
+  String get profileEmailHint => 'Zadejte svůj e-mail';
+
+  @override
+  String get profileBio => 'O mně';
+
+  @override
+  String get profileBioHint => 'Řekněte nám něco o sobě';
+
+  @override
+  String get profileAppearance => 'Vzhled';
+
+  @override
+  String get profileDarkMode => 'Tmavý režim';
+
+  @override
+  String get profileDarkModeDesc => 'Použít tmavý motiv v celé aplikaci';
+
+  @override
+  String get profileNotifications => 'Oznámení';
+
+  @override
+  String get profilePushNotifications => 'Push oznámení';
+
+  @override
+  String get profilePushNotificationsDesc =>
+      'Přijímat push oznámení na vašem zařízení';
+
+  @override
+  String get profileEmailNotifications => 'E-mailová oznámení';
+
+  @override
+  String get profileEmailNotificationsDesc => 'Přijímat aktualizace e-mailem';
+
+  @override
+  String get profilePrivacy => 'Soukromí';
+
+  @override
+  String get profileAnalytics => 'Analytika';
+
+  @override
+  String get profileAnalyticsDesc =>
+      'Pomozte nám zlepšit sdílením dat o použití';
+
+  @override
+  String get profileDangerZone => 'Nebezpečná zóna';
+
+  @override
+  String get profileDeleteAccount => 'Smazat účet';
+
+  @override
+  String get profileDeleteAccountDesc => 'Trvale odstranit váš účet a data';
+
+  @override
+  String get profileChangeAvatar => 'Změnit avatar';
+
+  @override
+  String get languageTitle => 'Jazyk';
+
+  @override
+  String get languageSubtitle => 'Vyberte preferovaný jazyk';
+
+  @override
+  String get languageChanged => 'Jazyk změněn na';
+
+  @override
+  String get languageInfoMessage =>
+      'Aplikace se aktualizuje na váš vybraný jazyk. Některý obsah může vyžadovat restart aplikace.';
+
+  @override
+  String get privacyTitle => 'Soukromí & Bezpečnost';
+
+  @override
+  String get privacySubtitle => 'Spravujte své předvolby soukromí';
+
+  @override
+  String get privacyDataAnalytics => 'Data & Analytika';
+
+  @override
+  String get privacyAnalytics => 'Analytika';
+
+  @override
+  String get privacyAnalyticsDesc =>
+      'Pomozte nám zlepšit sdílením anonymních dat o použití';
+
+  @override
+  String get privacySecurity => 'Bezpečnost';
+
+  @override
+  String get privacyDataEncryption => 'Šifrování dat';
+
+  @override
+  String get privacyDataEncryptionDesc =>
+      'Všechna vaše data jsou šifrována při přenosu i uložení';
+
+  @override
+  String get privacyLocalStorage => 'Lokální úložiště';
+
+  @override
+  String get privacyLocalStorageDesc =>
+      'Vaše předvolby jsou bezpečně uloženy na vašem zařízení';
+
+  @override
+  String get privacyLegal => 'Právní záležitosti';
+
+  @override
+  String get privacyPolicy => 'Zásady ochrany osobních údajů';
+
+  @override
+  String get privacyTermsOfService => 'Podmínky služby';
+
+  @override
+  String get aboutTitle => 'O aplikaci';
+
+  @override
+  String get aboutAppName => 'NanoSolve Hive';
+
+  @override
+  String get aboutVersion => 'Verze';
+
+  @override
+  String get aboutSection => 'O NanoSolve';
+
+  @override
+  String get aboutDescription =>
+      'NanoSolve Hive je vaší branou k pochopení nanoplastů a jejich dopadu na lidské zdraví a životní prostředí. Poskytujeme vědecky podložené informace, které vám pomohou činit informovaná rozhodnutí.';
+
+  @override
+  String get aboutConnect => 'Připojit se';
+
+  @override
+  String get aboutWebsite => 'Webové stránky';
+
+  @override
+  String get aboutWebsiteUrl => 'nanosolve.io';
+
+  @override
+  String get aboutContactUs => 'Kontaktujte nás';
+
+  @override
+  String get aboutContactUsDesc => 'Spojte se s naším týmem';
+
+  @override
+  String get aboutLegal => 'Právní záležitosti';
+
+  @override
+  String get aboutPrivacyPolicy => 'Zásady ochrany osobních údajů';
+
+  @override
+  String get aboutPrivacyPolicyDesc => 'Jak nakládáme s vašimi daty';
+
+  @override
+  String get aboutTermsOfService => 'Podmínky služby';
+
+  @override
+  String get aboutTermsOfServiceDesc => 'Podmínky a ujednání';
+
+  @override
+  String get aboutOpenSourceLicenses => 'Open Source licence';
+
+  @override
+  String get aboutOpenSourceLicensesDesc =>
+      'Knihovny třetích stran, které používáme';
+
+  @override
+  String get aboutShare => 'Sdílet';
+
+  @override
+  String get aboutShareTitle => 'Sdílet NanoSolve';
+
+  @override
+  String get aboutShareDesc => 'Naskenujte tento QR kód pro stažení aplikace';
+
+  @override
+  String get aboutShareAppLink => 'Odkaz ke stažení aplikace';
+
+  @override
+  String get aboutFooterMessage => 'Vytvořeno s péčí pro čistší planetu';
+
+  @override
+  String get aboutCopyright => '2024 NanoSolve. Všechna práva vyhrazena.';
 }

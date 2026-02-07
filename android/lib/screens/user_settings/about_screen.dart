@@ -3,7 +3,10 @@ import 'terms_of_service_screen.dart';
 import 'package:flutter/material.dart';
 import 'dart:ui';
 import 'package:url_launcher/url_launcher.dart';
+import '../../l10n/app_localizations.dart';
 import '../../config/app_colors.dart';
+import '../../config/app_constants.dart';
+import '../../utils/responsive_config.dart';
 import '../../widgets/nanosolve_logo.dart';
 
 class AboutScreen extends StatelessWidget {
@@ -41,8 +44,11 @@ class AboutScreen extends StatelessWidget {
   }
 
   Widget _buildHeader(BuildContext context) {
+    final responsive = ResponsiveConfig.fromMediaQuery(context);
+    final header = responsive.getSecondaryHeaderConfig();
+
     return Container(
-      padding: const EdgeInsets.all(25),
+      padding: EdgeInsets.all(header.padding),
       decoration: BoxDecoration(
         color: const Color(0xFF141928).withValues(alpha: 0.9),
         border: Border(
@@ -59,21 +65,19 @@ class AboutScreen extends StatelessWidget {
                 GestureDetector(
                   onTap: () => Navigator.of(context).pop(),
                   child: Text(
-                    'Back',
-                    style: TextStyle(
+                    AppLocalizations.of(context)!.settingsBack,
+                    style: header.backStyle?.copyWith(
                       color: AppColors.pastelLavender,
-                      fontWeight: FontWeight.w700,
-                      fontSize: 12,
                       letterSpacing: 1,
                     ),
                   ),
                 ),
                 Icon(Icons.info_outline,
-                    size: 24, color: AppColors.pastelLavender),
+                    size: header.iconSize, color: AppColors.pastelLavender),
               ],
             ),
-            const SizedBox(height: 15),
-            const NanosolveLogo(height: 50),
+            SizedBox(height: header.spacing),
+            NanosolveLogo(height: header.logoHeight),
           ],
         ),
       ),
@@ -81,81 +85,97 @@ class AboutScreen extends StatelessWidget {
   }
 
   Widget _buildContent(BuildContext context) {
+    final responsive = ResponsiveConfig.fromMediaQuery(context);
+    final config = responsive.getSettingsScreenConfig();
+
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(25),
+      padding: EdgeInsets.all(config.contentPadding),
       child: Column(
         children: [
-          _buildAppInfo(),
-          const SizedBox(height: 30),
-          _buildSectionTitle('About NanoSolve'),
-          const SizedBox(height: 15),
-          _buildDescriptionCard(),
-          const SizedBox(height: 30),
-          _buildSectionTitle('Connect'),
-          const SizedBox(height: 15),
+          _buildAppInfo(context, config),
+          SizedBox(height: config.cardSpacing * 2),
+          _buildSectionTitle(
+              context, AppLocalizations.of(context)!.aboutSection, config),
+          SizedBox(height: config.cardSpacing),
+          _buildDescriptionCard(context, config),
+          SizedBox(height: config.cardSpacing * 2),
+          _buildSectionTitle(
+              context, AppLocalizations.of(context)!.aboutConnect, config),
+          SizedBox(height: config.cardSpacing),
           _buildLinkItem(
-            title: 'Website',
-            subtitle: 'nanosolve.io',
+            title: AppLocalizations.of(context)!.aboutWebsite,
+            subtitle: AppLocalizations.of(context)!.aboutWebsiteUrl,
             icon: Icons.language,
             color: AppColors.pastelAqua,
+            config: config,
             onTap: () => _launchUrl('https://nanosolve.io'),
           ),
-          const SizedBox(height: 15),
+          SizedBox(height: config.cardSpacing),
           _buildLinkItem(
-            title: 'Contact Us',
-            subtitle: 'Get in touch with our team',
+            title: AppLocalizations.of(context)!.aboutContactUs,
+            subtitle: AppLocalizations.of(context)!.aboutContactUsDesc,
             icon: Icons.email_outlined,
             color: AppColors.pastelMint,
+            config: config,
             onTap: () => _launchUrl('mailto:contact@nanosolve.io'),
           ),
-          const SizedBox(height: 30),
-          _buildSectionTitle('Legal'),
-          const SizedBox(height: 15),
+          SizedBox(height: config.cardSpacing * 2),
+          _buildSectionTitle(
+              context, AppLocalizations.of(context)!.aboutShare, config),
+          SizedBox(height: config.cardSpacing),
+          _buildShareCard(context, config),
+          SizedBox(height: config.cardSpacing * 2),
+          _buildFooter(context, config),
+  
+          SizedBox(height: config.cardSpacing * 2),
+          _buildSectionTitle(
+              context, AppLocalizations.of(context)!.aboutLegal, config),
+          SizedBox(height: config.cardSpacing),
           _buildLinkItem(
-            title: 'Privacy Policy',
-            subtitle: 'How we handle your data',
+            title: AppLocalizations.of(context)!.aboutPrivacyPolicy,
+            subtitle: AppLocalizations.of(context)!.aboutPrivacyPolicyDesc,
             icon: Icons.policy_outlined,
             color: AppColors.pastelLavender,
+            config: config,
             onTap: () => Navigator.of(context).push(
               MaterialPageRoute(builder: (_) => const PrivacyPolicyScreen()),
             ),
           ),
-          const SizedBox(height: 15),
+          SizedBox(height: config.cardSpacing),
           _buildLinkItem(
-            title: 'Terms of Service',
-            subtitle: 'Terms and conditions',
+            title: AppLocalizations.of(context)!.aboutTermsOfService,
+            subtitle: AppLocalizations.of(context)!.aboutTermsOfServiceDesc,
             icon: Icons.description_outlined,
             color: AppColors.pastelLavender,
+            config: config,
             onTap: () => Navigator.of(context).push(
               MaterialPageRoute(builder: (_) => const TermsOfServiceScreen()),
             ),
           ),
-          const SizedBox(height: 30),
+          SizedBox(height: config.cardSpacing * 2),
           _buildLinkItem(
-            title: 'Open Source Licenses',
-            subtitle: 'Third-party libraries we use',
+            title: AppLocalizations.of(context)!.aboutOpenSourceLicenses,
+            subtitle: AppLocalizations.of(context)!.aboutOpenSourceLicensesDesc,
             icon: Icons.code,
             color: AppColors.pastelAqua,
+            config: config,
             onTap: () => showLicensePage(
               context: context,
               applicationName: 'NanoSolve Hive',
               applicationVersion: 'v$appVersion ($buildNumber)',
             ),
           ),
-          const SizedBox(height: 40),
-          _buildFooter(),
-          const SizedBox(height: 20),
         ],
       ),
     );
   }
 
-  Widget _buildAppInfo() {
+  Widget _buildAppInfo(BuildContext context, SettingsScreenConfig config) {
     return Column(
       children: [
         Container(
-          width: 100,
-          height: 100,
+          width: config.iconContainerSize * 2,
+          height: config.iconContainerSize * 2,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             color: const Color(0xFF141928),
@@ -171,30 +191,27 @@ class AboutScreen extends StatelessWidget {
               ),
             ],
           ),
-          child: const Center(
-            child: NanosolveLogo(height: 50),
+          child: Center(
+            child: NanosolveLogo(height: config.iconContainerSize),
           ),
         ),
-        const SizedBox(height: 20),
+        SizedBox(height: config.cardSpacing),
         ShaderMask(
           shaderCallback: (bounds) => const LinearGradient(
             colors: [AppColors.pastelAqua, AppColors.pastelMint],
           ).createShader(bounds),
-          child: const Text(
-            'NanoSolve Hive',
-            style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.w900,
+          child: Text(
+            AppLocalizations.of(context)!.aboutAppName,
+            style: config.titleStyle?.copyWith(
               color: Colors.white,
               letterSpacing: 0.5,
             ),
           ),
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: AppConstants.space8),
         Text(
-          'Version $appVersion ($buildNumber)',
-          style: TextStyle(
-            fontSize: 13,
+          '${AppLocalizations.of(context)!.aboutVersion} $appVersion ($buildNumber)',
+          style: config.subtitleStyle?.copyWith(
             color: AppColors.textMuted,
             fontWeight: FontWeight.w600,
           ),
@@ -203,7 +220,8 @@ class AboutScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildSectionTitle(String title) {
+  Widget _buildSectionTitle(
+      BuildContext context, String title, SettingsScreenConfig config) {
     return Align(
       alignment: Alignment.centerLeft,
       child: Row(
@@ -216,11 +234,10 @@ class AboutScreen extends StatelessWidget {
               borderRadius: BorderRadius.circular(2),
             ),
           ),
-          const SizedBox(width: 10),
+          const SizedBox(width: AppConstants.space8),
           Text(
             title,
-            style: TextStyle(
-              fontSize: 16,
+            style: config.cardTitleStyle?.copyWith(
               fontWeight: FontWeight.w700,
               color: AppColors.pastelLavender,
               letterSpacing: 0.5,
@@ -231,19 +248,19 @@ class AboutScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildDescriptionCard() {
+  Widget _buildDescriptionCard(
+      BuildContext context, SettingsScreenConfig config) {
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: EdgeInsets.all(config.cardPadding),
       decoration: BoxDecoration(
         color: const Color(0xFF141928).withValues(alpha: 0.8),
-        borderRadius: BorderRadius.circular(18),
+        borderRadius: BorderRadius.circular(AppConstants.radiusLarge),
         border:
             Border.all(color: AppColors.pastelLavender.withValues(alpha: 0.2)),
       ),
       child: Text(
-        'NanoSolve Hive is your gateway to understanding nanoplastics and their impact on human health and the environment. We provide science-backed information to help you make informed decisions.',
-        style: TextStyle(
-          fontSize: 14,
+        AppLocalizations.of(context)!.aboutDescription,
+        style: config.subtitleStyle?.copyWith(
           color: AppColors.textMuted,
           height: 1.6,
         ),
@@ -256,37 +273,37 @@ class AboutScreen extends StatelessWidget {
     required String subtitle,
     required IconData icon,
     required Color color,
+    required SettingsScreenConfig config,
     required VoidCallback onTap,
   }) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.all(20),
+        padding: EdgeInsets.all(config.cardPadding),
         decoration: BoxDecoration(
           color: const Color(0xFF141928).withValues(alpha: 0.8),
-          borderRadius: BorderRadius.circular(18),
+          borderRadius: BorderRadius.circular(AppConstants.radiusLarge),
           border: Border.all(color: color.withValues(alpha: 0.2)),
         ),
         child: Row(
           children: [
             Container(
-              width: 45,
-              height: 45,
+              width: config.iconContainerSize,
+              height: config.iconContainerSize,
               decoration: BoxDecoration(
                 color: color.withValues(alpha: 0.15),
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(AppConstants.radiusMedium),
               ),
-              child: Icon(icon, size: 22, color: color),
+              child: Icon(icon, size: config.iconSize, color: color),
             ),
-            const SizedBox(width: 15),
+            SizedBox(width: config.cardSpacing),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     title,
-                    style: const TextStyle(
-                      fontSize: 14,
+                    style: config.cardTitleStyle?.copyWith(
                       fontWeight: FontWeight.w600,
                       color: Colors.white,
                     ),
@@ -294,35 +311,180 @@ class AboutScreen extends StatelessWidget {
                   const SizedBox(height: 4),
                   Text(
                     subtitle,
-                    style: TextStyle(fontSize: 12, color: AppColors.textMuted),
+                    style: config.subtitleStyle
+                        ?.copyWith(color: AppColors.textMuted),
                   ),
                 ],
               ),
             ),
             Icon(Icons.arrow_forward_ios,
-                size: 18, color: color.withValues(alpha: 0.6)),
+                size: config.arrowSize, color: color.withValues(alpha: 0.6)),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildFooter() {
+  Widget _buildShareCard(BuildContext context, SettingsScreenConfig config) {
+    const String appDownloadUrl = 'https://nanosolve.io/download';
+
+    return Container(
+      padding: EdgeInsets.all(config.cardPadding),
+      decoration: BoxDecoration(
+        color: const Color(0xFF141928).withValues(alpha: 0.8),
+        borderRadius: BorderRadius.circular(AppConstants.radiusLarge),
+        border: Border.all(color: AppColors.pastelAqua.withValues(alpha: 0.3)),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.pastelAqua.withValues(alpha: 0.1),
+            blurRadius: 20,
+            offset: const Offset(0, 5),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          Text(
+            AppLocalizations.of(context)!.aboutShareTitle,
+            style: config.cardTitleStyle?.copyWith(
+              fontWeight: FontWeight.w700,
+              color: AppColors.pastelAqua,
+              fontSize: (config.cardTitleStyle?.fontSize ?? 16) + 2,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: AppConstants.space16),
+          Text(
+            AppLocalizations.of(context)!.aboutShareDesc,
+            style: config.subtitleStyle?.copyWith(
+              color: AppColors.textMuted,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: AppConstants.space24),
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(AppConstants.radiusMedium),
+              boxShadow: [
+                BoxShadow(
+                  color: AppColors.pastelAqua.withValues(alpha: 0.3),
+                  blurRadius: 15,
+                  spreadRadius: 2,
+                ),
+              ],
+            ),
+            child: Column(
+              children: [
+                // Placeholder for QR code - will be replaced with actual QR code widget
+                Container(
+                  width: 200,
+                  height: 200,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: Colors.grey.shade300),
+                  ),
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.qr_code_2,
+                          size: 80,
+                          color: Colors.grey.shade600,
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          'QR Code',
+                          style: TextStyle(
+                            color: Colors.grey.shade600,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          child: Text(
+                            appDownloadUrl,
+                            style: TextStyle(
+                              color: Colors.grey.shade400,
+                              fontSize: 10,
+                            ),
+                            textAlign: TextAlign.center,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: AppConstants.space16),
+          GestureDetector(
+            onTap: () => _launchUrl(appDownloadUrl),
+            child: Container(
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppConstants.space16,
+                vertical: AppConstants.space12,
+              ),
+              decoration: BoxDecoration(
+                color: AppColors.pastelAqua.withValues(alpha: 0.15),
+                borderRadius: BorderRadius.circular(AppConstants.radiusMedium),
+                border: Border.all(
+                  color: AppColors.pastelAqua.withValues(alpha: 0.3),
+                ),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    Icons.link,
+                    size: 18,
+                    color: AppColors.pastelAqua,
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    AppLocalizations.of(context)!.aboutShareAppLink,
+                    style: config.subtitleStyle?.copyWith(
+                      color: AppColors.pastelAqua,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const SizedBox(width: 4),
+                  Icon(
+                    Icons.open_in_new,
+                    size: 14,
+                    color: AppColors.pastelAqua.withValues(alpha: 0.7),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildFooter(BuildContext context, SettingsScreenConfig config) {
     return Column(
       children: [
         Text(
-          'Made with care for a cleaner planet',
-          style: TextStyle(
-            fontSize: 12,
+          AppLocalizations.of(context)!.aboutFooterMessage,
+          style: config.subtitleStyle?.copyWith(
             color: AppColors.textMuted,
             fontWeight: FontWeight.w500,
           ),
         ),
         const SizedBox(height: 8),
         Text(
-          '2024 NanoSolve. All rights reserved.',
-          style: TextStyle(
-            fontSize: 11,
+          AppLocalizations.of(context)!.aboutCopyright,
+          style: config.subtitleStyle?.copyWith(
             color: AppColors.textDark,
           ),
         ),

@@ -179,6 +179,10 @@ class AppLocalizationsRu extends AppLocalizations {
   String get categoryDetailBrainstormSuccess => 'Идея отправлена на оценку!';
 
   @override
+  String get categoryDetailBrainstormError =>
+      'Failed to submit (due to internet issue). Your idea has been saved as a draft.';
+
+  @override
   String get categoryDetailBrainstormEditUsername =>
       'Редактировать имя пользователя';
 
@@ -720,4 +724,229 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get leaderboardSubtitle =>
       'Основные участники в решениях проблемы наночастиц пластика';
+
+  @override
+  String get settingsBack => 'Назад';
+
+  @override
+  String get settingsTitle => 'Настройки';
+
+  @override
+  String get settingsSubtitle => 'Управляйте своими предпочтениями';
+
+  @override
+  String get settingsProfile => 'Профиль';
+
+  @override
+  String get settingsLanguage => 'Язык';
+
+  @override
+  String get settingsPrivacySecurity => 'Конфиденциальность и безопасность';
+
+  @override
+  String get settingsAbout => 'О приложении';
+
+  @override
+  String get profileTitle => 'Настройки профиля';
+
+  @override
+  String get profileSubtitle => 'Настройте свой профиль и предпочтения';
+
+  @override
+  String get profilePersonalInfo => 'Личная информация';
+
+  @override
+  String get profileDisplayName => 'Отображаемое имя';
+
+  @override
+  String get profileDisplayNameHint => 'Введите свое полное имя или псевдоним';
+
+  @override
+  String get profileEmail => 'Электронная почта';
+
+  @override
+  String get profileEmailHint => 'Введите свой email';
+
+  @override
+  String get profileBio => 'О себе';
+
+  @override
+  String get profileBioHint => 'Расскажите о себе';
+
+  @override
+  String get profileAppearance => 'Внешний вид';
+
+  @override
+  String get profileDarkMode => 'Темный режим';
+
+  @override
+  String get profileDarkModeDesc =>
+      'Использовать темную тему во всем приложении';
+
+  @override
+  String get profileNotifications => 'Уведомления';
+
+  @override
+  String get profilePushNotifications => 'Push-уведомления';
+
+  @override
+  String get profilePushNotificationsDesc =>
+      'Получать push-уведомления на вашем устройстве';
+
+  @override
+  String get profileEmailNotifications => 'Уведомления по email';
+
+  @override
+  String get profileEmailNotificationsDesc =>
+      'Получать обновления по электронной почте';
+
+  @override
+  String get profilePrivacy => 'Конфиденциальность';
+
+  @override
+  String get profileAnalytics => 'Аналитика';
+
+  @override
+  String get profileAnalyticsDesc =>
+      'Помогите нам улучшить приложение, делясь данными об использовании';
+
+  @override
+  String get profileDangerZone => 'Опасная зона';
+
+  @override
+  String get profileDeleteAccount => 'Удалить аккаунт';
+
+  @override
+  String get profileDeleteAccountDesc =>
+      'Безвозвратно удалить ваш аккаунт и данные';
+
+  @override
+  String get profileChangeAvatar => 'Изменить аватар';
+
+  @override
+  String get languageTitle => 'Язык';
+
+  @override
+  String get languageSubtitle => 'Выберите предпочитаемый язык';
+
+  @override
+  String get languageChanged => 'Язык изменен на';
+
+  @override
+  String get languageInfoMessage =>
+      'Приложение обновится на выбранный вами язык. Некоторый контент может потребовать перезапуска приложения.';
+
+  @override
+  String get privacyTitle => 'Конфиденциальность и безопасность';
+
+  @override
+  String get privacySubtitle => 'Управляйте настройками конфиденциальности';
+
+  @override
+  String get privacyDataAnalytics => 'Данные и аналитика';
+
+  @override
+  String get privacyAnalytics => 'Аналитика';
+
+  @override
+  String get privacyAnalyticsDesc =>
+      'Помогите нам улучшить приложение, делясь анонимными данными об использовании';
+
+  @override
+  String get privacySecurity => 'Безопасность';
+
+  @override
+  String get privacyDataEncryption => 'Шифрование данных';
+
+  @override
+  String get privacyDataEncryptionDesc =>
+      'Все ваши данные зашифрованы при передаче и хранении';
+
+  @override
+  String get privacyLocalStorage => 'Локальное хранилище';
+
+  @override
+  String get privacyLocalStorageDesc =>
+      'Ваши настройки безопасно хранятся на вашем устройстве';
+
+  @override
+  String get privacyLegal => 'Правовая информация';
+
+  @override
+  String get privacyPolicy => 'Политика конфиденциальности';
+
+  @override
+  String get privacyTermsOfService => 'Условия использования';
+
+  @override
+  String get aboutTitle => 'О приложении';
+
+  @override
+  String get aboutAppName => 'NanoSolve Hive';
+
+  @override
+  String get aboutVersion => 'Версия';
+
+  @override
+  String get aboutSection => 'О NanoSolve';
+
+  @override
+  String get aboutDescription =>
+      'NanoSolve Hive — это ваш путь к пониманию нанопластика и его влияния на здоровье человека и окружающую среду. Мы предоставляем научно обоснованную информацию, чтобы помочь вам принимать обоснованные решения.';
+
+  @override
+  String get aboutConnect => 'Связаться';
+
+  @override
+  String get aboutWebsite => 'Веб-сайт';
+
+  @override
+  String get aboutWebsiteUrl => 'nanosolve.io';
+
+  @override
+  String get aboutContactUs => 'Свяжитесь с нами';
+
+  @override
+  String get aboutContactUsDesc => 'Свяжитесь с нашей командой';
+
+  @override
+  String get aboutLegal => 'Правовая информация';
+
+  @override
+  String get aboutPrivacyPolicy => 'Политика конфиденциальности';
+
+  @override
+  String get aboutPrivacyPolicyDesc => 'Как мы обрабатываем ваши данные';
+
+  @override
+  String get aboutTermsOfService => 'Условия использования';
+
+  @override
+  String get aboutTermsOfServiceDesc => 'Положения и условия';
+
+  @override
+  String get aboutOpenSourceLicenses => 'Лицензии Open Source';
+
+  @override
+  String get aboutOpenSourceLicensesDesc =>
+      'Сторонние библиотеки, которые мы используем';
+
+  @override
+  String get aboutShare => 'Поделиться';
+
+  @override
+  String get aboutShareTitle => 'Поделиться NanoSolve';
+
+  @override
+  String get aboutShareDesc =>
+      'Отсканируйте этот QR-код для загрузки приложения';
+
+  @override
+  String get aboutShareAppLink => 'Ссылка для загрузки приложения';
+
+  @override
+  String get aboutFooterMessage => 'Создано с заботой о более чистой планете';
+
+  @override
+  String get aboutCopyright => '2024 NanoSolve. Все права защищены.';
 }
