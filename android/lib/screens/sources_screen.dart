@@ -24,8 +24,8 @@ enum WebLinkSection { humanHealth, earthPollution, waterAbilities }
 
 class _SourcesScreenState extends State<SourcesScreen> {
   SourceType _selectedTab = SourceType.webLinks;
-  WebLinkSection? _expandedSection; // Only one section can be expanded at a time
-  String _selectedVideoLanguage = 'en'; // Default video language
+  WebLinkSection?
+      _expandedSection; // Only one section can be expanded at a time
 
   @override
   void initState() {
@@ -62,7 +62,6 @@ class _SourcesScreenState extends State<SourcesScreen> {
                 child: _selectedTab == SourceType.webLinks
                     ? _buildWebLinksTab()
                     : _buildVideoLinksTab(),
-                  
               ),
             ],
           ),
@@ -74,7 +73,6 @@ class _SourcesScreenState extends State<SourcesScreen> {
   Widget _buildHeader() {
     final responsive = ResponsiveConfig.fromMediaQuery(context);
     final header = responsive.getSecondaryHeaderConfig();
-
     return Container(
       padding: EdgeInsets.all(header.padding),
       decoration: BoxDecoration(
@@ -97,8 +95,8 @@ class _SourcesScreenState extends State<SourcesScreen> {
                   child: Text(
                     AppLocalizations.of(context)!.sourcesBack,
                     style: header.backStyle?.copyWith(
-                          color: AppColors.pastelAqua,
-                        ),
+                      color: AppColors.pastelAqua,
+                    ),
                   ),
                 ),
                 Icon(
@@ -141,8 +139,14 @@ class _SourcesScreenState extends State<SourcesScreen> {
         );
       },
       child: Container(
-        margin: EdgeInsets.all(config.reportMargin),
-        padding: EdgeInsets.all(config.reportPadding),
+        margin: EdgeInsets.symmetric(
+          horizontal: config.reportMarginH,
+          vertical: config.reportMarginV,
+        ),
+        padding: EdgeInsets.symmetric(
+          horizontal: config.reportPaddingH,
+          vertical: config.reportPaddingV,
+        ),
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topLeft,
@@ -189,7 +193,7 @@ class _SourcesScreenState extends State<SourcesScreen> {
                 color: Colors.white,
                 height: 1.4,
               ),
-            ),            
+            ),
           ],
         ),
       ),
@@ -250,7 +254,8 @@ class _SourcesScreenState extends State<SourcesScreen> {
       onTap: onTap,
       child: Container(
         padding: EdgeInsets.symmetric(
-            vertical: config.tabButtonPaddingV, horizontal: AppConstants.space4),
+            vertical: config.tabButtonPaddingV,
+            horizontal: AppConstants.space4),
         decoration: BoxDecoration(
           color: isActive
               ? AppColors.pastelAqua.withValues(alpha: 0.15)
@@ -345,7 +350,8 @@ class _SourcesScreenState extends State<SourcesScreen> {
     }
 
     // Find expanded section data
-    final expandedData = sections.firstWhere((s) => s.section == _expandedSection);
+    final expandedData =
+        sections.firstWhere((s) => s.section == _expandedSection);
 
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: config.contentPaddingH),
@@ -454,18 +460,17 @@ class _SourcesScreenState extends State<SourcesScreen> {
   Widget _buildVideoLinksTab() {
     final responsive = ResponsiveConfig.fromMediaQuery(context);
     final config = responsive.getSourcesScreenConfig();
+    final settingsManager = SettingsManager();
+    final userLanguage = settingsManager.userLanguage;
 
-    // Get videos for selected language, fallback to English if not available
-    final videos = allVideoSources[_selectedVideoLanguage] ?? videoSourcesEn;
+    // Get videos for user's language, fallback to English if not available
+    final videos = allVideoSources[userLanguage] ?? videoSourcesEn;
 
     return SingleChildScrollView(
       padding: EdgeInsets.symmetric(horizontal: config.contentPaddingH),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Language selector
-          _buildVideoLanguageSelector(config),
-          SizedBox(height: config.cardSpacing),
           // Video list
           ...videos.asMap().entries.map((entry) {
             return _buildVideoCard(
@@ -474,70 +479,8 @@ class _SourcesScreenState extends State<SourcesScreen> {
               config: config,
             );
           }),
-          SizedBox(height: config.reportPadding),
+          SizedBox(height: config.reportPaddingV),
         ],
-      ),
-    );
-  }
-
-  Widget _buildVideoLanguageSelector(SourcesScreenConfig config) {
-    final languages = [
-      {'code': 'en', 'name': 'English', 'flag': '🇬🇧'},
-      {'code': 'es', 'name': 'Español', 'flag': '🇪🇸'},
-      {'code': 'ru', 'name': 'Русский', 'flag': '🇷🇺'},
-      {'code': 'fr', 'name': 'Français', 'flag': '🇫🇷'},
-    ];
-
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: config.tabMarginV),
-      padding: EdgeInsets.all(config.tabPadding),
-      decoration: BoxDecoration(
-        color: const Color(0xFF141928).withValues(alpha: 0.85),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
-        borderRadius: BorderRadius.circular(AppConstants.radiusLarge),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: languages.map((lang) {
-          final isSelected = _selectedVideoLanguage == lang['code'];
-          return GestureDetector(
-            onTap: () {
-              setState(() => _selectedVideoLanguage = lang['code']!);
-              LoggerService().logUserAction('video_language_changed',
-                  params: {'language': lang['code']});
-            },
-            child: Container(
-              padding: const EdgeInsets.symmetric(
-                horizontal: AppConstants.space12,
-                vertical: AppConstants.space8,
-              ),
-              decoration: BoxDecoration(
-                color: isSelected
-                    ? AppColors.pastelMint.withValues(alpha: 0.15)
-                    : Colors.transparent,
-                borderRadius: BorderRadius.circular(AppConstants.radiusMedium),
-                border: isSelected
-                    ? Border.all(color: AppColors.pastelMint.withValues(alpha: 0.3))
-                    : null,
-              ),
-              child: Column(
-                children: [
-                  Text(
-                    lang['flag']!,
-                    style: const TextStyle(fontSize: 20),
-                  ),
-                  const SizedBox(height: AppConstants.space4),
-                  Text(
-                    lang['name']!,
-                    style: config.badgeStyle?.copyWith(
-                      color: isSelected ? AppColors.pastelMint : AppColors.textMuted,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          );
-        }).toList(),
       ),
     );
   }
@@ -600,9 +543,13 @@ class _SourcesScreenState extends State<SourcesScreen> {
                 borderRadius: BorderRadius.circular(AppConstants.radiusMedium),
               ),
               child: Icon(
-                video.isReport ? Icons.picture_as_pdf : Icons.play_circle_filled,
+                video.isReport
+                    ? Icons.picture_as_pdf
+                    : Icons.play_circle_filled,
                 size: config.sectionIconSize,
-                color: video.isReport ? AppColors.pastelAqua : AppColors.pastelMint,
+                color: video.isReport
+                    ? AppColors.pastelAqua
+                    : AppColors.pastelMint,
               ),
             ),
             SizedBox(width: config.cardSpacing),
@@ -628,7 +575,8 @@ class _SourcesScreenState extends State<SourcesScreen> {
                       color: video.isReport
                           ? AppColors.pastelAqua.withValues(alpha: 0.1)
                           : AppColors.pastelMint.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(AppConstants.radiusSmall),
+                      borderRadius:
+                          BorderRadius.circular(AppConstants.radiusSmall),
                       border: Border.all(
                         color: video.isReport
                             ? AppColors.pastelAqua.withValues(alpha: 0.3)
@@ -638,7 +586,9 @@ class _SourcesScreenState extends State<SourcesScreen> {
                     child: Text(
                       video.isReport ? 'PDF Report' : 'YouTube',
                       style: config.badgeStyle?.copyWith(
-                        color: video.isReport ? AppColors.pastelAqua : AppColors.pastelMint,
+                        color: video.isReport
+                            ? AppColors.pastelAqua
+                            : AppColors.pastelMint,
                       ),
                     ),
                   ),
@@ -748,7 +698,7 @@ class _SourcesScreenState extends State<SourcesScreen> {
                     color: AppColors.textMuted.withValues(alpha: 0.5),
                   ),
                 ),
-                SizedBox(height: config.reportPadding),
+                SizedBox(height: config.reportPaddingV),
                 Icon(
                   Icons.picture_as_pdf,
                   size: config.pdfIconSize,

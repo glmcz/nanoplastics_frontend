@@ -5,7 +5,8 @@ class PDFSource {
   final String description;
   final String? pdfAssetPath; // Custom PDF asset path for non-main report PDFs
   final String language; // 'cs' for Czech, 'en' for English
-  final String? url; // Optional URL for web links (opens in browser instead of PDF viewer)
+  final String?
+      url; // Optional URL for web links (opens in browser instead of PDF viewer)
 
   PDFSource({
     required this.title,
@@ -22,6 +23,7 @@ class PDFSource {
 }
 
 // Human Health Category
+// TODO: remove source from one PDF and add relevant one and not these examples
 final List<PDFSource> humanHealthSources = [
   // Czech
   PDFSource(
@@ -169,49 +171,16 @@ final List<PDFSource> humanHealthSources = [
 
 // Earth Pollution Category
 final List<PDFSource> earthPollutionSources = [
+    // Main Report - Czech
+  PDFSource(
+    title: 'Nanoplasty v biosféře - Zpráva (2025)',
+    startPage: 1,
+    endPage: 999,
+    description: 'Kompletní komplexní zpráva o nanoplastech',
+    language: 'cs',
+    url: 'https://allatra.org/storage/app/media/reports/cs/Nanoplastics_in_the_Biosphere_Report_CS.pdf',
+  ),
   // Czech
-  PDFSource(
-    title: 'Globální ztráty fotosyntézy',
-    startPage: 31,
-    endPage: 44,
-    description: 'Flóra, fauna a půdní biota (suchozemské ekosystémy)',
-    language: 'cs',
-  ),
-  PDFSource(
-    title: 'Růst fragmentů v tichomořské skvrně',
-    startPage: 45,
-    endPage: 66,
-    description: 'Světový oceán (mořská kontaminace)',
-    language: 'cs',
-  ),
-  PDFSource(
-    title: 'Emise plastů z oceánu do atmosféry',
-    startPage: 45,
-    endPage: 66,
-    description: 'Světový oceán (mořská kontaminace)',
-    language: 'cs',
-  ),
-  PDFSource(
-    title: 'Překonávání hematoencefalické bariéry',
-    startPage: 92,
-    endPage: 119,
-    description: 'Fyzikální vlastnosti (degradace polymerů)',
-    language: 'cs',
-  ),
-  PDFSource(
-    title: 'Tvorba ledu v atmosféře pomocí MNP',
-    startPage: 23,
-    endPage: 30,
-    description: 'Atmosféra a globální koloběh vody',
-    language: 'cs',
-  ),
-  PDFSource(
-    title: 'MNP v mracích a vliv na srážky',
-    startPage: 23,
-    endPage: 30,
-    description: 'Atmosféra a globální koloběh vody',
-    language: 'cs',
-  ),
   PDFSource(
     title: 'Acidifikace oceánů rozkladem plastů',
     startPage: 45,
@@ -311,6 +280,42 @@ final List<PDFSource> earthPollutionSources = [
     description: 'Magnetic Field & Earth\'s Core',
     language: 'en',
   ),
+  // Main Report - English
+  PDFSource(
+    title: 'Nanoplastics in the Biosphere Report (2025)',
+    startPage: 1,
+    endPage: 999,
+    description: 'Complete comprehensive report on nanoplastics',
+    language: 'en',
+    url: 'https://allatra.org/storage/app/media/reports/en/Nanoplastics_in_the_Biosphere_Report.pdf',
+  ),
+  // Spanish
+  PDFSource(
+    title: 'Nanoplásticos en la Biosfera - Informe (2025)',
+    startPage: 1,
+    endPage: 999,
+    description: 'Informe completo e integral sobre nanoplásticos',
+    language: 'es',
+    url: 'https://allatra.org/storage/app/media/reports/es/Nanoplasticos_en_la_Biosfera_Informe_ES.pdf',
+  ),
+  // Russian
+  PDFSource(
+    title: 'Нанопластик в биосфере - Отчёт (2025)',
+    startPage: 1,
+    endPage: 999,
+    description: 'Полный комплексный отчет о нанопластике',
+    language: 'ru',
+    url: 'https://allatra.org/storage/app/media/reports/ru/Nanoplastics_in_the_Biosphere_Report_RU.pdf',
+  ),
+  // French
+  PDFSource(
+    title: 'Les Nanoplastiques dans la Biosphère - Rapport (2025)',
+    startPage: 1,
+    endPage: 999,
+    description: 'Rapport complet et exhaustif sur les nanoplastiques',
+    language: 'fr',
+    url: 'https://allatra.org/storage/app/media/reports/fr/Nanoplastics_in_the_Biosphere_Report_FR.pdf',
+  ),
 ];
 
 // Special Water Abilities Category
@@ -338,7 +343,8 @@ class VideoSource {
   final String title;
   final String url;
   final String language; // 'en', 'es', 'ru', 'fr', 'cs'
-  final bool isReport; // True if this is a PDF report link, false if YouTube video
+  final bool
+      isReport; // True if this is a PDF report link, false if YouTube video
 
   VideoSource({
     required this.title,
@@ -350,12 +356,6 @@ class VideoSource {
 
 // Video Sources - English
 final List<VideoSource> videoSourcesEn = [
-  VideoSource(
-    title: 'Nanoplastics in the Biosphere Report (2025)',
-    url: 'https://allatra.org/storage/app/media/reports/en/Nanoplastics_in_the_Biosphere_Report.pdf',
-    language: 'en',
-    isReport: true,
-  ),
   VideoSource(
     title: 'Nanoplastics. Threat to Life | ALLATRA Documentary',
     url: 'https://youtu.be/BVap0MdbCZg',
@@ -382,7 +382,8 @@ final List<VideoSource> videoSourcesEn = [
     language: 'en',
   ),
   VideoSource(
-    title: 'ALLATRA at UN Summit COP16 | Climate Crisis and Ocean Pollution Documentary',
+    title:
+        'ALLATRA at UN Summit COP16 | Climate Crisis and Ocean Pollution Documentary',
     url: 'https://youtu.be/0DNempKykno',
     language: 'en',
   ),
@@ -390,12 +391,6 @@ final List<VideoSource> videoSourcesEn = [
 
 // Video Sources - Spanish
 final List<VideoSource> videoSourcesEs = [
-  VideoSource(
-    title: 'Nanoplásticos en la Biosfera - Informe (2025)',
-    url: 'https://allatra.org/storage/app/media/reports/es/Nanoplasticos_en_la_Biosfera_Informe_ES.pdf',
-    language: 'es',
-    isReport: true,
-  ),
   VideoSource(
     title: 'Nanoplásticos. Una amenaza para la vida | Documental de ALLATRA',
     url: 'https://youtu.be/G8Kxul9QVDE',
@@ -422,7 +417,8 @@ final List<VideoSource> videoSourcesEs = [
     language: 'es',
   ),
   VideoSource(
-    title: '¿Cómo limpiar el océano y detener la crisis climática? Soluciones de ALLATRA en COP29',
+    title:
+        '¿Cómo limpiar el océano y detener la crisis climática? Soluciones de ALLATRA en COP29',
     url: 'https://youtu.be/LDHi5fk90nI',
     language: 'es',
   ),
@@ -430,12 +426,6 @@ final List<VideoSource> videoSourcesEs = [
 
 // Video Sources - Russian
 final List<VideoSource> videoSourcesRu = [
-  VideoSource(
-    title: 'Нанопластик в биосфере - Отчёт (2025)',
-    url: 'https://allatra.org/storage/app/media/reports/ru/Nanoplastics_in_the_Biosphere_Report_RU.pdf',
-    language: 'ru',
-    isReport: true,
-  ),
   VideoSource(
     title: 'Нанопластик. Угроза жизни | Научно-популярный фильм АЛЛАТРА',
     url: 'https://youtu.be/y9ephv8L1-Q',
@@ -462,7 +452,8 @@ final List<VideoSource> videoSourcesRu = [
     language: 'ru',
   ),
   VideoSource(
-    title: 'Климатический кризис и загрязнение океанов | АЛЛАТРА на саммите ООН COP16',
+    title:
+        'Климатический кризис и загрязнение океанов | АЛЛАТРА на саммите ООН COP16',
     url: 'https://youtu.be/aiz2ADBo1qI',
     language: 'ru',
   ),
@@ -470,12 +461,6 @@ final List<VideoSource> videoSourcesRu = [
 
 // Video Sources - French
 final List<VideoSource> videoSourcesFr = [
-  VideoSource(
-    title: 'Les Nanoplastiques dans la Biosphère - Rapport (2025)',
-    url: 'https://allatra.org/storage/app/media/reports/fr/Nanoplastics_in_the_Biosphere_Report_FR.pdf',
-    language: 'fr',
-    isReport: true,
-  ),
   VideoSource(
     title: 'Nanoplastiques. Menace pour la vie | Documentaire ALLATRA',
     url: 'https://youtu.be/ilwHuxNgfa0',
@@ -492,7 +477,8 @@ final List<VideoSource> videoSourcesFr = [
     language: 'fr',
   ),
   VideoSource(
-    title: 'Des lésions cérébrales à l\'infertilité : comment les nanoparticules de plastique volent votre avenir',
+    title:
+        'Des lésions cérébrales à l\'infertilité : comment les nanoparticules de plastique volent votre avenir',
     url: 'https://youtu.be/e9N3YRMS8NE',
     language: 'fr',
   ),
@@ -502,15 +488,62 @@ final List<VideoSource> videoSourcesFr = [
     language: 'fr',
   ),
   VideoSource(
-    title: 'ALLATRA au Sommet de l\'ONU COP16 | Documentaire sur la crise climatique',
+    title:
+        'ALLATRA au Sommet de l\'ONU COP16 | Documentaire sur la crise climatique',
     url: 'https://youtu.be/5w7Ol0MMIUU',
     language: 'fr',
+  ),
+];
+
+// Video Sources - Czech
+final List<VideoSource> videoSourcesCs = [
+  VideoSource(
+    title: 'Nanoplasty. Hrozba pro život | Dokument ALLATRA',
+    url: 'https://www.youtube.com/watch?v=MRhJPOAQCJc',
+    language: 'cs',
+  ),
+  VideoSource(
+    title: 'Antropogenní faktor zániku oceánu | Vědecko-populární film',
+    url: 'https://www.youtube.com/watch?v=1BUCp3m1uFE',
+    language: 'cs',
+  ),
+  VideoSource(
+    title: 'Past pro lidstvo | Vědecko-populární film',
+    url: 'https://www.youtube.com/watch?v=v6FBZz4j1_Y',
+    language: 'cs',
+  ),
+  VideoSource(
+    title: 'Čo vás ničí na kvantovej úrovni?',
+    url: 'https://www.youtube.com/watch?v=k2lf9lIiOJE',
+    language: 'cs',
+  ),
+  VideoSource(
+    title: 'Nanoplasty. Posledná generácia sa už narodila',
+    url: 'https://www.youtube.com/watch?v=-YoP7PBguPU',
+    language: 'cs',
+  ),
+  VideoSource(
+    title:
+        'Ako vyčistiť oceán a zastaviť klimatickú krízu? Riešenia od ALLATRA na COP29',
+    url: 'https://www.youtube.com/watch?v=y6YYgX5kRWU',
+    language: 'cs',
+  ),
+  VideoSource(
+    title: 'Mikro a nanoplasty v mozgu',
+    url: 'https://www.youtube.com/watch?v=Tc--Q31C058',
+    language: 'cs',
+  ),
+  VideoSource(
+    title: 'Dopad mikroplastů na zdraví dětí | Co dělat?',
+    url: 'https://www.youtube.com/watch?v=EBGDSROdf30',
+    language: 'cs',
   ),
 ];
 
 // All video sources combined for easy access
 final Map<String, List<VideoSource>> allVideoSources = {
   'en': videoSourcesEn,
+  'cs': videoSourcesCs,
   'es': videoSourcesEs,
   'ru': videoSourcesRu,
   'fr': videoSourcesFr,

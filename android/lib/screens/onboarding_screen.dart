@@ -113,22 +113,150 @@ class _OnboardingScreenState extends State<OnboardingScreen>
     return Scaffold(
       body: Stack(
         children: [
-          // Background simulation (blurred)
+          // Base animated gradient background
           Container(
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               gradient: RadialGradient(
-                center: Alignment.center,
-                radius: 1.0,
+                center: Alignment.topLeft,
+                radius: 2.0,
                 colors: [
-                  AppColors.pastelAqua.withValues(alpha: 0.1),
-                  Colors.transparent,
+                  Color(0xFF1A1F2E),
+                  Color(0xFF0A0A12),
+                  Color(0xFF050508),
                 ],
               ),
             ),
-            child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-              child: Container(
-                color: const Color(0xFF0A0A12).withValues(alpha: 0.6),
+          ),
+
+          // Aurora-style gradient overlay
+          Positioned.fill(
+            child: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topRight,
+                  end: Alignment.bottomLeft,
+                  colors: [
+                    AppColors.pastelAqua.withValues(alpha: 0.08),
+                    Colors.transparent,
+                    AppColors.pastelMint.withValues(alpha: 0.08),
+                    Colors.transparent,
+                    AppColors.pastelAqua.withValues(alpha: 0.06),
+                  ],
+                  stops: const [0.0, 0.3, 0.5, 0.7, 1.0],
+                ),
+              ),
+            ),
+          ),
+
+          // Large top-left orb with gradient
+          Positioned(
+            top: -200,
+            left: -200,
+            child: Container(
+              width: 600,
+              height: 600,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: RadialGradient(
+                  colors: [
+                    AppColors.pastelAqua.withValues(alpha: 0.25),
+                    AppColors.pastelAqua.withValues(alpha: 0.15),
+                    AppColors.pastelMint.withValues(alpha: 0.08),
+                    Colors.transparent,
+                  ],
+                ),
+              ),
+            ),
+          ),
+
+          // Bottom-right large orb
+          Positioned(
+            bottom: -250,
+            right: -200,
+            child: Container(
+              width: 700,
+              height: 700,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: RadialGradient(
+                  colors: [
+                    AppColors.pastelMint.withValues(alpha: 0.22),
+                    AppColors.pastelAqua.withValues(alpha: 0.12),
+                    AppColors.pastelMint.withValues(alpha: 0.06),
+                    Colors.transparent,
+                  ],
+                ),
+              ),
+            ),
+          ),
+
+          // Middle-left accent orb
+          Positioned(
+            top: MediaQuery.of(context).size.height * 0.45,
+            left: -100,
+            child: Container(
+              width: 350,
+              height: 350,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: RadialGradient(
+                  colors: [
+                    AppColors.pastelAqua.withValues(alpha: 0.18),
+                    AppColors.pastelMint.withValues(alpha: 0.08),
+                    Colors.transparent,
+                  ],
+                ),
+              ),
+            ),
+          ),
+
+          // Top-right small accent
+          Positioned(
+            top: MediaQuery.of(context).size.height * 0.15,
+            right: 80,
+            child: Container(
+              width: 250,
+              height: 250,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: RadialGradient(
+                  colors: [
+                    AppColors.pastelMint.withValues(alpha: 0.15),
+                    Colors.transparent,
+                  ],
+                ),
+              ),
+            ),
+          ),
+
+          // Diagonal light streaks
+          Positioned.fill(
+            child: CustomPaint(
+              painter: _LightStreaksPainter(),
+            ),
+          ),
+
+          // Refined grid pattern
+          Positioned.fill(
+            child: CustomPaint(
+              painter: _GridPatternPainter(),
+            ),
+          ),
+
+          // Heavy blur for dreamy effect
+          BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 100, sigmaY: 100),
+            child: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    const Color(0xFF0A0A12).withValues(alpha: 0.2),
+                    Colors.transparent,
+                    const Color(0xFF0A0A12).withValues(alpha: 0.3),
+                  ],
+                ),
               ),
             ),
           ),
@@ -139,20 +267,36 @@ class _OnboardingScreenState extends State<OnboardingScreen>
             child: BackdropFilter(
               filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
               child: Container(
-                color: const Color(0xFF0A0A12).withValues(alpha: 0.6),
+                color: Colors.transparent,
                 child: Center(
                   child: Container(
                     margin: const EdgeInsets.all(AppConstants.space20),
                     constraints: const BoxConstraints(maxWidth: 550),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF141928).withValues(alpha: 0.85),
-                      border: Border.all(
-                        color: Colors.white.withValues(alpha: 0.1),
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          const Color(0xFF141928).withValues(alpha: 0.75),
+                          const Color(0xFF0F1419).withValues(alpha: 0.8),
+                          const Color(0xFF141928).withValues(alpha: 0.75),
+                        ],
                       ),
-                      borderRadius: BorderRadius.circular(AppConstants.radiusXXL),
+                      border: Border.all(
+                        color: Colors.white.withValues(alpha: 0.15),
+                        width: 1.5,
+                      ),
+                      borderRadius:
+                          BorderRadius.circular(AppConstants.radiusXXL),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.5),
+                          color: AppColors.pastelAqua.withValues(alpha: 0.1),
+                          blurRadius: 40,
+                          spreadRadius: 0,
+                          offset: const Offset(0, 20),
+                        ),
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.6),
                           blurRadius: 30,
                           spreadRadius: 0,
                           offset: const Offset(0, 30),
@@ -160,14 +304,24 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                       ],
                     ),
                     child: ClipRRect(
-                      borderRadius: BorderRadius.circular(AppConstants.radiusXXL),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          _buildModalHeader(),
-                          Flexible(child: _buildSlidesContainer()),
-                          _buildModalFooter(),
-                        ],
+                      borderRadius:
+                          BorderRadius.circular(AppConstants.radiusXXL),
+                      child: Builder(
+                        builder: (context) {
+                          final responsive =
+                              ResponsiveConfig.fromMediaQuery(context);
+                          final config = responsive.getOnboardingSlideConfig();
+                          return Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              _buildModalHeader(),
+                              SizedBox(height: config.sectionSpacing),
+                              Flexible(child: _buildSlidesContainer()),
+                              SizedBox(height: config.sectionSpacing),
+                              _buildModalFooter(),
+                            ],
+                          );
+                        },
                       ),
                     ),
                   ),
@@ -181,8 +335,11 @@ class _OnboardingScreenState extends State<OnboardingScreen>
   }
 
   Widget _buildModalHeader() {
+    final responsive = ResponsiveConfig.fromMediaQuery(context);
+    final config = responsive.getOnboardingSlideConfig();
+
     return Padding(
-      padding: const EdgeInsets.all(AppConstants.space30),
+      padding: EdgeInsets.all(config.headerPadding),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -207,11 +364,13 @@ class _OnboardingScreenState extends State<OnboardingScreen>
   Widget _buildSlidesContainer() {
     final l10n = AppLocalizations.of(context)!;
     final slides = _getSlides(l10n);
+    final responsive = ResponsiveConfig.fromMediaQuery(context);
+    final config = responsive.getOnboardingSlideConfig();
+
     return LayoutBuilder(
       builder: (context, constraints) {
-        const minHeight = 280.0;
-        final slideHeight =
-            (constraints.maxHeight * 0.5).clamp(minHeight, 450.0);
+        final slideHeight = (constraints.maxHeight * config.slideHeightPercent)
+            .clamp(config.minSlideHeight, config.maxSlideHeight);
         return SizedBox(
           height: slideHeight,
           child: PageView.builder(
@@ -245,7 +404,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
         children: [
           // Media - Image or Icon
           Flexible(
-            flex: 3,
+            flex: 2,
             child: ConstrainedBox(
               constraints: BoxConstraints(maxHeight: imageHeight),
               child: Container(
@@ -295,18 +454,18 @@ class _OnboardingScreenState extends State<OnboardingScreen>
               ),
             ),
           ),
-          SizedBox(height: config.spacing),
+          SizedBox(height: config.spacing * 1.5),
 
           // Title with highlight using ShaderMask
           Flexible(
+            flex: 2,
             child: ShaderMask(
               shaderCallback: (bounds) => const LinearGradient(
                 colors: [AppColors.pastelAqua, AppColors.pastelMint],
               ).createShader(bounds),
               child: RichText(
                 textAlign: TextAlign.center,
-                overflow: TextOverflow.ellipsis,
-                maxLines: 2,
+                maxLines: 4,
                 text: TextSpan(
                   style: config.titleStyle,
                   children: [
@@ -323,20 +482,6 @@ class _OnboardingScreenState extends State<OnboardingScreen>
               ),
             ),
           ),
-          SizedBox(height: config.spacing),
-
-          // Description
-          Flexible(
-            child: Text(
-              slide.description,
-              textAlign: TextAlign.center,
-              style: config.descStyle?.copyWith(
-                color: AppColors.textRed,
-              ),
-              maxLines: screenHeight < 400 ? 3 : 5,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
         ],
       ),
     );
@@ -345,8 +490,11 @@ class _OnboardingScreenState extends State<OnboardingScreen>
   Widget _buildModalFooter() {
     final l10n = AppLocalizations.of(context)!;
     final slides = _getSlides(l10n);
+    final responsive = ResponsiveConfig.fromMediaQuery(context);
+    final config = responsive.getOnboardingSlideConfig();
+
     return Padding(
-      padding: const EdgeInsets.all(AppConstants.space30),
+      padding: EdgeInsets.all(config.footerPadding),
       child: Column(
         children: [
           // Dots indicator
@@ -356,7 +504,8 @@ class _OnboardingScreenState extends State<OnboardingScreen>
               slides.length,
               (index) => AnimatedContainer(
                 duration: const Duration(milliseconds: 300),
-                margin: const EdgeInsets.symmetric(horizontal: AppConstants.space4),
+                margin:
+                    const EdgeInsets.symmetric(horizontal: AppConstants.space4),
                 width: _currentPage == index ? 25.0 : 10.0,
                 height: 10.0,
                 decoration: BoxDecoration(
@@ -374,18 +523,21 @@ class _OnboardingScreenState extends State<OnboardingScreen>
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              if (_currentPage > 0)
-                TextButton(
-                  onPressed: _previousPage,
-                  child: Text(
-                    l10n.onboardingBack,
-                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          color: AppColors.textMuted,
+              SizedBox(
+                width: 80,
+                child: _currentPage > 0
+                    ? TextButton(
+                        onPressed: _previousPage,
+                        child: Text(
+                          l10n.onboardingBack,
+                          style:
+                              Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                    color: AppColors.textMuted,
+                                  ),
                         ),
-                  ),
-                )
-              else
-                const SizedBox(),
+                      )
+                    : const SizedBox.shrink(),
+              ),
               ElevatedButton(
                 onPressed: _nextPage,
                 style: ElevatedButton.styleFrom(
@@ -429,4 +581,74 @@ class _OnboardingScreenState extends State<OnboardingScreen>
       ),
     );
   }
+}
+
+// Custom painter for subtle grid pattern
+class _GridPatternPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = Colors.white.withValues(alpha: 0.03)
+      ..strokeWidth = 0.5
+      ..style = PaintingStyle.stroke;
+
+    const spacing = 80.0;
+
+    // Draw vertical lines
+    for (double x = 0; x < size.width; x += spacing) {
+      canvas.drawLine(
+        Offset(x, 0),
+        Offset(x, size.height),
+        paint,
+      );
+    }
+
+    // Draw horizontal lines
+    for (double y = 0; y < size.height; y += spacing) {
+      canvas.drawLine(
+        Offset(0, y),
+        Offset(size.width, y),
+        paint,
+      );
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+}
+
+// Custom painter for diagonal light streaks
+class _LightStreaksPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..shader = LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [
+          Colors.white.withValues(alpha: 0.0),
+          Colors.white.withValues(alpha: 0.05),
+          Colors.white.withValues(alpha: 0.0),
+        ],
+        stops: const [0.0, 0.5, 1.0],
+      ).createShader(Rect.fromLTWH(0, 0, size.width, size.height))
+      ..strokeWidth = 2.0
+      ..style = PaintingStyle.stroke;
+
+    // Draw diagonal streaks
+    final streakCount = 8;
+    final spacing = size.width / streakCount;
+
+    for (int i = 0; i < streakCount; i++) {
+      final x = i * spacing;
+      final path = Path()
+        ..moveTo(x, 0)
+        ..lineTo(x + size.height * 0.3, size.height);
+
+      canvas.drawPath(path, paint);
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }

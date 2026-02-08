@@ -171,17 +171,29 @@ class ResponsiveConfig {
           spacing: AppConstants.space8,
           iconRatio: 0.26,
           iconSizeMultiplier: 0.44,
-          titleStyle: Theme.of(context!).textTheme.headlineLarge,
-          descStyle: Theme.of(context!).textTheme.bodyMedium,
+          headerPadding: AppConstants.space8,
+          footerPadding: AppConstants.space20,
+          sectionSpacing: 0,
+          slideHeightPercent: 0.60,
+          minSlideHeight: 300.0,
+          maxSlideHeight: 300.0,
+          titleStyle: Theme.of(context!).textTheme.headlineSmall,
+          descStyle: Theme.of(context!).textTheme.bodySmall,
         );
       case ScreenHeight.medium:
         return OnboardingSlideConfig(
           imageHeightPercent: 0.25,
-          spacing: AppConstants.space12,
+          spacing: AppConstants.space20,
           iconRatio: 0.30,
           iconSizeMultiplier: 0.48,
-          titleStyle: Theme.of(context!).textTheme.displaySmall,
-          descStyle: Theme.of(context!).textTheme.bodyLarge,
+          headerPadding: AppConstants.space12,
+          footerPadding: AppConstants.space24,
+          sectionSpacing: 0,
+          slideHeightPercent: 0.65,
+          minSlideHeight: 300.0,
+          maxSlideHeight: 300.0,
+          titleStyle: Theme.of(context!).textTheme.headlineXL,
+          descStyle: Theme.of(context!).textTheme.bodyMedium,
         );
     }
   }
@@ -247,7 +259,7 @@ class ResponsiveConfig {
           padding: AppConstants.space10,
           logoHeight: AppConstants.logoMedium,
           iconSize: 28,
-          spacing: AppConstants.space20,
+          spacing: AppConstants.space10,
           backStyle: Theme.of(context!).textTheme.titleSmall,
         );
     }
@@ -261,8 +273,10 @@ class ResponsiveConfig {
       case ScreenSize.small:
         return SourcesScreenConfig(
           contentPaddingH: AppConstants.space14,
-          reportMargin: AppConstants.space14,
-          reportPadding: AppConstants.space10,
+          reportMarginH: AppConstants.space14,
+          reportMarginV: AppConstants.space14,
+          reportPaddingH: AppConstants.space10,
+          reportPaddingV: AppConstants.space10,
           tabMarginH: AppConstants.space14,
           tabMarginV: AppConstants.space10,
           tabPadding: AppConstants.space5,
@@ -290,8 +304,10 @@ class ResponsiveConfig {
       case ScreenSize.medium:
         return SourcesScreenConfig(
           contentPaddingH: AppConstants.space32,
-          reportMargin: AppConstants.space30,
-          reportPadding: AppConstants.space24,
+          reportMarginH: AppConstants.space30,
+          reportMarginV: AppConstants.space12,
+          reportPaddingH: AppConstants.space20,
+          reportPaddingV: AppConstants.space12,
           tabMarginH: AppConstants.space30,
           tabMarginV: AppConstants.space24,
           tabPadding: AppConstants.space6,
@@ -410,6 +426,21 @@ class ResponsiveConfig {
           avatarHintStyle: Theme.of(context!).textTheme.labelMedium,
           dangerTitleStyle: Theme.of(context!).textTheme.bodyMedium,
           dangerSubStyle: Theme.of(context!).textTheme.labelSmall,
+          linkIconSize: 18,
+          linkIconSpacing: 8,
+          secondaryIconSize: 14,
+          secondaryIconSpacing: 4,
+          qrCodeSize: 200,
+          qrCodeIconSize: 80,
+          qrCodePadding: 16,
+          qrCodeTextFontSize: 14,
+          qrCodeUrlFontSize: 10,
+          textLineHeight: 1.6,
+          borderWidth: 3,
+          shadowBlurRadius: 20,
+          shadowSpreadRadius: 2,
+          lightShadowBlurRadius: 15,
+          backdropBlurSigma: 10,
         );
       case ScreenSize.medium:
         return SettingsScreenConfig(
@@ -441,6 +472,21 @@ class ResponsiveConfig {
           avatarHintStyle: Theme.of(context!).textTheme.labelLarge,
           dangerTitleStyle: Theme.of(context!).textTheme.bodyMedium,
           dangerSubStyle: Theme.of(context!).textTheme.labelMedium,
+          linkIconSize: 20,
+          linkIconSpacing: 10,
+          secondaryIconSize: 16,
+          secondaryIconSpacing: 6,
+          qrCodeSize: 240,
+          qrCodeIconSize: 100,
+          qrCodePadding: 20,
+          qrCodeTextFontSize: 16,
+          qrCodeUrlFontSize: 12,
+          textLineHeight: 1.8,
+          borderWidth: 4,
+          shadowBlurRadius: 25,
+          shadowSpreadRadius: 3,
+          lightShadowBlurRadius: 20,
+          backdropBlurSigma: 12,
         );
     }
   }
@@ -535,6 +581,12 @@ class OnboardingSlideConfig {
   final double spacing;
   final double iconRatio;
   final double iconSizeMultiplier;
+  final double headerPadding;
+  final double footerPadding;
+  final double sectionSpacing;
+  final double slideHeightPercent;
+  final double minSlideHeight;
+  final double maxSlideHeight;
   final TextStyle? titleStyle;
   final TextStyle? descStyle;
 
@@ -543,6 +595,12 @@ class OnboardingSlideConfig {
     required this.spacing,
     required this.iconRatio,
     required this.iconSizeMultiplier,
+    required this.headerPadding,
+    required this.footerPadding,
+    required this.sectionSpacing,
+    required this.slideHeightPercent,
+    required this.minSlideHeight,
+    required this.maxSlideHeight,
     required this.titleStyle,
     required this.descStyle,
   });
@@ -594,8 +652,10 @@ class SecondaryHeaderConfig {
 
 class SourcesScreenConfig {
   final double contentPaddingH;
-  final double reportMargin;
-  final double reportPadding;
+  final double reportMarginH;
+  final double reportMarginV;
+  final double reportPaddingH;
+  final double reportPaddingV;
   final double tabMarginH;
   final double tabMarginV;
   final double tabPadding;
@@ -622,8 +682,10 @@ class SourcesScreenConfig {
 
   SourcesScreenConfig({
     required this.contentPaddingH,
-    required this.reportMargin,
-    required this.reportPadding,
+    required this.reportMarginH,
+    required this.reportMarginV,
+    required this.reportPaddingH,
+    required this.reportPaddingV,
     required this.tabMarginH,
     required this.tabMarginV,
     required this.tabPadding,
@@ -739,6 +801,21 @@ class SettingsScreenConfig {
   final TextStyle? avatarHintStyle;
   final TextStyle? dangerTitleStyle;
   final TextStyle? dangerSubStyle;
+  final double? linkIconSize;
+  final double? linkIconSpacing;
+  final double? secondaryIconSize;
+  final double? secondaryIconSpacing;
+  final double? qrCodeSize;
+  final double? qrCodeIconSize;
+  final double? qrCodePadding;
+  final double? qrCodeTextFontSize;
+  final double? qrCodeUrlFontSize;
+  final double? textLineHeight;
+  final double? borderWidth;
+  final double? shadowBlurRadius;
+  final double? shadowSpreadRadius;
+  final double? lightShadowBlurRadius;
+  final double? backdropBlurSigma;
 
   SettingsScreenConfig({
     required this.contentPadding,
@@ -769,5 +846,20 @@ class SettingsScreenConfig {
     this.avatarHintStyle,
     this.dangerTitleStyle,
     this.dangerSubStyle,
+    this.linkIconSize,
+    this.linkIconSpacing,
+    this.secondaryIconSize,
+    this.secondaryIconSpacing,
+    this.qrCodeSize,
+    this.qrCodeIconSize,
+    this.qrCodePadding,
+    this.qrCodeTextFontSize,
+    this.qrCodeUrlFontSize,
+    this.textLineHeight,
+    this.borderWidth,
+    this.shadowBlurRadius,
+    this.shadowSpreadRadius,
+    this.lightShadowBlurRadius,
+    this.backdropBlurSigma,
   });
 }

@@ -2,7 +2,7 @@ import 'privacy_policy_screen.dart';
 import 'terms_of_service_screen.dart';
 import 'package:flutter/material.dart';
 import 'dart:ui';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_custom_tabs/flutter_custom_tabs.dart';
 import '../../l10n/app_localizations.dart';
 import '../../config/app_colors.dart';
 import '../../config/app_constants.dart';
@@ -17,6 +17,9 @@ class AboutScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final responsive = ResponsiveConfig.fromMediaQuery(context);
+    final config = responsive.getSettingsScreenConfig();
+
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
@@ -34,7 +37,7 @@ class AboutScreen extends StatelessWidget {
         child: SafeArea(
           child: Column(
             children: [
-              _buildHeader(context),
+              _buildHeader(context, config),
               Expanded(child: _buildContent(context)),
             ],
           ),
@@ -43,7 +46,8 @@ class AboutScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildHeader(BuildContext context) {
+  Widget _buildHeader(
+      BuildContext context, SettingsScreenConfig? settingsConfig) {
     final responsive = ResponsiveConfig.fromMediaQuery(context);
     final header = responsive.getSecondaryHeaderConfig();
 
@@ -56,7 +60,9 @@ class AboutScreen extends StatelessWidget {
         ),
       ),
       child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+        filter: ImageFilter.blur(
+            sigmaX: settingsConfig?.backdropBlurSigma ?? 10,
+            sigmaY: settingsConfig?.backdropBlurSigma ?? 10),
         child: Column(
           children: [
             Row(
@@ -126,7 +132,6 @@ class AboutScreen extends StatelessWidget {
           _buildShareCard(context, config),
           SizedBox(height: config.cardSpacing * 2),
           _buildFooter(context, config),
-  
           SizedBox(height: config.cardSpacing * 2),
           _buildSectionTitle(
               context, AppLocalizations.of(context)!.aboutLegal, config),
@@ -181,13 +186,13 @@ class AboutScreen extends StatelessWidget {
             color: const Color(0xFF141928),
             border: Border.all(
               color: AppColors.pastelLavender.withValues(alpha: 0.5),
-              width: 3,
+              width: config.borderWidth ?? 3,
             ),
             boxShadow: [
               BoxShadow(
                 color: AppColors.pastelLavender.withValues(alpha: 0.2),
-                blurRadius: 20,
-                spreadRadius: 2,
+                blurRadius: config.shadowBlurRadius ?? 20,
+                spreadRadius: config.shadowSpreadRadius ?? 2,
               ),
             ],
           ),
@@ -262,7 +267,7 @@ class AboutScreen extends StatelessWidget {
         AppLocalizations.of(context)!.aboutDescription,
         style: config.subtitleStyle?.copyWith(
           color: AppColors.textMuted,
-          height: 1.6,
+          height: config.textLineHeight ?? 1.6,
         ),
       ),
     );
@@ -337,7 +342,7 @@ class AboutScreen extends StatelessWidget {
         boxShadow: [
           BoxShadow(
             color: AppColors.pastelAqua.withValues(alpha: 0.1),
-            blurRadius: 20,
+            blurRadius: config.shadowBlurRadius ?? 20,
             offset: const Offset(0, 5),
           ),
         ],
@@ -363,15 +368,15 @@ class AboutScreen extends StatelessWidget {
           ),
           const SizedBox(height: AppConstants.space24),
           Container(
-            padding: const EdgeInsets.all(16),
+            padding: EdgeInsets.all(config.qrCodePadding ?? 16),
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(AppConstants.radiusMedium),
               boxShadow: [
                 BoxShadow(
                   color: AppColors.pastelAqua.withValues(alpha: 0.3),
-                  blurRadius: 15,
-                  spreadRadius: 2,
+                  blurRadius: config.lightShadowBlurRadius ?? 15,
+                  spreadRadius: config.shadowSpreadRadius ?? 2,
                 ),
               ],
             ),
@@ -379,8 +384,8 @@ class AboutScreen extends StatelessWidget {
               children: [
                 // Placeholder for QR code - will be replaced with actual QR code widget
                 Container(
-                  width: 200,
-                  height: 200,
+                  width: config.qrCodeSize ?? 200,
+                  height: config.qrCodeSize ?? 200,
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(8),
@@ -392,26 +397,27 @@ class AboutScreen extends StatelessWidget {
                       children: [
                         Icon(
                           Icons.qr_code_2,
-                          size: 80,
+                          size: config.qrCodeIconSize ?? 80,
                           color: Colors.grey.shade600,
                         ),
-                        const SizedBox(height: 8),
+                        SizedBox(height: config.qrCodePadding ?? 16),
                         Text(
                           'QR Code',
                           style: TextStyle(
                             color: Colors.grey.shade600,
-                            fontSize: 14,
+                            fontSize: config.qrCodeTextFontSize ?? 14,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
-                        const SizedBox(height: 4),
+                        SizedBox(height: config.qrCodePadding ?? 16),
                         Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: config.qrCodePadding ?? 16),
                           child: Text(
                             appDownloadUrl,
                             style: TextStyle(
                               color: Colors.grey.shade400,
-                              fontSize: 10,
+                              fontSize: config.qrCodeUrlFontSize ?? 10,
                             ),
                             textAlign: TextAlign.center,
                             maxLines: 2,
@@ -445,10 +451,10 @@ class AboutScreen extends StatelessWidget {
                 children: [
                   Icon(
                     Icons.link,
-                    size: 18,
+                    size: config.linkIconSize ?? 18,
                     color: AppColors.pastelAqua,
                   ),
-                  const SizedBox(width: 8),
+                  SizedBox(width: config.linkIconSpacing ?? 8),
                   Text(
                     AppLocalizations.of(context)!.aboutShareAppLink,
                     style: config.subtitleStyle?.copyWith(
@@ -456,10 +462,10 @@ class AboutScreen extends StatelessWidget {
                       fontWeight: FontWeight.w600,
                     ),
                   ),
-                  const SizedBox(width: 4),
+                  SizedBox(width: config.secondaryIconSpacing ?? 4),
                   Icon(
                     Icons.open_in_new,
-                    size: 14,
+                    size: config.secondaryIconSize ?? 14,
                     color: AppColors.pastelAqua.withValues(alpha: 0.7),
                   ),
                 ],
@@ -493,26 +499,38 @@ class AboutScreen extends StatelessWidget {
   }
 
   Future<void> _launchUrl(String url) async {
-    debugPrint('🔗 [URLLauncher] Launching URL: $url');
+    debugPrint('🔗 [CustomTabs] Launching URL: $url');
     try {
-      final uri = Uri.parse(url);
-      debugPrint('🔗 [URLLauncher] Parsed URI: $uri');
-      debugPrint(
-          '🔗 [URLLauncher] Attempting to launch in external application...');
+      final theme = CustomTabsOptions(
+        colorSchemes: CustomTabsColorSchemes.defaults(
+          toolbarColor: AppColors.pastelLavender,
+        ),
+        shareState: CustomTabsShareState.on,
+        urlBarHidingEnabled: true,
+        showTitle: true,
+        browser: const CustomTabsBrowserConfiguration(
+          fallbackCustomTabs: [
+            'com.android.chrome',
+            'com.chrome.beta',
+            'com.chrome.dev',
+          ],
+        ),
+      );
 
-      if (await canLaunchUrl(uri)) {
-        debugPrint('🔗 [URLLauncher] URL is launchable');
-        await launchUrl(
-          uri,
-          mode: LaunchMode.externalApplication,
-        );
-        debugPrint('🔗 [URLLauncher] URL launched successfully');
-      } else {
-        debugPrint('❌ [URLLauncher] Cannot launch URL: $url');
-      }
+      await launchUrl(
+        Uri.parse(url),
+        customTabsOptions: theme,
+        safariVCOptions: SafariViewControllerOptions(
+          preferredBarTintColor: AppColors.pastelLavender,
+          preferredControlTintColor: Colors.white,
+          barCollapsingEnabled: true,
+          dismissButtonStyle: SafariViewControllerDismissButtonStyle.close,
+        ),
+      );
+      debugPrint('🔗 [CustomTabs] URL launched successfully');
     } catch (e, stackTrace) {
-      debugPrint('❌ [URLLauncher] Error launching $url: $e');
-      debugPrint('❌ [URLLauncher] Stack trace: $stackTrace');
+      debugPrint('❌ [CustomTabs] Error launching $url: $e');
+      debugPrint('❌ [CustomTabs] Stack trace: $stackTrace');
     }
   }
 }
