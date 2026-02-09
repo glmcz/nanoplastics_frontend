@@ -156,7 +156,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
         ),
       ),
       child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+        filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
         child: Column(
           children: [
             Row(
@@ -261,7 +261,6 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               _scheduleAutoSave();
             },
           ),
-         
           const SizedBox(height: AppConstants.space16),
           _buildDangerZone(config),
           const SizedBox(height: AppConstants.space40),

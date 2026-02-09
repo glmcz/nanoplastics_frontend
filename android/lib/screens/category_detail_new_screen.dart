@@ -156,14 +156,10 @@ class _CategoryDetailNewScreenState extends State<CategoryDetailNewScreen>
                             colors: [
                               Colors.transparent,
                               widget.categoryData.themeColor
-                                  .withValues(alpha: 0.4),
-                              widget.categoryData.themeColor
-                                  .withValues(alpha: 0.6),
-                              widget.categoryData.themeColor
-                                  .withValues(alpha: 0.4),
+                                  .withValues(alpha: 0.75),
                               Colors.transparent,
                             ],
-                            stops: const [0.0, 0.2, 0.5, 0.8, 1.0],
+                            stops: const [0.0, 0.5, 1.0],
                           ),
                           boxShadow: [
                             BoxShadow(

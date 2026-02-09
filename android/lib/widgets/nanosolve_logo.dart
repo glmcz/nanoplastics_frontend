@@ -12,9 +12,11 @@ class NanosolveLogo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomPaint(
-      size: Size(height * 4, height),
-      painter: _NanosolveLogoPainter(darkMode: darkMode),
+    return RepaintBoundary(
+      child: CustomPaint(
+        size: Size(height * 4, height),
+        painter: _NanosolveLogoPainter(darkMode: darkMode),
+      ),
     );
   }
 }
@@ -29,8 +31,10 @@ class _NanosolveLogoPainter extends CustomPainter {
     final scale = size.height / 100;
 
     // Define solid colors for particles
-    final nanoColor = darkMode ? const Color(0xFFD8DFFF) : const Color(0xFFC7CEFF);
-    final solveColor = darkMode ? const Color(0xFFB5FFB5) : const Color(0xFF98FB98);
+    final nanoColor =
+        darkMode ? const Color(0xFFD8DFFF) : const Color(0xFFC7CEFF);
+    final solveColor =
+        darkMode ? const Color(0xFFB5FFB5) : const Color(0xFF98FB98);
 
     canvas.save();
     canvas.translate(20 * scale, 10 * scale);
@@ -55,10 +59,14 @@ class _NanosolveLogoPainter extends CustomPainter {
       ..strokeCap = StrokeCap.round
       ..style = PaintingStyle.stroke;
 
-    canvas.drawLine(Offset(45 * scale, 40 * scale), Offset(70 * scale, 25 * scale), solveLinePaint);
-    canvas.drawLine(Offset(45 * scale, 40 * scale), Offset(75 * scale, 55 * scale), solveLinePaint);
-    canvas.drawLine(Offset(70 * scale, 25 * scale), Offset(90 * scale, 40 * scale), solveLinePaint);
-    canvas.drawLine(Offset(75 * scale, 55 * scale), Offset(90 * scale, 40 * scale), solveLinePaint);
+    canvas.drawLine(Offset(45 * scale, 40 * scale),
+        Offset(70 * scale, 25 * scale), solveLinePaint);
+    canvas.drawLine(Offset(45 * scale, 40 * scale),
+        Offset(75 * scale, 55 * scale), solveLinePaint);
+    canvas.drawLine(Offset(70 * scale, 25 * scale),
+        Offset(90 * scale, 40 * scale), solveLinePaint);
+    canvas.drawLine(Offset(75 * scale, 55 * scale),
+        Offset(90 * scale, 40 * scale), solveLinePaint);
 
     // Draw solve circles (right side)
     final solvePaint = Paint()..color = solveColor;

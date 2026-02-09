@@ -22,6 +22,8 @@ class _OnboardingScreenState extends State<OnboardingScreen>
   int _currentPage = 0;
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
+  late final _GridPatternPainter _gridPatternPainter = _GridPatternPainter();
+  late final _LightStreaksPainter _lightStreaksPainter = _LightStreaksPainter();
 
   List<OnboardingSlide> _getSlides(AppLocalizations l10n) {
     return [
@@ -130,19 +132,17 @@ class _OnboardingScreenState extends State<OnboardingScreen>
 
           // Aurora-style gradient overlay
           Positioned.fill(
-            child: Container(
+            child: DecoratedBox(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   begin: Alignment.topRight,
                   end: Alignment.bottomLeft,
                   colors: [
-                    AppColors.pastelAqua.withValues(alpha: 0.08),
+                    AppColors.pastelAqua.withValues(alpha: 0.05),
                     Colors.transparent,
-                    AppColors.pastelMint.withValues(alpha: 0.08),
-                    Colors.transparent,
-                    AppColors.pastelAqua.withValues(alpha: 0.06),
+                    AppColors.pastelMint.withValues(alpha: 0.05),
                   ],
-                  stops: const [0.0, 0.3, 0.5, 0.7, 1.0],
+                  stops: const [0.0, 0.5, 1.0],
                 ),
               ),
             ),
@@ -231,30 +231,34 @@ class _OnboardingScreenState extends State<OnboardingScreen>
 
           // Diagonal light streaks
           Positioned.fill(
-            child: CustomPaint(
-              painter: _LightStreaksPainter(),
+            child: RepaintBoundary(
+              child: CustomPaint(
+                painter: _lightStreaksPainter,
+              ),
             ),
           ),
 
           // Refined grid pattern
           Positioned.fill(
-            child: CustomPaint(
-              painter: _GridPatternPainter(),
+            child: RepaintBoundary(
+              child: CustomPaint(
+                painter: _gridPatternPainter,
+              ),
             ),
           ),
 
-          // Heavy blur for dreamy effect
+          // Light blur for dreamy effect
           BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 100, sigmaY: 100),
+            filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
             child: Container(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: [
-                    const Color(0xFF0A0A12).withValues(alpha: 0.2),
+                    const Color(0xFF0A0A12).withValues(alpha: 0.1),
                     Colors.transparent,
-                    const Color(0xFF0A0A12).withValues(alpha: 0.3),
+                    const Color(0xFF0A0A12).withValues(alpha: 0.15),
                   ],
                 ),
               ),
@@ -265,7 +269,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
           FadeTransition(
             opacity: _fadeAnimation,
             child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
+              filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
               child: Container(
                 color: Colors.transparent,
                 child: Center(
@@ -585,21 +589,21 @@ class _OnboardingScreenState extends State<OnboardingScreen>
 
 // Custom painter for subtle grid pattern
 class _GridPatternPainter extends CustomPainter {
+  final Paint _paint = Paint()
+    ..color = Colors.white.withValues(alpha: 0.02)
+    ..strokeWidth = 0.5
+    ..style = PaintingStyle.stroke;
+
   @override
   void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = Colors.white.withValues(alpha: 0.03)
-      ..strokeWidth = 0.5
-      ..style = PaintingStyle.stroke;
-
-    const spacing = 80.0;
+    const spacing = 100.0;
 
     // Draw vertical lines
     for (double x = 0; x < size.width; x += spacing) {
       canvas.drawLine(
         Offset(x, 0),
         Offset(x, size.height),
-        paint,
+        _paint,
       );
     }
 
@@ -608,13 +612,13 @@ class _GridPatternPainter extends CustomPainter {
       canvas.drawLine(
         Offset(0, y),
         Offset(size.width, y),
-        paint,
+        _paint,
       );
     }
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+  bool shouldRepaint(_GridPatternPainter oldDelegate) => false;
 }
 
 // Custom painter for diagonal light streaks
@@ -627,16 +631,16 @@ class _LightStreaksPainter extends CustomPainter {
         end: Alignment.bottomRight,
         colors: [
           Colors.white.withValues(alpha: 0.0),
-          Colors.white.withValues(alpha: 0.05),
+          Colors.white.withValues(alpha: 0.03),
           Colors.white.withValues(alpha: 0.0),
         ],
         stops: const [0.0, 0.5, 1.0],
       ).createShader(Rect.fromLTWH(0, 0, size.width, size.height))
-      ..strokeWidth = 2.0
+      ..strokeWidth = 1.5
       ..style = PaintingStyle.stroke;
 
     // Draw diagonal streaks
-    final streakCount = 8;
+    final streakCount = 4;
     final spacing = size.width / streakCount;
 
     for (int i = 0; i < streakCount; i++) {
@@ -650,5 +654,5 @@ class _LightStreaksPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+  bool shouldRepaint(_LightStreaksPainter oldDelegate) => false;
 }

@@ -45,7 +45,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
         ),
       ),
       child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+        filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
         child: Column(
           children: [
             Row(
@@ -65,9 +65,9 @@ class PrivacyPolicyScreen extends StatelessWidget {
                 Text(
                   'PRIVACY POLICY',
                   style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-                    color: Colors.white,
-                    letterSpacing: 1.5,
-                  ),
+                        color: Colors.white,
+                        letterSpacing: 1.5,
+                      ),
                 ),
               ],
             ),
@@ -129,9 +129,9 @@ class PrivacyPolicyScreen extends StatelessWidget {
           Text(
             'Last Updated: January 2026',
             style: Theme.of(context).textTheme.labelSmall?.copyWith(
-              color: AppColors.textMuted,
-              fontStyle: FontStyle.italic,
-            ),
+                  color: AppColors.textMuted,
+                  fontStyle: FontStyle.italic,
+                ),
           ),
           const SizedBox(height: AppConstants.space40),
         ],
@@ -139,7 +139,8 @@ class PrivacyPolicyScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildSection(BuildContext context, String title, List<String> content) {
+  Widget _buildSection(
+      BuildContext context, String title, List<String> content) {
     return Padding(
       padding: const EdgeInsets.only(bottom: AppConstants.space24),
       child: Column(
@@ -148,9 +149,9 @@ class PrivacyPolicyScreen extends StatelessWidget {
           Text(
             title,
             style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-              color: Colors.white,
-              letterSpacing: 0.5,
-            ),
+                  color: Colors.white,
+                  letterSpacing: 0.5,
+                ),
           ),
           const SizedBox(height: AppConstants.space8),
           ...content.map((text) => Padding(
@@ -158,10 +159,10 @@ class PrivacyPolicyScreen extends StatelessWidget {
                 child: Text(
                   text,
                   style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                    color: AppColors.textMuted,
-                    height: 1.6,
-                    fontWeight: FontWeight.normal,
-                  ),
+                        color: AppColors.textMuted,
+                        height: 1.6,
+                        fontWeight: FontWeight.normal,
+                      ),
                 ),
               )),
         ],

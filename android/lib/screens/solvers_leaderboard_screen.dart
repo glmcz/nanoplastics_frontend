@@ -103,7 +103,7 @@ class _SolversLeaderboardScreenState extends State<SolversLeaderboardScreen> {
         ),
       ),
       child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+        filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
         child: Column(
           children: [
             Row(
@@ -273,7 +273,8 @@ class _SolversLeaderboardScreenState extends State<SolversLeaderboardScreen> {
               onPressed: _showRegistrationDialog,
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.pastelMint,
-                padding: const EdgeInsets.symmetric(vertical: AppConstants.space16),
+                padding:
+                    const EdgeInsets.symmetric(vertical: AppConstants.space16),
                 shape: RoundedRectangleBorder(
                   borderRadius:
                       BorderRadius.circular(AppConstants.radiusMedium),
