@@ -6,12 +6,14 @@ import 'package:pdfx/pdfx.dart';
 import '../config/app_colors.dart';
 import '../config/app_constants.dart';
 import '../widgets/nanosolve_logo.dart';
+import '../widgets/header_back_button.dart';
 import '../l10n/app_localizations.dart';
 import '../services/logger_service.dart';
 import 'dart:async';
 import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:path_provider/path_provider.dart';
 
 class PDFViewerScreen extends StatefulWidget {
   final String title;
@@ -234,12 +236,19 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
       final data = await rootBundle.load(pdfPath);
       final bytes = data.buffer.asUint8List();
 
-      final sanitizedTitle = widget.title
-          .replaceAll(RegExp(r'[^\w\s-]'), '')
-          .replaceAll(' ', '_');
-      final tempDir = Directory.systemTemp;
-      final tempFile = File('${tempDir.path}/Nanoplastics_$sanitizedTitle.pdf');
+      final sanitizedTitle =
+          widget.title.replaceAll(RegExp(r'[^\w\s-]'), '').replaceAll(' ', '_');
+
+      // Use app's cache directory instead of system temp for better accessibility
+      final cacheDir = await getTemporaryDirectory();
+      final tempFile =
+          File('${cacheDir.path}/Nanoplastics_$sanitizedTitle.pdf');
       await tempFile.writeAsBytes(bytes);
+
+      // Ensure file exists before sharing
+      if (!await tempFile.exists()) {
+        throw Exception('Failed to create temporary PDF file');
+      }
 
       await Share.shareXFiles(
         [XFile(tempFile.path)],
@@ -251,6 +260,16 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
       });
     } catch (e) {
       LoggerService().logError('PDFShareFailed', e);
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to share PDF: $e'),
+            backgroundColor: Colors.red,
+            duration: const Duration(seconds: 3),
+          ),
+        );
+      }
     }
   }
 
@@ -399,14 +418,8 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            GestureDetector(
-              onTap: () => Navigator.of(context).pop(),
-              child: Text(
-                AppLocalizations.of(context)!.sourcesBack,
-                style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                      color: AppColors.pastelAqua,
-                    ),
-              ),
+            HeaderBackButton(
+              label: AppLocalizations.of(context)!.sourcesBack,
             ),
             const NanosolveLogo(height: AppConstants.logoXS),
             SizedBox(

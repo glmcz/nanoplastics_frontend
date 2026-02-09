@@ -196,6 +196,10 @@ class AppLocalizationsRu extends AppLocalizations {
   String get categoryDetailBrainstormSave => 'Сохранить';
 
   @override
+  String get categoryDetailBrainstormMinLength =>
+      'Пожалуйста, напишите не менее 10 символов.';
+
+  @override
   String get categoryDetailSourcesTitle => 'Связанные Источники';
 
   @override

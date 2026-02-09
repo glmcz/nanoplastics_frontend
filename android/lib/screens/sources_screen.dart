@@ -5,6 +5,7 @@ import '../config/app_colors.dart';
 import '../config/app_constants.dart';
 import '../utils/responsive_config.dart';
 import '../widgets/nanosolve_logo.dart';
+import '../widgets/header_back_button.dart';
 import '../l10n/app_localizations.dart';
 import '../models/pdf_source.dart';
 import 'pdf_viewer_screen.dart';
@@ -90,14 +91,8 @@ class _SourcesScreenState extends State<SourcesScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                GestureDetector(
-                  onTap: () => Navigator.of(context).pop(),
-                  child: Text(
-                    AppLocalizations.of(context)!.sourcesBack,
-                    style: header.backStyle?.copyWith(
-                      color: AppColors.pastelAqua,
-                    ),
-                  ),
+                HeaderBackButton(
+                  label: AppLocalizations.of(context)!.sourcesBack,
                 ),
                 Icon(
                   Icons.menu_book_outlined,

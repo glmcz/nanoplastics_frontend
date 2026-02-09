@@ -6,6 +6,7 @@ import '../../config/app_constants.dart';
 import '../../utils/responsive_config.dart';
 import '../../services/settings_manager.dart';
 import '../../widgets/nanosolve_logo.dart';
+import '../../widgets/header_back_button.dart';
 
 class PrivacySecurityScreen extends StatefulWidget {
   const PrivacySecurityScreen({super.key});
@@ -81,15 +82,9 @@ class _PrivacySecurityScreenState extends State<PrivacySecurityScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                GestureDetector(
-                  onTap: () => Navigator.of(context).pop(),
-                  child: Text(
-                    AppLocalizations.of(context)!.settingsBack,
-                    style: header.backStyle?.copyWith(
-                      color: AppColors.pastelMint,
-                      letterSpacing: 1,
-                    ),
-                  ),
+                HeaderBackButton(
+                  label: AppLocalizations.of(context)!.settingsBack,
+                  color: AppColors.pastelMint,
                 ),
                 Icon(Icons.lock_outline,
                     size: header.iconSize, color: AppColors.pastelMint),

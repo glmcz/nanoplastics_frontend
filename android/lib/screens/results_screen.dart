@@ -5,6 +5,7 @@ import '../config/app_colors.dart';
 import '../config/app_constants.dart';
 import '../utils/responsive_config.dart';
 import '../widgets/nanosolve_logo.dart';
+import '../widgets/header_back_button.dart';
 import 'solvers_leaderboard_screen.dart';
 import 'user_settings/user_settings_screen.dart';
 import '../services/logger_service.dart';
@@ -78,15 +79,9 @@ class _ResultsScreenState extends State<ResultsScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                GestureDetector(
-                  onTap: () => Navigator.of(context).pop(),
-                  child: Text(
-                    l10n.resultsBackButton,
-                    style: header.backStyle?.copyWith(
-                      color: AppColors.pastelMint,
-                      letterSpacing: 1,
-                    ),
-                  ),
+                HeaderBackButton(
+                  label: l10n.resultsBackButton,
+                  color: AppColors.pastelMint,
                 ),
                 Row(
                   children: [

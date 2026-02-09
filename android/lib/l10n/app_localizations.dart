@@ -464,6 +464,12 @@ abstract class AppLocalizations {
   /// **'Save'**
   String get categoryDetailBrainstormSave;
 
+  /// No description provided for @categoryDetailBrainstormMinLength.
+  ///
+  /// In en, this message translates to:
+  /// **'Please write at least 10 characters.'**
+  String get categoryDetailBrainstormMinLength;
+
   /// No description provided for @categoryDetailSourcesTitle.
   ///
   /// In en, this message translates to:

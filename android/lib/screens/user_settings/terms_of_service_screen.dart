@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:ui';
 import '../../config/app_colors.dart';
 import '../../config/app_constants.dart';
+import '../../widgets/header_back_button.dart';
 
 class TermsOfServiceScreen extends StatelessWidget {
   const TermsOfServiceScreen({super.key});
@@ -50,17 +51,9 @@ class TermsOfServiceScreen extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                GestureDetector(
-                  onTap: () => Navigator.of(context).pop(),
-                  child: Text(
-                    'Back',
-                    style: Theme.of(context).textTheme.labelLarge!.copyWith(
-                          color: AppColors.pastelLavender,
-                          letterSpacing: 1,
-                        ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
+                HeaderBackButton(
+                  label: 'Back',
+                  color: AppColors.pastelLavender,
                 ),
                 const Icon(Icons.description_outlined,
                     size: AppConstants.iconMedium,

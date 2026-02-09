@@ -8,6 +8,7 @@ import '../../config/app_colors.dart';
 import '../../config/app_constants.dart';
 import '../../utils/responsive_config.dart';
 import '../../widgets/nanosolve_logo.dart';
+import '../../widgets/header_back_button.dart';
 
 class AboutScreen extends StatelessWidget {
   const AboutScreen({super.key});
@@ -68,15 +69,9 @@ class AboutScreen extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                GestureDetector(
-                  onTap: () => Navigator.of(context).pop(),
-                  child: Text(
-                    AppLocalizations.of(context)!.settingsBack,
-                    style: header.backStyle?.copyWith(
-                      color: AppColors.pastelLavender,
-                      letterSpacing: 1,
-                    ),
-                  ),
+                HeaderBackButton(
+                  label: AppLocalizations.of(context)!.settingsBack,
+                  color: AppColors.pastelLavender,
                 ),
                 Icon(Icons.info_outline,
                     size: header.iconSize, color: AppColors.pastelLavender),

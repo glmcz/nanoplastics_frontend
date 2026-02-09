@@ -59,6 +59,7 @@
   "categoryDetailBrainstormUsernameHint": "Ingresa nombre de usuario",
   "categoryDetailBrainstormCancel": "Cancelar",
   "categoryDetailBrainstormSave": "Guardar",
+  "categoryDetailBrainstormMinLength": "Por favor, escribe al menos 10 caracteres.",
   "categoryDetailSourcesTitle": "Fuentes Relacionadas",
   "categoryDetailSourcesCount": "fuentes",
   "sourcesTitle": "Fuentes",

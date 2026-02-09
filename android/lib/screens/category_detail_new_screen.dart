@@ -9,7 +9,7 @@ import '../models/category_detail_data.dart';
 import '../l10n/app_localizations.dart';
 import 'pdf_viewer_screen.dart';
 import '../services/logger_service.dart';
-import '../services/idea_service.dart';
+import '../services/api_service.dart';
 
 class CategoryDetailNewScreen extends StatefulWidget {
   final CategoryDetailData categoryData;
@@ -117,9 +117,67 @@ class _CategoryDetailNewScreenState extends State<CategoryDetailNewScreen>
           child: Column(
             children: [
               _buildHeader(),
-              _buildHeroIcon(),
               Expanded(
-                child: _buildScrollableContent(),
+                child: Stack(
+                  children: [
+                    _buildScrollableContent(),
+                    // Gradient fade at the top of scrollable area
+                    Positioned(
+                      top: 0,
+                      left: 0,
+                      right: 0,
+                      height: 24,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [
+                              widget.categoryData.themeColor
+                                  .withValues(alpha: 0.12),
+                              widget.categoryData.themeColor
+                                  .withValues(alpha: 0.03),
+                              Colors.transparent,
+                            ],
+                            stops: const [0.0, 0.5, 1.0],
+                          ),
+                        ),
+                      ),
+                    ),
+                    // Thin glowing line separator
+                    Positioned(
+                      top: 0,
+                      left: AppConstants.space40,
+                      right: AppConstants.space40,
+                      child: Container(
+                        height: 1,
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              Colors.transparent,
+                              widget.categoryData.themeColor
+                                  .withValues(alpha: 0.4),
+                              widget.categoryData.themeColor
+                                  .withValues(alpha: 0.6),
+                              widget.categoryData.themeColor
+                                  .withValues(alpha: 0.4),
+                              Colors.transparent,
+                            ],
+                            stops: const [0.0, 0.2, 0.5, 0.8, 1.0],
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: widget.categoryData.themeColor
+                                  .withValues(alpha: 0.3),
+                              blurRadius: 8,
+                              spreadRadius: 1,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
@@ -165,14 +223,6 @@ class _CategoryDetailNewScreenState extends State<CategoryDetailNewScreen>
           ),
           SizedBox(height: config.spacing),
           NanosolveLogo(height: config.logoHeight),
-          SizedBox(height: config.spacing),
-          Text(
-            widget.categoryData.title.toUpperCase(),
-            style: config.titleStyle?.copyWith(
-              color: Colors.white,
-            ),
-            textAlign: TextAlign.center,
-          ),
         ],
       ),
     );
@@ -213,10 +263,22 @@ class _CategoryDetailNewScreenState extends State<CategoryDetailNewScreen>
   }
 
   Widget _buildScrollableContent() {
+    final responsive = ResponsiveConfig.fromMediaQuery(context);
+    final config = responsive.getCategoryDetailHeaderConfig();
+
     return SingleChildScrollView(
       padding: const EdgeInsets.symmetric(horizontal: AppConstants.space20),
       child: Column(
         children: [
+          SizedBox(height: config.spacing),
+          Text(
+            widget.categoryData.title.toUpperCase(),
+            style: config.titleStyle?.copyWith(
+              color: Colors.white,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          _buildHeroIcon(),
           _buildInfoPanel(),
           const SizedBox(height: AppConstants.space30),
         ],
@@ -292,7 +354,7 @@ class _CategoryDetailNewScreenState extends State<CategoryDetailNewScreen>
               );
 
               // Submit to backend
-              final result = await IdeaService.submitIdea(
+              final result = await ApiService.submitIdea(
                 description: text,
                 category: widget.categoryData.title,
               );

@@ -5,6 +5,7 @@ import '../../config/app_colors.dart';
 import '../../config/app_constants.dart';
 import '../../utils/responsive_config.dart';
 import '../../widgets/nanosolve_logo.dart';
+import '../../widgets/header_back_button.dart';
 import 'user_profile.dart';
 import 'language_screen.dart';
 import 'privacy_security_screen.dart';
@@ -69,15 +70,9 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                GestureDetector(
-                  onTap: () => Navigator.of(context).pop(),
-                  child: Text(
-                    AppLocalizations.of(context)!.settingsBack,
-                    style: header.backStyle?.copyWith(
-                      color: AppColors.pastelMint,
-                      letterSpacing: 1,
-                    ),
-                  ),
+                HeaderBackButton(
+                  label: AppLocalizations.of(context)!.settingsBack,
+                  color: AppColors.pastelMint,
                 ),
                 Icon(
                   Icons.settings,

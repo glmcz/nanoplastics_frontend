@@ -70,6 +70,7 @@
   "categoryDetailBrainstormUsernameHint": "Enter username",
   "categoryDetailBrainstormCancel": "Cancel",
   "categoryDetailBrainstormSave": "Save",
+  "categoryDetailBrainstormMinLength": "Please write at least 10 characters.",
   "categoryDetailSourcesTitle": "Related Sources",
   "categoryDetailSourcesCount": "sources",
 

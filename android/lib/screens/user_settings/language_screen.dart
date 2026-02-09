@@ -6,6 +6,7 @@ import '../../config/app_constants.dart';
 import '../../utils/responsive_config.dart';
 import '../../services/settings_manager.dart';
 import '../../widgets/nanosolve_logo.dart';
+import '../../widgets/header_back_button.dart';
 import '../../main.dart';
 
 class LanguageScreen extends StatefulWidget {
@@ -114,15 +115,8 @@ class _LanguageScreenState extends State<LanguageScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                GestureDetector(
-                  onTap: () => Navigator.of(context).pop(),
-                  child: Text(
-                    AppLocalizations.of(context)!.settingsBack,
-                    style: header.backStyle?.copyWith(
-                      color: AppColors.pastelAqua,
-                      letterSpacing: 1,
-                    ),
-                  ),
+                HeaderBackButton(
+                  label: AppLocalizations.of(context)!.settingsBack,
                 ),
                 Icon(Icons.language,
                     size: header.iconSize, color: AppColors.pastelAqua),

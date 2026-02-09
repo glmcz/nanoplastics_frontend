@@ -70,6 +70,7 @@
   "categoryDetailBrainstormUsernameHint": "Zadejte uživatelské jméno",
   "categoryDetailBrainstormCancel": "Zrušit",
   "categoryDetailBrainstormSave": "Uložit",
+  "categoryDetailBrainstormMinLength": "Napište prosím alespoň 10 znaků.",
   "categoryDetailSourcesTitle": "Zdroje k tématu",
   "categoryDetailSourcesCount": "zdrojů",
 

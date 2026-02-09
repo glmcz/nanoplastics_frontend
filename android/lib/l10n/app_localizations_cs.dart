@@ -194,6 +194,10 @@ class AppLocalizationsCs extends AppLocalizations {
   String get categoryDetailBrainstormSave => 'Uložit';
 
   @override
+  String get categoryDetailBrainstormMinLength =>
+      'Napište prosím alespoň 10 znaků.';
+
+  @override
   String get categoryDetailSourcesTitle => 'Zdroje k tématu';
 
   @override

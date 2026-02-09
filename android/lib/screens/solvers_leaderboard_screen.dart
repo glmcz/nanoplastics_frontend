@@ -5,8 +5,9 @@ import '../config/app_colors.dart';
 import '../config/app_constants.dart';
 import '../utils/responsive_config.dart';
 import '../widgets/nanosolve_logo.dart';
+import '../widgets/header_back_button.dart';
 import '../services/settings_manager.dart';
-import '../services/solver_service.dart';
+import '../services/api_service.dart';
 import '../models/solver.dart';
 import 'user_settings/profile_registration_dialog.dart';
 
@@ -33,7 +34,7 @@ class _SolversLeaderboardScreenState extends State<SolversLeaderboardScreen> {
 
   void _loadSolvers() {
     setState(() {
-      _solversFuture = SolverService.getTopSolvers();
+      _solversFuture = ApiService.getTopSolvers();
     });
   }
 
@@ -108,27 +109,10 @@ class _SolversLeaderboardScreenState extends State<SolversLeaderboardScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                GestureDetector(
-                  onTap: () => Navigator.of(context).pop(),
-                  child: Row(
-                    children: [
-                      const Icon(
-                        Icons.arrow_back_ios,
-                        size: AppConstants.iconSmall,
-                        color: AppColors.pastelMint,
-                      ),
-                      const SizedBox(width: AppConstants.space4),
-                      Text(
-                        l10n.resultsBackButton,
-                        style: Theme.of(context).textTheme.labelLarge!.copyWith(
-                              color: AppColors.pastelMint,
-                              letterSpacing: 1,
-                            ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ],
-                  ),
+                HeaderBackButton(
+                  label: l10n.resultsBackButton,
+                  color: AppColors.pastelMint,
+                  showArrow: true,
                 ),
                 const Icon(
                   Icons.emoji_events,

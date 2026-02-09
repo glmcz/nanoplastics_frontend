@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:ui';
 import '../../config/app_colors.dart';
 import '../../config/app_constants.dart';
+import '../../widgets/header_back_button.dart';
 
 class PrivacyPolicyScreen extends StatelessWidget {
   const PrivacyPolicyScreen({super.key});
@@ -50,15 +51,8 @@ class PrivacyPolicyScreen extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                GestureDetector(
-                  onTap: () => Navigator.of(context).pop(),
-                  child: Text(
-                    'Back',
-                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                      color: AppColors.pastelAqua,
-                      letterSpacing: 1,
-                    ),
-                  ),
+                HeaderBackButton(
+                  label: 'Back',
                 ),
                 const Icon(Icons.privacy_tip_outlined,
                     size: AppConstants.iconMedium, color: AppColors.pastelAqua),

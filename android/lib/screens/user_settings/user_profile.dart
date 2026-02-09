@@ -7,6 +7,7 @@ import '../../config/app_constants.dart';
 import '../../utils/responsive_config.dart';
 import '../../services/settings_manager.dart';
 import '../../widgets/nanosolve_logo.dart';
+import '../../widgets/header_back_button.dart';
 
 class UserProfileScreen extends StatefulWidget {
   const UserProfileScreen({super.key});
@@ -161,15 +162,9 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                GestureDetector(
-                  onTap: () => Navigator.of(context).pop(),
-                  child: Text(
-                    AppLocalizations.of(context)!.settingsBack,
-                    style: header.backStyle?.copyWith(
-                      color: AppColors.pastelMint,
-                      letterSpacing: 1,
-                    ),
-                  ),
+                HeaderBackButton(
+                  label: AppLocalizations.of(context)!.settingsBack,
+                  color: AppColors.pastelMint,
                 ),
                 Icon(
                   Icons.person,
@@ -266,42 +261,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               _scheduleAutoSave();
             },
           ),
-          const SizedBox(height: AppConstants.space16),
-          _buildToggleItem(
-            title: AppLocalizations.of(context)!.profileEmailNotifications,
-            subtitle:
-                AppLocalizations.of(context)!.profileEmailNotificationsDesc,
-            icon: Icons.email_outlined,
-            value: _emailNotificationsEnabled,
-            color: AppColors.pastelAqua,
-            config: config,
-            onChanged: (value) {
-              setState(() {
-                _emailNotificationsEnabled = value;
-                _hasChanges = true;
-              });
-              _scheduleAutoSave();
-            },
-          ),
-          const SizedBox(height: AppConstants.space30),
-          _buildSectionTitle(AppLocalizations.of(context)!.profilePrivacy,
-              AppColors.pastelMint, config),
-          const SizedBox(height: AppConstants.space16),
-          _buildToggleItem(
-            title: AppLocalizations.of(context)!.profileAnalytics,
-            subtitle: AppLocalizations.of(context)!.profileAnalyticsDesc,
-            icon: Icons.analytics_outlined,
-            value: _analyticsEnabled,
-            color: AppColors.pastelMint,
-            config: config,
-            onChanged: (value) {
-              setState(() {
-                _analyticsEnabled = value;
-                _hasChanges = true;
-              });
-              _scheduleAutoSave();
-            },
-          ),
+         
           const SizedBox(height: AppConstants.space16),
           _buildDangerZone(config),
           const SizedBox(height: AppConstants.space40),

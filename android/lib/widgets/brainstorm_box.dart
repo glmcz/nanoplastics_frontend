@@ -77,9 +77,22 @@ class _BrainstormBoxState extends State<BrainstormBox> {
   }
 
   Future<void> _handleSubmit() async {
-    if (_controller.text.trim().isEmpty) return;
-
-    final text = _controller.text;
+    final text = _controller.text.trim();
+    if (text.length < 10) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              AppLocalizations.of(context)!.categoryDetailBrainstormMinLength,
+            ),
+            backgroundColor: Colors.orange,
+            behavior: SnackBarBehavior.floating,
+            duration: const Duration(seconds: 2),
+          ),
+        );
+      }
+      return;
+    }
     final l10n = AppLocalizations.of(context)!;
 
     try {
@@ -101,9 +114,14 @@ class _BrainstormBoxState extends State<BrainstormBox> {
       }
     } catch (e) {
       if (mounted) {
+        final errorMsg = e.toString().replaceFirst('Exception: ', '');
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(l10n.categoryDetailBrainstormError),
+            content: Text(
+              errorMsg.isNotEmpty
+                  ? errorMsg
+                  : l10n.categoryDetailBrainstormError,
+            ),
             backgroundColor: Colors.red,
             behavior: SnackBarBehavior.floating,
             duration: const Duration(seconds: 3),

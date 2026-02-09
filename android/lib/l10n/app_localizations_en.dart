@@ -195,6 +195,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get categoryDetailBrainstormSave => 'Save';
 
   @override
+  String get categoryDetailBrainstormMinLength =>
+      'Please write at least 10 characters.';
+
+  @override
   String get categoryDetailSourcesTitle => 'Related Sources';
 
   @override

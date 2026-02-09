@@ -59,6 +59,7 @@
   "categoryDetailBrainstormUsernameHint": "Введите имя пользователя",
   "categoryDetailBrainstormCancel": "Отмена",
   "categoryDetailBrainstormSave": "Сохранить",
+  "categoryDetailBrainstormMinLength": "Пожалуйста, напишите не менее 10 символов.",
   "categoryDetailSourcesTitle": "Связанные Источники",
   "categoryDetailSourcesCount": "источников",
   "sourcesTitle": "Источники",
