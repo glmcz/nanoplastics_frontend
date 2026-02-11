@@ -10,6 +10,7 @@ A mobile application providing science-backed information about nanoplastics and
 - Configurable user profile and settings
 - Multi-language support
 
+
 ## Contributing
 
 Contributions are welcome. To contribute:
@@ -21,6 +22,12 @@ Contributions are welcome. To contribute:
 5. Open a Pull Request
 
 All contributions are subject to review. By submitting a contribution, you agree that your changes become part of this project under the same license terms.
+
+
+### UX Design system
+The goal is responsive behavior via tokens, not per-widget scaling. Each screen now pulls from AppSpacing, AppSizing, and AppTypography, which all derive from ResponsiveConfig scales. That means all screens adapt consistently to different widths/heights/landscape without duplicating scaling logic in widgets.
+
+For other screen variants, you adjust tokens (or add variant-aware logic inside the token classes), and every screen updates automatically. This avoids per-screen magic numbers and keeps behavior consistent across small/normal/large devices.
 
 ## License
 

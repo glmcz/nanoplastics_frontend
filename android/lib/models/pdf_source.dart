@@ -171,14 +171,13 @@ final List<PDFSource> humanHealthSources = [
 
 // Earth Pollution Category
 final List<PDFSource> earthPollutionSources = [
-    // Main Report - Czech
+    // Main Report - Czech (downloaded on demand)
   PDFSource(
     title: 'Nanoplasty v biosféře - Zpráva (2025)',
     startPage: 1,
     endPage: 999,
     description: 'Kompletní komplexní zpráva o nanoplastech',
     language: 'cs',
-    url: 'https://allatra.org/storage/app/media/reports/cs/Nanoplastics_in_the_Biosphere_Report_CS.pdf',
   ),
   // Czech
   PDFSource(
@@ -287,34 +286,31 @@ final List<PDFSource> earthPollutionSources = [
     endPage: 999,
     description: 'Complete comprehensive report on nanoplastics',
     language: 'en',
-    url: 'https://allatra.org/storage/app/media/reports/en/Nanoplastics_in_the_Biosphere_Report.pdf',
+    pdfAssetPath: 'assets/docs/Nanoplastics_Report_EN_compressed.pdf',
   ),
-  // Spanish
+  // Spanish (downloaded on demand)
   PDFSource(
     title: 'Nanoplásticos en la Biosfera - Informe (2025)',
     startPage: 1,
     endPage: 999,
     description: 'Informe completo e integral sobre nanoplásticos',
     language: 'es',
-    url: 'https://allatra.org/storage/app/media/reports/es/Nanoplasticos_en_la_Biosfera_Informe_ES.pdf',
   ),
-  // Russian
+  // Russian (downloaded on demand)
   PDFSource(
     title: 'Нанопластик в биосфере - Отчёт (2025)',
     startPage: 1,
     endPage: 999,
     description: 'Полный комплексный отчет о нанопластике',
     language: 'ru',
-    url: 'https://allatra.org/storage/app/media/reports/ru/Nanoplastics_in_the_Biosphere_Report_RU.pdf',
   ),
-  // French
+  // French (downloaded on demand)
   PDFSource(
     title: 'Les Nanoplastiques dans la Biosphère - Rapport (2025)',
     startPage: 1,
     endPage: 999,
     description: 'Rapport complet et exhaustif sur les nanoplastiques',
     language: 'fr',
-    url: 'https://allatra.org/storage/app/media/reports/fr/Nanoplastics_in_the_Biosphere_Report_FR.pdf',
   ),
 ];
 

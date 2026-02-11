@@ -3,7 +3,9 @@ import 'dart:ui';
 import '../../l10n/app_localizations.dart';
 import '../../config/app_colors.dart';
 import '../../config/app_constants.dart';
-import '../../utils/responsive_config.dart';
+import '../../utils/app_spacing.dart';
+import '../../utils/app_sizing.dart';
+import '../../utils/app_typography.dart';
 import '../../services/settings_manager.dart';
 import '../../widgets/nanosolve_logo.dart';
 import '../../widgets/header_back_button.dart';
@@ -64,11 +66,11 @@ class _PrivacySecurityScreenState extends State<PrivacySecurityScreen> {
   }
 
   Widget _buildHeader() {
-    final responsive = ResponsiveConfig.fromMediaQuery(context);
-    final header = responsive.getSecondaryHeaderConfig();
+    final spacing = AppSpacing.of(context);
+    final sizing = AppSizing.of(context);
 
     return Container(
-      padding: EdgeInsets.all(header.padding),
+      padding: EdgeInsets.all(spacing.headerPadding),
       decoration: BoxDecoration(
         color: const Color(0xFF141928).withValues(alpha: 0.9),
         border: Border(
@@ -87,11 +89,11 @@ class _PrivacySecurityScreenState extends State<PrivacySecurityScreen> {
                   color: AppColors.pastelMint,
                 ),
                 Icon(Icons.lock_outline,
-                    size: header.iconSize, color: AppColors.pastelMint),
+                    size: sizing.iconMd, color: AppColors.pastelMint),
               ],
             ),
-            SizedBox(height: header.spacing),
-            NanosolveLogo(height: header.logoHeight),
+            SizedBox(height: spacing.headerSpacing),
+            NanosolveLogo(height: sizing.logoHeight),
           ],
         ),
       ),
@@ -99,77 +101,114 @@ class _PrivacySecurityScreenState extends State<PrivacySecurityScreen> {
   }
 
   Widget _buildContent() {
-    final responsive = ResponsiveConfig.fromMediaQuery(context);
-    final config = responsive.getSettingsScreenConfig();
+    final spacing = AppSpacing.of(context);
+    final sizing = AppSizing.of(context);
+    final typography = AppTypography.of(context);
+
+    final contentPad = spacing.contentPadding;
+    final cardPad = spacing.cardPadding;
+    final cardSpace = spacing.cardSpacing;
+    final iconContainer = sizing.iconContainer;
+    final iconSz = sizing.iconMd;
+    final arrowSz = sizing.arrowSize;
+    final titleStyle = typography.display.copyWith(color: AppColors.textMain);
+    final subtitleStyle =
+        typography.subtitle.copyWith(color: AppColors.textMuted);
+    final cardTitleStyle = typography.title.copyWith(color: AppColors.textMain);
 
     return SingleChildScrollView(
-      padding: EdgeInsets.all(config.contentPadding),
+      padding: EdgeInsets.all(contentPad),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildTitleSection(config),
-          SizedBox(height: config.cardSpacing * 2),
+          _buildTitleSection(titleStyle, subtitleStyle),
+          SizedBox(height: cardSpace * 2),
           _buildSectionTitle(AppLocalizations.of(context)!.privacyDataAnalytics,
-              AppColors.pastelMint, config),
-          SizedBox(height: config.cardSpacing),
+              AppColors.pastelMint, cardTitleStyle),
+          SizedBox(height: cardSpace),
           _buildToggleItem(
             title: AppLocalizations.of(context)!.privacyAnalytics,
             subtitle: AppLocalizations.of(context)!.privacyAnalyticsDesc,
             icon: Icons.analytics_outlined,
             value: _analyticsEnabled,
             color: AppColors.pastelMint,
-            config: config,
+            cardPad: cardPad,
+            iconContainer: iconContainer,
+            iconSz: iconSz,
+            cardSpace: cardSpace,
+            cardTitleStyle: cardTitleStyle,
+            subtitleStyle: subtitleStyle,
             onChanged: _updateAnalytics,
           ),
-          SizedBox(height: config.cardSpacing * 2),
+          SizedBox(height: cardSpace * 2),
           _buildSectionTitle(AppLocalizations.of(context)!.privacySecurity,
-              AppColors.pastelLavender, config),
-          SizedBox(height: config.cardSpacing),
+              AppColors.pastelLavender, cardTitleStyle),
+          SizedBox(height: cardSpace),
           _buildInfoItem(
             title: AppLocalizations.of(context)!.privacyDataEncryption,
             subtitle: AppLocalizations.of(context)!.privacyDataEncryptionDesc,
             icon: Icons.enhanced_encryption_outlined,
             color: AppColors.pastelLavender,
-            config: config,
+            cardPad: cardPad,
+            iconContainer: iconContainer,
+            iconSz: iconSz,
+            cardSpace: cardSpace,
+            cardTitleStyle: cardTitleStyle,
+            subtitleStyle: subtitleStyle,
           ),
-          SizedBox(height: config.cardSpacing),
+          SizedBox(height: cardSpace),
           _buildInfoItem(
             title: AppLocalizations.of(context)!.privacyLocalStorage,
             subtitle: AppLocalizations.of(context)!.privacyLocalStorageDesc,
             icon: Icons.phone_android_outlined,
             color: AppColors.pastelLavender,
-            config: config,
+            cardPad: cardPad,
+            iconContainer: iconContainer,
+            iconSz: iconSz,
+            cardSpace: cardSpace,
+            cardTitleStyle: cardTitleStyle,
+            subtitleStyle: subtitleStyle,
           ),
-          SizedBox(height: config.cardSpacing * 2),
+          SizedBox(height: cardSpace * 2),
           _buildSectionTitle(AppLocalizations.of(context)!.privacyLegal,
-              AppColors.pastelAqua, config),
-          SizedBox(height: config.cardSpacing),
+              AppColors.pastelAqua, cardTitleStyle),
+          SizedBox(height: cardSpace),
           _buildLinkItem(
             title: AppLocalizations.of(context)!.privacyPolicy,
             icon: Icons.policy_outlined,
             color: AppColors.pastelAqua,
-            config: config,
+            cardPad: cardPad,
+            iconContainer: iconContainer,
+            iconSz: iconSz,
+            cardSpace: cardSpace,
+            arrowSz: arrowSz,
+            cardTitleStyle: cardTitleStyle,
             onTap: () {
               // Open privacy policy
             },
           ),
-          SizedBox(height: config.cardSpacing),
+          SizedBox(height: cardSpace),
           _buildLinkItem(
             title: AppLocalizations.of(context)!.privacyTermsOfService,
             icon: Icons.description_outlined,
             color: AppColors.pastelAqua,
-            config: config,
+            cardPad: cardPad,
+            iconContainer: iconContainer,
+            iconSz: iconSz,
+            cardSpace: cardSpace,
+            arrowSz: arrowSz,
+            cardTitleStyle: cardTitleStyle,
             onTap: () {
               // Open terms of service
             },
           ),
-          SizedBox(height: config.cardSpacing * 2),
+          SizedBox(height: cardSpace * 2),
         ],
       ),
     );
   }
 
-  Widget _buildTitleSection(SettingsScreenConfig config) {
+  Widget _buildTitleSection(TextStyle titleStyle, TextStyle subtitleStyle) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -179,16 +218,15 @@ class _PrivacySecurityScreenState extends State<PrivacySecurityScreen> {
           ).createShader(bounds),
           child: Text(
             AppLocalizations.of(context)!.privacyTitle,
-            style: config.titleStyle?.copyWith(
+            style: titleStyle.copyWith(
               color: Colors.white,
-              letterSpacing: 0.5,
             ),
           ),
         ),
         const SizedBox(height: AppConstants.space8),
         Text(
           AppLocalizations.of(context)!.privacySubtitle,
-          style: config.subtitleStyle?.copyWith(
+          style: subtitleStyle.copyWith(
             color: AppColors.textMuted,
           ),
           maxLines: 1,
@@ -199,7 +237,7 @@ class _PrivacySecurityScreenState extends State<PrivacySecurityScreen> {
   }
 
   Widget _buildSectionTitle(
-      String title, Color color, SettingsScreenConfig config) {
+      String title, Color color, TextStyle cardTitleStyle) {
     return Row(
       children: [
         Container(
@@ -213,7 +251,7 @@ class _PrivacySecurityScreenState extends State<PrivacySecurityScreen> {
         const SizedBox(width: AppConstants.space8),
         Text(
           title,
-          style: config.cardTitleStyle?.copyWith(
+          style: cardTitleStyle.copyWith(
             fontWeight: FontWeight.w700,
             color: color,
             letterSpacing: 0.5,
@@ -231,11 +269,16 @@ class _PrivacySecurityScreenState extends State<PrivacySecurityScreen> {
     required IconData icon,
     required bool value,
     required Color color,
-    required SettingsScreenConfig config,
+    required double cardPad,
+    required double iconContainer,
+    required double iconSz,
+    required double cardSpace,
+    required TextStyle cardTitleStyle,
+    required TextStyle subtitleStyle,
     required ValueChanged<bool> onChanged,
   }) {
     return Container(
-      padding: EdgeInsets.all(config.cardPadding),
+      padding: EdgeInsets.all(cardPad),
       decoration: BoxDecoration(
         color: const Color(0xFF141928).withValues(alpha: 0.8),
         borderRadius: BorderRadius.circular(AppConstants.radiusLarge),
@@ -244,22 +287,22 @@ class _PrivacySecurityScreenState extends State<PrivacySecurityScreen> {
       child: Row(
         children: [
           Container(
-            width: config.iconContainerSize,
-            height: config.iconContainerSize,
+            width: iconContainer,
+            height: iconContainer,
             decoration: BoxDecoration(
               color: color.withValues(alpha: 0.15),
               borderRadius: BorderRadius.circular(AppConstants.radiusMedium),
             ),
-            child: Icon(icon, size: config.iconSize, color: color),
+            child: Icon(icon, size: iconSz, color: color),
           ),
-          SizedBox(width: config.cardSpacing),
+          SizedBox(width: cardSpace),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   title,
-                  style: config.cardTitleStyle?.copyWith(
+                  style: cardTitleStyle.copyWith(
                     fontWeight: FontWeight.w600,
                     color: Colors.white,
                   ),
@@ -269,7 +312,7 @@ class _PrivacySecurityScreenState extends State<PrivacySecurityScreen> {
                 const SizedBox(height: AppConstants.space4),
                 Text(
                   subtitle,
-                  style: config.subtitleStyle?.copyWith(
+                  style: subtitleStyle.copyWith(
                     color: AppColors.textMuted,
                   ),
                   maxLines: 2,
@@ -296,10 +339,15 @@ class _PrivacySecurityScreenState extends State<PrivacySecurityScreen> {
     required String subtitle,
     required IconData icon,
     required Color color,
-    required SettingsScreenConfig config,
+    required double cardPad,
+    required double iconContainer,
+    required double iconSz,
+    required double cardSpace,
+    required TextStyle cardTitleStyle,
+    required TextStyle subtitleStyle,
   }) {
     return Container(
-      padding: EdgeInsets.all(config.cardPadding),
+      padding: EdgeInsets.all(cardPad),
       decoration: BoxDecoration(
         color: const Color(0xFF141928).withValues(alpha: 0.8),
         borderRadius: BorderRadius.circular(AppConstants.radiusLarge),
@@ -308,22 +356,22 @@ class _PrivacySecurityScreenState extends State<PrivacySecurityScreen> {
       child: Row(
         children: [
           Container(
-            width: config.iconContainerSize,
-            height: config.iconContainerSize,
+            width: iconContainer,
+            height: iconContainer,
             decoration: BoxDecoration(
               color: color.withValues(alpha: 0.15),
               borderRadius: BorderRadius.circular(AppConstants.radiusMedium),
             ),
-            child: Icon(icon, size: config.iconSize, color: color),
+            child: Icon(icon, size: iconSz, color: color),
           ),
-          SizedBox(width: config.cardSpacing),
+          SizedBox(width: cardSpace),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   title,
-                  style: config.cardTitleStyle?.copyWith(
+                  style: cardTitleStyle.copyWith(
                     fontWeight: FontWeight.w600,
                     color: Colors.white,
                   ),
@@ -333,7 +381,7 @@ class _PrivacySecurityScreenState extends State<PrivacySecurityScreen> {
                 const SizedBox(height: AppConstants.space4),
                 Text(
                   subtitle,
-                  style: config.subtitleStyle?.copyWith(
+                  style: subtitleStyle.copyWith(
                     color: AppColors.textMuted,
                   ),
                   maxLines: 2,
@@ -343,7 +391,7 @@ class _PrivacySecurityScreenState extends State<PrivacySecurityScreen> {
             ),
           ),
           Icon(Icons.check_circle,
-              size: config.iconSize, color: color.withValues(alpha: 0.6)),
+              size: iconSz, color: color.withValues(alpha: 0.6)),
         ],
       ),
     );
@@ -353,13 +401,18 @@ class _PrivacySecurityScreenState extends State<PrivacySecurityScreen> {
     required String title,
     required IconData icon,
     required Color color,
-    required SettingsScreenConfig config,
+    required double cardPad,
+    required double iconContainer,
+    required double iconSz,
+    required double cardSpace,
+    required double arrowSz,
+    required TextStyle cardTitleStyle,
     required VoidCallback onTap,
   }) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: EdgeInsets.all(config.cardPadding),
+        padding: EdgeInsets.all(cardPad),
         decoration: BoxDecoration(
           color: const Color(0xFF141928).withValues(alpha: 0.8),
           borderRadius: BorderRadius.circular(AppConstants.radiusLarge),
@@ -368,26 +421,26 @@ class _PrivacySecurityScreenState extends State<PrivacySecurityScreen> {
         child: Row(
           children: [
             Container(
-              width: config.iconContainerSize,
-              height: config.iconContainerSize,
+              width: iconContainer,
+              height: iconContainer,
               decoration: BoxDecoration(
                 color: color.withValues(alpha: 0.15),
                 borderRadius: BorderRadius.circular(AppConstants.radiusMedium),
               ),
-              child: Icon(icon, size: config.iconSize, color: color),
+              child: Icon(icon, size: iconSz, color: color),
             ),
-            SizedBox(width: config.cardSpacing),
+            SizedBox(width: cardSpace),
             Expanded(
               child: Text(
                 title,
-                style: config.cardTitleStyle?.copyWith(
+                style: cardTitleStyle.copyWith(
                   fontWeight: FontWeight.w600,
                   color: Colors.white,
                 ),
               ),
             ),
             Icon(Icons.arrow_forward_ios,
-                size: config.arrowSize, color: color.withValues(alpha: 0.6)),
+                size: arrowSz, color: color.withValues(alpha: 0.6)),
           ],
         ),
       ),

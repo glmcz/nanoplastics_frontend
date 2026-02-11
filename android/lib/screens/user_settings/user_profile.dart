@@ -4,7 +4,9 @@ import 'dart:async';
 import '../../l10n/app_localizations.dart';
 import '../../config/app_colors.dart';
 import '../../config/app_constants.dart';
-import '../../utils/responsive_config.dart';
+import '../../utils/app_spacing.dart';
+import '../../utils/app_sizing.dart';
+import '../../utils/app_typography.dart';
 import '../../services/settings_manager.dart';
 import '../../widgets/nanosolve_logo.dart';
 import '../../widgets/header_back_button.dart';
@@ -142,11 +144,11 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   }
 
   Widget _buildHeader() {
-    final responsive = ResponsiveConfig.fromMediaQuery(context);
-    final header = responsive.getSecondaryHeaderConfig();
+    final spacing = AppSpacing.of(context);
+    final sizing = AppSizing.of(context);
 
     return Container(
-      padding: EdgeInsets.all(header.padding),
+      padding: EdgeInsets.all(spacing.headerPadding),
       decoration: BoxDecoration(
         color: const Color(0xFF141928).withValues(alpha: 0.9),
         border: Border(
@@ -168,13 +170,13 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                 ),
                 Icon(
                   Icons.person,
-                  size: header.iconSize,
+                  size: sizing.iconMd,
                   color: AppColors.pastelMint,
                 ),
               ],
             ),
-            SizedBox(height: header.spacing),
-            NanosolveLogo(height: header.logoHeight),
+            SizedBox(height: spacing.headerSpacing),
+            NanosolveLogo(height: sizing.logoHeight),
           ],
         ),
       ),
@@ -182,27 +184,30 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   }
 
   Widget _buildContent() {
-    final responsive = ResponsiveConfig.fromMediaQuery(context);
-    final config = responsive.getSettingsScreenConfig();
+    final spacing = AppSpacing.of(context);
+    final sizing = AppSizing.of(context);
+    final typography = AppTypography.of(context);
 
     return SingleChildScrollView(
-      padding: EdgeInsets.all(config.contentPadding),
+      padding: EdgeInsets.all(spacing.contentPadding),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildTitleSection(config),
+          _buildTitleSection(typography),
           const SizedBox(height: AppConstants.space30),
-          _buildAvatarSection(config),
+          _buildAvatarSection(sizing, typography),
           const SizedBox(height: AppConstants.space30),
           _buildSectionTitle(AppLocalizations.of(context)!.profilePersonalInfo,
-              AppColors.pastelMint, config),
+              AppColors.pastelMint, spacing, typography),
           const SizedBox(height: AppConstants.space16),
           _buildTextField(
             controller: _displayNameController,
             label: AppLocalizations.of(context)!.profileDisplayName,
             hint: AppLocalizations.of(context)!.profileDisplayNameHint,
             icon: Icons.person_outline,
-            config: config,
+            spacing: spacing,
+            sizing: sizing,
+            typography: typography,
           ),
           const SizedBox(height: AppConstants.space16),
           _buildTextField(
@@ -211,7 +216,9 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
             hint: AppLocalizations.of(context)!.profileEmailHint,
             icon: Icons.email_outlined,
             keyboardType: TextInputType.emailAddress,
-            config: config,
+            spacing: spacing,
+            sizing: sizing,
+            typography: typography,
           ),
           const SizedBox(height: AppConstants.space16),
           _buildTextField(
@@ -220,11 +227,13 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
             hint: AppLocalizations.of(context)!.profileBioHint,
             icon: Icons.description_outlined,
             maxLines: 3,
-            config: config,
+            spacing: spacing,
+            sizing: sizing,
+            typography: typography,
           ),
           const SizedBox(height: AppConstants.space30),
           _buildSectionTitle(AppLocalizations.of(context)!.profileAppearance,
-              AppColors.pastelLavender, config),
+              AppColors.pastelLavender, spacing, typography),
           const SizedBox(height: AppConstants.space16),
           _buildToggleItem(
             title: AppLocalizations.of(context)!.profileDarkMode,
@@ -232,7 +241,9 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
             icon: Icons.dark_mode_outlined,
             value: _darkModeEnabled,
             color: AppColors.pastelLavender,
-            config: config,
+            spacing: spacing,
+            sizing: sizing,
+            typography: typography,
             onChanged: (value) {
               setState(() {
                 _darkModeEnabled = value;
@@ -243,7 +254,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
           ),
           const SizedBox(height: AppConstants.space30),
           _buildSectionTitle(AppLocalizations.of(context)!.profileNotifications,
-              AppColors.pastelAqua, config),
+              AppColors.pastelAqua, spacing, typography),
           const SizedBox(height: AppConstants.space16),
           _buildToggleItem(
             title: AppLocalizations.of(context)!.profilePushNotifications,
@@ -252,7 +263,9 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
             icon: Icons.notifications_outlined,
             value: _pushNotificationsEnabled,
             color: AppColors.pastelAqua,
-            config: config,
+            spacing: spacing,
+            sizing: sizing,
+            typography: typography,
             onChanged: (value) {
               setState(() {
                 _pushNotificationsEnabled = value;
@@ -262,14 +275,14 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
             },
           ),
           const SizedBox(height: AppConstants.space16),
-          _buildDangerZone(config),
+          _buildDangerZone(spacing, sizing, typography),
           const SizedBox(height: AppConstants.space40),
         ],
       ),
     );
   }
 
-  Widget _buildTitleSection(SettingsScreenConfig config) {
+  Widget _buildTitleSection(AppTypography typography) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -279,7 +292,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
           ).createShader(bounds),
           child: Text(
             AppLocalizations.of(context)!.profileTitle,
-            style: config.titleStyle?.copyWith(
+            style: typography.display.copyWith(
               color: Colors.white,
               letterSpacing: 0.5,
             ),
@@ -288,7 +301,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
         const SizedBox(height: AppConstants.space8),
         Text(
           AppLocalizations.of(context)!.profileSubtitle,
-          style: config.subtitleStyle?.copyWith(
+          style: typography.subtitle.copyWith(
             color: AppColors.textMuted,
             fontWeight: FontWeight.w600,
           ),
@@ -297,7 +310,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     );
   }
 
-  Widget _buildAvatarSection(SettingsScreenConfig config) {
+  Widget _buildAvatarSection(AppSizing sizing, AppTypography typography) {
     return Center(
       child: Column(
         children: [
@@ -306,14 +319,14 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               // Avatar selection logic
             },
             child: Container(
-              width: config.avatarSize,
-              height: config.avatarSize,
+              width: sizing.avatarMd,
+              height: sizing.avatarMd,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 color: const Color(0xFF141928),
                 border: Border.all(
                   color: AppColors.pastelMint.withValues(alpha: 0.5),
-                  width: config.avatarBorderWidth!,
+                  width: sizing.borderMedium,
                 ),
                 boxShadow: [
                   BoxShadow(
@@ -325,7 +338,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               ),
               child: Icon(
                 Icons.person,
-                size: config.avatarSize! * 0.5,
+                size: sizing.avatarIconSize,
                 color: AppColors.pastelMint.withValues(alpha: 0.7),
               ),
             ),
@@ -333,7 +346,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
           const SizedBox(height: AppConstants.space12),
           Text(
             AppLocalizations.of(context)!.profileChangeAvatar,
-            style: config.avatarHintStyle?.copyWith(
+            style: typography.label.copyWith(
               color: AppColors.textMuted,
               fontWeight: FontWeight.w500,
             ),
@@ -344,12 +357,12 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   }
 
   Widget _buildSectionTitle(
-      String title, Color color, SettingsScreenConfig config) {
+      String title, Color color, AppSpacing spacing, AppTypography typography) {
     return Row(
       children: [
         Container(
-          width: config.sectionBarWidth,
-          height: config.sectionBarHeight,
+          width: spacing.xs,
+          height: spacing.xl,
           decoration: BoxDecoration(
             color: color,
             borderRadius: BorderRadius.circular(2),
@@ -358,7 +371,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
         const SizedBox(width: AppConstants.space8),
         Text(
           title,
-          style: config.sectionTitleStyle?.copyWith(
+          style: typography.title.copyWith(
             fontWeight: FontWeight.w700,
             color: color,
             letterSpacing: 0.5,
@@ -373,12 +386,14 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     required String label,
     required String hint,
     required IconData icon,
-    required SettingsScreenConfig config,
+    required AppSpacing spacing,
+    required AppSizing sizing,
+    required AppTypography typography,
     TextInputType keyboardType = TextInputType.text,
     int maxLines = 1,
   }) {
     return Container(
-      padding: EdgeInsets.all(config.fieldPadding ?? 0),
+      padding: EdgeInsets.all(spacing.sm),
       decoration: BoxDecoration(
         color: const Color(0xFF141928).withValues(alpha: 0.8),
         borderRadius: BorderRadius.circular(AppConstants.radiusLarge),
@@ -389,12 +404,11 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
         children: [
           Row(
             children: [
-              Icon(icon,
-                  size: AppConstants.iconSmall, color: AppColors.pastelMint),
+              Icon(icon, size: sizing.iconSm, color: AppColors.pastelMint),
               const SizedBox(width: AppConstants.space8),
               Text(
                 label,
-                style: config.fieldLabelStyle?.copyWith(
+                style: typography.label.copyWith(
                   fontWeight: FontWeight.w600,
                   color: AppColors.textMuted,
                 ),
@@ -406,13 +420,13 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
             controller: controller,
             keyboardType: keyboardType,
             maxLines: maxLines,
-            style: config.fieldInputStyle?.copyWith(
+            style: typography.body.copyWith(
               color: Colors.white,
               fontWeight: FontWeight.w500,
             ),
             decoration: InputDecoration(
               hintText: hint,
-              hintStyle: config.fieldInputStyle?.copyWith(
+              hintStyle: typography.body.copyWith(
                 color: AppColors.textDark,
               ),
               filled: true,
@@ -437,11 +451,13 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     required IconData icon,
     required bool value,
     required Color color,
-    required SettingsScreenConfig config,
+    required AppSpacing spacing,
+    required AppSizing sizing,
+    required AppTypography typography,
     required ValueChanged<bool> onChanged,
   }) {
     return Container(
-      padding: EdgeInsets.all(config.fieldPadding ?? 0),
+      padding: EdgeInsets.all(spacing.sm),
       decoration: BoxDecoration(
         color: const Color(0xFF141928).withValues(alpha: 0.8),
         borderRadius: BorderRadius.circular(AppConstants.radiusLarge),
@@ -450,13 +466,13 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       child: Row(
         children: [
           Container(
-            width: config.toggleIconContainer,
-            height: config.toggleIconContainer,
+            width: sizing.iconContainer,
+            height: sizing.iconContainer,
             decoration: BoxDecoration(
               color: color.withValues(alpha: 0.15),
               borderRadius: BorderRadius.circular(AppConstants.radiusMedium),
             ),
-            child: Icon(icon, size: config.toggleIconSize, color: color),
+            child: Icon(icon, size: sizing.iconSm, color: color),
           ),
           const SizedBox(width: AppConstants.space16),
           Expanded(
@@ -465,7 +481,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               children: [
                 Text(
                   title,
-                  style: config.toggleTitleStyle?.copyWith(
+                  style: typography.title.copyWith(
                     fontWeight: FontWeight.w600,
                     color: Colors.white,
                   ),
@@ -473,7 +489,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                 const SizedBox(height: AppConstants.space4),
                 Text(
                   subtitle,
-                  style: config.toggleSubStyle?.copyWith(
+                  style: typography.bodySm.copyWith(
                     color: AppColors.textMuted,
                   ),
                 ),
@@ -493,14 +509,23 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     );
   }
 
-  Widget _buildDangerZone(SettingsScreenConfig config) {
+  Widget _buildDangerZone(
+    AppSpacing spacing,
+    AppSizing sizing,
+    AppTypography typography,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildSectionTitle('Danger Zone', AppColors.neonCrimson, config),
+        _buildSectionTitle(
+          'Danger Zone',
+          AppColors.neonCrimson,
+          spacing,
+          typography,
+        ),
         const SizedBox(height: AppConstants.space16),
         Container(
-          padding: EdgeInsets.all(config.dangerPadding ?? 0),
+          padding: EdgeInsets.all(spacing.cardPadding),
           decoration: BoxDecoration(
             color: const Color(0xFF141928).withValues(alpha: 0.8),
             borderRadius: BorderRadius.circular(AppConstants.radiusXL),
@@ -513,7 +538,9 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                 title: 'Reset Settings',
                 subtitle: 'Reset all settings to default values',
                 icon: Icons.refresh,
-                config: config,
+                spacing: spacing,
+                sizing: sizing,
+                typography: typography,
                 onTap: _showResetConfirmation,
               ),
               const SizedBox(height: AppConstants.space16),
@@ -521,7 +548,9 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                 title: 'Delete Account',
                 subtitle: 'Permanently delete your account and data',
                 icon: Icons.delete_forever,
-                config: config,
+                spacing: spacing,
+                sizing: sizing,
+                typography: typography,
                 onTap: _showDeleteConfirmation,
               ),
             ],
@@ -535,13 +564,15 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     required String title,
     required String subtitle,
     required IconData icon,
-    required SettingsScreenConfig config,
+    required AppSpacing spacing,
+    required AppSizing sizing,
+    required AppTypography typography,
     required VoidCallback onTap,
   }) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: EdgeInsets.all(config.dangerButtonPadding ?? 0),
+        padding: EdgeInsets.all(spacing.md),
         decoration: BoxDecoration(
           color: AppColors.neonCrimson.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(AppConstants.radiusMedium),
@@ -550,8 +581,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
         ),
         child: Row(
           children: [
-            Icon(icon,
-                size: config.dangerIconSize, color: AppColors.neonCrimson),
+            Icon(icon, size: sizing.iconSm, color: AppColors.neonCrimson),
             const SizedBox(width: AppConstants.space12),
             Expanded(
               child: Column(
@@ -559,7 +589,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                 children: [
                   Text(
                     title,
-                    style: config.dangerTitleStyle?.copyWith(
+                    style: typography.title.copyWith(
                       fontWeight: FontWeight.w600,
                       color: AppColors.neonCrimson,
                     ),
@@ -567,7 +597,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                   const SizedBox(height: AppConstants.space4),
                   Text(
                     subtitle,
-                    style: config.dangerSubStyle?.copyWith(
+                    style: typography.bodySm.copyWith(
                       color: AppColors.textMuted,
                     ),
                   ),
@@ -576,7 +606,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
             ),
             Icon(
               Icons.arrow_forward_ios,
-              size: config.dangerArrowSize,
+              size: sizing.arrowSize,
               color: AppColors.neonCrimson.withValues(alpha: 0.5),
             ),
           ],

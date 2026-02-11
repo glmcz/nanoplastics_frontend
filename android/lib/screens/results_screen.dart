@@ -3,7 +3,9 @@ import 'dart:ui';
 import '../l10n/app_localizations.dart';
 import '../config/app_colors.dart';
 import '../config/app_constants.dart';
-import '../utils/responsive_config.dart';
+import '../utils/app_spacing.dart';
+import '../utils/app_sizing.dart';
+import '../utils/app_typography.dart';
 import '../widgets/nanosolve_logo.dart';
 import '../widgets/header_back_button.dart';
 import 'solvers_leaderboard_screen.dart';
@@ -59,11 +61,11 @@ class _ResultsScreenState extends State<ResultsScreen> {
 
   Widget _buildHeader() {
     final l10n = AppLocalizations.of(context)!;
-    final responsive = ResponsiveConfig.fromMediaQuery(context);
-    final header = responsive.getSecondaryHeaderConfig();
+    final spacing = AppSpacing.of(context);
+    final sizing = AppSizing.of(context);
 
     return Container(
-      padding: EdgeInsets.all(header.padding),
+      padding: EdgeInsets.all(spacing.headerPadding),
       decoration: BoxDecoration(
         color: const Color(0xFF141928).withValues(alpha: 0.9),
         border: Border(
@@ -87,10 +89,10 @@ class _ResultsScreenState extends State<ResultsScreen> {
                   children: [
                     Icon(
                       Icons.auto_graph_outlined,
-                      size: header.iconSize,
+                      size: sizing.iconMd,
                       color: AppColors.pastelMint,
                     ),
-                    SizedBox(width: header.spacing),
+                    SizedBox(width: spacing.headerSpacing),
                     GestureDetector(
                       onTap: () {
                         Navigator.of(context).push(
@@ -101,7 +103,7 @@ class _ResultsScreenState extends State<ResultsScreen> {
                       },
                       child: Icon(
                         Icons.settings,
-                        size: header.iconSize,
+                        size: sizing.iconMd,
                         color: AppColors.pastelMint,
                       ),
                     ),
@@ -109,8 +111,8 @@ class _ResultsScreenState extends State<ResultsScreen> {
                 ),
               ],
             ),
-            SizedBox(height: header.spacing),
-            NanosolveLogo(height: header.logoHeight),
+            SizedBox(height: spacing.headerSpacing),
+            NanosolveLogo(height: sizing.logoHeight),
           ],
         ),
       ),
@@ -119,26 +121,28 @@ class _ResultsScreenState extends State<ResultsScreen> {
 
   Widget _buildContent() {
     final l10n = AppLocalizations.of(context)!;
-    final responsive = ResponsiveConfig.fromMediaQuery(context);
-    final config = responsive.getResultsScreenConfig();
+    final spacing = AppSpacing.of(context);
+    final sizing = AppSizing.of(context);
+    final typography = AppTypography.of(context);
 
     return SingleChildScrollView(
       padding: EdgeInsets.symmetric(
-          horizontal: config.contentHorizontalPadding,
-          vertical: config.contentVerticalPadding),
+          horizontal: spacing.contentPadding, vertical: spacing.contentPadding),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          _buildTitleSection(l10n, config),
-          SizedBox(height: config.sectionSpacing),
+          _buildTitleSection(l10n, spacing, typography),
+          SizedBox(height: spacing.sectionSpacing),
           _buildStatsCard(
             title: l10n.resultsStatsTotalIdeas,
             value: '7',
             icon: Icons.lightbulb_outline,
             color: AppColors.pastelLavender,
-            config: config,
+            spacing: spacing,
+            sizing: sizing,
+            typography: typography,
           ),
-          SizedBox(height: config.cardSpacing),
+          SizedBox(height: spacing.cardSpacing),
           GestureDetector(
             onTap: () {
               Navigator.of(context).push(
@@ -152,17 +156,23 @@ class _ResultsScreenState extends State<ResultsScreen> {
               value: '22',
               icon: Icons.people_outline,
               color: AppColors.pastelMint,
-              config: config,
+              spacing: spacing,
+              sizing: sizing,
+              typography: typography,
             ),
           ),
-          SizedBox(height: config.sectionSpacing),
-          _buildInfoPanel(l10n, config),
+          SizedBox(height: spacing.sectionSpacing),
+          _buildInfoPanel(l10n, spacing, sizing, typography),
         ],
       ),
     );
   }
 
-  Widget _buildTitleSection(AppLocalizations l10n, ResultsScreenConfig config) {
+  Widget _buildTitleSection(
+    AppLocalizations l10n,
+    AppSpacing spacing,
+    AppTypography typography,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -172,7 +182,7 @@ class _ResultsScreenState extends State<ResultsScreen> {
           ).createShader(bounds),
           child: Text(
             l10n.resultsTitle,
-            style: config.titleStyle?.copyWith(
+            style: typography.display.copyWith(
               color: Colors.white,
               letterSpacing: 0.5,
             ),
@@ -180,10 +190,10 @@ class _ResultsScreenState extends State<ResultsScreen> {
             overflow: TextOverflow.ellipsis,
           ),
         ),
-        SizedBox(height: config.titleSpacing),
+        SizedBox(height: spacing.sm),
         Text(
           l10n.resultsSubtitle,
-          style: config.subtitleStyle?.copyWith(
+          style: typography.subtitle.copyWith(
             fontWeight: FontWeight.w600,
           ),
           maxLines: 2,
@@ -198,12 +208,14 @@ class _ResultsScreenState extends State<ResultsScreen> {
     required String value,
     required IconData icon,
     required Color color,
-    required ResultsScreenConfig config,
+    required AppSpacing spacing,
+    required AppSizing sizing,
+    required AppTypography typography,
   }) {
     return Container(
       padding: EdgeInsets.symmetric(
-          horizontal: config.contentHorizontalPadding * 0.8,
-          vertical: config.contentVerticalPadding * 0.8),
+          horizontal: spacing.contentPadding * 0.8,
+          vertical: spacing.contentPadding * 0.8),
       decoration: BoxDecoration(
         color: const Color(0xFF141928).withValues(alpha: 0.8),
         borderRadius: BorderRadius.circular(AppConstants.radiusLarge),
@@ -219,15 +231,15 @@ class _ResultsScreenState extends State<ResultsScreen> {
       child: Row(
         children: [
           Container(
-            width: config.statsIconContainer,
-            height: config.statsIconContainer,
+            width: sizing.iconContainer,
+            height: sizing.iconContainer,
             decoration: BoxDecoration(
               color: color.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(AppConstants.radiusMedium),
             ),
             child: Icon(
               icon,
-              size: config.statsIconSize,
+              size: sizing.iconMd,
               color: color,
             ),
           ),
@@ -238,7 +250,7 @@ class _ResultsScreenState extends State<ResultsScreen> {
               children: [
                 Text(
                   title,
-                  style: config.statsTitleStyle?.copyWith(
+                  style: typography.label.copyWith(
                     color: AppColors.textMuted,
                   ),
                   maxLines: 1,
@@ -247,7 +259,7 @@ class _ResultsScreenState extends State<ResultsScreen> {
                 const SizedBox(height: AppConstants.space4),
                 Text(
                   value,
-                  style: config.statsValueStyle?.copyWith(
+                  style: typography.stat.copyWith(
                     color: color,
                   ),
                 ),
@@ -259,11 +271,16 @@ class _ResultsScreenState extends State<ResultsScreen> {
     );
   }
 
-  Widget _buildInfoPanel(AppLocalizations l10n, ResultsScreenConfig config) {
+  Widget _buildInfoPanel(
+    AppLocalizations l10n,
+    AppSpacing spacing,
+    AppSizing sizing,
+    AppTypography typography,
+  ) {
     return Container(
       padding: EdgeInsets.symmetric(
-          horizontal: config.contentHorizontalPadding * 0.8,
-          vertical: config.contentVerticalPadding * 0.8),
+          horizontal: spacing.contentPadding * 0.8,
+          vertical: spacing.contentPadding * 0.8),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topLeft,
@@ -285,14 +302,14 @@ class _ResultsScreenState extends State<ResultsScreen> {
             children: [
               Icon(
                 Icons.info_outline,
-                size: config.infoIconSize,
+                size: sizing.iconSm,
                 color: AppColors.pastelMint,
               ),
               const SizedBox(width: AppConstants.space12),
               Expanded(
                 child: Text(
                   l10n.resultsEvaluationSystemTitle,
-                  style: config.infoTitleStyle?.copyWith(
+                  style: typography.title.copyWith(
                     fontWeight: FontWeight.w800,
                     color: AppColors.pastelMint,
                     letterSpacing: 0.5,
@@ -306,7 +323,7 @@ class _ResultsScreenState extends State<ResultsScreen> {
           const SizedBox(height: AppConstants.space16),
           Text(
             l10n.resultsEvaluationSystemDesc1,
-            style: config.infoBodyStyle?.copyWith(
+            style: typography.body.copyWith(
               color: Colors.white70,
               height: 1.6,
             ),
@@ -316,7 +333,7 @@ class _ResultsScreenState extends State<ResultsScreen> {
           const SizedBox(height: AppConstants.space16),
           Text(
             l10n.resultsEvaluationSystemDesc2,
-            style: config.infoBodyStyle?.copyWith(
+            style: typography.body.copyWith(
               color: Colors.white70,
               height: 1.6,
             ),

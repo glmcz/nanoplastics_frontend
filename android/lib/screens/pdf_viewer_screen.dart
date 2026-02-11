@@ -9,6 +9,8 @@ import '../widgets/nanosolve_logo.dart';
 import '../widgets/header_back_button.dart';
 import '../l10n/app_localizations.dart';
 import '../services/logger_service.dart';
+import '../services/settings_manager.dart';
+import '../utils/pdf_utils.dart';
 import 'dart:async';
 import 'dart:io';
 import 'package:file_picker/file_picker.dart';
@@ -39,12 +41,16 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
   late PdfControllerPinch _pdfController;
   late PdfDocument _pdfDocument;
   bool _isLoading = true;
+  bool _isDownloading = false;
+  double _downloadProgress = 0.0;
   String? _error;
   int _currentPage = 1;
   int _stablePageBeforeRotation = 1; // Stores page before rotation starts
   Orientation? _lastOrientation;
   bool _isRotating = false;
   bool _initialPageSet = false; // Track if initial page has been set
+  String? _resolvedPath; // The actual path used to open the PDF
+  bool _pdfIsAsset = true; // Whether _resolvedPath is a Flutter asset
 
   @override
   void initState() {
@@ -67,45 +73,37 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
   Future<void> _initializePDF() async {
     final startTime = DateTime.now();
     try {
-      // Load PDF from assets - use custom path if provided, otherwise default
-      final pdfPath = widget.pdfAssetPath ??
-          'assets/docs/Nanoplastics_in_the_Biosphere_Report.pdf';
-      final document = await PdfDocument.openAsset(pdfPath);
+      PdfDocument document;
 
-      // Create controller and initialize at start page
-      _pdfController = PdfControllerPinch(
-        document: Future.value(document),
-        initialPage: widget.startPage,
-      );
+      if (widget.pdfAssetPath != null) {
+        // Explicit asset path provided (e.g. water PDFs, or language-specific)
+        _resolvedPath = widget.pdfAssetPath;
+        _pdfIsAsset = true;
+        document = await PdfDocument.openAsset(widget.pdfAssetPath!);
+      } else {
+        // Resolve main report for current language
+        final resolved = await resolveMainReport();
 
-      _pdfDocument = document;
-
-      final loadTime = DateTime.now().difference(startTime).inMilliseconds;
-
-      setState(() {
-        _isLoading = false;
-        _currentPage = widget.startPage;
-        _stablePageBeforeRotation = widget.startPage;
-      });
-
-      // Jump to start page once the viewer has laid out its pages.
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (mounted) {
-          _safeJumpToPage(widget.startPage);
-          _initialPageSet = true;
+        if (resolved != null) {
+          // Available locally (EN bundled or previously downloaded)
+          _resolvedPath = resolved.path;
+          _pdfIsAsset = resolved.isAsset;
+          document = resolved.isAsset
+              ? await PdfDocument.openAsset(resolved.path)
+              : await PdfDocument.openFile(resolved.path);
+        } else {
+          // Need to download for current language
+          await _downloadAndOpenReport();
+          return;
         }
-      });
+      }
 
-      // Log PDF performance
-      LoggerService().logPDFPerformance(
-        pages: _pdfDocument.pagesCount,
-        durationMs: loadTime,
-        fileSizeMB: 11, // Approximate size of compressed PDF
-      );
+      _openDocument(document, startTime);
     } catch (e) {
       final loadTime = DateTime.now().difference(startTime).inMilliseconds;
       setState(() {
         _isLoading = false;
+        _isDownloading = false;
         _error = 'Failed to load PDF: $e';
       });
 
@@ -116,6 +114,80 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
         {'title': widget.title, 'loadTime': loadTime},
       );
     }
+  }
+
+  Future<void> _downloadAndOpenReport() async {
+    final startTime = DateTime.now();
+    setState(() {
+      _isDownloading = true;
+      _downloadProgress = 0.0;
+    });
+
+    try {
+      final langCode = SettingsManager().userLanguage;
+      final localPath = await downloadReport(
+        langCode,
+        onProgress: (progress) {
+          if (mounted) {
+            setState(() => _downloadProgress = progress);
+          }
+        },
+      );
+
+      if (!mounted) return;
+
+      _resolvedPath = localPath;
+      _pdfIsAsset = false;
+      final document = await PdfDocument.openFile(localPath);
+      _openDocument(document, startTime);
+    } catch (e) {
+      final loadTime = DateTime.now().difference(startTime).inMilliseconds;
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+          _isDownloading = false;
+          _error = 'Failed to download PDF: $e';
+        });
+      }
+
+      LoggerService().logError(
+        'PDFDownloadFailed',
+        e,
+        null,
+        {'title': widget.title, 'loadTime': loadTime},
+      );
+    }
+  }
+
+  void _openDocument(PdfDocument document, DateTime startTime) {
+    _pdfController = PdfControllerPinch(
+      document: Future.value(document),
+      initialPage: widget.startPage,
+    );
+
+    _pdfDocument = document;
+
+    final loadTime = DateTime.now().difference(startTime).inMilliseconds;
+
+    setState(() {
+      _isLoading = false;
+      _isDownloading = false;
+      _currentPage = widget.startPage;
+      _stablePageBeforeRotation = widget.startPage;
+    });
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        _safeJumpToPage(widget.startPage);
+        _initialPageSet = true;
+      }
+    });
+
+    LoggerService().logPDFPerformance(
+      pages: _pdfDocument.pagesCount,
+      durationMs: loadTime,
+      fileSizeMB: 11,
+    );
   }
 
   @override
@@ -227,25 +299,29 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
     }
   }
 
+  Future<Uint8List> _loadPdfBytes() async {
+    if (_pdfIsAsset) {
+      final data = await rootBundle.load(_resolvedPath!);
+      return data.buffer.asUint8List();
+    } else {
+      return await File(_resolvedPath!).readAsBytes();
+    }
+  }
+
   Future<void> _sharePDF() async {
-    if (kIsWeb) return;
+    if (kIsWeb || _resolvedPath == null) return;
 
     try {
-      final pdfPath = widget.pdfAssetPath ??
-          'assets/docs/Nanoplastics_in_the_Biosphere_Report.pdf';
-      final data = await rootBundle.load(pdfPath);
-      final bytes = data.buffer.asUint8List();
+      final bytes = await _loadPdfBytes();
 
       final sanitizedTitle =
           widget.title.replaceAll(RegExp(r'[^\w\s-]'), '').replaceAll(' ', '_');
 
-      // Use app's cache directory instead of system temp for better accessibility
       final cacheDir = await getTemporaryDirectory();
       final tempFile =
           File('${cacheDir.path}/Nanoplastics_$sanitizedTitle.pdf');
       await tempFile.writeAsBytes(bytes);
 
-      // Ensure file exists before sharing
       if (!await tempFile.exists()) {
         throw Exception('Failed to create temporary PDF file');
       }
@@ -293,11 +369,8 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
           widget.title.replaceAll(RegExp(r'[^\w\s-]'), '').replaceAll(' ', '_');
       final fileName = 'Nanoplastics_$sanitizedTitle.pdf';
 
-      // Get PDF data from assets
-      final data = await rootBundle.load(
-        'assets/docs/Nanoplastics_in_the_Biosphere_Report.pdf',
-      );
-      final bytes = data.buffer.asUint8List();
+      // Get PDF data from asset or local file
+      final bytes = await _loadPdfBytes();
 
       // Let user pick directory
       String? selectedDirectory = await FilePicker.platform.getDirectoryPath();
@@ -494,23 +567,40 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
 
   Widget _buildPDFViewer({bool isPortrait = true}) {
     if (_isLoading) {
-      return const Center(
+      return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(
-                AppColors.pastelAqua,
+            if (_isDownloading) ...[
+              CircularProgressIndicator(
+                value: _downloadProgress > 0 ? _downloadProgress : null,
+                valueColor: const AlwaysStoppedAnimation<Color>(
+                  AppColors.pastelAqua,
+                ),
               ),
-            ),
-            SizedBox(height: 16),
-            Text(
-              'Loading PDF...',
-              style: TextStyle(
-                color: AppColors.textMuted,
-                fontSize: 14,
+              const SizedBox(height: 16),
+              Text(
+                'Downloading report... ${(_downloadProgress * 100).toInt()}%',
+                style: const TextStyle(
+                  color: AppColors.textMuted,
+                  fontSize: 14,
+                ),
               ),
-            ),
+            ] else ...[
+              const CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(
+                  AppColors.pastelAqua,
+                ),
+              ),
+              const SizedBox(height: 16),
+              const Text(
+                'Loading PDF...',
+                style: TextStyle(
+                  color: AppColors.textMuted,
+                  fontSize: 14,
+                ),
+              ),
+            ],
           ],
         ),
       );

@@ -3,7 +3,9 @@ import 'dart:ui';
 import 'package:flutter_custom_tabs/flutter_custom_tabs.dart';
 import '../config/app_colors.dart';
 import '../config/app_constants.dart';
-import '../utils/responsive_config.dart';
+import '../utils/app_spacing.dart';
+import '../utils/app_sizing.dart';
+import '../utils/app_typography.dart';
 import '../widgets/nanosolve_logo.dart';
 import '../widgets/header_back_button.dart';
 import '../l10n/app_localizations.dart';
@@ -72,10 +74,10 @@ class _SourcesScreenState extends State<SourcesScreen> {
   }
 
   Widget _buildHeader() {
-    final responsive = ResponsiveConfig.fromMediaQuery(context);
-    final header = responsive.getSecondaryHeaderConfig();
+    final spacing = AppSpacing.of(context);
+    final sizing = AppSizing.of(context);
     return Container(
-      padding: EdgeInsets.all(header.padding),
+      padding: EdgeInsets.all(spacing.headerPadding),
       decoration: BoxDecoration(
         color: const Color(0xFF141928).withValues(alpha: 0.9),
         border: Border(
@@ -96,13 +98,13 @@ class _SourcesScreenState extends State<SourcesScreen> {
                 ),
                 Icon(
                   Icons.menu_book_outlined,
-                  size: header.iconSize,
+                  size: sizing.iconMd,
                   color: AppColors.pastelAqua,
                 ),
               ],
             ),
-            SizedBox(height: header.spacing),
-            NanosolveLogo(height: header.logoHeight),
+            SizedBox(height: spacing.headerSpacing),
+            NanosolveLogo(height: sizing.logoHeight),
           ],
         ),
       ),
@@ -110,8 +112,9 @@ class _SourcesScreenState extends State<SourcesScreen> {
   }
 
   Widget _buildMainReportCard() {
-    final responsive = ResponsiveConfig.fromMediaQuery(context);
-    final config = responsive.getSourcesScreenConfig();
+    final spacing = AppSpacing.of(context);
+    final sizing = AppSizing.of(context);
+    final typography = AppTypography.of(context);
 
     return GestureDetector(
       onTap: () {
@@ -127,20 +130,18 @@ class _SourcesScreenState extends State<SourcesScreen> {
               endPage: 198,
               description:
                   'The comprehensive global report on nanoplastics pollution and its effects',
-              pdfAssetPath:
-                  'assets/docs/Nanoplastics_in_the_Biosphere_Report.pdf',
             ),
           ),
         );
       },
       child: Container(
         margin: EdgeInsets.symmetric(
-          horizontal: config.reportMarginH,
-          vertical: config.reportMarginV,
+          horizontal: spacing.contentPadding,
+          vertical: spacing.md,
         ),
         padding: EdgeInsets.symmetric(
-          horizontal: config.reportPaddingH,
-          vertical: config.reportPaddingV,
+          horizontal: spacing.cardPadding,
+          vertical: spacing.md,
         ),
         decoration: BoxDecoration(
           gradient: LinearGradient(
@@ -169,7 +170,7 @@ class _SourcesScreenState extends State<SourcesScreen> {
               children: [
                 Text(
                   AppLocalizations.of(context)!.sourcesMainReportLabel,
-                  style: config.reportLabelStyle?.copyWith(
+                  style: typography.label.copyWith(
                     color: AppColors.pastelAqua,
                     letterSpacing: 1,
                   ),
@@ -177,14 +178,14 @@ class _SourcesScreenState extends State<SourcesScreen> {
                 Icon(
                   Icons.picture_as_pdf,
                   color: AppColors.pastelAqua.withValues(alpha: 0.8),
-                  size: config.pdfIconSize,
+                  size: sizing.iconLg,
                 ),
               ],
             ),
             const SizedBox(height: AppConstants.space4),
             Text(
               AppLocalizations.of(context)!.sourcesMainReportTitle,
-              style: config.reportTitleStyle?.copyWith(
+              style: typography.headline.copyWith(
                 color: Colors.white,
                 height: 1.4,
               ),
@@ -196,13 +197,14 @@ class _SourcesScreenState extends State<SourcesScreen> {
   }
 
   Widget _buildTabsNavigation() {
-    final responsive = ResponsiveConfig.fromMediaQuery(context);
-    final config = responsive.getSourcesScreenConfig();
+    final spacing = AppSpacing.of(context);
+    final sizing = AppSizing.of(context);
+    final typography = AppTypography.of(context);
 
     return Container(
       margin: EdgeInsets.symmetric(
-          horizontal: config.tabMarginH, vertical: config.tabMarginV),
-      padding: EdgeInsets.all(config.tabPadding),
+          horizontal: spacing.tabMarginH, vertical: sizing.tabMarginV),
+      padding: EdgeInsets.all(spacing.tabInnerPadding),
       decoration: BoxDecoration(
         color: Colors.white.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(AppConstants.radiusLarge),
@@ -214,7 +216,8 @@ class _SourcesScreenState extends State<SourcesScreen> {
             child: _buildTabButton(
               label: AppLocalizations.of(context)!.sourcesTabWeb,
               isActive: _selectedTab == SourceType.webLinks,
-              config: config,
+              textStyle: typography.tab,
+              padding: spacing.tabButtonPadding,
               onTap: () {
                 setState(() => _selectedTab = SourceType.webLinks);
                 LoggerService().logUserAction('sources_tab_switched',
@@ -226,7 +229,8 @@ class _SourcesScreenState extends State<SourcesScreen> {
             child: _buildTabButton(
               label: AppLocalizations.of(context)!.sourcesTabVideo,
               isActive: _selectedTab == SourceType.videoLinks,
-              config: config,
+              textStyle: typography.tab,
+              padding: spacing.tabButtonPadding,
               onTap: () {
                 setState(() => _selectedTab = SourceType.videoLinks);
                 LoggerService().logUserAction('sources_tab_switched',
@@ -242,15 +246,14 @@ class _SourcesScreenState extends State<SourcesScreen> {
   Widget _buildTabButton({
     required String label,
     required bool isActive,
-    required SourcesScreenConfig config,
+    required TextStyle textStyle,
+    required double padding,
     required VoidCallback onTap,
   }) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: EdgeInsets.symmetric(
-            vertical: config.tabButtonPaddingV,
-            horizontal: AppConstants.space4),
+        padding: EdgeInsets.symmetric(vertical: padding, horizontal: padding),
         decoration: BoxDecoration(
           color: isActive
               ? AppColors.pastelAqua.withValues(alpha: 0.15)
@@ -271,7 +274,7 @@ class _SourcesScreenState extends State<SourcesScreen> {
         child: Text(
           label,
           textAlign: TextAlign.center,
-          style: config.tabStyle?.copyWith(
+          style: textStyle.copyWith(
             color: isActive ? AppColors.pastelAqua : AppColors.textMuted,
             letterSpacing: 0.5,
           ),
@@ -282,8 +285,9 @@ class _SourcesScreenState extends State<SourcesScreen> {
 
   Widget _buildWebLinksTab() {
     final l10n = AppLocalizations.of(context)!;
-    final responsive = ResponsiveConfig.fromMediaQuery(context);
-    final config = responsive.getSourcesScreenConfig();
+    final spacing = AppSpacing.of(context);
+    final sizing = AppSizing.of(context);
+    final typography = AppTypography.of(context);
 
     // Filter all sources based on user's language setting
     final userLang = SettingsManager().userLanguage;
@@ -325,7 +329,7 @@ class _SourcesScreenState extends State<SourcesScreen> {
     // If no section is expanded, show all collapsed sections in a scrollable list
     if (_expandedSection == null) {
       return SingleChildScrollView(
-        padding: EdgeInsets.symmetric(horizontal: config.contentPaddingH),
+        padding: EdgeInsets.symmetric(horizontal: spacing.contentPadding),
         child: Column(
           children: [
             for (final s in sections) ...[
@@ -334,10 +338,12 @@ class _SourcesScreenState extends State<SourcesScreen> {
                 icon: s.icon,
                 sourceCount: s.sources.length,
                 isExpanded: false,
-                config: config,
+                spacing: spacing,
+                sizing: sizing,
+                typography: typography,
                 onTap: () => setState(() => _expandedSection = s.section),
               ),
-              SizedBox(height: config.cardSpacing),
+              SizedBox(height: spacing.cardSpacing),
             ],
           ],
         ),
@@ -349,7 +355,7 @@ class _SourcesScreenState extends State<SourcesScreen> {
         sections.firstWhere((s) => s.section == _expandedSection);
 
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: config.contentPaddingH),
+      padding: EdgeInsets.symmetric(horizontal: spacing.contentPadding),
       child: Column(
         children: [
           // Sticky header for expanded section
@@ -358,10 +364,12 @@ class _SourcesScreenState extends State<SourcesScreen> {
             icon: expandedData.icon,
             sourceCount: expandedData.sources.length,
             isExpanded: true,
-            config: config,
+            spacing: spacing,
+            sizing: sizing,
+            typography: typography,
             onTap: () => setState(() => _expandedSection = null),
           ),
-          SizedBox(height: config.cardSpacing),
+          SizedBox(height: spacing.cardSpacing),
           // Scrollable content for expanded section
           Expanded(
             child: ListView.builder(
@@ -370,7 +378,9 @@ class _SourcesScreenState extends State<SourcesScreen> {
                 return _buildPDFLinkCard(
                   number: index + 1,
                   source: expandedData.sources[index],
-                  config: config,
+                  spacing: spacing,
+                  sizing: sizing,
+                  typography: typography,
                 );
               },
             ),
@@ -385,7 +395,9 @@ class _SourcesScreenState extends State<SourcesScreen> {
     required IconData icon,
     required int sourceCount,
     required bool isExpanded,
-    required SourcesScreenConfig config,
+    required AppSpacing spacing,
+    required AppSizing sizing,
+    required AppTypography typography,
     required VoidCallback onTap,
   }) {
     return GestureDetector(
@@ -400,29 +412,29 @@ class _SourcesScreenState extends State<SourcesScreen> {
           ),
           borderRadius: BorderRadius.circular(AppConstants.radiusLarge),
         ),
-        padding: EdgeInsets.all(config.sectionPadding),
+        padding: EdgeInsets.all(spacing.cardPadding),
         child: Row(
           children: [
             Container(
-              padding: EdgeInsets.all(config.sectionIconPadding),
+              padding: EdgeInsets.all(spacing.sm),
               decoration: BoxDecoration(
                 color: AppColors.pastelMint.withValues(alpha: 0.15),
                 borderRadius: BorderRadius.circular(AppConstants.radiusMedium),
               ),
               child: Icon(
                 icon,
-                size: config.sectionIconSize,
+                size: sizing.iconMd,
                 color: AppColors.pastelMint,
               ),
             ),
-            SizedBox(width: config.cardSpacing),
+            SizedBox(width: spacing.cardSpacing),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     title,
-                    style: config.sectionTitleStyle?.copyWith(
+                    style: typography.title.copyWith(
                       color: Colors.white,
                       letterSpacing: 0.5,
                     ),
@@ -430,7 +442,7 @@ class _SourcesScreenState extends State<SourcesScreen> {
                   const SizedBox(height: AppConstants.space4),
                   Text(
                     '$sourceCount resources',
-                    style: config.sectionCountStyle?.copyWith(
+                    style: typography.bodySm.copyWith(
                       color: AppColors.textMuted,
                     ),
                   ),
@@ -443,7 +455,7 @@ class _SourcesScreenState extends State<SourcesScreen> {
               child: Icon(
                 Icons.keyboard_arrow_down,
                 color: AppColors.pastelAqua,
-                size: config.sectionArrowSize,
+                size: sizing.iconSm,
               ),
             ),
           ],
@@ -453,8 +465,9 @@ class _SourcesScreenState extends State<SourcesScreen> {
   }
 
   Widget _buildVideoLinksTab() {
-    final responsive = ResponsiveConfig.fromMediaQuery(context);
-    final config = responsive.getSourcesScreenConfig();
+    final spacing = AppSpacing.of(context);
+    final sizing = AppSizing.of(context);
+    final typography = AppTypography.of(context);
     final settingsManager = SettingsManager();
     final userLanguage = settingsManager.userLanguage;
 
@@ -462,7 +475,7 @@ class _SourcesScreenState extends State<SourcesScreen> {
     final videos = allVideoSources[userLanguage] ?? videoSourcesEn;
 
     return SingleChildScrollView(
-      padding: EdgeInsets.symmetric(horizontal: config.contentPaddingH),
+      padding: EdgeInsets.symmetric(horizontal: spacing.contentPadding),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -471,10 +484,12 @@ class _SourcesScreenState extends State<SourcesScreen> {
             return _buildVideoCard(
               number: entry.key + 1,
               video: entry.value,
-              config: config,
+              spacing: spacing,
+              sizing: sizing,
+              typography: typography,
             );
           }),
-          SizedBox(height: config.reportPaddingV),
+          SizedBox(height: spacing.md),
         ],
       ),
     );
@@ -483,7 +498,9 @@ class _SourcesScreenState extends State<SourcesScreen> {
   Widget _buildVideoCard({
     required int number,
     required VideoSource video,
-    required SourcesScreenConfig config,
+    required AppSpacing spacing,
+    required AppSizing sizing,
+    required AppTypography typography,
   }) {
     return GestureDetector(
       onTap: () async {
@@ -518,8 +535,8 @@ class _SourcesScreenState extends State<SourcesScreen> {
       },
       child: Container(
         width: double.infinity,
-        margin: EdgeInsets.only(bottom: config.cardSpacing),
-        padding: EdgeInsets.all(config.cardPadding),
+        margin: EdgeInsets.only(bottom: spacing.cardSpacing),
+        padding: EdgeInsets.all(spacing.cardPadding),
         decoration: BoxDecoration(
           color: const Color(0xFF141928).withValues(alpha: 0.85),
           border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
@@ -530,7 +547,7 @@ class _SourcesScreenState extends State<SourcesScreen> {
           children: [
             // Thumbnail/Icon
             Container(
-              padding: EdgeInsets.all(config.sectionIconPadding),
+              padding: EdgeInsets.all(spacing.sm),
               decoration: BoxDecoration(
                 color: video.isReport
                     ? AppColors.pastelAqua.withValues(alpha: 0.15)
@@ -541,13 +558,13 @@ class _SourcesScreenState extends State<SourcesScreen> {
                 video.isReport
                     ? Icons.picture_as_pdf
                     : Icons.play_circle_filled,
-                size: config.sectionIconSize,
+                size: sizing.iconMd,
                 color: video.isReport
                     ? AppColors.pastelAqua
                     : AppColors.pastelMint,
               ),
             ),
-            SizedBox(width: config.cardSpacing),
+            SizedBox(width: spacing.cardSpacing),
             // Content
             Expanded(
               child: Column(
@@ -555,7 +572,7 @@ class _SourcesScreenState extends State<SourcesScreen> {
                 children: [
                   Text(
                     video.title,
-                    style: config.cardTitleStyle?.copyWith(
+                    style: typography.title.copyWith(
                       color: Colors.white,
                       height: 1.3,
                     ),
@@ -580,7 +597,7 @@ class _SourcesScreenState extends State<SourcesScreen> {
                     ),
                     child: Text(
                       video.isReport ? 'PDF Report' : 'YouTube',
-                      style: config.badgeStyle?.copyWith(
+                      style: typography.labelSm.copyWith(
                         color: video.isReport
                             ? AppColors.pastelAqua
                             : AppColors.pastelMint,
@@ -593,7 +610,7 @@ class _SourcesScreenState extends State<SourcesScreen> {
             // Number
             Text(
               '#$number',
-              style: config.numberStyle?.copyWith(
+              style: typography.label.copyWith(
                 color: AppColors.textMuted.withValues(alpha: 0.5),
               ),
             ),
@@ -606,7 +623,9 @@ class _SourcesScreenState extends State<SourcesScreen> {
   Widget _buildPDFLinkCard({
     required int number,
     required PDFSource source,
-    required SourcesScreenConfig config,
+    required AppSpacing spacing,
+    required AppSizing sizing,
+    required AppTypography typography,
   }) {
     return GestureDetector(
       onTap: () {
@@ -630,8 +649,8 @@ class _SourcesScreenState extends State<SourcesScreen> {
       },
       child: Container(
         width: double.infinity,
-        margin: EdgeInsets.only(bottom: config.cardSpacing),
-        padding: EdgeInsets.all(config.cardPadding),
+        margin: EdgeInsets.only(bottom: spacing.cardSpacing),
+        padding: EdgeInsets.all(spacing.cardPadding),
         decoration: BoxDecoration(
           color: const Color(0xFF141928).withValues(alpha: 0.85),
           border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
@@ -646,7 +665,7 @@ class _SourcesScreenState extends State<SourcesScreen> {
                 children: [
                   Text(
                     source.title,
-                    style: config.cardTitleStyle?.copyWith(
+                    style: typography.title.copyWith(
                       color: Colors.white,
                       height: 1.3,
                     ),
@@ -654,7 +673,7 @@ class _SourcesScreenState extends State<SourcesScreen> {
                   const SizedBox(height: AppConstants.space4),
                   Text(
                     source.description,
-                    style: config.cardDescStyle?.copyWith(
+                    style: typography.bodySm.copyWith(
                       color: AppColors.pastelLavender,
                     ),
                   ),
@@ -674,7 +693,7 @@ class _SourcesScreenState extends State<SourcesScreen> {
                     ),
                     child: Text(
                       'Pages ${source.startPage}-${source.endPage}',
-                      style: config.badgeStyle?.copyWith(
+                      style: typography.labelSm.copyWith(
                         color: AppColors.pastelAqua,
                       ),
                     ),
@@ -689,14 +708,14 @@ class _SourcesScreenState extends State<SourcesScreen> {
               children: [
                 Text(
                   '#$number',
-                  style: config.numberStyle?.copyWith(
+                  style: typography.label.copyWith(
                     color: AppColors.textMuted.withValues(alpha: 0.5),
                   ),
                 ),
-                SizedBox(height: config.reportPaddingV),
+                SizedBox(height: spacing.md),
                 Icon(
                   Icons.picture_as_pdf,
-                  size: config.pdfIconSize,
+                  size: sizing.iconLg,
                   color: AppColors.pastelAqua.withValues(alpha: 0.8),
                 ),
               ],

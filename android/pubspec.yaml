@@ -60,7 +60,7 @@ flutter:
     - assets/images/
     - assets/l10n/app_cs.arb
     - assets/l10n/app_en.arb
-    - assets/docs/Nanoplastics_in_the_Biosphere_Report.pdf
+    - assets/docs/Nanoplastics_Report_EN_compressed.pdf
     - assets/docs/CS_WATER_compressed.pdf
     - assets/docs/EN_WATER_compressed.pdf
     - assets/onboarding/slide1_ocean_plastic.jpg

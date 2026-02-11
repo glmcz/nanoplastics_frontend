@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import '../config/app_colors.dart';
 import '../config/app_constants.dart';
-import '../utils/responsive_config.dart';
+import '../utils/app_spacing.dart';
+import '../utils/app_sizing.dart';
+import '../utils/app_typography.dart';
 import '../widgets/nanosolve_logo.dart';
 import '../l10n/app_localizations.dart';
 import '../models/category_data.dart';
@@ -9,6 +11,7 @@ import '../models/category_detail_data.dart';
 import 'category_detail_new_screen.dart';
 import 'sources_screen.dart';
 import 'results_screen.dart';
+import 'user_settings/user_settings_screen.dart';
 import '../services/logger_service.dart';
 
 enum ImpactType { human, planet }
@@ -22,11 +25,12 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   ImpactType _selectedTab = ImpactType.human;
-  late ResponsiveConfig responsive;
 
   @override
   Widget build(BuildContext context) {
-    responsive = ResponsiveConfig.fromMediaQuery(context);
+    final spacing = AppSpacing.of(context);
+    final sizing = AppSizing.of(context);
+
     return Scaffold(
       body: Stack(
         children: [
@@ -69,11 +73,14 @@ class _MainScreenState extends State<MainScreen> {
           SafeArea(
             child: Column(
               children: [
-                _buildTopNavigation(),
                 _buildHeader(),
                 Expanded(
-                  child: _buildCategoryGrid(),
+                  child: SingleChildScrollView(
+                    padding: EdgeInsets.only(bottom: spacing.md),
+                    child: _buildCategoryGrid(),
+                  ),
                 ),
+                _buildTopNavigation(),
                 _buildBottomNavigation(),
               ],
             ),
@@ -85,11 +92,17 @@ class _MainScreenState extends State<MainScreen> {
 
   Widget _buildTopNavigation() {
     final l10n = AppLocalizations.of(context)!;
-    final config = responsive.getTabBarConfig();
+    final spacing = AppSpacing.of(context);
+    final sizing = AppSizing.of(context);
+    final typography = AppTypography.of(context);
     return Container(
-      margin: EdgeInsets.symmetric(
-          horizontal: config.marginH, vertical: config.marginV),
-      padding: EdgeInsets.all(config.innerPadding),
+      margin: EdgeInsets.only(
+        left: spacing.tabMarginH,
+        right: spacing.tabMarginH,
+        top: spacing.tabMarginH,
+        bottom: sizing.tabMarginV,
+      ),
+      padding: EdgeInsets.all(spacing.tabInnerPadding),
       decoration: BoxDecoration(
         color: Colors.black.withValues(alpha: 0.4),
         borderRadius: BorderRadius.circular(AppConstants.radiusMedium),
@@ -102,7 +115,8 @@ class _MainScreenState extends State<MainScreen> {
               label: l10n.tabHuman,
               isActive: _selectedTab == ImpactType.human,
               activeColor: AppColors.neonCyan,
-              config: config,
+              textStyle: typography.tab,
+              padding: spacing.tabButtonPadding,
               onTap: () {
                 setState(() => _selectedTab = ImpactType.human);
                 LoggerService()
@@ -115,7 +129,8 @@ class _MainScreenState extends State<MainScreen> {
               label: l10n.tabPlanet,
               isActive: _selectedTab == ImpactType.planet,
               activeColor: const Color(0xFF48CAE4),
-              config: config,
+              textStyle: typography.tab,
+              padding: spacing.tabButtonPadding,
               onTap: () {
                 setState(() => _selectedTab = ImpactType.planet);
                 LoggerService()
@@ -133,33 +148,38 @@ class _MainScreenState extends State<MainScreen> {
     required bool isActive,
     required Color activeColor,
     required VoidCallback onTap,
-    required TabBarConfig config,
+    required TextStyle textStyle,
+    required double padding,
   }) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: EdgeInsets.symmetric(
-            vertical: config.buttonPaddingV,
-            horizontal: config.buttonPaddingH),
-        decoration: BoxDecoration(
-          color: isActive
-              ? Colors.black.withValues(alpha: 0.3)
-              : Colors.transparent,
-          borderRadius: BorderRadius.circular(AppConstants.radiusSmall),
-          border: isActive ? Border.all(color: activeColor) : null,
-          boxShadow: isActive
-              ? [
-                  BoxShadow(
-                      color: activeColor.withValues(alpha: 0.3), blurRadius: 12)
-                ]
-              : null,
-        ),
-        child: Text(
-          label,
-          textAlign: TextAlign.center,
-          style: config.textStyle?.copyWith(
-                color: isActive ? activeColor : AppColors.textMuted,
-              ),
+    return Semantics(
+      button: true,
+      label: label,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(AppConstants.radiusSmall),
+        child: Container(
+          padding: EdgeInsets.symmetric(vertical: padding, horizontal: padding),
+          decoration: BoxDecoration(
+            color: isActive
+                ? Colors.black.withValues(alpha: 0.3)
+                : Colors.transparent,
+            borderRadius: BorderRadius.circular(AppConstants.radiusSmall),
+            border: isActive ? Border.all(color: activeColor) : null,
+            boxShadow: isActive
+                ? [
+                    BoxShadow(
+                        color: activeColor.withValues(alpha: 0.3),
+                        blurRadius: 12)
+                  ]
+                : null,
+          ),
+          child: Text(
+            label,
+            textAlign: TextAlign.center,
+            style: textStyle.copyWith(
+              color: isActive ? activeColor : AppColors.textMuted,
+            ),
+          ),
         ),
       ),
     );
@@ -167,26 +187,27 @@ class _MainScreenState extends State<MainScreen> {
 
   Widget _buildHeader() {
     final l10n = AppLocalizations.of(context)!;
-    final config = responsive.getMainScreenHeaderConfig();
+    final spacing = AppSpacing.of(context);
+    final sizing = AppSizing.of(context);
+    final typography = AppTypography.of(context);
 
     return Padding(
       padding: EdgeInsets.symmetric(
-          horizontal: config.horizontalPadding,
-          vertical: config.verticalPadding),
+          horizontal: spacing.contentPadding, vertical: spacing.headerPadding),
       child: Column(
         children: [
-          NanosolveLogo(height: config.logoHeight),
+          NanosolveLogo(height: sizing.logoHeight),
           const SizedBox(height: AppConstants.space4),
           Text(
             _selectedTab == ImpactType.human ? l10n.tabHuman : l10n.tabPlanet,
-            style: config.titleStyle?.copyWith(
+            style: typography.display.copyWith(
               color: Colors.white,
             ),
           ),
           const SizedBox(height: AppConstants.space4),
           Text(
             l10n.appSubtitle,
-            style: config.subtitleStyle?.copyWith(
+            style: typography.label.copyWith(
               color: AppColors.textMuted,
             ),
           ),
@@ -294,37 +315,52 @@ class _MainScreenState extends State<MainScreen> {
     final categories = _selectedTab == ImpactType.human
         ? _getHumanCategories(l10n)
         : _getPlanetCategories(l10n);
+    final spacing = AppSpacing.of(context);
+    final sizing = AppSizing.of(context);
+    final typography = AppTypography.of(context);
 
     // Build pairs of cards in rows so each row sizes to its content
     final rowCount = (categories.length / 2).ceil();
-    final config = responsive.getCategoryCardConfig();
 
-    return ListView.separated(
-      padding: EdgeInsets.only(
-          left: config.padding,
-          right: config.padding,
-          top: config.padding,
-          bottom: config.gridBottomPadding),
-      itemCount: rowCount,
-      separatorBuilder: (_, __) => SizedBox(height: config.gridRowSpacing),
-      itemBuilder: (context, rowIndex) {
-        final first = rowIndex * 2;
-        final second = first + 1;
-        return IntrinsicHeight(
+    final rows = <Widget>[];
+    for (int rowIndex = 0; rowIndex < rowCount; rowIndex++) {
+      if (rowIndex > 0) {
+        rows.add(SizedBox(height: spacing.gridSpacing));
+      }
+      final first = rowIndex * 2;
+      final second = first + 1;
+      rows.add(
+        IntrinsicHeight(
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Expanded(
                 child: _CategoryCard(
                   category: categories[first],
+                  iconContainerSize: sizing.categoryIconContainer,
+                  iconSize: sizing.categoryIconSize,
+                  padding: sizing.categoryPadding,
+                  spacing: spacing.cardSpacing,
+                  titleStyle: typography.title,
+                  descStyle: typography.bodySm.copyWith(
+                    color: AppColors.textMuted,
+                  ),
                   onTap: () => _navigateToCategoryDetail(categories[first]),
                 ),
               ),
-              SizedBox(width: config.gridColumnSpacing),
+              SizedBox(width: spacing.gridSpacing),
               if (second < categories.length)
                 Expanded(
                   child: _CategoryCard(
                     category: categories[second],
+                    iconContainerSize: sizing.categoryIconContainer,
+                    iconSize: sizing.categoryIconSize,
+                    padding: sizing.categoryPadding,
+                    spacing: spacing.cardSpacing,
+                    titleStyle: typography.title,
+                    descStyle: typography.bodySm.copyWith(
+                      color: AppColors.textMuted,
+                    ),
                     onTap: () => _navigateToCategoryDetail(categories[second]),
                   ),
                 )
@@ -332,18 +368,82 @@ class _MainScreenState extends State<MainScreen> {
                 const Expanded(child: SizedBox()),
             ],
           ),
-        );
-      },
+        ),
+      );
+    }
+
+    return Padding(
+      padding: EdgeInsets.only(
+        left: spacing.contentPadding,
+        right: spacing.contentPadding,
+        top: spacing.md,
+        bottom: spacing.gridBottomPadding,
+      ),
+      child: Column(children: rows),
+    );
+  }
+
+  Widget _buildSettingsJoystick() {
+    final accentColor = _selectedTab == ImpactType.human
+        ? AppColors.neonCyan
+        : const Color(0xFF48CAE4);
+    final sizing = AppSizing.of(context);
+
+    return Transform.translate(
+      offset: const Offset(0, 0),
+      child: Center(
+        child: Semantics(
+          button: true,
+          label: 'Settings',
+          child: InkWell(
+            onTap: () {
+              LoggerService().logUserAction('settings_tapped');
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (_) => const UserSettingsScreen(),
+                ),
+              );
+            },
+            borderRadius: BorderRadius.circular(sizing.joystickSize / 2),
+            child: Container(
+              width: sizing.joystickSize,
+              height: sizing.joystickSize,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: const Color(0xFF141928),
+                border: Border.all(
+                  color: accentColor.withValues(alpha: 0.5),
+                  width: sizing.joystickBorderWidth,
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: accentColor.withValues(alpha: 0.3),
+                    blurRadius: sizing.joystickShadowBlur,
+                    spreadRadius: sizing.joystickShadowSpread,
+                  ),
+                ],
+              ),
+              child: Icon(
+                Icons.settings,
+                size: sizing.joystickIconSize,
+                color: accentColor,
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 
   Widget _buildBottomNavigation() {
     final l10n = AppLocalizations.of(context)!;
-    final config = responsive.bottomNavConfig;
+    final spacing = AppSpacing.of(context);
+    final sizing = AppSizing.of(context);
+    final typography = AppTypography.of(context);
 
     return Container(
       padding: EdgeInsets.symmetric(
-          horizontal: config.horizontalPadding, vertical: config.verticalPadding),
+          horizontal: spacing.bottomNavPaddingH, vertical: spacing.sm),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topCenter,
@@ -362,17 +462,19 @@ class _MainScreenState extends State<MainScreen> {
               icon: Icons.menu_book_outlined,
               color: AppColors.pastelAqua,
               onTap: () => _navigateToResources(null),
-              responsive: responsive,
+              typography: typography,
             ),
           ),
-          SizedBox(width: config.spacing),
+          SizedBox(width: spacing.bottomNavSpacing * 0.5),
+          _buildSettingsJoystick(),
+          SizedBox(width: spacing.bottomNavSpacing * 0.5),
           Expanded(
             child: _buildBottomButton(
               label: l10n.navResults,
               icon: Icons.auto_graph_outlined,
               color: AppColors.pastelMint,
               onTap: () => _navigateToResults(),
-              responsive: responsive,
+              typography: typography,
             ),
           ),
         ],
@@ -385,39 +487,45 @@ class _MainScreenState extends State<MainScreen> {
     required IconData icon,
     required Color color,
     required VoidCallback onTap,
-    required ResponsiveConfig responsive,
+    required AppTypography typography,
   }) {
-    final config = responsive.getBottomButtonConfig();
+    final spacing = AppSpacing.of(context);
+    final sizing = AppSizing.of(context);
 
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: EdgeInsets.symmetric(
-            vertical: config.verticalPadding,
-            horizontal: config.horizontalPadding),
-        decoration: BoxDecoration(
-          color: const Color(0xFF141928).withValues(alpha: 0.8),
-          borderRadius: BorderRadius.circular(AppConstants.radiusSmall),
-          border: Border.all(color: color.withValues(alpha: 0.3), width: 0),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            Icon(icon, size: config.iconSize, color: color),
-            SizedBox(width: config.spacing),
-            Expanded(
-              child: Text(
-                label,
-                style: config.textStyle?.copyWith(
-                  color: color,
+    return Semantics(
+      button: true,
+      label: label,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(AppConstants.radiusSmall),
+        child: Container(
+          padding: EdgeInsets.symmetric(
+              vertical: sizing.bottomButtonPaddingV,
+              horizontal: spacing.bottomButtonPaddingH),
+          decoration: BoxDecoration(
+            color: const Color(0xFF141928).withValues(alpha: 0.8),
+            borderRadius: BorderRadius.circular(AppConstants.radiusSmall),
+            border: Border.all(color: color.withValues(alpha: 0.3), width: 0),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              Icon(icon, size: sizing.bottomButtonIconSize, color: color),
+              SizedBox(width: spacing.bottomButtonSpacing),
+              Expanded(
+                child: Text(
+                  label,
+                  style: typography.label.copyWith(
+                    color: color,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                  textAlign: TextAlign.center,
                 ),
-                overflow: TextOverflow.ellipsis,
-                maxLines: 1,
-                textAlign: TextAlign.center,
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -505,57 +613,71 @@ class _MainScreenState extends State<MainScreen> {
 class _CategoryCard extends StatelessWidget {
   final CategoryData category;
   final VoidCallback onTap;
+  final double iconContainerSize;
+  final double iconSize;
+  final double padding;
+  final double spacing;
+  final TextStyle titleStyle;
+  final TextStyle descStyle;
 
   const _CategoryCard({
     required this.category,
     required this.onTap,
+    required this.iconContainerSize,
+    required this.iconSize,
+    required this.padding,
+    required this.spacing,
+    required this.titleStyle,
+    required this.descStyle,
   });
 
   @override
   Widget build(BuildContext context) {
-    final responsive = ResponsiveConfig.fromMediaQuery(context);
-    final config = responsive.getCategoryCardConfig();
-
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: EdgeInsets.all(config.padding),
-        decoration: BoxDecoration(
-          color: Colors.black.withValues(alpha: 0.7),
-          borderRadius: BorderRadius.circular(AppConstants.radiusLarge),
-          border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              width: config.iconContainerSize,
-              height: config.iconContainerSize,
-              decoration: BoxDecoration(
-                color: category.color.withValues(alpha: 0.2),
-                borderRadius: BorderRadius.circular(AppConstants.radiusSmall),
+    return Semantics(
+      button: true,
+      label: category.title,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(AppConstants.radiusLarge),
+        child: Container(
+          padding: EdgeInsets.all(padding),
+          decoration: BoxDecoration(
+            color: Colors.black.withValues(alpha: 0.7),
+            borderRadius: BorderRadius.circular(AppConstants.radiusLarge),
+            border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                width: iconContainerSize,
+                height: iconContainerSize,
+                decoration: BoxDecoration(
+                  color: category.color.withValues(alpha: 0.2),
+                  borderRadius: BorderRadius.circular(AppConstants.radiusSmall),
+                ),
+                child: Icon(
+                  category.icon,
+                  size: iconSize,
+                  color: category.color,
+                ),
               ),
-              child: Icon(
-                category.icon,
-                size: config.iconSize,
-                color: category.color,
+              SizedBox(height: spacing),
+              Text(
+                category.title,
+                style: titleStyle.copyWith(
+                  color: Colors.white,
+                ),
               ),
-            ),
-            SizedBox(height: config.spacing),
-            Text(
-              category.title,
-              style: config.titleStyle?.copyWith(
-                color: Colors.white,
+              const SizedBox(height: AppConstants.space4),
+              Text(
+                category.description,
+                style: descStyle,
+                maxLines: 3,
+                overflow: TextOverflow.ellipsis,
               ),
-            ),
-            const SizedBox(height: AppConstants.space4),
-            Text(
-              category.description,
-              style: config.descStyle,
-              maxLines: 3,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

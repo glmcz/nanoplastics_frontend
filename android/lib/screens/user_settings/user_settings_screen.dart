@@ -3,7 +3,9 @@ import 'dart:ui';
 import '../../l10n/app_localizations.dart';
 import '../../config/app_colors.dart';
 import '../../config/app_constants.dart';
-import '../../utils/responsive_config.dart';
+import '../../utils/app_spacing.dart';
+import '../../utils/app_sizing.dart';
+import '../../utils/app_typography.dart';
 import '../../widgets/nanosolve_logo.dart';
 import '../../widgets/header_back_button.dart';
 import 'user_profile.dart';
@@ -50,11 +52,11 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
   }
 
   Widget _buildHeader() {
-    final responsive = ResponsiveConfig.fromMediaQuery(context);
-    final header = responsive.getSecondaryHeaderConfig();
+    final spacing = AppSpacing.of(context);
+    final sizing = AppSizing.of(context);
 
     return Container(
-      padding: EdgeInsets.all(header.padding),
+      padding: EdgeInsets.all(spacing.headerPadding),
       decoration: BoxDecoration(
         color: const Color(0xFF141928).withValues(alpha: 0.9),
         border: Border(
@@ -76,13 +78,13 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
                 ),
                 Icon(
                   Icons.settings,
-                  size: header.iconSize,
+                  size: sizing.iconMd,
                   color: AppColors.pastelMint,
                 ),
               ],
             ),
-            SizedBox(height: header.spacing),
-            NanosolveLogo(height: header.logoHeight),
+            SizedBox(height: spacing.headerSpacing),
+            NanosolveLogo(height: sizing.logoHeight),
           ],
         ),
       ),
@@ -90,62 +92,71 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
   }
 
   Widget _buildContent() {
-    final responsive = ResponsiveConfig.fromMediaQuery(context);
-    final config = responsive.getSettingsScreenConfig();
+    final spacing = AppSpacing.of(context);
+    final sizing = AppSizing.of(context);
+    final typography = AppTypography.of(context);
 
     return SingleChildScrollView(
-      padding: EdgeInsets.all(config.contentPadding),
+      padding: EdgeInsets.all(spacing.contentPadding),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildTitleSection(config),
-          SizedBox(height: config.cardSpacing * 2),
+          _buildTitleSection(typography),
+          SizedBox(height: spacing.cardSpacing * 2),
           _buildSettingItem(
             title: AppLocalizations.of(context)!.settingsProfile,
             icon: Icons.person_outline,
             color: AppColors.pastelMint,
-            config: config,
+            spacing: spacing,
+            sizing: sizing,
+            typography: typography,
             onTap: () => Navigator.of(context).push(
               MaterialPageRoute(builder: (_) => const UserProfileScreen()),
             ),
           ),
-          SizedBox(height: config.cardSpacing),
+          SizedBox(height: spacing.cardSpacing),
           _buildSettingItem(
             title: AppLocalizations.of(context)!.settingsLanguage,
             icon: Icons.language,
             color: AppColors.pastelAqua,
-            config: config,
+            spacing: spacing,
+            sizing: sizing,
+            typography: typography,
             onTap: () => Navigator.of(context).push(
               MaterialPageRoute(builder: (_) => const LanguageScreen()),
             ),
           ),
-          SizedBox(height: config.cardSpacing),
+          SizedBox(height: spacing.cardSpacing),
           _buildSettingItem(
             title: AppLocalizations.of(context)!.settingsPrivacySecurity,
             icon: Icons.lock_outline,
             color: AppColors.pastelMint,
-            config: config,
+            spacing: spacing,
+            sizing: sizing,
+            typography: typography,
             onTap: () => Navigator.of(context).push(
               MaterialPageRoute(builder: (_) => const PrivacySecurityScreen()),
             ),
           ),
-          SizedBox(height: config.cardSpacing),
+          SizedBox(height: spacing.cardSpacing),
           _buildSettingItem(
             title: AppLocalizations.of(context)!.settingsAbout,
             icon: Icons.info_outline,
             color: AppColors.pastelLavender,
-            config: config,
+            spacing: spacing,
+            sizing: sizing,
+            typography: typography,
             onTap: () => Navigator.of(context).push(
               MaterialPageRoute(builder: (_) => const AboutScreen()),
             ),
           ),
-          SizedBox(height: config.cardSpacing),
+          SizedBox(height: spacing.cardSpacing),
         ],
       ),
     );
   }
 
-  Widget _buildTitleSection(SettingsScreenConfig config) {
+  Widget _buildTitleSection(AppTypography typography) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -155,7 +166,7 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
           ).createShader(bounds),
           child: Text(
             AppLocalizations.of(context)!.settingsTitle,
-            style: config.titleStyle?.copyWith(
+            style: typography.display.copyWith(
               color: Colors.white,
               letterSpacing: 0.5,
             ),
@@ -164,7 +175,7 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
         const SizedBox(height: AppConstants.space8),
         Text(
           AppLocalizations.of(context)!.settingsSubtitle,
-          style: config.subtitleStyle,
+          style: typography.subtitle,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
         ),
@@ -176,13 +187,15 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
     required String title,
     required IconData icon,
     required Color color,
-    required SettingsScreenConfig config,
+    required AppSpacing spacing,
+    required AppSizing sizing,
+    required AppTypography typography,
     VoidCallback? onTap,
   }) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: EdgeInsets.all(config.cardPadding),
+        padding: EdgeInsets.all(spacing.cardPadding),
         decoration: BoxDecoration(
           color: const Color(0xFF141928).withValues(alpha: 0.8),
           borderRadius: BorderRadius.circular(AppConstants.radiusLarge),
@@ -198,23 +211,23 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
         child: Row(
           children: [
             Container(
-              width: config.iconContainerSize,
-              height: config.iconContainerSize,
+              width: sizing.iconContainer,
+              height: sizing.iconContainer,
               decoration: BoxDecoration(
                 color: color.withValues(alpha: 0.2),
                 borderRadius: BorderRadius.circular(AppConstants.radiusMedium),
               ),
               child: Icon(
                 icon,
-                size: config.iconSize,
+                size: sizing.iconMd,
                 color: color,
               ),
             ),
-            SizedBox(width: config.cardSpacing),
+            SizedBox(width: spacing.cardSpacing),
             Expanded(
               child: Text(
                 title,
-                style: config.cardTitleStyle?.copyWith(
+                style: typography.title.copyWith(
                   color: Colors.white,
                 ),
                 maxLines: 1,
@@ -223,7 +236,7 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
             ),
             Icon(
               Icons.arrow_forward,
-              size: config.arrowSize,
+              size: sizing.arrowSize,
               color: color.withValues(alpha: 0.6),
             ),
           ],

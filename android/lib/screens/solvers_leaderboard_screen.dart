@@ -3,7 +3,8 @@ import 'dart:ui';
 import '../l10n/app_localizations.dart';
 import '../config/app_colors.dart';
 import '../config/app_constants.dart';
-import '../utils/responsive_config.dart';
+import '../utils/app_spacing.dart';
+import '../utils/app_sizing.dart';
 import '../widgets/nanosolve_logo.dart';
 import '../widgets/header_back_button.dart';
 import '../services/settings_manager.dart';
@@ -92,8 +93,10 @@ class _SolversLeaderboardScreenState extends State<SolversLeaderboardScreen> {
 
   Widget _buildHeader(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final spacing = AppSpacing.of(context);
+    final sizing = AppSizing.of(context);
     return Container(
-      padding: const EdgeInsets.all(AppConstants.space24),
+      padding: EdgeInsets.all(spacing.headerPadding),
       decoration: BoxDecoration(
         color: const Color(0xFF141928).withValues(alpha: 0.9),
         border: Border(
@@ -114,18 +117,16 @@ class _SolversLeaderboardScreenState extends State<SolversLeaderboardScreen> {
                   color: AppColors.pastelMint,
                   showArrow: true,
                 ),
-                const Icon(
+                Icon(
                   Icons.emoji_events,
-                  size: AppConstants.iconMedium,
+                  size: sizing.iconMd,
                   color: AppColors.pastelMint,
                 ),
               ],
             ),
-            const SizedBox(height: AppConstants.space16),
+            SizedBox(height: spacing.headerSpacing),
             NanosolveLogo(
-              height: ResponsiveConfig.fromMediaQuery(context)
-                  .getSecondaryHeaderConfig()
-                  .logoHeight,
+              height: sizing.logoHeight,
             ),
           ],
         ),

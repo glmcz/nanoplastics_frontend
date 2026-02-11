@@ -48,13 +48,13 @@ class PrivacyPolicyScreen extends StatelessWidget {
         filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
         child: Column(
           children: [
-            Row(
+            const Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 HeaderBackButton(
                   label: 'Back',
                 ),
-                const Icon(Icons.privacy_tip_outlined,
+                Icon(Icons.privacy_tip_outlined,
                     size: AppConstants.iconMedium, color: AppColors.pastelAqua),
               ],
             ),

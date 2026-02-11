@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_custom_tabs/flutter_custom_tabs.dart';
 import '../config/app_colors.dart';
 import '../config/app_constants.dart';
-import '../utils/responsive_config.dart';
+import '../utils/app_spacing.dart';
+import '../utils/app_sizing.dart';
+import '../utils/app_typography.dart';
 import '../widgets/nanosolve_logo.dart';
 import '../widgets/brainstorm_box.dart';
 import '../models/category_detail_data.dart';
@@ -184,28 +186,29 @@ class _CategoryDetailNewScreenState extends State<CategoryDetailNewScreen>
 
   Widget _buildHeader() {
     final l10n = AppLocalizations.of(context)!;
-    final responsive = ResponsiveConfig.fromMediaQuery(context);
-    final config = responsive.getCategoryDetailHeaderConfig();
+    final spacing = AppSpacing.of(context);
+    final sizing = AppSizing.of(context);
+    final typography = AppTypography.of(context);
 
     return Padding(
-      padding: EdgeInsets.all(config.padding),
+      padding: EdgeInsets.all(spacing.contentPadding),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           SizedBox(
             width: double.infinity,
             child: InkWell(
-              onTap: () => Navigator.of(context).pop(),
+              onTap: () => Navigator.of(context).maybePop(),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Icon(Icons.arrow_back_ios,
-                      color: Colors.white, size: config.backIconSize),
+                      color: Colors.white, size: sizing.backIcon),
                   const SizedBox(width: AppConstants.space4),
                   Flexible(
                     child: Text(
                       l10n.categoryDetailBackToOverview,
-                      style: config.backTextStyle?.copyWith(
+                      style: typography.back.copyWith(
                         color: Colors.white,
                       ),
                       maxLines: 2,
@@ -217,25 +220,24 @@ class _CategoryDetailNewScreenState extends State<CategoryDetailNewScreen>
               ),
             ),
           ),
-          SizedBox(height: config.spacing),
-          NanosolveLogo(height: config.logoHeight),
+          SizedBox(height: spacing.headerSpacing),
+          NanosolveLogo(height: sizing.logoHeight),
         ],
       ),
     );
   }
 
   Widget _buildHeroIcon() {
-    final responsive = ResponsiveConfig.fromMediaQuery(context);
-    final config = responsive.heroIconConfig;
+    final sizing = AppSizing.of(context);
 
     return AnimatedBuilder(
       animation: _animationController,
       builder: (context, child) {
         return Container(
-          padding: EdgeInsets.symmetric(vertical: config.verticalPadding),
+          padding: EdgeInsets.symmetric(vertical: sizing.heroPadding),
           child: Container(
-            width: config.iconSize,
-            height: config.iconSize,
+            width: sizing.heroIconSize,
+            height: sizing.heroIconSize,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               color: widget.categoryData.themeColor.withValues(alpha: 0.1),
@@ -249,7 +251,7 @@ class _CategoryDetailNewScreenState extends State<CategoryDetailNewScreen>
             ),
             child: Icon(
               widget.categoryData.icon,
-              size: config.iconSize * 0.55,
+              size: sizing.heroIconInnerSize,
               color: widget.categoryData.themeColor,
             ),
           ),
@@ -259,17 +261,17 @@ class _CategoryDetailNewScreenState extends State<CategoryDetailNewScreen>
   }
 
   Widget _buildScrollableContent() {
-    final responsive = ResponsiveConfig.fromMediaQuery(context);
-    final config = responsive.getCategoryDetailHeaderConfig();
+    final spacing = AppSpacing.of(context);
+    final typography = AppTypography.of(context);
 
     return SingleChildScrollView(
       padding: const EdgeInsets.symmetric(horizontal: AppConstants.space20),
       child: Column(
         children: [
-          SizedBox(height: config.spacing),
+          SizedBox(height: spacing.headerSpacing),
           Text(
             widget.categoryData.title.toUpperCase(),
-            style: config.titleStyle?.copyWith(
+            style: typography.headline.copyWith(
               color: Colors.white,
             ),
             textAlign: TextAlign.center,

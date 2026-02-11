@@ -48,14 +48,14 @@ class TermsOfServiceScreen extends StatelessWidget {
         filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
         child: Column(
           children: [
-            Row(
+            const Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 HeaderBackButton(
                   label: 'Back',
                   color: AppColors.pastelLavender,
                 ),
-                const Icon(Icons.description_outlined,
+                Icon(Icons.description_outlined,
                     size: AppConstants.iconMedium,
                     color: AppColors.pastelLavender),
               ],

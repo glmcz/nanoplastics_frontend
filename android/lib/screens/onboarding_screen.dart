@@ -3,6 +3,8 @@ import 'dart:ui';
 import '../config/app_colors.dart';
 import '../config/app_constants.dart';
 import '../utils/responsive_config.dart';
+import '../utils/app_spacing.dart';
+import '../utils/app_typography.dart';
 import '../widgets/nanosolve_logo.dart';
 import '../l10n/app_localizations.dart';
 import '../models/onboarding_slide.dart';
@@ -312,16 +314,14 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                           BorderRadius.circular(AppConstants.radiusXXL),
                       child: Builder(
                         builder: (context) {
-                          final responsive =
-                              ResponsiveConfig.fromMediaQuery(context);
-                          final config = responsive.getOnboardingSlideConfig();
+                          final spacing = AppSpacing.of(context);
                           return Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               _buildModalHeader(),
-                              SizedBox(height: config.sectionSpacing),
+                              SizedBox(height: spacing.sectionSpacing),
                               Flexible(child: _buildSlidesContainer()),
-                              SizedBox(height: config.sectionSpacing),
+                              SizedBox(height: spacing.sectionSpacing),
                               _buildModalFooter(),
                             ],
                           );
@@ -339,11 +339,10 @@ class _OnboardingScreenState extends State<OnboardingScreen>
   }
 
   Widget _buildModalHeader() {
-    final responsive = ResponsiveConfig.fromMediaQuery(context);
-    final config = responsive.getOnboardingSlideConfig();
+    final spacing = AppSpacing.of(context);
 
     return Padding(
-      padding: EdgeInsets.all(config.headerPadding),
+      padding: EdgeInsets.all(spacing.lg),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -368,13 +367,17 @@ class _OnboardingScreenState extends State<OnboardingScreen>
   Widget _buildSlidesContainer() {
     final l10n = AppLocalizations.of(context)!;
     final slides = _getSlides(l10n);
-    final responsive = ResponsiveConfig.fromMediaQuery(context);
-    final config = responsive.getOnboardingSlideConfig();
+    final responsive = ResponsiveConfig.fromContext(context);
+
+    final isWide = responsive.isLandscape;
+    final slideHeightPercent = isWide ? 0.65 : 0.75;
+    final minSlideHeight = (isWide ? 220 : 260) * responsive.scaleH;
+    final maxSlideHeight = (isWide ? 360 : 520) * responsive.scaleH;
 
     return LayoutBuilder(
       builder: (context, constraints) {
-        final slideHeight = (constraints.maxHeight * config.slideHeightPercent)
-            .clamp(config.minSlideHeight, config.maxSlideHeight);
+        final slideHeight = (constraints.maxHeight * slideHeightPercent)
+            .clamp(minSlideHeight, maxSlideHeight);
         return SizedBox(
           height: slideHeight,
           child: PageView.builder(
@@ -391,13 +394,19 @@ class _OnboardingScreenState extends State<OnboardingScreen>
   }
 
   Widget _buildSlide(OnboardingSlide slide) {
-    final responsive = ResponsiveConfig.fromMediaQuery(context);
-    final config = responsive.getOnboardingSlideConfig();
+    final responsive = ResponsiveConfig.fromContext(context);
+    final spacing = AppSpacing.of(context);
+    final typography = AppTypography.of(context);
+
+    final isWide = responsive.isLandscape;
+    final imageHeightPercent = isWide ? 0.35 : 0.4;
+    const iconRatio = 0.4;
+    const iconSizeMultiplier = 0.5;
 
     final screenHeight = MediaQuery.of(context).size.height;
-    final imageHeight = screenHeight * config.imageHeightPercent;
-    final iconContainerSize = imageHeight * config.iconRatio;
-    final iconSize = iconContainerSize * config.iconSizeMultiplier;
+    final imageHeight = screenHeight * imageHeightPercent;
+    final iconContainerSize = imageHeight * iconRatio;
+    final iconSize = iconContainerSize * iconSizeMultiplier;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: AppConstants.space12),
@@ -458,7 +467,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
               ),
             ),
           ),
-          SizedBox(height: config.spacing * 1.5),
+          SizedBox(height: spacing.md * 1.5),
 
           // Title with highlight using ShaderMask
           Flexible(
@@ -471,7 +480,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                 textAlign: TextAlign.center,
                 maxLines: 4,
                 text: TextSpan(
-                  style: config.titleStyle,
+                  style: typography.display,
                   children: [
                     TextSpan(
                       text: '${slide.title} ',
@@ -494,11 +503,10 @@ class _OnboardingScreenState extends State<OnboardingScreen>
   Widget _buildModalFooter() {
     final l10n = AppLocalizations.of(context)!;
     final slides = _getSlides(l10n);
-    final responsive = ResponsiveConfig.fromMediaQuery(context);
-    final config = responsive.getOnboardingSlideConfig();
+    final spacing = AppSpacing.of(context);
 
     return Padding(
-      padding: EdgeInsets.all(config.footerPadding),
+      padding: EdgeInsets.all(spacing.lg),
       child: Column(
         children: [
           // Dots indicator
@@ -640,7 +648,7 @@ class _LightStreaksPainter extends CustomPainter {
       ..style = PaintingStyle.stroke;
 
     // Draw diagonal streaks
-    final streakCount = 4;
+    const streakCount = 4;
     final spacing = size.width / streakCount;
 
     for (int i = 0; i < streakCount; i++) {

@@ -3,7 +3,9 @@ import 'dart:ui';
 import '../../l10n/app_localizations.dart';
 import '../../config/app_colors.dart';
 import '../../config/app_constants.dart';
-import '../../utils/responsive_config.dart';
+import '../../utils/app_spacing.dart';
+import '../../utils/app_sizing.dart';
+import '../../utils/app_typography.dart';
 import '../../services/settings_manager.dart';
 import '../../widgets/nanosolve_logo.dart';
 import '../../widgets/header_back_button.dart';
@@ -97,11 +99,11 @@ class _LanguageScreenState extends State<LanguageScreen> {
   }
 
   Widget _buildHeader() {
-    final responsive = ResponsiveConfig.fromMediaQuery(context);
-    final header = responsive.getSecondaryHeaderConfig();
+    final spacing = AppSpacing.of(context);
+    final sizing = AppSizing.of(context);
 
     return Container(
-      padding: EdgeInsets.all(header.padding),
+      padding: EdgeInsets.all(spacing.headerPadding),
       decoration: BoxDecoration(
         color: const Color(0xFF141928).withValues(alpha: 0.9),
         border: Border(
@@ -119,11 +121,11 @@ class _LanguageScreenState extends State<LanguageScreen> {
                   label: AppLocalizations.of(context)!.settingsBack,
                 ),
                 Icon(Icons.language,
-                    size: header.iconSize, color: AppColors.pastelAqua),
+                    size: sizing.iconMd, color: AppColors.pastelAqua),
               ],
             ),
-            SizedBox(height: header.spacing),
-            NanosolveLogo(height: header.logoHeight),
+            SizedBox(height: spacing.headerSpacing),
+            NanosolveLogo(height: sizing.logoHeight),
           ],
         ),
       ),
@@ -131,29 +133,35 @@ class _LanguageScreenState extends State<LanguageScreen> {
   }
 
   Widget _buildContent() {
-    final responsive = ResponsiveConfig.fromMediaQuery(context);
-    final config = responsive.getSettingsScreenConfig();
+    final spacing = AppSpacing.of(context);
+    final sizing = AppSizing.of(context);
+    final typography = AppTypography.of(context);
 
     return SingleChildScrollView(
-      padding: EdgeInsets.all(config.contentPadding),
+      padding: EdgeInsets.all(spacing.contentPadding),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildTitleSection(config),
-          SizedBox(height: config.cardSpacing * 2),
+          _buildTitleSection(typography),
+          SizedBox(height: spacing.cardSpacing * 2),
           ..._languages.map((lang) => Padding(
-                padding: EdgeInsets.only(bottom: config.cardSpacing),
-                child: _buildLanguageItem(lang, config),
+                padding: EdgeInsets.only(bottom: spacing.cardSpacing),
+                child: _buildLanguageItem(
+                  lang,
+                  spacing,
+                  sizing,
+                  typography,
+                ),
               )),
-          SizedBox(height: config.cardSpacing),
-          _buildInfoCard(config),
-          SizedBox(height: config.cardSpacing * 2),
+          SizedBox(height: spacing.cardSpacing),
+          _buildInfoCard(spacing, sizing, typography),
+          SizedBox(height: spacing.cardSpacing * 2),
         ],
       ),
     );
   }
 
-  Widget _buildTitleSection(SettingsScreenConfig config) {
+  Widget _buildTitleSection(AppTypography typography) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -163,7 +171,7 @@ class _LanguageScreenState extends State<LanguageScreen> {
           ).createShader(bounds),
           child: Text(
             AppLocalizations.of(context)!.languageTitle,
-            style: config.titleStyle?.copyWith(
+            style: typography.display.copyWith(
               color: Colors.white,
               letterSpacing: 0.5,
             ),
@@ -172,7 +180,7 @@ class _LanguageScreenState extends State<LanguageScreen> {
         const SizedBox(height: AppConstants.space8),
         Text(
           AppLocalizations.of(context)!.languageSubtitle,
-          style: config.subtitleStyle?.copyWith(
+          style: typography.subtitle.copyWith(
             color: AppColors.textMuted,
             fontWeight: FontWeight.w600,
           ),
@@ -184,14 +192,18 @@ class _LanguageScreenState extends State<LanguageScreen> {
   }
 
   Widget _buildLanguageItem(
-      LanguageOption language, SettingsScreenConfig config) {
+    LanguageOption language,
+    AppSpacing spacing,
+    AppSizing sizing,
+    AppTypography typography,
+  ) {
     final isSelected = _selectedLanguage == language.code;
 
     return GestureDetector(
       onTap: () => _selectLanguage(language.code),
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
-        padding: EdgeInsets.all(config.cardPadding),
+        padding: EdgeInsets.all(spacing.cardPadding),
         decoration: BoxDecoration(
           color: isSelected
               ? AppColors.pastelAqua.withValues(alpha: 0.15)
@@ -217,16 +229,16 @@ class _LanguageScreenState extends State<LanguageScreen> {
           children: [
             Text(
               language.flag,
-              style: TextStyle(fontSize: config.iconSize + 6),
+              style: TextStyle(fontSize: sizing.iconMd + 6),
             ),
-            SizedBox(width: config.cardSpacing),
+            SizedBox(width: spacing.cardSpacing),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     language.name,
-                    style: config.cardTitleStyle?.copyWith(
+                    style: typography.title.copyWith(
                       fontWeight: FontWeight.w700,
                       color: isSelected ? AppColors.pastelAqua : Colors.white,
                     ),
@@ -234,7 +246,7 @@ class _LanguageScreenState extends State<LanguageScreen> {
                   const SizedBox(height: 4),
                   Text(
                     language.nativeName,
-                    style: config.subtitleStyle?.copyWith(
+                    style: typography.subtitle.copyWith(
                       color: isSelected
                           ? AppColors.pastelAqua.withValues(alpha: 0.7)
                           : AppColors.textMuted,
@@ -246,8 +258,8 @@ class _LanguageScreenState extends State<LanguageScreen> {
             ),
             AnimatedContainer(
               duration: const Duration(milliseconds: 200),
-              width: config.iconSize,
-              height: config.iconSize,
+              width: sizing.iconMd,
+              height: sizing.iconMd,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 color: isSelected ? AppColors.pastelAqua : Colors.transparent,
@@ -258,7 +270,7 @@ class _LanguageScreenState extends State<LanguageScreen> {
               ),
               child: isSelected
                   ? Icon(Icons.check,
-                      size: config.iconSize * 0.65,
+                      size: sizing.iconMd * 0.65,
                       color: const Color(0xFF0A0A12))
                   : null,
             ),
@@ -268,9 +280,13 @@ class _LanguageScreenState extends State<LanguageScreen> {
     );
   }
 
-  Widget _buildInfoCard(SettingsScreenConfig config) {
+  Widget _buildInfoCard(
+    AppSpacing spacing,
+    AppSizing sizing,
+    AppTypography typography,
+  ) {
     return Container(
-      padding: EdgeInsets.all(config.cardPadding),
+      padding: EdgeInsets.all(spacing.cardPadding),
       decoration: BoxDecoration(
         color: AppColors.pastelAqua.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(AppConstants.radiusLarge),
@@ -280,14 +296,14 @@ class _LanguageScreenState extends State<LanguageScreen> {
         children: [
           Icon(
             Icons.info_outline,
-            size: config.iconSize,
+            size: sizing.iconMd,
             color: AppColors.pastelAqua,
           ),
-          SizedBox(width: config.cardSpacing),
+          SizedBox(width: spacing.cardSpacing),
           Expanded(
             child: Text(
               AppLocalizations.of(context)!.languageInfoMessage,
-              style: config.subtitleStyle?.copyWith(
+              style: typography.subtitle.copyWith(
                 color: AppColors.textMuted,
                 height: 1.4,
               ),

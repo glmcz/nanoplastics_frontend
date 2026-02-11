@@ -6,7 +6,9 @@ import 'package:flutter_custom_tabs/flutter_custom_tabs.dart';
 import '../../l10n/app_localizations.dart';
 import '../../config/app_colors.dart';
 import '../../config/app_constants.dart';
-import '../../utils/responsive_config.dart';
+import '../../utils/app_spacing.dart';
+import '../../utils/app_sizing.dart';
+import '../../utils/app_typography.dart';
 import '../../widgets/nanosolve_logo.dart';
 import '../../widgets/header_back_button.dart';
 
@@ -18,8 +20,9 @@ class AboutScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final responsive = ResponsiveConfig.fromMediaQuery(context);
-    final config = responsive.getSettingsScreenConfig();
+    final spacing = AppSpacing.of(context);
+    final sizing = AppSizing.of(context);
+    final typography = AppTypography.of(context);
 
     return Scaffold(
       body: Container(
@@ -38,8 +41,9 @@ class AboutScreen extends StatelessWidget {
         child: SafeArea(
           child: Column(
             children: [
-              _buildHeader(context, config),
-              Expanded(child: _buildContent(context)),
+              _buildHeader(context, spacing, sizing),
+              Expanded(
+                  child: _buildContent(context, spacing, sizing, typography)),
             ],
           ),
         ),
@@ -48,12 +52,12 @@ class AboutScreen extends StatelessWidget {
   }
 
   Widget _buildHeader(
-      BuildContext context, SettingsScreenConfig? settingsConfig) {
-    final responsive = ResponsiveConfig.fromMediaQuery(context);
-    final header = responsive.getSecondaryHeaderConfig();
-
+    BuildContext context,
+    AppSpacing spacing,
+    AppSizing sizing,
+  ) {
     return Container(
-      padding: EdgeInsets.all(header.padding),
+      padding: EdgeInsets.all(spacing.headerPadding),
       decoration: BoxDecoration(
         color: const Color(0xFF141928).withValues(alpha: 0.9),
         border: Border(
@@ -62,8 +66,7 @@ class AboutScreen extends StatelessWidget {
       ),
       child: BackdropFilter(
         filter: ImageFilter.blur(
-            sigmaX: settingsConfig?.backdropBlurSigma ?? 10,
-            sigmaY: settingsConfig?.backdropBlurSigma ?? 10),
+            sigmaX: sizing.backdropBlurSigma, sigmaY: sizing.backdropBlurSigma),
         child: Column(
           children: [
             Row(
@@ -74,91 +77,103 @@ class AboutScreen extends StatelessWidget {
                   color: AppColors.pastelLavender,
                 ),
                 Icon(Icons.info_outline,
-                    size: header.iconSize, color: AppColors.pastelLavender),
+                    size: sizing.iconMd, color: AppColors.pastelLavender),
               ],
             ),
-            SizedBox(height: header.spacing),
-            NanosolveLogo(height: header.logoHeight),
+            SizedBox(height: spacing.headerSpacing),
+            NanosolveLogo(height: sizing.logoHeight),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildContent(BuildContext context) {
-    final responsive = ResponsiveConfig.fromMediaQuery(context);
-    final config = responsive.getSettingsScreenConfig();
-
+  Widget _buildContent(
+    BuildContext context,
+    AppSpacing spacing,
+    AppSizing sizing,
+    AppTypography typography,
+  ) {
     return SingleChildScrollView(
-      padding: EdgeInsets.all(config.contentPadding),
+      padding: EdgeInsets.all(spacing.contentPadding),
       child: Column(
         children: [
-          _buildAppInfo(context, config),
-          SizedBox(height: config.cardSpacing * 2),
+          _buildAppInfo(context, spacing, sizing, typography),
+          SizedBox(height: spacing.cardSpacing * 2),
           _buildSectionTitle(
-              context, AppLocalizations.of(context)!.aboutSection, config),
-          SizedBox(height: config.cardSpacing),
-          _buildDescriptionCard(context, config),
-          SizedBox(height: config.cardSpacing * 2),
+              context, AppLocalizations.of(context)!.aboutSection, typography),
+          SizedBox(height: spacing.cardSpacing),
+          _buildDescriptionCard(context, spacing, typography),
+          SizedBox(height: spacing.cardSpacing * 2),
           _buildSectionTitle(
-              context, AppLocalizations.of(context)!.aboutConnect, config),
-          SizedBox(height: config.cardSpacing),
+              context, AppLocalizations.of(context)!.aboutConnect, typography),
+          SizedBox(height: spacing.cardSpacing),
           _buildLinkItem(
             title: AppLocalizations.of(context)!.aboutWebsite,
             subtitle: AppLocalizations.of(context)!.aboutWebsiteUrl,
             icon: Icons.language,
             color: AppColors.pastelAqua,
-            config: config,
+            spacing: spacing,
+            sizing: sizing,
+            typography: typography,
             onTap: () => _launchUrl('https://nanosolve.io'),
           ),
-          SizedBox(height: config.cardSpacing),
+          SizedBox(height: spacing.cardSpacing),
           _buildLinkItem(
             title: AppLocalizations.of(context)!.aboutContactUs,
             subtitle: AppLocalizations.of(context)!.aboutContactUsDesc,
             icon: Icons.email_outlined,
             color: AppColors.pastelMint,
-            config: config,
+            spacing: spacing,
+            sizing: sizing,
+            typography: typography,
             onTap: () => _launchUrl('mailto:contact@nanosolve.io'),
           ),
-          SizedBox(height: config.cardSpacing * 2),
+          SizedBox(height: spacing.cardSpacing * 2),
           _buildSectionTitle(
-              context, AppLocalizations.of(context)!.aboutShare, config),
-          SizedBox(height: config.cardSpacing),
-          _buildShareCard(context, config),
-          SizedBox(height: config.cardSpacing * 2),
-          _buildFooter(context, config),
-          SizedBox(height: config.cardSpacing * 2),
+              context, AppLocalizations.of(context)!.aboutShare, typography),
+          SizedBox(height: spacing.cardSpacing),
+          _buildShareCard(context, spacing, sizing, typography),
+          SizedBox(height: spacing.cardSpacing * 2),
+          _buildFooter(context, spacing, typography),
+          SizedBox(height: spacing.cardSpacing * 2),
           _buildSectionTitle(
-              context, AppLocalizations.of(context)!.aboutLegal, config),
-          SizedBox(height: config.cardSpacing),
+              context, AppLocalizations.of(context)!.aboutLegal, typography),
+          SizedBox(height: spacing.cardSpacing),
           _buildLinkItem(
             title: AppLocalizations.of(context)!.aboutPrivacyPolicy,
             subtitle: AppLocalizations.of(context)!.aboutPrivacyPolicyDesc,
             icon: Icons.policy_outlined,
             color: AppColors.pastelLavender,
-            config: config,
+            spacing: spacing,
+            sizing: sizing,
+            typography: typography,
             onTap: () => Navigator.of(context).push(
               MaterialPageRoute(builder: (_) => const PrivacyPolicyScreen()),
             ),
           ),
-          SizedBox(height: config.cardSpacing),
+          SizedBox(height: spacing.cardSpacing),
           _buildLinkItem(
             title: AppLocalizations.of(context)!.aboutTermsOfService,
             subtitle: AppLocalizations.of(context)!.aboutTermsOfServiceDesc,
             icon: Icons.description_outlined,
             color: AppColors.pastelLavender,
-            config: config,
+            spacing: spacing,
+            sizing: sizing,
+            typography: typography,
             onTap: () => Navigator.of(context).push(
               MaterialPageRoute(builder: (_) => const TermsOfServiceScreen()),
             ),
           ),
-          SizedBox(height: config.cardSpacing * 2),
+          SizedBox(height: spacing.cardSpacing * 2),
           _buildLinkItem(
             title: AppLocalizations.of(context)!.aboutOpenSourceLicenses,
             subtitle: AppLocalizations.of(context)!.aboutOpenSourceLicensesDesc,
             icon: Icons.code,
             color: AppColors.pastelAqua,
-            config: config,
+            spacing: spacing,
+            sizing: sizing,
+            typography: typography,
             onTap: () => showLicensePage(
               context: context,
               applicationName: 'NanoSolve Hive',
@@ -170,39 +185,44 @@ class AboutScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildAppInfo(BuildContext context, SettingsScreenConfig config) {
+  Widget _buildAppInfo(
+    BuildContext context,
+    AppSpacing spacing,
+    AppSizing sizing,
+    AppTypography typography,
+  ) {
     return Column(
       children: [
         Container(
-          width: config.iconContainerSize * 2,
-          height: config.iconContainerSize * 2,
+          width: sizing.iconContainer * 2,
+          height: sizing.iconContainer * 2,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             color: const Color(0xFF141928),
             border: Border.all(
               color: AppColors.pastelLavender.withValues(alpha: 0.5),
-              width: config.borderWidth ?? 3,
+              width: sizing.borderThick,
             ),
             boxShadow: [
               BoxShadow(
                 color: AppColors.pastelLavender.withValues(alpha: 0.2),
-                blurRadius: config.shadowBlurRadius ?? 20,
-                spreadRadius: config.shadowSpreadRadius ?? 2,
+                blurRadius: sizing.shadowBlur,
+                spreadRadius: sizing.shadowSpread,
               ),
             ],
           ),
           child: Center(
-            child: NanosolveLogo(height: config.iconContainerSize),
+            child: NanosolveLogo(height: sizing.iconContainer),
           ),
         ),
-        SizedBox(height: config.cardSpacing),
+        SizedBox(height: spacing.cardSpacing),
         ShaderMask(
           shaderCallback: (bounds) => const LinearGradient(
             colors: [AppColors.pastelAqua, AppColors.pastelMint],
           ).createShader(bounds),
           child: Text(
             AppLocalizations.of(context)!.aboutAppName,
-            style: config.titleStyle?.copyWith(
+            style: typography.display.copyWith(
               color: Colors.white,
               letterSpacing: 0.5,
             ),
@@ -211,7 +231,7 @@ class AboutScreen extends StatelessWidget {
         const SizedBox(height: AppConstants.space8),
         Text(
           '${AppLocalizations.of(context)!.aboutVersion} $appVersion ($buildNumber)',
-          style: config.subtitleStyle?.copyWith(
+          style: typography.subtitle.copyWith(
             color: AppColors.textMuted,
             fontWeight: FontWeight.w600,
           ),
@@ -221,7 +241,7 @@ class AboutScreen extends StatelessWidget {
   }
 
   Widget _buildSectionTitle(
-      BuildContext context, String title, SettingsScreenConfig config) {
+      BuildContext context, String title, AppTypography typography) {
     return Align(
       alignment: Alignment.centerLeft,
       child: Row(
@@ -237,7 +257,7 @@ class AboutScreen extends StatelessWidget {
           const SizedBox(width: AppConstants.space8),
           Text(
             title,
-            style: config.cardTitleStyle?.copyWith(
+            style: typography.title.copyWith(
               fontWeight: FontWeight.w700,
               color: AppColors.pastelLavender,
               letterSpacing: 0.5,
@@ -249,9 +269,12 @@ class AboutScreen extends StatelessWidget {
   }
 
   Widget _buildDescriptionCard(
-      BuildContext context, SettingsScreenConfig config) {
+    BuildContext context,
+    AppSpacing spacing,
+    AppTypography typography,
+  ) {
     return Container(
-      padding: EdgeInsets.all(config.cardPadding),
+      padding: EdgeInsets.all(spacing.cardPadding),
       decoration: BoxDecoration(
         color: const Color(0xFF141928).withValues(alpha: 0.8),
         borderRadius: BorderRadius.circular(AppConstants.radiusLarge),
@@ -260,9 +283,9 @@ class AboutScreen extends StatelessWidget {
       ),
       child: Text(
         AppLocalizations.of(context)!.aboutDescription,
-        style: config.subtitleStyle?.copyWith(
+        style: typography.subtitle.copyWith(
           color: AppColors.textMuted,
-          height: config.textLineHeight ?? 1.6,
+          height: typography.body.height ?? 1.6,
         ),
       ),
     );
@@ -273,13 +296,15 @@ class AboutScreen extends StatelessWidget {
     required String subtitle,
     required IconData icon,
     required Color color,
-    required SettingsScreenConfig config,
+    required AppSpacing spacing,
+    required AppSizing sizing,
+    required AppTypography typography,
     required VoidCallback onTap,
   }) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: EdgeInsets.all(config.cardPadding),
+        padding: EdgeInsets.all(spacing.cardPadding),
         decoration: BoxDecoration(
           color: const Color(0xFF141928).withValues(alpha: 0.8),
           borderRadius: BorderRadius.circular(AppConstants.radiusLarge),
@@ -288,22 +313,22 @@ class AboutScreen extends StatelessWidget {
         child: Row(
           children: [
             Container(
-              width: config.iconContainerSize,
-              height: config.iconContainerSize,
+              width: sizing.iconContainer,
+              height: sizing.iconContainer,
               decoration: BoxDecoration(
                 color: color.withValues(alpha: 0.15),
                 borderRadius: BorderRadius.circular(AppConstants.radiusMedium),
               ),
-              child: Icon(icon, size: config.iconSize, color: color),
+              child: Icon(icon, size: sizing.iconMd, color: color),
             ),
-            SizedBox(width: config.cardSpacing),
+            SizedBox(width: spacing.cardSpacing),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     title,
-                    style: config.cardTitleStyle?.copyWith(
+                    style: typography.title.copyWith(
                       fontWeight: FontWeight.w600,
                       color: Colors.white,
                     ),
@@ -311,25 +336,30 @@ class AboutScreen extends StatelessWidget {
                   const SizedBox(height: 4),
                   Text(
                     subtitle,
-                    style: config.subtitleStyle
-                        ?.copyWith(color: AppColors.textMuted),
+                    style: typography.subtitle
+                        .copyWith(color: AppColors.textMuted),
                   ),
                 ],
               ),
             ),
             Icon(Icons.arrow_forward_ios,
-                size: config.arrowSize, color: color.withValues(alpha: 0.6)),
+                size: sizing.arrowSize, color: color.withValues(alpha: 0.6)),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildShareCard(BuildContext context, SettingsScreenConfig config) {
+  Widget _buildShareCard(
+    BuildContext context,
+    AppSpacing spacing,
+    AppSizing sizing,
+    AppTypography typography,
+  ) {
     const String appDownloadUrl = 'https://nanosolve.io/download';
 
     return Container(
-      padding: EdgeInsets.all(config.cardPadding),
+      padding: EdgeInsets.all(spacing.cardPadding),
       decoration: BoxDecoration(
         color: const Color(0xFF141928).withValues(alpha: 0.8),
         borderRadius: BorderRadius.circular(AppConstants.radiusLarge),
@@ -337,7 +367,7 @@ class AboutScreen extends StatelessWidget {
         boxShadow: [
           BoxShadow(
             color: AppColors.pastelAqua.withValues(alpha: 0.1),
-            blurRadius: config.shadowBlurRadius ?? 20,
+            blurRadius: sizing.shadowBlur,
             offset: const Offset(0, 5),
           ),
         ],
@@ -346,32 +376,32 @@ class AboutScreen extends StatelessWidget {
         children: [
           Text(
             AppLocalizations.of(context)!.aboutShareTitle,
-            style: config.cardTitleStyle?.copyWith(
+            style: typography.title.copyWith(
               fontWeight: FontWeight.w700,
               color: AppColors.pastelAqua,
-              fontSize: (config.cardTitleStyle?.fontSize ?? 16) + 2,
+              fontSize: (typography.title.fontSize ?? 16) + 2,
             ),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: AppConstants.space16),
           Text(
             AppLocalizations.of(context)!.aboutShareDesc,
-            style: config.subtitleStyle?.copyWith(
+            style: typography.subtitle.copyWith(
               color: AppColors.textMuted,
             ),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: AppConstants.space24),
           Container(
-            padding: EdgeInsets.all(config.qrCodePadding ?? 16),
+            padding: EdgeInsets.all(spacing.md),
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(AppConstants.radiusMedium),
               boxShadow: [
                 BoxShadow(
                   color: AppColors.pastelAqua.withValues(alpha: 0.3),
-                  blurRadius: config.lightShadowBlurRadius ?? 15,
-                  spreadRadius: config.shadowSpreadRadius ?? 2,
+                  blurRadius: sizing.shadowBlur * 0.7,
+                  spreadRadius: sizing.shadowSpread,
                 ),
               ],
             ),
@@ -379,8 +409,8 @@ class AboutScreen extends StatelessWidget {
               children: [
                 // Placeholder for QR code - will be replaced with actual QR code widget
                 Container(
-                  width: config.qrCodeSize ?? 200,
-                  height: config.qrCodeSize ?? 200,
+                  width: sizing.qrCodeSize,
+                  height: sizing.qrCodeSize,
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(8),
@@ -392,27 +422,26 @@ class AboutScreen extends StatelessWidget {
                       children: [
                         Icon(
                           Icons.qr_code_2,
-                          size: config.qrCodeIconSize ?? 80,
+                          size: sizing.qrCodeIconSize,
                           color: Colors.grey.shade600,
                         ),
-                        SizedBox(height: config.qrCodePadding ?? 16),
+                        SizedBox(height: spacing.md),
                         Text(
                           'QR Code',
                           style: TextStyle(
                             color: Colors.grey.shade600,
-                            fontSize: config.qrCodeTextFontSize ?? 14,
+                            fontSize: typography.body.fontSize ?? 14,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
-                        SizedBox(height: config.qrCodePadding ?? 16),
+                        SizedBox(height: spacing.md),
                         Padding(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: config.qrCodePadding ?? 16),
+                          padding: EdgeInsets.symmetric(horizontal: spacing.md),
                           child: Text(
                             appDownloadUrl,
                             style: TextStyle(
                               color: Colors.grey.shade400,
-                              fontSize: config.qrCodeUrlFontSize ?? 10,
+                              fontSize: typography.labelXs.fontSize ?? 10,
                             ),
                             textAlign: TextAlign.center,
                             maxLines: 2,
@@ -446,21 +475,21 @@ class AboutScreen extends StatelessWidget {
                 children: [
                   Icon(
                     Icons.link,
-                    size: config.linkIconSize ?? 18,
+                    size: sizing.linkIconSize,
                     color: AppColors.pastelAqua,
                   ),
-                  SizedBox(width: config.linkIconSpacing ?? 8),
+                  SizedBox(width: spacing.sm),
                   Text(
                     AppLocalizations.of(context)!.aboutShareAppLink,
-                    style: config.subtitleStyle?.copyWith(
+                    style: typography.subtitle.copyWith(
                       color: AppColors.pastelAqua,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
-                  SizedBox(width: config.secondaryIconSpacing ?? 4),
+                  SizedBox(width: spacing.xs),
                   Icon(
                     Icons.open_in_new,
-                    size: config.secondaryIconSize ?? 14,
+                    size: sizing.secondaryIconSize,
                     color: AppColors.pastelAqua.withValues(alpha: 0.7),
                   ),
                 ],
@@ -472,12 +501,16 @@ class AboutScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildFooter(BuildContext context, SettingsScreenConfig config) {
+  Widget _buildFooter(
+    BuildContext context,
+    AppSpacing spacing,
+    AppTypography typography,
+  ) {
     return Column(
       children: [
         Text(
           AppLocalizations.of(context)!.aboutFooterMessage,
-          style: config.subtitleStyle?.copyWith(
+          style: typography.subtitle.copyWith(
             color: AppColors.textMuted,
             fontWeight: FontWeight.w500,
           ),
@@ -485,7 +518,7 @@ class AboutScreen extends StatelessWidget {
         const SizedBox(height: 8),
         Text(
           AppLocalizations.of(context)!.aboutCopyright,
-          style: config.subtitleStyle?.copyWith(
+          style: typography.subtitle.copyWith(
             color: AppColors.textDark,
           ),
         ),
@@ -515,7 +548,7 @@ class AboutScreen extends StatelessWidget {
       await launchUrl(
         Uri.parse(url),
         customTabsOptions: theme,
-        safariVCOptions: SafariViewControllerOptions(
+        safariVCOptions: const SafariViewControllerOptions(
           preferredBarTintColor: AppColors.pastelLavender,
           preferredControlTintColor: Colors.white,
           barCollapsingEnabled: true,
