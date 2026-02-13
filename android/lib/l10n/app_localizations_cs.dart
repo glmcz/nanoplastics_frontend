@@ -144,7 +144,7 @@ class AppLocalizationsCs extends AppLocalizations {
   String get categoryDetailBack => 'Zpět';
 
   @override
-  String get categoryDetailBackToOverview => '← ZPĚT';
+  String get categoryDetailBackToOverview => 'ZPĚT';
 
   @override
   String get categoryDetailBrainstorm => 'Brainstorm';

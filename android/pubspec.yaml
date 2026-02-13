@@ -24,6 +24,7 @@ dependencies:
   file_picker: ^8.1.0
   share_plus: ^10.0.0
   path_provider: ^2.1.0
+  qr_flutter: ^4.1.0
 
 dev_dependencies:
   flutter_test:
@@ -61,6 +62,10 @@ flutter:
     - assets/l10n/app_cs.arb
     - assets/l10n/app_en.arb
     - assets/docs/Nanoplastics_Report_EN_compressed.pdf
+    - assets/docs/Nanoplastics_Report_CS_compressed.pdf
+    - assets/docs/Nanoplastics_Report_ES_compressed.pdf
+    - assets/docs/Nanoplastics_Report_FR_compressed.pdf
+    - assets/docs/Nanoplastics_Report_RU_compressed.pdf
     - assets/docs/CS_WATER_compressed.pdf
     - assets/docs/EN_WATER_compressed.pdf
     - assets/onboarding/slide1_ocean_plastic.jpg

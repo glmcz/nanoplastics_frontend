@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import '../config/app_colors.dart';
 import '../config/app_constants.dart';
@@ -16,6 +18,8 @@ import '../services/logger_service.dart';
 
 enum ImpactType { human, planet }
 
+enum _HubButtonPosition { topLeft, topRight, bottomLeft, bottomRight }
+
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
 
@@ -28,7 +32,6 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final spacing = AppSpacing.of(context);
     final sizing = AppSizing.of(context);
 
     return Scaffold(
@@ -71,116 +74,28 @@ class _MainScreenState extends State<MainScreen> {
           ),
           // Main content
           SafeArea(
+            bottom: false,
             child: Column(
               children: [
                 _buildHeader(),
                 Expanded(
                   child: SingleChildScrollView(
-                    padding: EdgeInsets.only(bottom: spacing.md),
+                    physics: const ClampingScrollPhysics(),
+                    padding: EdgeInsets.only(bottom: sizing.hubContainerHeight),
                     child: _buildCategoryGrid(),
                   ),
                 ),
-                _buildTopNavigation(),
-                _buildBottomNavigation(),
               ],
             ),
           ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildTopNavigation() {
-    final l10n = AppLocalizations.of(context)!;
-    final spacing = AppSpacing.of(context);
-    final sizing = AppSizing.of(context);
-    final typography = AppTypography.of(context);
-    return Container(
-      margin: EdgeInsets.only(
-        left: spacing.tabMarginH,
-        right: spacing.tabMarginH,
-        top: spacing.tabMarginH,
-        bottom: sizing.tabMarginV,
-      ),
-      padding: EdgeInsets.all(spacing.tabInnerPadding),
-      decoration: BoxDecoration(
-        color: Colors.black.withValues(alpha: 0.4),
-        borderRadius: BorderRadius.circular(AppConstants.radiusMedium),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: _buildTabButton(
-              label: l10n.tabHuman,
-              isActive: _selectedTab == ImpactType.human,
-              activeColor: AppColors.neonCyan,
-              textStyle: typography.tab,
-              padding: spacing.tabButtonPadding,
-              onTap: () {
-                setState(() => _selectedTab = ImpactType.human);
-                LoggerService()
-                    .logUserAction('tab_switched', params: {'tab': 'human'});
-              },
-            ),
-          ),
-          Expanded(
-            child: _buildTabButton(
-              label: l10n.tabPlanet,
-              isActive: _selectedTab == ImpactType.planet,
-              activeColor: const Color(0xFF48CAE4),
-              textStyle: typography.tab,
-              padding: spacing.tabButtonPadding,
-              onTap: () {
-                setState(() => _selectedTab = ImpactType.planet);
-                LoggerService()
-                    .logUserAction('tab_switched', params: {'tab': 'planet'});
-              },
-            ),
+          // Control Hub overlay at bottom
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: 0,
+            child: _buildControlHub(),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildTabButton({
-    required String label,
-    required bool isActive,
-    required Color activeColor,
-    required VoidCallback onTap,
-    required TextStyle textStyle,
-    required double padding,
-  }) {
-    return Semantics(
-      button: true,
-      label: label,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(AppConstants.radiusSmall),
-        child: Container(
-          padding: EdgeInsets.symmetric(vertical: padding, horizontal: padding),
-          decoration: BoxDecoration(
-            color: isActive
-                ? Colors.black.withValues(alpha: 0.3)
-                : Colors.transparent,
-            borderRadius: BorderRadius.circular(AppConstants.radiusSmall),
-            border: isActive ? Border.all(color: activeColor) : null,
-            boxShadow: isActive
-                ? [
-                    BoxShadow(
-                        color: activeColor.withValues(alpha: 0.3),
-                        blurRadius: 12)
-                  ]
-                : null,
-          ),
-          child: Text(
-            label,
-            textAlign: TextAlign.center,
-            style: textStyle.copyWith(
-              color: isActive ? activeColor : AppColors.textMuted,
-            ),
-          ),
-        ),
       ),
     );
   }
@@ -190,10 +105,10 @@ class _MainScreenState extends State<MainScreen> {
     final spacing = AppSpacing.of(context);
     final sizing = AppSizing.of(context);
     final typography = AppTypography.of(context);
-
     return Padding(
       padding: EdgeInsets.symmetric(
-          horizontal: spacing.contentPadding, vertical: spacing.headerPadding),
+          horizontal: spacing.contentPadding,
+          vertical: spacing.headerPadding * 5),
       child: Column(
         children: [
           NanosolveLogo(height: sizing.logoHeight),
@@ -319,13 +234,12 @@ class _MainScreenState extends State<MainScreen> {
     final sizing = AppSizing.of(context);
     final typography = AppTypography.of(context);
 
-    // Build pairs of cards in rows so each row sizes to its content
     final rowCount = (categories.length / 2).ceil();
 
     final rows = <Widget>[];
     for (int rowIndex = 0; rowIndex < rowCount; rowIndex++) {
       if (rowIndex > 0) {
-        rows.add(SizedBox(height: spacing.gridSpacing));
+        rows.add(SizedBox(height: spacing.gridRowSpacing));
       }
       final first = rowIndex * 2;
       final second = first + 1;
@@ -340,7 +254,6 @@ class _MainScreenState extends State<MainScreen> {
                   iconContainerSize: sizing.categoryIconContainer,
                   iconSize: sizing.categoryIconSize,
                   padding: sizing.categoryPadding,
-                  spacing: spacing.cardSpacing,
                   titleStyle: typography.title,
                   descStyle: typography.bodySm.copyWith(
                     color: AppColors.textMuted,
@@ -356,7 +269,6 @@ class _MainScreenState extends State<MainScreen> {
                     iconContainerSize: sizing.categoryIconContainer,
                     iconSize: sizing.categoryIconSize,
                     padding: sizing.categoryPadding,
-                    spacing: spacing.cardSpacing,
                     titleStyle: typography.title,
                     descStyle: typography.bodySm.copyWith(
                       color: AppColors.textMuted,
@@ -377,104 +289,153 @@ class _MainScreenState extends State<MainScreen> {
         left: spacing.contentPadding,
         right: spacing.contentPadding,
         top: spacing.md,
-        bottom: spacing.gridBottomPadding,
       ),
       child: Column(children: rows),
     );
   }
 
-  Widget _buildSettingsJoystick() {
-    final accentColor = _selectedTab == ImpactType.human
-        ? AppColors.neonCyan
-        : const Color(0xFF48CAE4);
+  // ── Control Hub ──
+
+  Widget _buildControlHub() {
     final sizing = AppSizing.of(context);
-
-    return Transform.translate(
-      offset: const Offset(0, 0),
-      child: Center(
-        child: Semantics(
-          button: true,
-          label: 'Settings',
-          child: InkWell(
-            onTap: () {
-              LoggerService().logUserAction('settings_tapped');
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (_) => const UserSettingsScreen(),
-                ),
-              );
-            },
-            borderRadius: BorderRadius.circular(sizing.joystickSize / 2),
-            child: Container(
-              width: sizing.joystickSize,
-              height: sizing.joystickSize,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: const Color(0xFF141928),
-                border: Border.all(
-                  color: accentColor.withValues(alpha: 0.5),
-                  width: sizing.joystickBorderWidth,
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: accentColor.withValues(alpha: 0.3),
-                    blurRadius: sizing.joystickShadowBlur,
-                    spreadRadius: sizing.joystickShadowSpread,
-                  ),
-                ],
-              ),
-              child: Icon(
-                Icons.settings,
-                size: sizing.joystickIconSize,
-                color: accentColor,
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildBottomNavigation() {
-    final l10n = AppLocalizations.of(context)!;
     final spacing = AppSpacing.of(context);
-    final sizing = AppSizing.of(context);
     final typography = AppTypography.of(context);
+    final l10n = AppLocalizations.of(context)!;
 
-    return Container(
-      padding: EdgeInsets.symmetric(
-          horizontal: spacing.bottomNavPaddingH, vertical: spacing.sm),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [
-            Colors.transparent,
-            const Color(0xFF0A0A14).withValues(alpha: 0.95),
-          ],
-        ),
-      ),
-      child: Row(
+    return SizedBox(
+      height: sizing.hubContainerHeight,
+      child: Stack(
         children: [
-          Expanded(
-            child: _buildBottomButton(
-              label: l10n.navSources,
-              icon: Icons.menu_book_outlined,
-              color: AppColors.pastelAqua,
-              onTap: () => _navigateToResources(null),
-              typography: typography,
+          // Gradient background - passes touches through
+          Positioned.fill(
+            child: IgnorePointer(
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Colors.transparent,
+                      AppColors.hubBackground.withValues(alpha: 0.95),
+                      AppColors.hubBackground,
+                    ],
+                    stops: const [0.0, 0.5, 1.0],
+                  ),
+                ),
+              ),
             ),
           ),
-          SizedBox(width: spacing.bottomNavSpacing * 0.5),
-          _buildSettingsJoystick(),
-          SizedBox(width: spacing.bottomNavSpacing * 0.5),
-          Expanded(
-            child: _buildBottomButton(
-              label: l10n.navResults,
-              icon: Icons.auto_graph_outlined,
-              color: AppColors.pastelMint,
-              onTap: () => _navigateToResults(),
-              typography: typography,
+          // Interactive button grid
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: sizing.hubBottomPadding,
+            child: Center(
+              child: SizedBox(
+                width: sizing.hubGridWidth,
+                height: sizing.hubGridHeight,
+                child: Stack(
+                  clipBehavior: Clip.none,
+                  children: [
+                    // 2x2 button grid
+                    Column(
+                      children: [
+                        // Top row: Human | Planet
+                        Expanded(
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: _HubButton(
+                                  label: l10n.tabHuman,
+                                  icon: Icons.person_outline,
+                                  position: _HubButtonPosition.topLeft,
+                                  isActive: _selectedTab == ImpactType.human,
+                                  activeColor: AppColors.neonCyan,
+                                  textStyle: typography.hubLabel,
+                                  iconSize: sizing.hubButtonIconSize,
+                                  activeGlowBlur: sizing.hubActiveGlowBlur,
+                                  internalGap: spacing.hubButtonGap,
+                                  onTap: () {
+                                    setState(
+                                        () => _selectedTab = ImpactType.human);
+                                    LoggerService().logUserAction(
+                                        'tab_switched',
+                                        params: {'tab': 'human'});
+                                  },
+                                ),
+                              ),
+                              SizedBox(width: spacing.hubGridGap),
+                              Expanded(
+                                child: _HubButton(
+                                  label: l10n.tabPlanet,
+                                  icon: Icons.public_outlined,
+                                  position: _HubButtonPosition.topRight,
+                                  isActive: _selectedTab == ImpactType.planet,
+                                  activeColor: AppColors.neonOcean,
+                                  textStyle: typography.hubLabel,
+                                  iconSize: sizing.hubButtonIconSize,
+                                  activeGlowBlur: sizing.hubActiveGlowBlur,
+                                  internalGap: spacing.hubButtonGap,
+                                  onTap: () {
+                                    setState(
+                                        () => _selectedTab = ImpactType.planet);
+                                    LoggerService().logUserAction(
+                                        'tab_switched',
+                                        params: {'tab': 'planet'});
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(height: spacing.hubGridGap),
+                        // Bottom row: Sources | Results
+                        Expanded(
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: _HubButton(
+                                  label: l10n.navSources,
+                                  icon: Icons.menu_book_outlined,
+                                  position: _HubButtonPosition.bottomLeft,
+                                  isActive: false,
+                                  activeColor: AppColors.pastelAqua,
+                                  textStyle: typography.hubLabel,
+                                  iconSize: sizing.hubButtonIconSize,
+                                  activeGlowBlur: sizing.hubActiveGlowBlur,
+                                  internalGap: spacing.hubButtonGap,
+                                  onTap: () => _navigateToResources(null),
+                                ),
+                              ),
+                              SizedBox(width: spacing.hubGridGap),
+                              Expanded(
+                                child: _HubButton(
+                                  label: l10n.navResults,
+                                  icon: Icons.auto_graph_outlined,
+                                  position: _HubButtonPosition.bottomRight,
+                                  isActive: false,
+                                  activeColor: AppColors.pastelMint,
+                                  textStyle: typography.hubLabel,
+                                  iconSize: sizing.hubButtonIconSize,
+                                  activeGlowBlur: sizing.hubActiveGlowBlur,
+                                  internalGap: spacing.hubButtonGap,
+                                  onTap: () => _navigateToResults(),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    // Center settings knob
+                    Positioned.fill(
+                      child: Center(
+                        child: _buildCenterKnob(),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
           ),
         ],
@@ -482,60 +443,60 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 
-  Widget _buildBottomButton({
-    required String label,
-    required IconData icon,
-    required Color color,
-    required VoidCallback onTap,
-    required AppTypography typography,
-  }) {
-    final spacing = AppSpacing.of(context);
+  Widget _buildCenterKnob() {
     final sizing = AppSizing.of(context);
 
     return Semantics(
       button: true,
-      label: label,
+      label: 'Settings',
       child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(AppConstants.radiusSmall),
+        onTap: () {
+          LoggerService().logUserAction('settings_tapped');
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (_) => const UserSettingsScreen(),
+            ),
+          );
+        },
+        customBorder: const CircleBorder(),
         child: Container(
-          padding: EdgeInsets.symmetric(
-              vertical: sizing.bottomButtonPaddingV,
-              horizontal: spacing.bottomButtonPaddingH),
+          width: sizing.hubKnobSize,
+          height: sizing.hubKnobSize,
           decoration: BoxDecoration(
-            color: const Color(0xFF141928).withValues(alpha: 0.8),
-            borderRadius: BorderRadius.circular(AppConstants.radiusSmall),
-            border: Border.all(color: color.withValues(alpha: 0.3), width: 0),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Icon(icon, size: sizing.bottomButtonIconSize, color: color),
-              SizedBox(width: spacing.bottomButtonSpacing),
-              Expanded(
-                child: Text(
-                  label,
-                  style: typography.label.copyWith(
-                    color: color,
-                  ),
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 1,
-                  textAlign: TextAlign.center,
-                ),
+            shape: BoxShape.circle,
+            color: AppColors.hubKnobBg,
+            border: Border.all(
+              color: AppColors.hubBackground,
+              width: sizing.hubKnobBorderWidth,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.white.withValues(alpha: 0.1),
+                blurRadius: 0,
+                spreadRadius: 1,
+              ),
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.6),
+                blurRadius: 20,
               ),
             ],
+          ),
+          child: Icon(
+            Icons.settings,
+            size: sizing.hubKnobIconSize,
+            color: Colors.white,
           ),
         ),
       ),
     );
   }
 
+  // ── Navigation ──
+
   void _navigateToCategoryDetail(CategoryData category) {
     final l10n = AppLocalizations.of(context)!;
     CategoryDetailData? detailData;
 
-    // Map category to detail data
     switch (category.id) {
       case 'human_central':
         detailData = CategoryDetailDataFactory.centralSystems(l10n);
@@ -576,7 +537,7 @@ class _MainScreenState extends State<MainScreen> {
     }
 
     if (detailData != null) {
-      final data = detailData; // Shadow to non-nullable for use in closure
+      final data = detailData;
       LoggerService().logUserAction('category_card_tapped', params: {
         'category': category.title,
         'subtitle': data.subtitle,
@@ -610,13 +571,145 @@ class _MainScreenState extends State<MainScreen> {
   }
 }
 
+// ── Hub Button ──
+
+class _HubButton extends StatelessWidget {
+  final String label;
+  final IconData icon;
+  final _HubButtonPosition position;
+  final bool isActive;
+  final Color activeColor;
+  final TextStyle textStyle;
+  final double iconSize;
+  final double activeGlowBlur;
+  final double internalGap;
+  final VoidCallback onTap;
+
+  const _HubButton({
+    required this.label,
+    required this.icon,
+    required this.position,
+    required this.isActive,
+    required this.activeColor,
+    required this.textStyle,
+    required this.iconSize,
+    required this.activeGlowBlur,
+    required this.internalGap,
+    required this.onTap,
+  });
+
+  BorderRadius get _borderRadius {
+    const sharp = Radius.circular(AppConstants.radiusSharp);
+    const inner = Radius.circular(AppConstants.radiusHubInner);
+    switch (position) {
+      case _HubButtonPosition.topLeft:
+        return const BorderRadius.only(
+          topLeft: sharp,
+          topRight: sharp,
+          bottomLeft: sharp,
+          bottomRight: inner,
+        );
+      case _HubButtonPosition.topRight:
+        return const BorderRadius.only(
+          topLeft: sharp,
+          topRight: sharp,
+          bottomLeft: inner,
+          bottomRight: sharp,
+        );
+      case _HubButtonPosition.bottomLeft:
+        return const BorderRadius.only(
+          topLeft: sharp,
+          topRight: inner,
+          bottomLeft: sharp,
+          bottomRight: sharp,
+        );
+      case _HubButtonPosition.bottomRight:
+        return const BorderRadius.only(
+          topLeft: inner,
+          topRight: sharp,
+          bottomLeft: sharp,
+          bottomRight: sharp,
+        );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final borderRadius = _borderRadius;
+
+    return Semantics(
+      button: true,
+      label: label,
+      selected: isActive,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: borderRadius,
+        child: ClipRRect(
+          borderRadius: borderRadius,
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
+            child: Container(
+              decoration: BoxDecoration(
+                color: isActive
+                    ? activeColor.withValues(alpha: 0.15)
+                    : AppColors.hubButtonBg.withValues(alpha: 0.7),
+                borderRadius: borderRadius,
+                border: Border.all(
+                  color: isActive
+                      ? activeColor
+                      : Colors.white.withValues(alpha: 0.08),
+                ),
+                boxShadow: isActive
+                    ? [
+                        BoxShadow(
+                          color: activeColor.withValues(alpha: 0.15),
+                          blurRadius: activeGlowBlur,
+                        ),
+                      ]
+                    : null,
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  isActive
+                      ? Icon(icon, size: iconSize, color: activeColor)
+                      : Opacity(
+                          opacity: 0.6,
+                          child: Icon(
+                            icon,
+                            size: iconSize,
+                            color: AppColors.hubTextInactive,
+                          ),
+                        ),
+                  SizedBox(height: internalGap),
+                  Text(
+                    label.toUpperCase(),
+                    style: textStyle.copyWith(
+                      color:
+                          isActive ? Colors.white : AppColors.hubTextInactive,
+                    ),
+                    textAlign: TextAlign.center,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// ── Category Card ──
+
 class _CategoryCard extends StatelessWidget {
   final CategoryData category;
   final VoidCallback onTap;
   final double iconContainerSize;
   final double iconSize;
   final double padding;
-  final double spacing;
   final TextStyle titleStyle;
   final TextStyle descStyle;
 
@@ -626,7 +719,6 @@ class _CategoryCard extends StatelessWidget {
     required this.iconContainerSize,
     required this.iconSize,
     required this.padding,
-    required this.spacing,
     required this.titleStyle,
     required this.descStyle,
   });
@@ -638,45 +730,57 @@ class _CategoryCard extends StatelessWidget {
       label: category.title,
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(AppConstants.radiusLarge),
-        child: Container(
-          padding: EdgeInsets.all(padding),
-          decoration: BoxDecoration(
-            color: Colors.black.withValues(alpha: 0.7),
-            borderRadius: BorderRadius.circular(AppConstants.radiusLarge),
-            border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                width: iconContainerSize,
-                height: iconContainerSize,
-                decoration: BoxDecoration(
-                  color: category.color.withValues(alpha: 0.2),
-                  borderRadius: BorderRadius.circular(AppConstants.radiusSmall),
-                ),
-                child: Icon(
-                  category.icon,
-                  size: iconSize,
-                  color: category.color,
+        borderRadius: BorderRadius.circular(AppConstants.radiusCard),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(AppConstants.radiusCard),
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+            child: Container(
+              padding: EdgeInsets.all(padding),
+              decoration: BoxDecoration(
+                color: AppColors.cardBgGlass.withValues(alpha: 0.6),
+                borderRadius: BorderRadius.circular(AppConstants.radiusCard),
+                border: Border.all(
+                  color: Colors.white.withValues(alpha: 0.08),
                 ),
               ),
-              SizedBox(height: spacing),
-              Text(
-                category.title,
-                style: titleStyle.copyWith(
-                  color: Colors.white,
-                ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    width: iconContainerSize,
+                    height: iconContainerSize,
+                    decoration: BoxDecoration(
+                      color: category.color.withValues(alpha: 0.2),
+                      borderRadius:
+                          BorderRadius.circular(AppConstants.radiusSmall),
+                    ),
+                    child: Icon(
+                      category.icon,
+                      size: iconSize,
+                      color: category.color,
+                    ),
+                  ),
+                  const SizedBox(height: AppConstants.space4),
+                  Text(
+                    category.title,
+                    style: titleStyle.copyWith(
+                      color: Colors.white,
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: AppConstants.space4),
+                  Text(
+                    category.description,
+                    style: descStyle,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
               ),
-              const SizedBox(height: AppConstants.space4),
-              Text(
-                category.description,
-                style: descStyle,
-                maxLines: 3,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ],
+            ),
           ),
         ),
       ),

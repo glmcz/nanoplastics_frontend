@@ -36,8 +36,42 @@ class _NanosolveLogoPainter extends CustomPainter {
     final solveColor =
         darkMode ? const Color(0xFFB5FFB5) : const Color(0xFF98FB98);
 
+    // Draw text first to measure its width for centering
+    final textSpan = TextSpan(
+      children: [
+        TextSpan(
+          text: 'NANO',
+          style: TextStyle(
+            fontFamily: 'Montserrat',
+            fontSize: 48 * scale,
+            fontWeight: FontWeight.w400,
+            color: darkMode ? const Color(0xFFE2E8F0) : const Color(0xFF5E6E82),
+          ),
+        ),
+        TextSpan(
+          text: 'SOLVE',
+          style: TextStyle(
+            fontFamily: 'Montserrat',
+            fontSize: 48 * scale,
+            fontWeight: FontWeight.w800,
+            color: darkMode ? const Color(0xFFFFFFFF) : const Color(0xFF2C3E50),
+          ),
+        ),
+      ],
+    );
+
+    final textPainter = TextPainter(
+      text: textSpan,
+      textDirection: TextDirection.ltr,
+    );
+    textPainter.layout();
+
+    // Calculate total width and center offset
+    final totalWidth = 130 * scale + textPainter.width;
+    final horizontalCenterOffset = (size.width - totalWidth) / 2;
+
     canvas.save();
-    canvas.translate(20 * scale, 10 * scale);
+    canvas.translate(horizontalCenterOffset, 10 * scale);
 
     // Draw nano particles (left side) with varying opacity
     final nanoPaint1 = Paint()..color = nanoColor.withValues(alpha: 0.7);
@@ -76,36 +110,9 @@ class _NanosolveLogoPainter extends CustomPainter {
 
     canvas.restore();
 
-    // Draw text "NANOSOLVE" using a single TextPainter with styled spans
-    final textSpan = TextSpan(
-      children: [
-        TextSpan(
-          text: 'NANO',
-          style: TextStyle(
-            fontFamily: 'Montserrat',
-            fontSize: 48 * scale,
-            fontWeight: FontWeight.w400,
-            color: darkMode ? const Color(0xFFE2E8F0) : const Color(0xFF5E6E82),
-          ),
-        ),
-        TextSpan(
-          text: 'SOLVE',
-          style: TextStyle(
-            fontFamily: 'Montserrat',
-            fontSize: 48 * scale,
-            fontWeight: FontWeight.w800,
-            color: darkMode ? const Color(0xFFFFFFFF) : const Color(0xFF2C3E50),
-          ),
-        ),
-      ],
-    );
-
-    final textPainter = TextPainter(
-      text: textSpan,
-      textDirection: TextDirection.ltr,
-    );
-    textPainter.layout();
-    textPainter.paint(canvas, Offset(130 * scale, 30 * scale));
+    // Draw text centered
+    textPainter.paint(
+        canvas, Offset(horizontalCenterOffset + 130 * scale, 30 * scale));
   }
 
   @override

@@ -3,6 +3,7 @@ import '../../config/app_colors.dart';
 import '../../config/app_constants.dart';
 import '../../services/settings_manager.dart';
 
+
 class ProfileRegistrationDialog extends StatefulWidget {
   final VoidCallback? onProfileShared;
 

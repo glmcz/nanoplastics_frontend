@@ -61,4 +61,9 @@ class AppConstants {
 
   // ── Touch targets (min 44x44 per iOS HIG) ─────────────────────────
   static const double minTouchTarget = 44.0;
+
+  // ── Control Hub ─────────────────────────────────────────────────
+  static const double radiusSharp = 4.0;
+  static const double radiusHubInner = 28.0;
+  static const double radiusCard = 18.0;
 }

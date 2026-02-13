@@ -148,8 +148,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get categoryDetailBack => 'Atrás';
 
   @override
-  String get categoryDetailBackToOverview =>
-      '← VOLVER A LA DESCRIPCIÓN GENERAL';
+  String get categoryDetailBackToOverview => 'VOLVER A LA DESCRIPCIÓN GENERAL';
 
   @override
   String get categoryDetailBrainstorm => 'Lluvia de Ideas';

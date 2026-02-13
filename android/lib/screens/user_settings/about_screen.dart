@@ -3,6 +3,7 @@ import 'terms_of_service_screen.dart';
 import 'package:flutter/material.dart';
 import 'dart:ui';
 import 'package:flutter_custom_tabs/flutter_custom_tabs.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 import '../../l10n/app_localizations.dart';
 import '../../config/app_colors.dart';
 import '../../config/app_constants.dart';
@@ -10,7 +11,6 @@ import '../../utils/app_spacing.dart';
 import '../../utils/app_sizing.dart';
 import '../../utils/app_typography.dart';
 import '../../widgets/nanosolve_logo.dart';
-import '../../widgets/header_back_button.dart';
 
 class AboutScreen extends StatelessWidget {
   const AboutScreen({super.key});
@@ -20,6 +20,7 @@ class AboutScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final spacing = AppSpacing.of(context);
     final sizing = AppSizing.of(context);
     final typography = AppTypography.of(context);
@@ -41,7 +42,7 @@ class AboutScreen extends StatelessWidget {
         child: SafeArea(
           child: Column(
             children: [
-              _buildHeader(context, spacing, sizing),
+              _buildHeader(context, spacing, sizing, l10n, typography),
               Expanded(
                   child: _buildContent(context, spacing, sizing, typography)),
             ],
@@ -51,39 +52,42 @@ class AboutScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildHeader(
-    BuildContext context,
-    AppSpacing spacing,
-    AppSizing sizing,
-  ) {
-    return Container(
-      padding: EdgeInsets.all(spacing.headerPadding),
-      decoration: BoxDecoration(
-        color: const Color(0xFF141928).withValues(alpha: 0.9),
-        border: Border(
-          bottom: BorderSide(color: Colors.white.withValues(alpha: 0.1)),
-        ),
-      ),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(
-            sigmaX: sizing.backdropBlurSigma, sigmaY: sizing.backdropBlurSigma),
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                HeaderBackButton(
-                  label: AppLocalizations.of(context)!.settingsBack,
-                  color: AppColors.pastelLavender,
-                ),
-                Icon(Icons.info_outline,
-                    size: sizing.iconMd, color: AppColors.pastelLavender),
-              ],
+  Widget _buildHeader(context, spacing, sizing, l10n, typography) {
+  
+
+    return Padding(
+      padding: EdgeInsets.all(spacing.contentPadding),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          SizedBox(
+            width: double.infinity,
+            child: InkWell(
+              onTap: () => Navigator.of(context).maybePop(),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Icon(Icons.arrow_back_ios,
+                      color: Colors.white, size: sizing.backIcon),
+                  const SizedBox(width: AppConstants.space4),
+                  Flexible(
+                    child: Text(
+                      l10n.categoryDetailBackToOverview,
+                      style: typography.back.copyWith(
+                        color: Colors.white,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.fade,
+                      softWrap: true,
+                    ),
+                  ),
+                ],
+              ),
             ),
-            SizedBox(height: spacing.headerSpacing),
-            NanosolveLogo(height: sizing.logoHeight),
-          ],
-        ),
+          ),
+          SizedBox(height: spacing.headerSpacing),
+          NanosolveLogo(height: sizing.logoHeightLg),
+        ],
       ),
     );
   }
@@ -138,33 +142,7 @@ class AboutScreen extends StatelessWidget {
           _buildFooter(context, spacing, typography),
           SizedBox(height: spacing.cardSpacing * 2),
           _buildSectionTitle(
-              context, AppLocalizations.of(context)!.aboutLegal, typography),
-          SizedBox(height: spacing.cardSpacing),
-          _buildLinkItem(
-            title: AppLocalizations.of(context)!.aboutPrivacyPolicy,
-            subtitle: AppLocalizations.of(context)!.aboutPrivacyPolicyDesc,
-            icon: Icons.policy_outlined,
-            color: AppColors.pastelLavender,
-            spacing: spacing,
-            sizing: sizing,
-            typography: typography,
-            onTap: () => Navigator.of(context).push(
-              MaterialPageRoute(builder: (_) => const PrivacyPolicyScreen()),
-            ),
-          ),
-          SizedBox(height: spacing.cardSpacing),
-          _buildLinkItem(
-            title: AppLocalizations.of(context)!.aboutTermsOfService,
-            subtitle: AppLocalizations.of(context)!.aboutTermsOfServiceDesc,
-            icon: Icons.description_outlined,
-            color: AppColors.pastelLavender,
-            spacing: spacing,
-            sizing: sizing,
-            typography: typography,
-            onTap: () => Navigator.of(context).push(
-              MaterialPageRoute(builder: (_) => const TermsOfServiceScreen()),
-            ),
-          ),
+              context, AppLocalizations.of(context)!.aboutLegal, typography),  
           SizedBox(height: spacing.cardSpacing * 2),
           _buildLinkItem(
             title: AppLocalizations.of(context)!.aboutOpenSourceLicenses,
@@ -407,49 +385,18 @@ class AboutScreen extends StatelessWidget {
             ),
             child: Column(
               children: [
-                // Placeholder for QR code - will be replaced with actual QR code widget
-                Container(
-                  width: sizing.qrCodeSize,
-                  height: sizing.qrCodeSize,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: Colors.grey.shade300),
+                QrImageView(
+                  data: appDownloadUrl,
+                  version: QrVersions.auto,
+                  size: sizing.qrCodeSize,
+                  backgroundColor: Colors.white,
+                  eyeStyle: const QrEyeStyle(
+                    eyeShape: QrEyeShape.square,
+                    color: Color(0xFF0A0A12),
                   ),
-                  child: Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.qr_code_2,
-                          size: sizing.qrCodeIconSize,
-                          color: Colors.grey.shade600,
-                        ),
-                        SizedBox(height: spacing.md),
-                        Text(
-                          'QR Code',
-                          style: TextStyle(
-                            color: Colors.grey.shade600,
-                            fontSize: typography.body.fontSize ?? 14,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        SizedBox(height: spacing.md),
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: spacing.md),
-                          child: Text(
-                            appDownloadUrl,
-                            style: TextStyle(
-                              color: Colors.grey.shade400,
-                              fontSize: typography.labelXs.fontSize ?? 10,
-                            ),
-                            textAlign: TextAlign.center,
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                      ],
-                    ),
+                  dataModuleStyle: const QrDataModuleStyle(
+                    dataModuleShape: QrDataModuleShape.square,
+                    color: Color(0xFF0A0A12),
                   ),
                 ),
               ],

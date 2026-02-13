@@ -5,8 +5,10 @@ import 'dart:ui';
 import 'package:pdfx/pdfx.dart';
 import '../config/app_colors.dart';
 import '../config/app_constants.dart';
+import '../utils/app_spacing.dart';
+import '../utils/app_sizing.dart';
+import '../utils/app_typography.dart';
 import '../widgets/nanosolve_logo.dart';
-import '../widgets/header_back_button.dart';
 import '../l10n/app_localizations.dart';
 import '../services/logger_service.dart';
 import '../services/settings_manager.dart';
@@ -476,6 +478,11 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
   }
 
   Widget _buildHeader() {
+    final l10n = AppLocalizations.of(context)!;
+    final spacing = AppSpacing.of(context);
+    final sizing = AppSizing.of(context);
+    final typography = AppTypography.of(context);
+
     return Container(
       padding: const EdgeInsets.all(AppConstants.space8),
       decoration: BoxDecoration(
@@ -491,10 +498,33 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            HeaderBackButton(
-              label: AppLocalizations.of(context)!.sourcesBack,
+            SizedBox(
+            width: double.infinity,
+            child: InkWell(
+              onTap: () => Navigator.of(context).maybePop(),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Icon(Icons.arrow_back_ios,
+                      color: Colors.white, size: sizing.backIcon),
+                  const SizedBox(width: AppConstants.space4),
+                  Flexible(
+                    child: Text(
+                      l10n.categoryDetailBackToOverview,
+                      style: typography.back.copyWith(
+                        color: Colors.white,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.fade,
+                      softWrap: true,
+                    ),
+                  ),
+                ],
+              ),
             ),
-            const NanosolveLogo(height: AppConstants.logoXS),
+          ),
+          SizedBox(height: spacing.headerSpacing),
+          NanosolveLogo(height: sizing.logoHeightLg),
             SizedBox(
               width: 50,
               child: TextField(

@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'dart:ui';
+import '../../l10n/app_localizations.dart';
+import '../../widgets/nanosolve_logo.dart';
 import '../../config/app_colors.dart';
 import '../../config/app_constants.dart';
-import '../../widgets/header_back_button.dart';
+import '../../utils/app_spacing.dart';
+import '../../utils/app_sizing.dart';
+import '../../utils/app_typography.dart';
 
 class TermsOfServiceScreen extends StatelessWidget {
   const TermsOfServiceScreen({super.key});
@@ -35,48 +39,45 @@ class TermsOfServiceScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildHeader(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(AppConstants.space24),
-      decoration: BoxDecoration(
-        color: const Color(0xFF141928).withValues(alpha: 0.9),
-        border: Border(
-          bottom: BorderSide(color: Colors.white.withValues(alpha: 0.1)),
-        ),
-      ),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
-        child: Column(
-          children: [
-            const Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                HeaderBackButton(
-                  label: 'Back',
-                  color: AppColors.pastelLavender,
-                ),
-                Icon(Icons.description_outlined,
-                    size: AppConstants.iconMedium,
-                    color: AppColors.pastelLavender),
-              ],
-            ),
-            const SizedBox(height: AppConstants.space16),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'TERMS OF SERVICE',
-                  style: Theme.of(context).textTheme.headlineLarge!.copyWith(
+  Widget _buildHeader(context) {
+    final l10n = AppLocalizations.of(context)!;
+    final spacing = AppSpacing.of(context);
+    final sizing = AppSizing.of(context);
+    final typography = AppTypography.of(context);
+
+    return Padding(
+      padding: EdgeInsets.all(spacing.contentPadding),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          SizedBox(
+            width: double.infinity,
+            child: InkWell(
+              onTap: () => Navigator.of(context).maybePop(),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Icon(Icons.arrow_back_ios,
+                      color: Colors.white, size: sizing.backIcon),
+                  const SizedBox(width: AppConstants.space4),
+                  Flexible(
+                    child: Text(
+                      l10n.categoryDetailBackToOverview,
+                      style: typography.back.copyWith(
                         color: Colors.white,
-                        letterSpacing: 1.5,
                       ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ],
+                      maxLines: 2,
+                      overflow: TextOverflow.fade,
+                      softWrap: true,
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ],
-        ),
+          ),
+          SizedBox(height: spacing.headerSpacing),
+          NanosolveLogo(height: sizing.logoHeightLg),
+        ],
       ),
     );
   }

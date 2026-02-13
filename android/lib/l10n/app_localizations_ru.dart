@@ -148,7 +148,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get categoryDetailBack => 'Назад';
 
   @override
-  String get categoryDetailBackToOverview => '← ВЕРНУТЬСЯ К ОБЗОРУ';
+  String get categoryDetailBackToOverview => 'ВЕРНУТЬСЯ К ОБЗОРУ';
 
   @override
   String get categoryDetailBrainstorm => 'Мозговой Штурм';

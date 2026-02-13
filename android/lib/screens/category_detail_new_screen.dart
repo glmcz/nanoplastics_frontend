@@ -221,7 +221,7 @@ class _CategoryDetailNewScreenState extends State<CategoryDetailNewScreen>
             ),
           ),
           SizedBox(height: spacing.headerSpacing),
-          NanosolveLogo(height: sizing.logoHeight),
+          NanosolveLogo(height: sizing.logoHeightLg),
         ],
       ),
     );

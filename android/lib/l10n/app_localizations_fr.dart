@@ -148,7 +148,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get categoryDetailBack => 'Retour';
 
   @override
-  String get categoryDetailBackToOverview => '← RETOUR À L\'APERÇU';
+  String get categoryDetailBackToOverview => 'RETOUR À L\'APERÇU';
 
   @override
   String get categoryDetailBrainstorm => 'Remue-Méninges';

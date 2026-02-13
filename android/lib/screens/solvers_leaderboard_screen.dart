@@ -3,14 +3,15 @@ import 'dart:ui';
 import '../l10n/app_localizations.dart';
 import '../config/app_colors.dart';
 import '../config/app_constants.dart';
+import '../utils/app_typography.dart';
 import '../utils/app_spacing.dart';
 import '../utils/app_sizing.dart';
 import '../widgets/nanosolve_logo.dart';
-import '../widgets/header_back_button.dart';
 import '../services/settings_manager.dart';
 import '../services/api_service.dart';
 import '../models/solver.dart';
 import 'user_settings/profile_registration_dialog.dart';
+import '../utils/route_observer.dart';
 
 class SolversLeaderboardScreen extends StatefulWidget {
   const SolversLeaderboardScreen({super.key});
@@ -20,8 +21,8 @@ class SolversLeaderboardScreen extends StatefulWidget {
       _SolversLeaderboardScreenState();
 }
 
-class _SolversLeaderboardScreenState extends State<SolversLeaderboardScreen> {
-  late bool _userIsRegistered;
+class _SolversLeaderboardScreenState extends State<SolversLeaderboardScreen>
+    with RouteAware {
   late bool _userHasEmailAndBio;
   final _settingsManager = SettingsManager();
   Future<List<Solver>>? _solversFuture;
@@ -33,6 +34,30 @@ class _SolversLeaderboardScreenState extends State<SolversLeaderboardScreen> {
     _loadSolvers();
   }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final route = ModalRoute.of(context);
+    if (route is PageRoute) {
+      routeObserver.subscribe(this, route);
+    }
+  }
+
+  @override
+  void dispose() {
+    routeObserver.unsubscribe(this);
+    super.dispose();
+  }
+
+  @override
+  void didPopNext() {
+    // Called when returning to this screen from another screen
+    setState(() {
+      _checkUserRegistration();
+      _loadSolvers();
+    });
+  }
+
   void _loadSolvers() {
     setState(() {
       _solversFuture = ApiService.getTopSolvers();
@@ -40,7 +65,6 @@ class _SolversLeaderboardScreenState extends State<SolversLeaderboardScreen> {
   }
 
   void _checkUserRegistration() {
-    _userIsRegistered = _settingsManager.isProfileRegistered;
     final displayName = _settingsManager.displayName.trim();
     final email = _settingsManager.email.trim();
     _userHasEmailAndBio = displayName.isNotEmpty && email.isNotEmpty;
@@ -95,8 +119,10 @@ class _SolversLeaderboardScreenState extends State<SolversLeaderboardScreen> {
     final l10n = AppLocalizations.of(context)!;
     final spacing = AppSpacing.of(context);
     final sizing = AppSizing.of(context);
+    final typography = AppTypography.of(context);
+
     return Container(
-      padding: EdgeInsets.all(spacing.headerPadding),
+      padding: EdgeInsets.all(spacing.headerPadding * 15),
       decoration: BoxDecoration(
         color: const Color(0xFF141928).withValues(alpha: 0.9),
         border: Border(
@@ -109,25 +135,33 @@ class _SolversLeaderboardScreenState extends State<SolversLeaderboardScreen> {
         filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
         child: Column(
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                HeaderBackButton(
-                  label: l10n.resultsBackButton,
-                  color: AppColors.pastelMint,
-                  showArrow: true,
+            SizedBox(
+              width: double.infinity,
+              child: InkWell(
+                onTap: () => Navigator.of(context).maybePop(),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Icon(Icons.arrow_back_ios,
+                        color: Colors.white, size: sizing.backIcon),
+                    const SizedBox(width: AppConstants.space4),
+                    Flexible(
+                      child: Text(
+                        l10n.categoryDetailBackToOverview,
+                        style: typography.back.copyWith(
+                          color: Colors.white,
+                        ),
+                        maxLines: 2,
+                        overflow: TextOverflow.fade,
+                        softWrap: true,
+                      ),
+                    ),
+                  ],
                 ),
-                Icon(
-                  Icons.emoji_events,
-                  size: sizing.iconMd,
-                  color: AppColors.pastelMint,
-                ),
-              ],
+              ),
             ),
             SizedBox(height: spacing.headerSpacing),
-            NanosolveLogo(
-              height: sizing.logoHeight,
-            ),
+            NanosolveLogo(height: sizing.logoHeightLg),
           ],
         ),
       ),
@@ -138,7 +172,7 @@ class _SolversLeaderboardScreenState extends State<SolversLeaderboardScreen> {
     final l10n = AppLocalizations.of(context)!;
 
     // Check if user has access to leaderboard
-    if (!_userIsRegistered || !_userHasEmailAndBio) {
+    if (!_userHasEmailAndBio) {
       return _buildRestrictedAccessView(context, l10n);
     }
 

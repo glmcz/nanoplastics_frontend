@@ -37,6 +37,18 @@ android {
         versionName = flutter.versionName
     }
 
+    flavorDimensions += "bundle"
+    productFlavors {
+        create("lite") {
+            dimension = "bundle"
+            // EN-only build — non-EN PDFs stripped at build time
+        }
+        create("full") {
+            dimension = "bundle"
+            // All language PDFs bundled
+        }
+    }
+
     buildTypes {
         release {
             // TODO: Add your own signing config for the release build.
@@ -50,4 +62,25 @@ android {
 
 flutter {
     source = "../.."
+}
+
+// Strip non-EN PDF assets from lite flavor builds
+android.applicationVariants.all {
+    val variantName = name
+    if (variantName.startsWith("lite")) {
+        mergeAssetsProvider.get().doLast {
+            val outputDir = outputDir.get().asFile
+            outputDir.walkTopDown()
+                .filter { it.isFile && it.name.endsWith(".pdf") }
+                .filter {
+                    val n = it.name
+                    n.contains("_CS_") || n.contains("_ES_") ||
+                    n.contains("_FR_") || n.contains("_RU_")
+                }
+                .forEach {
+                    println("Lite flavor: removing ${it.name}")
+                    it.delete()
+                }
+        }
+    }
 }

@@ -74,4 +74,11 @@ class AppColors {
   static Color neonMagmaGlow = neonMagma.withValues(alpha: 0.4);
   static Color neonSourceGlow = neonSource.withValues(alpha: 0.4);
   static Color neonPhysicsGlow = neonPhysics.withValues(alpha: 0.3);
+
+  // Control Hub
+  static const Color hubBackground = Color(0xFF020205);
+  static const Color hubButtonBg = Color(0xFF14141E);
+  static const Color hubKnobBg = Color(0xFF1A1A2E);
+  static const Color hubTextInactive = Color(0xFF8899A6);
+  static const Color cardBgGlass = Color(0xFF0A0F1E);
 }

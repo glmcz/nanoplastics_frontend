@@ -7,7 +7,7 @@ import '../../utils/app_spacing.dart';
 import '../../utils/app_sizing.dart';
 import '../../utils/app_typography.dart';
 import '../../widgets/nanosolve_logo.dart';
-import '../../widgets/header_back_button.dart';
+import '../../services/settings_manager.dart';
 import 'user_profile.dart';
 import 'language_screen.dart';
 import 'privacy_security_screen.dart';
@@ -21,6 +21,21 @@ class UserSettingsScreen extends StatefulWidget {
 }
 
 class _UserSettingsScreenState extends State<UserSettingsScreen> {
+  final _settingsManager = SettingsManager();
+
+  bool _checkProfileCompletion() {
+    // Check if email and display name are filled
+    try {
+      final email = _settingsManager.email;
+      final displayName = _settingsManager.displayName;
+      final hasEmail = email != null && email.isNotEmpty;
+      final hasDisplayName = displayName != null && displayName.isNotEmpty;
+      return hasEmail && hasDisplayName;
+    } catch (e) {
+      return false;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,41 +67,44 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
   }
 
   Widget _buildHeader() {
+    final l10n = AppLocalizations.of(context)!;
     final spacing = AppSpacing.of(context);
     final sizing = AppSizing.of(context);
+    final typography = AppTypography.of(context);
 
-    return Container(
-      padding: EdgeInsets.all(spacing.headerPadding),
-      decoration: BoxDecoration(
-        color: const Color(0xFF141928).withValues(alpha: 0.9),
-        border: Border(
-          bottom: BorderSide(
-            color: Colors.white.withValues(alpha: 0.1),
-          ),
-        ),
-      ),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                HeaderBackButton(
-                  label: AppLocalizations.of(context)!.settingsBack,
-                  color: AppColors.pastelMint,
-                ),
-                Icon(
-                  Icons.settings,
-                  size: sizing.iconMd,
-                  color: AppColors.pastelMint,
-                ),
-              ],
+    return Padding(
+      padding: EdgeInsets.all(spacing.contentPadding),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          SizedBox(
+            width: double.infinity,
+            child: InkWell(
+              onTap: () => Navigator.of(context).maybePop(),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Icon(Icons.arrow_back_ios,
+                      color: Colors.white, size: sizing.backIcon),
+                  const SizedBox(width: AppConstants.space4),
+                  Flexible(
+                    child: Text(
+                      l10n.categoryDetailBackToOverview,
+                      style: typography.back.copyWith(
+                        color: Colors.white,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.fade,
+                      softWrap: true,
+                    ),
+                  ),
+                ],
+              ),
             ),
-            SizedBox(height: spacing.headerSpacing),
-            NanosolveLogo(height: sizing.logoHeight),
-          ],
-        ),
+          ),
+          SizedBox(height: spacing.headerSpacing),
+          NanosolveLogo(height: sizing.logoHeightLg),
+        ],
       ),
     );
   }
@@ -134,9 +152,12 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
             spacing: spacing,
             sizing: sizing,
             typography: typography,
-            onTap: () => Navigator.of(context).push(
-              MaterialPageRoute(builder: (_) => const PrivacySecurityScreen()),
-            ),
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                    builder: (_) => const PrivacySecurityScreen()),
+              );
+            },
           ),
           SizedBox(height: spacing.cardSpacing),
           _buildSettingItem(

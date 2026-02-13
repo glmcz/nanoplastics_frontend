@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
+import '../config/build_config.dart';
 import '../services/settings_manager.dart';
 
 const _baseDownloadUrl = 'https://localhost:1111';
@@ -9,9 +10,12 @@ const _baseDownloadUrl = 'https://localhost:1111';
 String _reportFileName(String langCode) =>
     'Nanoplastics_Report_${langCode.toUpperCase()}_compressed.pdf';
 
+/// Asset path for the bundled report in the given language.
+String _reportAssetPath(String langCode) =>
+    'assets/docs/${_reportFileName(langCode)}';
+
 /// Asset path for the bundled EN report.
-String getMainReportAssetPath() =>
-    'assets/docs/${_reportFileName('en')}';
+String getMainReportAssetPath() => _reportAssetPath('en');
 
 /// Local file path where a downloaded report is stored.
 Future<String> _localReportPath(String langCode) async {
@@ -36,14 +40,16 @@ class ResolvedPdf {
 /// Resolves the main report PDF for the current (or given) language.
 ///
 /// - EN is always loaded from bundled assets.
-/// - Other languages: check local download cache first, otherwise return null
+/// - When [BuildConfig.bundleAllLangs] is true (full flavor), all languages
+///   are loaded from bundled assets.
+/// - Otherwise: check local download cache first, return null if missing
 ///   (caller must trigger a download).
 Future<ResolvedPdf?> resolveMainReport([String? langCode]) async {
   final code = (langCode ?? SettingsManager().userLanguage).toLowerCase();
 
-  // EN is always bundled
-  if (code == 'en') {
-    return ResolvedPdf(isAsset: true, path: getMainReportAssetPath());
+  // EN is always bundled; in full build all langs are bundled
+  if (code == 'en' || BuildConfig.bundleAllLangs) {
+    return ResolvedPdf(isAsset: true, path: _reportAssetPath(code));
   }
 
   // Check local cache

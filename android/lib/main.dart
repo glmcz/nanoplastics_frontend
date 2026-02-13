@@ -7,6 +7,7 @@ import 'screens/main_screen.dart';
 import 'l10n/app_localizations.dart';
 import 'services/settings_manager.dart';
 import 'services/logger_service.dart';
+import 'utils/route_observer.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -101,6 +102,7 @@ class _NanoSolveHiveAppState extends State<NanoSolveHiveApp> {
       title: 'NanoSolve Hive',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.darkTheme,
+      navigatorObservers: [routeObserver],
 
       // Localization support
       localizationsDelegates: const [

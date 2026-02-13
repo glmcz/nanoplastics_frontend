@@ -7,7 +7,6 @@ import '../utils/app_spacing.dart';
 import '../utils/app_sizing.dart';
 import '../utils/app_typography.dart';
 import '../widgets/nanosolve_logo.dart';
-import '../widgets/header_back_button.dart';
 import '../l10n/app_localizations.dart';
 import '../models/pdf_source.dart';
 import 'pdf_viewer_screen.dart';
@@ -74,39 +73,44 @@ class _SourcesScreenState extends State<SourcesScreen> {
   }
 
   Widget _buildHeader() {
+    final l10n = AppLocalizations.of(context)!;
     final spacing = AppSpacing.of(context);
     final sizing = AppSizing.of(context);
-    return Container(
-      padding: EdgeInsets.all(spacing.headerPadding),
-      decoration: BoxDecoration(
-        color: const Color(0xFF141928).withValues(alpha: 0.9),
-        border: Border(
-          bottom: BorderSide(
-            color: Colors.white.withValues(alpha: 0.1),
-          ),
-        ),
-      ),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                HeaderBackButton(
-                  label: AppLocalizations.of(context)!.sourcesBack,
-                ),
-                Icon(
-                  Icons.menu_book_outlined,
-                  size: sizing.iconMd,
-                  color: AppColors.pastelAqua,
-                ),
-              ],
+    final typography = AppTypography.of(context);
+
+    return Padding(
+      padding: EdgeInsets.all(spacing.contentPadding),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          SizedBox(
+            width: double.infinity,
+            child: InkWell(
+              onTap: () => Navigator.of(context).maybePop(),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Icon(Icons.arrow_back_ios,
+                      color: Colors.white, size: sizing.backIcon),
+                  const SizedBox(width: AppConstants.space4),
+                  Flexible(
+                    child: Text(
+                      l10n.categoryDetailBackToOverview,
+                      style: typography.back.copyWith(
+                        color: Colors.white,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.fade,
+                      softWrap: true,
+                    ),
+                  ),
+                ],
+              ),
             ),
-            SizedBox(height: spacing.headerSpacing),
-            NanosolveLogo(height: sizing.logoHeight),
-          ],
-        ),
+          ),
+          SizedBox(height: spacing.headerSpacing),
+          NanosolveLogo(height: sizing.logoHeightLg),
+        ],
       ),
     );
   }
@@ -178,7 +182,7 @@ class _SourcesScreenState extends State<SourcesScreen> {
                 Icon(
                   Icons.picture_as_pdf,
                   color: AppColors.pastelAqua.withValues(alpha: 0.8),
-                  size: sizing.iconLg,
+                  size: sizing.iconMd,
                 ),
               ],
             ),
@@ -188,6 +192,7 @@ class _SourcesScreenState extends State<SourcesScreen> {
               style: typography.headline.copyWith(
                 color: Colors.white,
                 height: 1.4,
+                fontSize: sizing.radiusMd,
               ),
             ),
           ],
@@ -715,7 +720,7 @@ class _SourcesScreenState extends State<SourcesScreen> {
                 SizedBox(height: spacing.md),
                 Icon(
                   Icons.picture_as_pdf,
-                  size: sizing.iconLg,
+                  size: sizing.iconMd,
                   color: AppColors.pastelAqua.withValues(alpha: 0.8),
                 ),
               ],

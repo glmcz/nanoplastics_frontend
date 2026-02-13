@@ -377,7 +377,7 @@ abstract class AppLocalizations {
   /// No description provided for @categoryDetailBackToOverview.
   ///
   /// In en, this message translates to:
-  /// **'← BACK'**
+  /// **'BACK'**
   String get categoryDetailBackToOverview;
 
   /// No description provided for @categoryDetailBrainstorm.

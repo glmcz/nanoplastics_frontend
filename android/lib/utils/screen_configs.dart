@@ -262,8 +262,18 @@ class OnboardingSlideConfig {
 
 extension ScreenConfigExtensions on ResponsiveConfig {
   SecondaryHeaderConfig getSecondaryHeaderConfig() {
-    final spacing = AppSpacing(scaleW);
-    final sizing = AppSizing(scaleW: scaleW, scaleH: scaleH);
+    final compactScale = isCompact ? 0.85 : 1.0;
+    final spacing = AppSpacing(scaleW,
+        compactScale: compactScale,
+        categoryScale: AppSizing.categoryScaleFor(this));
+    final sizing = AppSizing(
+      scaleW: scaleW,
+      scaleH: scaleH,
+      compactScale: compactScale,
+      heroScale: (isSmallPhone || isCompact) ? 0.8 : 1.0,
+      logoScale: isXLargePhone ? 0.5 : (isLargePhone ? 0.5 : 0.8),
+      categoryScale: AppSizing.categoryScaleFor(this),
+    );
 
     return SecondaryHeaderConfig(
       padding: spacing.headerPadding,
@@ -274,9 +284,23 @@ extension ScreenConfigExtensions on ResponsiveConfig {
   }
 
   ResultsScreenConfig getResultsScreenConfig() {
-    final spacing = AppSpacing(scaleW);
-    final sizing = AppSizing(scaleW: scaleW, scaleH: scaleH);
-    final typography = AppTypography(fontScale);
+    final compactScale = isCompact ? 0.85 : 1.0;
+    final spacing = AppSpacing(scaleW,
+        compactScale: compactScale,
+        categoryScale: AppSizing.categoryScaleFor(this));
+    final sizing = AppSizing(
+      scaleW: scaleW,
+      scaleH: scaleH,
+      compactScale: compactScale,
+      heroScale: (isSmallPhone || isCompact) ? 0.8 : 1.0,
+      logoScale: isXLargePhone ? 0.5 : (isLargePhone ? 0.5 : 0.8),
+      categoryScale: AppSizing.categoryScaleFor(this),
+    );
+    final isSmall = isSmallPhone;
+    final titleScale = isSmall ? 0.78 : 1.0;
+    final titleScaleCompactScale = isCompact ? 0.9 : 1.0;
+    final typography = AppTypography(fontScale,
+        titleScale: titleScale * titleScaleCompactScale);
 
     return ResultsScreenConfig(
       contentHorizontalPadding: spacing.contentPadding,
@@ -297,9 +321,23 @@ extension ScreenConfigExtensions on ResponsiveConfig {
   }
 
   SourcesScreenConfig getSourcesScreenConfig() {
-    final spacing = AppSpacing(scaleW);
-    final sizing = AppSizing(scaleW: scaleW, scaleH: scaleH);
-    final typography = AppTypography(fontScale);
+    final compactScale = isCompact ? 0.85 : 1.0;
+    final spacing = AppSpacing(scaleW,
+        compactScale: compactScale,
+        categoryScale: AppSizing.categoryScaleFor(this));
+    final sizing = AppSizing(
+      scaleW: scaleW,
+      scaleH: scaleH,
+      compactScale: compactScale,
+      heroScale: (isSmallPhone || isCompact) ? 0.8 : 1.0,
+      logoScale: isXLargePhone ? 0.5 : (isLargePhone ? 0.5 : 0.8),
+      categoryScale: AppSizing.categoryScaleFor(this),
+    );
+    final isSmall = isSmallPhone;
+    final titleScale = isSmall ? 0.78 : 1.0;
+    final titleScaleCompactScale = isCompact ? 0.9 : 1.0;
+    final typography = AppTypography(fontScale,
+        titleScale: titleScale * titleScaleCompactScale);
 
     return SourcesScreenConfig(
       reportMarginH: spacing.contentPadding,
@@ -331,9 +369,23 @@ extension ScreenConfigExtensions on ResponsiveConfig {
   }
 
   SettingsScreenConfig getSettingsScreenConfig() {
-    final spacing = AppSpacing(scaleW);
-    final sizing = AppSizing(scaleW: scaleW, scaleH: scaleH);
-    final typography = AppTypography(fontScale);
+    final compactScale = isCompact ? 0.85 : 1.0;
+    final spacing = AppSpacing(scaleW,
+        compactScale: compactScale,
+        categoryScale: AppSizing.categoryScaleFor(this));
+    final sizing = AppSizing(
+      scaleW: scaleW,
+      scaleH: scaleH,
+      compactScale: compactScale,
+      heroScale: (isSmallPhone || isCompact) ? 0.8 : 1.0,
+      logoScale: isXLargePhone ? 0.5 : (isLargePhone ? 0.5 : 0.8),
+      categoryScale: AppSizing.categoryScaleFor(this),
+    );
+    final isSmall = isSmallPhone;
+    final titleScale = isSmall ? 0.78 : 1.0;
+    final titleScaleCompactScale = isCompact ? 0.9 : 1.0;
+    final typography = AppTypography(fontScale,
+        titleScale: titleScale * titleScaleCompactScale);
 
     return SettingsScreenConfig(
       contentPadding: spacing.contentPadding,
@@ -383,9 +435,23 @@ extension ScreenConfigExtensions on ResponsiveConfig {
   }
 
   CategoryDetailHeaderConfig getCategoryDetailHeaderConfig() {
-    final spacing = AppSpacing(scaleW);
-    final sizing = AppSizing(scaleW: scaleW, scaleH: scaleH);
-    final typography = AppTypography(fontScale);
+    final compactScale = isCompact ? 0.85 : 1.0;
+    final spacing = AppSpacing(scaleW,
+        compactScale: compactScale,
+        categoryScale: AppSizing.categoryScaleFor(this));
+    final sizing = AppSizing(
+      scaleW: scaleW,
+      scaleH: scaleH,
+      compactScale: compactScale,
+      heroScale: (isSmallPhone || isCompact) ? 0.8 : 1.0,
+      logoScale: isXLargePhone ? 0.5 : (isLargePhone ? 0.5 : 0.8),
+      categoryScale: AppSizing.categoryScaleFor(this),
+    );
+    final isSmall = isSmallPhone;
+    final titleScale = isSmall ? 0.78 : 1.0;
+    final titleScaleCompactScale = isCompact ? 0.9 : 1.0;
+    final typography = AppTypography(fontScale,
+        titleScale: titleScale * titleScaleCompactScale);
 
     return CategoryDetailHeaderConfig(
       padding: spacing.contentPadding,
@@ -398,7 +464,14 @@ extension ScreenConfigExtensions on ResponsiveConfig {
   }
 
   HeroIconConfig get heroIconConfig {
-    final sizing = AppSizing(scaleW: scaleW, scaleH: scaleH);
+    final sizing = AppSizing(
+      scaleW: scaleW,
+      scaleH: scaleH,
+      compactScale: isCompact ? 0.85 : 1.0,
+      heroScale: (isSmallPhone || isCompact) ? 0.8 : 1.0,
+      logoScale: isXLargePhone ? 0.5 : (isLargePhone ? 0.5 : 0.8),
+      categoryScale: AppSizing.categoryScaleFor(this),
+    );
     return HeroIconConfig(
       iconSize: sizing.heroIconSize,
       verticalPadding: sizing.heroPadding,
@@ -406,8 +479,15 @@ extension ScreenConfigExtensions on ResponsiveConfig {
   }
 
   OnboardingSlideConfig getOnboardingSlideConfig() {
-    final spacing = AppSpacing(scaleW);
-    final typography = AppTypography(fontScale);
+    final compactScale = isCompact ? 0.85 : 1.0;
+    final spacing = AppSpacing(scaleW,
+        compactScale: compactScale,
+        categoryScale: AppSizing.categoryScaleFor(this));
+    final isSmall = isSmallPhone;
+    final titleScale = isSmall ? 0.78 : 1.0;
+    final titleScaleCompactScale = isCompact ? 0.9 : 1.0;
+    final typography = AppTypography(fontScale,
+        titleScale: titleScale * titleScaleCompactScale);
 
     final isWide = isLandscape;
 

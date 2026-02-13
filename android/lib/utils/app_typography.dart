@@ -6,17 +6,21 @@ import 'responsive_config.dart';
 /// Usage: `AppTypography.of(context).display`
 class AppTypography {
   final double fontScale;
+  final double titleScale;
 
-  AppTypography(this.fontScale);
+  AppTypography(this.fontScale, {required this.titleScale});
 
   static AppTypography of(BuildContext context) {
     final r = ResponsiveConfig.fromContext(context);
-    return AppTypography(r.fontScale);
+    final isSmall = r.isSmallPhone;
+    final titleScale = isSmall ? 0.78 : 1.0;
+    final compactScale = r.isCompact ? 0.9 : 1.0;
+    return AppTypography(r.fontScale, titleScale: titleScale * compactScale);
   }
 
   /// Screen titles — large, bold
   TextStyle get display => TextStyle(
-        fontSize: 28 * fontScale,
+        fontSize: 28 * fontScale * titleScale,
         fontWeight: FontWeight.w800,
         letterSpacing: 0.5,
         height: 1.2,
@@ -24,14 +28,14 @@ class AppTypography {
 
   /// Section titles — medium emphasis
   TextStyle get headline => TextStyle(
-        fontSize: 20 * fontScale,
+        fontSize: 20 * fontScale * titleScale,
         fontWeight: FontWeight.w800,
         height: 1.25,
       );
 
   /// Card titles, setting item names
   TextStyle get title => TextStyle(
-        fontSize: 17 * fontScale,
+        fontSize: 17 * fontScale * titleScale,
         fontWeight: FontWeight.w700,
         height: 1.3,
       );
@@ -93,5 +97,12 @@ class AppTypography {
         fontSize: 12.5 * fontScale,
         fontWeight: FontWeight.w700,
         letterSpacing: 1,
+      );
+
+  /// Control hub button labels
+  TextStyle get hubLabel => TextStyle(
+        fontSize: 10.5 * fontScale,
+        fontWeight: FontWeight.w700,
+        letterSpacing: 0.5,
       );
 }

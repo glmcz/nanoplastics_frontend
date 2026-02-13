@@ -147,7 +147,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get categoryDetailBack => 'Back';
 
   @override
-  String get categoryDetailBackToOverview => '← BACK';
+  String get categoryDetailBackToOverview => 'BACK';
 
   @override
   String get categoryDetailBrainstorm => 'Brainstorm';
