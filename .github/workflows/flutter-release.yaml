@@ -44,6 +44,19 @@ jobs:
         run: |
           echo "${{ secrets.GOOGLE_SERVICES_JSON }}" | base64 --decode > android/app/google-services.json
 
+      # ---------------- RESTORE ANDROID SIGNING KEY ----------------
+      - name: Restore Android Keystore
+        run: |
+          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > android/app/release.jks
+
+      # ---------- SET SIGNING ENVIRONMENT VARIABLES ----------
+      - name: Set Signing Environment Variables
+        run: |
+          echo "KEYSTORE_PATH=$(pwd)/android/app/release.jks" >> $GITHUB_ENV
+          echo "KEYSTORE_PASSWORD=${{ secrets.KEYSTORE_PASSWORD }}" >> $GITHUB_ENV
+          echo "KEY_ALIAS=${{ secrets.KEY_ALIAS }}" >> $GITHUB_ENV
+          echo "KEY_PASSWORD=${{ secrets.KEY_PASSWORD }}" >> $GITHUB_ENV
+
       # ---------------- DEPENDENCIES ----------------
       - name: Install dependencies
         run: flutter pub get
@@ -73,3 +86,12 @@ jobs:
           tag_name: ${{ github.ref_type == 'tag' && github.ref_name || env.VERSION }}
           name: Release ${{ github.ref_type == 'tag' && github.ref_name || env.VERSION }}
           generate_release_notes: true
+
+      # ---------------- DEPLOY TO GITHUB PAGES ----------------
+      - name: Deploy APKs to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./build/app/outputs/flutter-apk
+          destination_dir: releases/${{ github.ref_type == 'tag' && github.ref_name || env.VERSION }}
+          keep_files: true

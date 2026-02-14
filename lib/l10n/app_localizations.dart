@@ -1769,7 +1769,7 @@ abstract class AppLocalizations {
   /// No description provided for @aboutShareDesc.
   ///
   /// In en, this message translates to:
-  /// **'Scan this QR code to download the app'**
+  /// **'Scan this QR code to download \nthe app'**
   String get aboutShareDesc;
 
   /// No description provided for @aboutShareAppLink.

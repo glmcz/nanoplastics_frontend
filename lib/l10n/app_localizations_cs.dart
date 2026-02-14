@@ -935,7 +935,7 @@ class AppLocalizationsCs extends AppLocalizations {
   String get aboutShareTitle => 'Sdílet NanoSolve';
 
   @override
-  String get aboutShareDesc => 'Naskenujte tento QR kód pro stažení aplikace';
+  String get aboutShareDesc => 'Naskenujte tento QR kód pro \nstažení aplikace';
 
   @override
   String get aboutShareAppLink => 'Odkaz ke stažení aplikace';

@@ -10,6 +10,15 @@ A mobile application providing science-backed information about nanoplastics and
 - Configurable user profile and settings
 - Multi-language support
 
+## 📥 Downloads
+
+**Latest Release:**
+- [app-full-release-ci.apk](https://github.com/glmcz/nanoplastics_frontend/releases/latest/download/app-full-release.apk) - Full (All languages)
+- [app-lite-release-ci.apk](https://github.com/glmcz/nanoplastics_frontend/releases/latest/download/app-lite-release.apk) - Lite (English only)
+
+**All Versions:**
+- **[GitHub Releases](https://github.com/glmcz/nanoplastics_frontend/releases)** - Full & Lite variants
+- **[GitHub Pages](https://glmcz.github.io/nanoplastics_frontend/)** - Organized by version
 
 ## Contributing
 

@@ -68,3 +68,4 @@ Thumbs.db
 fire_base_publish.sh
 firebase.json
 
+android/app/google-services.json

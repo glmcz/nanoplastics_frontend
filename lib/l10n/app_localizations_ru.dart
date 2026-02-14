@@ -943,7 +943,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get aboutShareDesc =>
-      'Отсканируйте этот QR-код для загрузки приложения';
+      'Отсканируйте этот QR-код для \nзагрузки приложения';
 
   @override
   String get aboutShareAppLink => 'Ссылка для загрузки приложения';

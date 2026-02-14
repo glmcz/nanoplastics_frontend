@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'dart:ui';
 import 'package:flutter_custom_tabs/flutter_custom_tabs.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import '../../l10n/app_localizations.dart';
 import '../../config/app_colors.dart';
 import '../../config/app_constants.dart';
@@ -12,11 +13,52 @@ import '../../utils/app_sizing.dart';
 import '../../utils/app_typography.dart';
 import '../../widgets/nanosolve_logo.dart';
 
-class AboutScreen extends StatelessWidget {
+class AboutScreen extends StatefulWidget {
   const AboutScreen({super.key});
 
   static const String appVersion = '1.0.0';
   static const String buildNumber = '1';
+
+  @override
+  State<AboutScreen> createState() => _AboutScreenState();
+}
+
+class _AboutScreenState extends State<AboutScreen> {
+  String _selectedVariant = 'full'; // 'full' or 'lite'
+  String appVersion = '1.0.0';
+  String buildNumber = '1';
+
+  @override
+  void initState() {
+    super.initState();
+    _loadVersionInfo();
+  }
+
+  Future<void> _loadVersionInfo() async {
+    try {
+      final info = await PackageInfo.fromPlatform();
+      setState(() {
+        appVersion = info.version; // e.g., "1.2.3"
+        buildNumber = info.buildNumber; // e.g., "4"
+      });
+    } catch (e) {
+      debugPrint('Error loading version: $e');
+    }
+  }
+
+  String _getDownloadUrl() {
+    if (_selectedVariant == 'lite') {
+      return 'https://github.com/glmcz/nanoplastics_frontend/releases/latest/download/app-lite-release.apk';
+    } else {
+      return 'https://github.com/glmcz/nanoplastics_frontend/releases/latest/download/app-full-release.apk';
+    }
+  }
+
+  String _getVariantLabel() {
+    return _selectedVariant == 'lite'
+        ? 'Lite (English)'
+        : 'Full (All Languages)';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -332,7 +374,7 @@ class AboutScreen extends StatelessWidget {
     AppSizing sizing,
     AppTypography typography,
   ) {
-    const String appDownloadUrl = 'https://nanosolve.io/download';
+    final appDownloadUrl = _getDownloadUrl();
 
     return Container(
       padding: EdgeInsets.all(spacing.cardPadding),
@@ -357,6 +399,27 @@ class AboutScreen extends StatelessWidget {
               fontWeight: FontWeight.w700,
               color: AppColors.pastelAqua,
               fontSize: (typography.title.fontSize ?? 16) + 2,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: AppConstants.space16),
+          // Variant selector
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              _buildVariantButton(
+                  'full', 'All Languages', spacing, sizing, typography),
+              SizedBox(width: spacing.cardSpacing),
+              _buildVariantButton(
+                  'lite', 'English Only', spacing, sizing, typography),
+            ],
+          ),
+          const SizedBox(height: AppConstants.space16),
+          Text(
+            _getVariantLabel(),
+            style: typography.subtitle.copyWith(
+              color: AppColors.pastelAqua,
+              fontWeight: FontWeight.w600,
             ),
             textAlign: TextAlign.center,
           ),
@@ -445,6 +508,42 @@ class AboutScreen extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildVariantButton(
+    String variant,
+    String label,
+    AppSpacing spacing,
+    AppSizing sizing,
+    AppTypography typography,
+  ) {
+    final isSelected = _selectedVariant == variant;
+    return GestureDetector(
+      onTap: () => setState(() => _selectedVariant = variant),
+      child: Container(
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppConstants.space12,
+          vertical: AppConstants.space8,
+        ),
+        decoration: BoxDecoration(
+          color: isSelected
+              ? AppColors.pastelAqua.withValues(alpha: 0.3)
+              : AppColors.pastelAqua.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(AppConstants.radiusMedium),
+          border: Border.all(
+            color:
+                AppColors.pastelAqua.withValues(alpha: isSelected ? 0.6 : 0.3),
+          ),
+        ),
+        child: Text(
+          label,
+          style: typography.subtitle.copyWith(
+            color: AppColors.pastelAqua,
+            fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+          ),
+        ),
       ),
     );
   }

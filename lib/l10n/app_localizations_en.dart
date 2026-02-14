@@ -940,7 +940,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get aboutShareTitle => 'Share NanoSolve';
 
   @override
-  String get aboutShareDesc => 'Scan this QR code to download the app';
+  String get aboutShareDesc => 'Scan this QR code to download \nthe app';
 
   @override
   String get aboutShareAppLink => 'App Download Link';
