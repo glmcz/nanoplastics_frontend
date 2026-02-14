@@ -53,6 +53,7 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
   bool _initialPageSet = false; // Track if initial page has been set
   String? _resolvedPath; // The actual path used to open the PDF
   bool _pdfIsAsset = true; // Whether _resolvedPath is a Flutter asset
+  late int _actualEndPage; // Clamped endPage based on actual PDF page count
 
   @override
   void initState() {
@@ -176,6 +177,9 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
       _isDownloading = false;
       _currentPage = widget.startPage;
       _stablePageBeforeRotation = widget.startPage;
+      // Clamp endPage to actual PDF page count (replaces sentinel 1 << 30)
+      _actualEndPage =
+          widget.endPage.clamp(widget.startPage, _pdfDocument.pagesCount);
     });
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -495,61 +499,65 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
       ),
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            SizedBox(
-            width: double.infinity,
-            child: InkWell(
-              onTap: () => Navigator.of(context).maybePop(),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Icon(Icons.arrow_back_ios,
-                      color: Colors.white, size: sizing.backIcon),
-                  const SizedBox(width: AppConstants.space4),
-                  Flexible(
-                    child: Text(
-                      l10n.categoryDetailBackToOverview,
-                      style: typography.back.copyWith(
-                        color: Colors.white,
-                      ),
-                      maxLines: 2,
-                      overflow: TextOverflow.fade,
-                      softWrap: true,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: InkWell(
+                    onTap: () => Navigator.of(context).maybePop(),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Icon(Icons.arrow_back_ios,
+                            color: Colors.white, size: sizing.backIcon),
+                        const SizedBox(width: AppConstants.space4),
+                        Flexible(
+                          child: Text(
+                            l10n.categoryDetailBackToOverview,
+                            style: typography.back.copyWith(
+                              color: Colors.white,
+                            ),
+                            maxLines: 2,
+                            overflow: TextOverflow.fade,
+                            softWrap: true,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                ],
-              ),
-            ),
-          ),
-          SizedBox(height: spacing.headerSpacing),
-          NanosolveLogo(height: sizing.logoHeightLg),
-            SizedBox(
-              width: 50,
-              child: TextField(
-                textAlign: TextAlign.right,
-                keyboardType: TextInputType.number,
-                inputFormatters: [
-                  FilteringTextInputFormatter.digitsOnly,
-                ],
-                onSubmitted: _jumpToPage,
-                controller: TextEditingController(text: '$_currentPage'),
-                style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                      color: AppColors.pastelAqua,
-                    ),
-                decoration: InputDecoration(
-                  prefix: Text(
-                    'p. ',
+                ),
+                SizedBox(
+                  width: 50,
+                  child: TextField(
+                    textAlign: TextAlign.right,
+                    keyboardType: TextInputType.number,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly,
+                    ],
+                    onSubmitted: _jumpToPage,
+                    controller: TextEditingController(text: '$_currentPage'),
                     style: Theme.of(context).textTheme.labelLarge?.copyWith(
                           color: AppColors.pastelAqua,
                         ),
+                    decoration: InputDecoration(
+                      prefix: Text(
+                        'p. ',
+                        style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                              color: AppColors.pastelAqua,
+                            ),
+                      ),
+                      border: InputBorder.none,
+                      contentPadding: EdgeInsets.zero,
+                    ),
                   ),
-                  border: InputBorder.none,
-                  contentPadding: EdgeInsets.zero,
                 ),
-              ),
+              ],
             ),
+            SizedBox(height: spacing.headerSpacing),
+            NanosolveLogo(height: sizing.logoHeightLg),
           ],
         ),
       ),
@@ -576,7 +584,7 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            '${widget.title} • str. ${widget.startPage}-${widget.endPage}',
+            '${widget.title} • str. ${widget.startPage}-${_actualEndPage}',
             style: Theme.of(context).textTheme.labelMedium?.copyWith(
                   color: AppColors.pastelLavender,
                 ),
@@ -788,7 +796,7 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                'Page $_currentPage/${widget.endPage}',
+                'Page $_currentPage/${_actualEndPage}',
                 style: const TextStyle(
                   color: AppColors.textMuted,
                   fontSize: 12,
@@ -817,7 +825,7 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
           ),
           GestureDetector(
             onTap: () {
-              if (_currentPage < widget.endPage) {
+              if (_currentPage < _actualEndPage) {
                 _pdfController.nextPage(
                   duration: const Duration(milliseconds: 200),
                   curve: Curves.easeInOut,

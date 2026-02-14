@@ -53,8 +53,6 @@ class AboutScreen extends StatelessWidget {
   }
 
   Widget _buildHeader(context, spacing, sizing, l10n, typography) {
-  
-
     return Padding(
       padding: EdgeInsets.all(spacing.contentPadding),
       child: Column(
@@ -142,7 +140,7 @@ class AboutScreen extends StatelessWidget {
           _buildFooter(context, spacing, typography),
           SizedBox(height: spacing.cardSpacing * 2),
           _buildSectionTitle(
-              context, AppLocalizations.of(context)!.aboutLegal, typography),  
+              context, AppLocalizations.of(context)!.aboutLegal, typography),
           SizedBox(height: spacing.cardSpacing * 2),
           _buildLinkItem(
             title: AppLocalizations.of(context)!.aboutOpenSourceLicenses,
@@ -351,6 +349,7 @@ class AboutScreen extends StatelessWidget {
         ],
       ),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           Text(
             AppLocalizations.of(context)!.aboutShareTitle,
@@ -426,11 +425,13 @@ class AboutScreen extends StatelessWidget {
                     color: AppColors.pastelAqua,
                   ),
                   SizedBox(width: spacing.sm),
-                  Text(
-                    AppLocalizations.of(context)!.aboutShareAppLink,
-                    style: typography.subtitle.copyWith(
-                      color: AppColors.pastelAqua,
-                      fontWeight: FontWeight.w600,
+                  Flexible(
+                    child: Text(
+                      AppLocalizations.of(context)!.aboutShareAppLink,
+                      style: typography.subtitle.copyWith(
+                        color: AppColors.pastelAqua,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
                   SizedBox(width: spacing.xs),

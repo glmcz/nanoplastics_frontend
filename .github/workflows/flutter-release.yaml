@@ -1,0 +1,75 @@
+name: Flutter Release Build
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container:
+      image: alpine:latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install dependencies on Alpine
+        run: |
+          apk add --no-cache \
+            git \
+            curl \
+            bash \
+            openjdk17-jdk \
+            android-sdk \
+            android-sdk-build-tools
+
+      - name: Install Flutter
+        run: |
+          git clone https://github.com/flutter/flutter.git -b stable --depth 1 /flutter
+          export PATH="/flutter/bin:$PATH"
+          flutter config --enable-web
+          flutter pub get
+
+      # ---------- FULL FLAVOR ----------
+      - name: Build FULL flavor APK
+        run: |
+          export PATH="/flutter/bin:$PATH"
+          flutter build apk \
+            --release \
+            --flavor full \
+            --dart-define=BUNDLE_ALL_LANGS=true
+
+      - name: Rename FULL APK
+        run: |
+          mkdir -p build/app/outputs/flutter-apk && \
+          mv build/app/outputs/flutter-apk/app-full-release.apk \
+             build/app/outputs/flutter-apk/app-full-release-ci.apk
+
+      # ---------- LITE FLAVOR ----------
+      - name: Build LITE flavor APK
+        run: |
+          export PATH="/flutter/bin:$PATH"
+          flutter build apk \
+            --release \
+            --flavor lite
+
+      - name: Rename LITE APK
+        run: |
+          mv build/app/outputs/flutter-apk/app-lite-release.apk \
+             build/app/outputs/flutter-apk/app-lite-release-ci.apk
+
+      # ---------- Upload artifacts ----------
+      - name: Upload FULL APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: full-apk
+          path: build/app/outputs/flutter-apk/app-full-release-ci.apk
+
+      - name: Upload LITE APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: lite-apk
+          path: build/app/outputs/flutter-apk/app-lite-release-ci.apk

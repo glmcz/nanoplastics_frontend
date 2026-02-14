@@ -957,7 +957,7 @@ class AppLocalizationsFr extends AppLocalizations {
       'Scannez ce code QR pour télécharger l\'application';
 
   @override
-  String get aboutShareAppLink => 'Lien de téléchargement de l\'application';
+  String get aboutShareAppLink => 'Lien de téléchargement \nde l\'application';
 
   @override
   String get aboutFooterMessage =>

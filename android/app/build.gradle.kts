@@ -2,6 +2,7 @@ plugins {
     id("com.android.application")
     // START: FlutterFire Configuration
     id("com.google.gms.google-services")
+    id("com.google.firebase.crashlytics")
     // END: FlutterFire Configuration
     id("kotlin-android")
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
@@ -19,7 +20,7 @@ android {
     }
 
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_17.toString()
+        jvmTarget = "17"
     }
 
     tasks.withType<JavaCompile> {
@@ -65,22 +66,24 @@ flutter {
 }
 
 // Strip non-EN PDF assets from lite flavor builds
-android.applicationVariants.all {
+android.applicationVariants.all variant@{
     val variantName = name
     if (variantName.startsWith("lite")) {
-        mergeAssetsProvider.get().doLast {
-            val outputDir = outputDir.get().asFile
-            outputDir.walkTopDown()
-                .filter { it.isFile && it.name.endsWith(".pdf") }
-                .filter {
-                    val n = it.name
-                    n.contains("_CS_") || n.contains("_ES_") ||
-                    n.contains("_FR_") || n.contains("_RU_")
-                }
-                .forEach {
-                    println("Lite flavor: removing ${it.name}")
-                    it.delete()
-                }
+        mergeAssetsProvider.configure {
+            doLast {
+                val outputDir = outputDir.get().asFile
+                outputDir.walkTopDown()
+                    .filter { file -> file.isFile && file.name.endsWith(".pdf") }
+                    .filter { file ->
+                        val n = file.name
+                        n.contains("_CS_") || n.contains("_ES_") ||
+                        n.contains("_FR_") || n.contains("_RU_")
+                    }
+                    .forEach { file ->
+                        println("Lite flavor: removing ${file.name}")
+                        file.delete()
+                    }
+            }
         }
     }
 }

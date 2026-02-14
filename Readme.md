@@ -23,6 +23,11 @@ Contributions are welcome. To contribute:
 
 All contributions are subject to review. By submitting a contribution, you agree that your changes become part of this project under the same license terms.
 
+### Local setup:
+- git clone repo...
+- use own flutterfire configure
+- flutter pub get
+- flutter run your target
 
 ### UX Design system
 The goal is responsive behavior via tokens, not per-widget scaling. Each screen now pulls from AppSpacing, AppSizing, and AppTypography, which all derive from ResponsiveConfig scales. That means all screens adapt consistently to different widths/heights/landscape without duplicating scaling logic in widgets.
