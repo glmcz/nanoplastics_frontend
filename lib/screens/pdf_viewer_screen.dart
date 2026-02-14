@@ -605,41 +605,44 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
 
   Widget _buildPDFViewer({bool isPortrait = true}) {
     if (_isLoading) {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            if (_isDownloading) ...[
-              CircularProgressIndicator(
-                value: _downloadProgress > 0 ? _downloadProgress : null,
-                valueColor: const AlwaysStoppedAnimation<Color>(
-                  AppColors.pastelAqua,
+      return Container(
+        color: Colors.white, // Prevent red screen flash during loading
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              if (_isDownloading) ...[
+                CircularProgressIndicator(
+                  value: _downloadProgress > 0 ? _downloadProgress : null,
+                  valueColor: const AlwaysStoppedAnimation<Color>(
+                    AppColors.pastelAqua,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 16),
-              Text(
-                'Downloading report... ${(_downloadProgress * 100).toInt()}%',
-                style: const TextStyle(
-                  color: AppColors.textMuted,
-                  fontSize: 14,
+                const SizedBox(height: 16),
+                Text(
+                  'Downloading report... ${(_downloadProgress * 100).toInt()}%',
+                  style: const TextStyle(
+                    color: AppColors.textMuted,
+                    fontSize: 14,
+                  ),
                 ),
-              ),
-            ] else ...[
-              const CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(
-                  AppColors.pastelAqua,
+              ] else ...[
+                const CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(
+                    AppColors.pastelAqua,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 16),
-              const Text(
-                'Loading PDF...',
-                style: TextStyle(
-                  color: AppColors.textMuted,
-                  fontSize: 14,
+                const SizedBox(height: 16),
+                const Text(
+                  'Loading PDF...',
+                  style: TextStyle(
+                    color: AppColors.textMuted,
+                    fontSize: 14,
+                  ),
                 ),
-              ),
+              ],
             ],
-          ],
+          ),
         ),
       );
     }

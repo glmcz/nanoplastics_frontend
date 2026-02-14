@@ -4,8 +4,8 @@
   "appTitle": "NANOSOLVE",
   "appSubtitle": "ANALÝZA ZDRAVOTNÍCH RIZIK NANOPLASTŮ",
 
-  "tabHuman": "VLIV NA ČLOVĚKA",
-  "tabPlanet": "VLIV NA ZEMI",
+  "tabHuman": "ČLOVĚK",
+  "tabPlanet": "ZEMĚ",
 
   "navSources": "Zdroje",
   "navResults": "Výsledky",
@@ -246,6 +246,9 @@
 
   "leaderboardTitle": "TOP 10 ŘEŠITELŮ",
   "leaderboardSubtitle": "Vedoucí přispěvatelé řešením nanoplastů",
+  "leaderboardAccessRestricted": "Přístup k žebříčku omezen",
+  "leaderboardAccessDescription": "Zaregistrujte se pomocí svého e-mailu a jména, abyste mohli zobrazit žebříček top 10 a byli uznáni za svá řešení.",
+  "leaderboardRegisterNow": "Registrovat se nyní",
 
   "settingsBack": "Zpět",
   "settingsTitle": "Nastavení",

@@ -107,8 +107,9 @@ class _MainScreenState extends State<MainScreen> {
     final typography = AppTypography.of(context);
     return Padding(
       padding: EdgeInsets.symmetric(
-          horizontal: spacing.contentPadding,
-          vertical: spacing.headerPadding * 5),
+          horizontal: spacing.contentPaddingH,
+          vertical: spacing.contentPaddingV
+      ),
       child: Column(
         children: [
           NanosolveLogo(height: sizing.logoHeight),
@@ -117,6 +118,7 @@ class _MainScreenState extends State<MainScreen> {
             _selectedTab == ImpactType.human ? l10n.tabHuman : l10n.tabPlanet,
             style: typography.display.copyWith(
               color: Colors.white,
+              fontSize: typography.display.fontSize
             ),
           ),
           const SizedBox(height: AppConstants.space4),
@@ -124,6 +126,7 @@ class _MainScreenState extends State<MainScreen> {
             l10n.appSubtitle,
             style: typography.label.copyWith(
               color: AppColors.textMuted,
+              fontSize: typography.label.fontSize
             ),
           ),
         ],
@@ -286,9 +289,10 @@ class _MainScreenState extends State<MainScreen> {
 
     return Padding(
       padding: EdgeInsets.only(
-        left: spacing.contentPadding,
-        right: spacing.contentPadding,
-        top: spacing.md,
+        left: spacing.md*1.5,
+        right: spacing.md*1.5, /// TODO refactor me. 
+        top: spacing.md*2.0,
+        bottom: spacing.md,
       ),
       child: Column(children: rows),
     );

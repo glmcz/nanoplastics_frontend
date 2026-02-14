@@ -7,8 +7,8 @@ import 'app_sizing.dart';
 /// Usage: `AppSpacing.of(context).md`
 class AppSpacing {
   final double scale;
-  final double compactScale;
-  final double categoryScale;
+  final double compactScale; /// change size of everything according screen size
+  final double categoryScale; /// additional categor vertical boost.
   AppSpacing(this.scale,
       {required this.compactScale, required this.categoryScale});
 
@@ -16,11 +16,9 @@ class AppSpacing {
     final r = ResponsiveConfig.fromContext(context);
     double a = 0;
     if (r.isBig) {
-      a = 1.5;
+      a = 1;
     } else if (r.isCompact) {
       a = 0.85;
-    } else {
-      a = 1.0;
     }
     final categoryScale = AppSizing.categoryScaleFor(r);
     return AppSpacing(r.scaleW, compactScale: a, categoryScale: categoryScale);
@@ -38,12 +36,14 @@ class AppSpacing {
 
   // ── Semantic spacing ──
 
-  double get contentPadding => 28 * scale * compactScale;
+  double get contentPaddingH => 28 * scale * compactScale;
+  double get contentPaddingV => 2 * scale * compactScale * categoryScale;
   double get cardPadding => 22 * scale * compactScale;
   double get cardSpacing => 18 * scale * compactScale;
   double get sectionSpacing => 30 * scale * compactScale;
-  double get gridSpacing => 10 * scale * compactScale;
-  double get gridRowSpacing => 10 * scale * compactScale * categoryScale;
+  double get gridSpacing => 5 * scale * compactScale;
+  double get gridRowSpacing =>
+      5 * scale * compactScale * categoryScale;
   double get gridBottomPadding => 54 * scale * compactScale;
 
   // ── Header (secondary screens) ──

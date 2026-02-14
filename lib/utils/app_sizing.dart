@@ -11,6 +11,7 @@ class AppSizing {
   final double heroScale;
   final double logoScale;
   final double categoryScale;
+  final bool isBig;
 
   AppSizing({
     required this.scaleW,
@@ -19,6 +20,7 @@ class AppSizing {
     required this.heroScale,
     required this.logoScale,
     required this.categoryScale,
+    required this.isBig,
   });
 
   static AppSizing of(BuildContext context) {
@@ -34,6 +36,7 @@ class AppSizing {
       heroScale: heroScale,
       logoScale: logoScale,
       categoryScale: categoryScale,
+      isBig: r.isBig,
     );
   }
 
@@ -44,7 +47,7 @@ class AppSizing {
     // Scale category cards based on height to fill vertical space on tall phones
     // Baseline: 812px height → 1.0x. Tall phone (e.g., 2000px) scales proportionally with no cap
     final heightScale = config.height / ResponsiveConfig.baseHeight;
-    return heightScale;
+    return heightScale * 1.2;
   }
 
   // ── Icons ──
@@ -138,8 +141,8 @@ class AppSizing {
   double get secondaryIconSize => iconXs;
 
   // ── Control Hub ──
-
-  double get hubGridWidth => 340 * scaleW * compactScale;
+  double get w => isBig ? (400 * scaleW / 1.2) : (400 * scaleW * compactScale);
+  double get hubGridWidth => w;
   double get hubGridHeight => 140 * scaleW * compactScale;
   double get hubContainerHeight => 200 * scaleW * compactScale;
   double get hubBottomPadding => 30 * scaleW * compactScale;

@@ -4,8 +4,8 @@
   "appTitle": "NANOSOLVE",
   "appSubtitle": "SCIENCE, SOCIETY, FUTURE",
 
-  "tabHuman": "IMPACT ON HUMAN",
-  "tabPlanet": "IMPACT ON EARTH",
+  "tabHuman": "HUMANS",
+  "tabPlanet": "PLANET",
 
   "navSources": "Sources",
   "navResults": "Results",
@@ -246,6 +246,9 @@
 
   "leaderboardTitle": "TOP 10 SOLVERS",
   "leaderboardSubtitle": "Leading contributors to nanoplastic solutions",
+  "leaderboardAccessRestricted": "Leaderboard Access Restricted",
+  "leaderboardAccessDescription": "Register with your email and name to view the top 10 leaderboard and be recognized for your solutions.",
+  "leaderboardRegisterNow": "Register Now",
 
   "settingsBack": "Back",
   "settingsTitle": "Settings",

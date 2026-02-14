@@ -15,10 +15,10 @@ class AppLocalizationsCs extends AppLocalizations {
   String get appSubtitle => 'ANALÝZA ZDRAVOTNÍCH RIZIK NANOPLASTŮ';
 
   @override
-  String get tabHuman => 'VLIV NA ČLOVĚKA';
+  String get tabHuman => 'ČLOVĚK';
 
   @override
-  String get tabPlanet => 'VLIV NA ZEMI';
+  String get tabPlanet => 'ZEMĚ';
 
   @override
   String get navSources => 'Zdroje';
@@ -724,6 +724,16 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get leaderboardSubtitle => 'Vedoucí přispěvatelé řešením nanoplastů';
+
+  @override
+  String get leaderboardAccessRestricted => 'Přístup k žebříčku omezen';
+
+  @override
+  String get leaderboardAccessDescription =>
+      'Zaregistrujte se pomocí svého e-mailu a jména, abyste mohli zobrazit žebříček top 10 a byli uznáni za svá řešení.';
+
+  @override
+  String get leaderboardRegisterNow => 'Registrovat se nyní';
 
   @override
   String get settingsBack => 'Zpět';

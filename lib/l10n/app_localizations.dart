@@ -119,13 +119,13 @@ abstract class AppLocalizations {
   /// No description provided for @tabHuman.
   ///
   /// In en, this message translates to:
-  /// **'IMPACT ON HUMAN'**
+  /// **'HUMANS'**
   String get tabHuman;
 
   /// No description provided for @tabPlanet.
   ///
   /// In en, this message translates to:
-  /// **'IMPACT ON EARTH'**
+  /// **'PLANET'**
   String get tabPlanet;
 
   /// No description provided for @navSources.
@@ -1363,6 +1363,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Leading contributors to nanoplastic solutions'**
   String get leaderboardSubtitle;
+
+  /// No description provided for @leaderboardAccessRestricted.
+  ///
+  /// In en, this message translates to:
+  /// **'Leaderboard Access Restricted'**
+  String get leaderboardAccessRestricted;
+
+  /// No description provided for @leaderboardAccessDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Register with your email and name to view the top 10 leaderboard and be recognized for your solutions.'**
+  String get leaderboardAccessDescription;
+
+  /// No description provided for @leaderboardRegisterNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Register Now'**
+  String get leaderboardRegisterNow;
 
   /// No description provided for @settingsBack.
   ///

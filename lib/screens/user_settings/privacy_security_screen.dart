@@ -72,8 +72,9 @@ class _PrivacySecurityScreenState extends State<PrivacySecurityScreen> {
 
     return Padding(
       padding: EdgeInsets.symmetric(
-          horizontal: spacing.contentPadding,
-          vertical: spacing.headerPadding * 5),
+        horizontal: spacing.contentPaddingH,
+        vertical: spacing.contentPaddingV
+        ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -113,8 +114,6 @@ class _PrivacySecurityScreenState extends State<PrivacySecurityScreen> {
     final spacing = AppSpacing.of(context);
     final sizing = AppSizing.of(context);
     final typography = AppTypography.of(context);
-
-    final contentPad = spacing.contentPadding;
     final cardPad = spacing.cardPadding;
     final cardSpace = spacing.cardSpacing;
     final iconContainer = sizing.iconContainer;
@@ -126,7 +125,9 @@ class _PrivacySecurityScreenState extends State<PrivacySecurityScreen> {
     final cardTitleStyle = typography.title.copyWith(color: AppColors.textMain);
 
     return SingleChildScrollView(
-      padding: EdgeInsets.all(contentPad),
+      padding: EdgeInsets.symmetric(
+        horizontal: spacing.contentPaddingH,
+        vertical: spacing.contentPaddingV),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

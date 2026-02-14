@@ -20,7 +20,7 @@ class AppTypography {
 
   /// Screen titles — large, bold
   TextStyle get display => TextStyle(
-        fontSize: 28 * fontScale * titleScale,
+        fontSize: 25 * fontScale * titleScale,
         fontWeight: FontWeight.w800,
         letterSpacing: 0.5,
         height: 1.2,

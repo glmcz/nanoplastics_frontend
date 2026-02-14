@@ -15,10 +15,10 @@ class AppLocalizationsFr extends AppLocalizations {
   String get appSubtitle => 'SCIENCE, SOCIÉTÉ, AVENIR';
 
   @override
-  String get tabHuman => 'IMPACT SUR LES HUMAINS';
+  String get tabHuman => 'HUMAINS';
 
   @override
-  String get tabPlanet => 'IMPACT SUR LA PLANÈTE TERRE';
+  String get tabPlanet => 'PLANÈTE';
 
   @override
   String get navSources => 'Sources';
@@ -739,6 +739,16 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get leaderboardSubtitle =>
       'Contributeurs principaux aux solutions de nanoplastiques';
+
+  @override
+  String get leaderboardAccessRestricted => 'Accès au classement restreint';
+
+  @override
+  String get leaderboardAccessDescription =>
+      'Inscrivez-vous avec votre e-mail et votre nom pour voir le top 10 du classement et être reconnu pour vos solutions.';
+
+  @override
+  String get leaderboardRegisterNow => 'S\'inscrire maintenant';
 
   @override
   String get settingsBack => 'Retour';

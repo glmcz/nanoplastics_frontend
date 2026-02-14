@@ -122,7 +122,10 @@ class _SolversLeaderboardScreenState extends State<SolversLeaderboardScreen>
     final typography = AppTypography.of(context);
 
     return Container(
-      padding: EdgeInsets.all(spacing.headerPadding * 15),
+      padding: EdgeInsets.symmetric(
+        horizontal: spacing.headerPadding * 15,
+        vertical: spacing.headerPadding * 8
+      ),
       decoration: BoxDecoration(
         color: const Color(0xFF141928).withValues(alpha: 0.9),
         border: Border(
@@ -254,12 +257,15 @@ class _SolversLeaderboardScreenState extends State<SolversLeaderboardScreen>
   Widget _buildRestrictedAccessView(
       BuildContext context, AppLocalizations l10n) {
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(AppConstants.space24),
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppConstants.space24,
+        vertical: AppConstants.space4
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildTitleSection(context),
-          const SizedBox(height: AppConstants.space40),
+          const SizedBox(height: AppConstants.space30),
           // Locked icon
           Center(
             child: Container(
@@ -280,7 +286,7 @@ class _SolversLeaderboardScreenState extends State<SolversLeaderboardScreen>
           // Main message
           Center(
             child: Text(
-              'Leaderboard Access Restricted',
+              l10n.leaderboardAccessRestricted,
               style: Theme.of(context).textTheme.displaySmall,
               textAlign: TextAlign.center,
               maxLines: 2,
@@ -291,7 +297,7 @@ class _SolversLeaderboardScreenState extends State<SolversLeaderboardScreen>
           // Description
           Center(
             child: Text(
-              'Register with your email and name to view the top 10 leaderboard and be recognized for your solutions.',
+              l10n.leaderboardAccessDescription,
               style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                     color: AppColors.textMuted,
                   ),
@@ -320,7 +326,7 @@ class _SolversLeaderboardScreenState extends State<SolversLeaderboardScreen>
                 color: Colors.black,
               ),
               label: Text(
-                'Register Now',
+                l10n.leaderboardRegisterNow,
                 style: Theme.of(context).textTheme.titleMedium!.copyWith(
                       color: Colors.black,
                     ),

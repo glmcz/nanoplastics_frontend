@@ -59,7 +59,7 @@ class ResponsiveConfig {
   bool get isXLargePhone => phoneSize == PhoneSize.xlarge;
 
   bool get isCompact => width < 360 || height < 700;
-  bool get isBig => width > 600 || height > 900;
+  bool get isBig => width > 410 || height > 900;
 
   // ── Scaling (baseline: 375 × 812) ──
 

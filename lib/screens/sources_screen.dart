@@ -79,8 +79,11 @@ class _SourcesScreenState extends State<SourcesScreen> {
     final typography = AppTypography.of(context);
 
     return Padding(
-      padding: EdgeInsets.all(spacing.contentPadding),
-      child: Column(
+        padding: EdgeInsets.symmetric(
+          horizontal: spacing.contentPaddingH,
+          vertical: spacing.contentPaddingV
+          ),
+        child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           SizedBox(
@@ -140,7 +143,7 @@ class _SourcesScreenState extends State<SourcesScreen> {
       },
       child: Container(
         margin: EdgeInsets.symmetric(
-          horizontal: spacing.contentPadding,
+          horizontal: spacing.contentPaddingH, /// TODO: refactor me
           vertical: spacing.md,
         ),
         padding: EdgeInsets.symmetric(
@@ -334,7 +337,10 @@ class _SourcesScreenState extends State<SourcesScreen> {
     // If no section is expanded, show all collapsed sections in a scrollable list
     if (_expandedSection == null) {
       return SingleChildScrollView(
-        padding: EdgeInsets.symmetric(horizontal: spacing.contentPadding),
+        padding: EdgeInsets.symmetric(
+          horizontal: spacing.contentPaddingH,
+          vertical: spacing.contentPaddingV
+          ),
         child: Column(
           children: [
             for (final s in sections) ...[
@@ -360,8 +366,11 @@ class _SourcesScreenState extends State<SourcesScreen> {
         sections.firstWhere((s) => s.section == _expandedSection);
 
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: spacing.contentPadding),
-      child: Column(
+      padding: EdgeInsets.symmetric(
+        horizontal: spacing.contentPaddingH,
+        vertical: spacing.contentPaddingV
+        ),
+        child: Column(
         children: [
           // Sticky header for expanded section
           _buildSectionHeader(
@@ -480,8 +489,11 @@ class _SourcesScreenState extends State<SourcesScreen> {
     final videos = allVideoSources[userLanguage] ?? videoSourcesEn;
 
     return SingleChildScrollView(
-      padding: EdgeInsets.symmetric(horizontal: spacing.contentPadding),
-      child: Column(
+        padding: EdgeInsets.symmetric(
+          horizontal: spacing.contentPaddingH,
+          vertical: spacing.contentPaddingV
+          ),
+        child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Video list

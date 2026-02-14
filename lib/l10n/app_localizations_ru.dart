@@ -15,10 +15,10 @@ class AppLocalizationsRu extends AppLocalizations {
   String get appSubtitle => 'НАУКА, ОБЩЕСТВО, БУДУЩЕЕ';
 
   @override
-  String get tabHuman => 'ВЛИЯНИЕ НА ЛЮДЕЙ';
+  String get tabHuman => 'ЛЮДИ';
 
   @override
-  String get tabPlanet => 'ВЛИЯНИЕ НА ПЛАНЕТУ ЗЕМЛЯ';
+  String get tabPlanet => 'ЗЕМЛЯ';
 
   @override
   String get navSources => 'Источники';
@@ -728,6 +728,16 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get leaderboardSubtitle =>
       'Основные участники в решениях проблемы наночастиц пластика';
+
+  @override
+  String get leaderboardAccessRestricted => 'Доступ к рейтингу ограничен';
+
+  @override
+  String get leaderboardAccessDescription =>
+      'Зарегистрируйтесь с вашим email и именем, чтобы увидеть топ-10 рейтинга и получить признание за ваши решения.';
+
+  @override
+  String get leaderboardRegisterNow => 'Зарегистрироваться сейчас';
 
   @override
   String get settingsBack => 'Назад';

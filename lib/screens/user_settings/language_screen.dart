@@ -104,8 +104,10 @@ class _LanguageScreenState extends State<LanguageScreen> {
     final typography = AppTypography.of(context);
 
     return Padding(
-      padding: EdgeInsets.all(spacing.contentPadding),
-      child: Column(
+      padding: EdgeInsets.symmetric(
+        horizontal: spacing.contentPaddingH,
+        vertical: spacing.contentPaddingV),
+        child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           SizedBox(
@@ -146,7 +148,9 @@ class _LanguageScreenState extends State<LanguageScreen> {
     final typography = AppTypography.of(context);
 
     return SingleChildScrollView(
-      padding: EdgeInsets.all(spacing.contentPadding),
+      padding: EdgeInsets.symmetric(
+        horizontal: spacing.contentPaddingH,
+        vertical: spacing.contentPaddingV),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

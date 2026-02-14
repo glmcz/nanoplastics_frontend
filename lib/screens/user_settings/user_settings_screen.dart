@@ -73,8 +73,10 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
     final typography = AppTypography.of(context);
 
     return Padding(
-      padding: EdgeInsets.all(spacing.contentPadding),
-      child: Column(
+      padding: EdgeInsets.symmetric(
+        horizontal: spacing.contentPaddingH,
+        vertical: spacing.contentPaddingV),
+        child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           SizedBox(
@@ -115,12 +117,14 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
     final typography = AppTypography.of(context);
 
     return SingleChildScrollView(
-      padding: EdgeInsets.all(spacing.contentPadding),
+      padding: EdgeInsets.symmetric(
+        horizontal: spacing.contentPaddingH,
+        vertical: spacing.contentPaddingV),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildTitleSection(typography),
-          SizedBox(height: spacing.cardSpacing * 2),
+          SizedBox(height: spacing.cardSpacing),
           _buildSettingItem(
             title: AppLocalizations.of(context)!.settingsProfile,
             icon: Icons.person_outline,
@@ -171,7 +175,6 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
               MaterialPageRoute(builder: (_) => const AboutScreen()),
             ),
           ),
-          SizedBox(height: spacing.cardSpacing),
         ],
       ),
     );

@@ -96,7 +96,10 @@ class _AboutScreenState extends State<AboutScreen> {
 
   Widget _buildHeader(context, spacing, sizing, l10n, typography) {
     return Padding(
-      padding: EdgeInsets.all(spacing.contentPadding),
+      padding: EdgeInsets.symmetric(
+        horizontal: spacing.contentPaddingH,
+        vertical: spacing.contentPaddingV
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -139,7 +142,9 @@ class _AboutScreenState extends State<AboutScreen> {
     AppTypography typography,
   ) {
     return SingleChildScrollView(
-      padding: EdgeInsets.all(spacing.contentPadding),
+      padding: EdgeInsets.symmetric(
+        horizontal: spacing.contentPaddingH,
+        vertical: spacing.contentPaddingV),
       child: Column(
         children: [
           _buildAppInfo(context, spacing, sizing, typography),

@@ -64,8 +64,10 @@ class _ResultsScreenState extends State<ResultsScreen> {
     final typography = AppTypography.of(context);
 
     return Padding(
-      padding: EdgeInsets.all(spacing.contentPadding),
-      child: Column(
+      padding: EdgeInsets.symmetric(
+        horizontal: spacing.contentPaddingH,
+        vertical: spacing.contentPaddingV),
+        child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           SizedBox(
@@ -108,7 +110,9 @@ class _ResultsScreenState extends State<ResultsScreen> {
 
     return SingleChildScrollView(
       padding: EdgeInsets.symmetric(
-          horizontal: spacing.contentPadding, vertical: spacing.contentPadding),
+          horizontal: spacing.contentPaddingH, 
+          vertical: spacing.contentPaddingV
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -195,8 +199,8 @@ class _ResultsScreenState extends State<ResultsScreen> {
   }) {
     return Container(
       padding: EdgeInsets.symmetric(
-          horizontal: spacing.contentPadding * 0.8,
-          vertical: spacing.contentPadding * 0.8),
+          horizontal: spacing.contentPaddingH * 0.8,
+          vertical: spacing.contentPaddingV * 0.8),
       decoration: BoxDecoration(
         color: const Color(0xFF141928).withValues(alpha: 0.8),
         borderRadius: BorderRadius.circular(AppConstants.radiusLarge),
@@ -260,8 +264,8 @@ class _ResultsScreenState extends State<ResultsScreen> {
   ) {
     return Container(
       padding: EdgeInsets.symmetric(
-          horizontal: spacing.contentPadding * 0.8,
-          vertical: spacing.contentPadding * 0.8),
+          horizontal: spacing.contentPaddingH * 0.8,
+          vertical: spacing.contentPaddingV * 0.8),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topLeft,

@@ -15,10 +15,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get appSubtitle => 'SCIENCE, SOCIETY, FUTURE';
 
   @override
-  String get tabHuman => 'IMPACT ON HUMAN';
+  String get tabHuman => 'HUMANS';
 
   @override
-  String get tabPlanet => 'IMPACT ON EARTH';
+  String get tabPlanet => 'PLANET';
 
   @override
   String get navSources => 'Sources';
@@ -730,6 +730,16 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get leaderboardSubtitle =>
       'Leading contributors to nanoplastic solutions';
+
+  @override
+  String get leaderboardAccessRestricted => 'Leaderboard Access Restricted';
+
+  @override
+  String get leaderboardAccessDescription =>
+      'Register with your email and name to view the top 10 leaderboard and be recognized for your solutions.';
+
+  @override
+  String get leaderboardRegisterNow => 'Register Now';
 
   @override
   String get settingsBack => 'Back';

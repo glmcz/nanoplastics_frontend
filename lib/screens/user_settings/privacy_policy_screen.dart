@@ -46,7 +46,9 @@ class PrivacyPolicyScreen extends StatelessWidget {
     final typography = AppTypography.of(context);
 
     return Padding(
-      padding: EdgeInsets.all(spacing.contentPadding),
+      padding: EdgeInsets.symmetric(
+        horizontal: spacing.contentPaddingH,
+        vertical: spacing.contentPaddingV),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [

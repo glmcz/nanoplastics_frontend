@@ -15,10 +15,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get appSubtitle => 'CIENCIA, SOCIEDAD, FUTURO';
 
   @override
-  String get tabHuman => 'IMPACTO EN LOS HUMANOS';
+  String get tabHuman => 'HUMANOS';
 
   @override
-  String get tabPlanet => 'IMPACTO EN EL PLANETA TIERRA';
+  String get tabPlanet => 'PLANETA';
 
   @override
   String get navSources => 'Fuentes';
@@ -36,7 +36,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get humanCategoryFiltrationDetox => 'Filtración y Desintoxicación';
 
   @override
-  String get humanCategoryFiltrationDetoxDesc => 'Riñones, hígado, linfático';
+  String get humanCategoryFiltrationDetoxDesc => 'Riñones, hígado';
 
   @override
   String get humanCategoryVitalityTissue => 'Vitalidad y Tejido';
@@ -740,6 +740,17 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get leaderboardSubtitle =>
       'Contribuyentes principales a las soluciones de nanoplásticos';
+
+  @override
+  String get leaderboardAccessRestricted =>
+      'Acceso a la clasificación restringido';
+
+  @override
+  String get leaderboardAccessDescription =>
+      'Regístrate con tu correo electrónico y nombre para ver el top 10 de la clasificación y ser reconocido por tus soluciones.';
+
+  @override
+  String get leaderboardRegisterNow => 'Registrarse ahora';
 
   @override
   String get settingsBack => 'Atrás';
