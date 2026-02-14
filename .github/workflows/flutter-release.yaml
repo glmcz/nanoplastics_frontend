@@ -9,34 +9,33 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    container:
-      image: alpine:latest
 
     steps:
+      # ---------------- CHECKOUT ----------------
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install dependencies on Alpine
-        run: |
-          apk add --no-cache \
-            git \
-            curl \
-            bash \
-            openjdk17-jdk \
-            android-sdk \
-            android-sdk-build-tools
+      # ---------------- JAVA ----------------
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
 
-      - name: Install Flutter
-        run: |
-          git clone https://github.com/flutter/flutter.git -b stable --depth 1 /flutter
-          export PATH="/flutter/bin:$PATH"
-          flutter config --enable-web
-          flutter pub get
+      # ---------------- FLUTTER ----------------
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: stable
+          cache: true
 
-      # ---------- FULL FLAVOR ----------
+      # ---------------- DEPENDENCIES ----------------
+      - name: Install dependencies
+        run: flutter pub get
+
+      # ---------------- FULL FLAVOR ----------------
       - name: Build FULL flavor APK
         run: |
-          export PATH="/flutter/bin:$PATH"
           flutter build apk \
             --release \
             --flavor full \
@@ -44,14 +43,12 @@ jobs:
 
       - name: Rename FULL APK
         run: |
-          mkdir -p build/app/outputs/flutter-apk && \
           mv build/app/outputs/flutter-apk/app-full-release.apk \
              build/app/outputs/flutter-apk/app-full-release-ci.apk
 
-      # ---------- LITE FLAVOR ----------
+      # ---------------- LITE FLAVOR ----------------
       - name: Build LITE flavor APK
         run: |
-          export PATH="/flutter/bin:$PATH"
           flutter build apk \
             --release \
             --flavor lite
@@ -61,7 +58,7 @@ jobs:
           mv build/app/outputs/flutter-apk/app-lite-release.apk \
              build/app/outputs/flutter-apk/app-lite-release-ci.apk
 
-      # ---------- Upload artifacts ----------
+      # ---------------- UPLOAD ARTIFACTS ----------------
       - name: Upload FULL APK
         uses: actions/upload-artifact@v4
         with:
@@ -73,3 +70,11 @@ jobs:
         with:
           name: lite-apk
           path: build/app/outputs/flutter-apk/app-lite-release-ci.apk
+
+      # ---------------- CREATE RELEASE ----------------
+      - name: Publish Release Assets
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            build/app/outputs/flutter-apk/app-full-release-ci.apk
+            build/app/outputs/flutter-apk/app-lite-release-ci.apk
