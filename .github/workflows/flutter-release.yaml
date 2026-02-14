@@ -3,19 +3,28 @@ name: Flutter Release Build
 on:
   push:
     tags:
-      - "v*"
-  workflow_dispatch:
+      - "v*" # Triggers when you push a tag like v1.0.2
+  workflow_dispatch: # Allows manual run from the UI
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write # Essential for creating the release without a manual token
 
     steps:
-      # ---------------- CHECKOUT ----------------
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # ---------------- JAVA ----------------
+      # --- EXTRACT VERSION FROM PUBSPEC ---
+      # This pulls the 'version: 1.2.3+4' from your pubspec.yaml 
+      # to use as a fallback if no git tag is present.
+      - name: Get Version from Pubspec
+        id: pubspec_version
+        run: |
+          VERSION=$(grep 'version: ' pubspec.yaml | sed 's/version: //')
+          echo "VERSION=v$VERSION" >> $GITHUB_ENV
+
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
@@ -42,19 +51,13 @@ jobs:
       # ---------------- FULL FLAVOR ----------------
       - name: Build FULL APK
         run: |
-          flutter build apk \
-            --release \
-            --flavor full \
-            --dart-define=BUNDLE_ALL_LANGS=true
+          flutter build apk --release --flavor full --dart-define=BUNDLE_ALL_LANGS=true
 
       # ---------------- LITE FLAVOR ----------------
       - name: Build LITE APK
         run: |
-          flutter build apk \
-            --release \
-            --flavor lite
+          flutter build apk --release --flavor lite
 
-      # ---------------- UPLOAD ARTIFACTS ----------------
       - name: Upload APKs
         uses: actions/upload-artifact@v4
         with:
@@ -66,3 +69,7 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           files: build/app/outputs/flutter-apk/*.apk
+          # LOGIC: Use the Git Tag if available, otherwise use the version from pubspec
+          tag_name: ${{ github.ref_type == 'tag' && github.ref_name || env.VERSION }}
+          name: Release ${{ github.ref_type == 'tag' && github.ref_name || env.VERSION }}
+          generate_release_notes: true
