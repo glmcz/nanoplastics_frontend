@@ -86,12 +86,3 @@ jobs:
           tag_name: ${{ github.ref_type == 'tag' && github.ref_name || env.VERSION }}
           name: Release ${{ github.ref_type == 'tag' && github.ref_name || env.VERSION }}
           generate_release_notes: true
-
-      # ---------------- DEPLOY TO GITHUB PAGES ----------------
-      - name: Deploy APKs to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./build/app/outputs/flutter-apk
-          destination_dir: releases/${{ github.ref_type == 'tag' && github.ref_name || env.VERSION }}
-          keep_files: true
