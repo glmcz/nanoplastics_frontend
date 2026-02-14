@@ -11,15 +11,18 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # ---------------- CHECKOUT ----------------
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      # ---------------- JAVA ----------------
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: 17
 
+      # ---------------- FLUTTER ----------------
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
@@ -27,10 +30,16 @@ jobs:
           channel: stable
           cache: true
 
+      # ---------------- RESTORE FIREBASE CONFIG ----------------
+      - name: Restore google-services.json
+        run: |
+          echo "${{ secrets.GOOGLE_SERVICES_JSON }}" | base64 --decode > android/app/google-services.json
+
+      # ---------------- DEPENDENCIES ----------------
       - name: Install dependencies
         run: flutter pub get
 
-      # ---------- FULL ----------
+      # ---------------- FULL FLAVOR ----------------
       - name: Build FULL APK
         run: |
           flutter build apk \
@@ -38,16 +47,22 @@ jobs:
             --flavor full \
             --dart-define=BUNDLE_ALL_LANGS=true
 
-      # ---------- LITE ----------
+      # ---------------- LITE FLAVOR ----------------
       - name: Build LITE APK
         run: |
           flutter build apk \
             --release \
             --flavor lite
 
-      # ---------- Upload ----------
+      # ---------------- UPLOAD ARTIFACTS ----------------
       - name: Upload APKs
         uses: actions/upload-artifact@v4
         with:
           name: release-apks
           path: build/app/outputs/flutter-apk/*.apk
+
+      # ---------------- CREATE RELEASE ----------------
+      - name: Publish Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: build/app/outputs/flutter-apk/*.apk
