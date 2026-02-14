@@ -11,70 +11,43 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # ---------------- CHECKOUT ----------------
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # ---------------- JAVA ----------------
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: 17
 
-      # ---------------- FLUTTER ----------------
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: stable
+          flutter-version: "3.38.5"
+          channel: stable
           cache: true
 
-      # ---------------- DEPENDENCIES ----------------
       - name: Install dependencies
         run: flutter pub get
 
-      # ---------------- FULL FLAVOR ----------------
-      - name: Build FULL flavor APK
+      # ---------- FULL ----------
+      - name: Build FULL APK
         run: |
           flutter build apk \
             --release \
             --flavor full \
             --dart-define=BUNDLE_ALL_LANGS=true
 
-      - name: Rename FULL APK
-        run: |
-          mv build/app/outputs/flutter-apk/app-full-release.apk \
-             build/app/outputs/flutter-apk/app-full-release-ci.apk
-
-      # ---------------- LITE FLAVOR ----------------
-      - name: Build LITE flavor APK
+      # ---------- LITE ----------
+      - name: Build LITE APK
         run: |
           flutter build apk \
             --release \
             --flavor lite
 
-      - name: Rename LITE APK
-        run: |
-          mv build/app/outputs/flutter-apk/app-lite-release.apk \
-             build/app/outputs/flutter-apk/app-lite-release-ci.apk
-
-      # ---------------- UPLOAD ARTIFACTS ----------------
-      - name: Upload FULL APK
+      # ---------- Upload ----------
+      - name: Upload APKs
         uses: actions/upload-artifact@v4
         with:
-          name: full-apk
-          path: build/app/outputs/flutter-apk/app-full-release-ci.apk
-
-      - name: Upload LITE APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: lite-apk
-          path: build/app/outputs/flutter-apk/app-lite-release-ci.apk
-
-      # ---------------- CREATE RELEASE ----------------
-      - name: Publish Release Assets
-        uses: softprops/action-gh-release@v2
-        with:
-          files: |
-            build/app/outputs/flutter-apk/app-full-release-ci.apk
-            build/app/outputs/flutter-apk/app-lite-release-ci.apk
+          name: release-apks
+          path: build/app/outputs/flutter-apk/*.apk
