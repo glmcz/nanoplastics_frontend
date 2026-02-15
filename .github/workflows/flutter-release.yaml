@@ -68,16 +68,51 @@ jobs:
           # Rename to preserve full build
           mv build/app/outputs/flutter-apk/app-full-release.apk build/app/outputs/flutter-apk/nanoplastics_app_full.apk || true
 
-      - name: Check APK files before publishing
+      # Clean only APK and app build cache for next flavor (keeps pub/gradle cache)
+      - name: Prepare for LITE build
         run: |
-          echo "Files in flutter-apk directory:"
-          ls -lh build/app/outputs/flutter-apk/ || echo "Directory not found!"
+          rm -rf build/app/outputs/flutter-apk/app-lite-release.apk
+          rm -rf android/app/build/outputs/flutter-apk/app-lite-release.apk
+          ./android/gradlew -p android/app clean -x :app:bundleFullRelease || true
+
       # ---------------- LITE FLAVOR ----------------
       - name: Build LITE APK
         run: |
           flutter build apk --release --flavor lite --dart-define=BUNDLE_ALL_LANGS=false --target-platform android-arm64
           # Rename to preserve lite build
           mv build/app/outputs/flutter-apk/app-lite-release.apk build/app/outputs/flutter-apk/nanoplastics_app_lite.apk || true
+
+      # Strip non-EN PDFs from LITE APK to reduce size
+      - name: Strip non-EN PDFs from LITE APK
+        run: |
+          APK_PATH="build/app/outputs/flutter-apk/nanoplastics_app_lite.apk"
+          TEMP_DIR=$(mktemp -d)
+          
+          echo "Extracting LITE APK..."
+          unzip -q "$APK_PATH" -d "$TEMP_DIR"
+          
+          echo "Removing non-EN PDF files (~20MB total)..."
+          # Detailed removal with size tracking
+          for f in "$TEMP_DIR/assets/flutter_assets/assets/docs/Nanoplastics_Report_CS_compressed.pdf" \
+                   "$TEMP_DIR/assets/flutter_assets/assets/docs/Nanoplastics_Report_ES_compressed.pdf" \
+                   "$TEMP_DIR/assets/flutter_assets/assets/docs/Nanoplastics_Report_FR_compressed.pdf" \
+                   "$TEMP_DIR/assets/flutter_assets/assets/docs/Nanoplastics_Report_RU_compressed.pdf" \
+                   "$TEMP_DIR/assets/flutter_assets/assets/docs/CS_WATER_compressed.pdf"; do
+            if [ -f "$f" ]; then
+              rm "$f"
+              echo "Removed: $(basename "$f")"
+            fi
+          done
+          
+          echo "Repackaging APK (this shrinks the final file)..."
+          cd "$TEMP_DIR"
+          zip -q -r "$OLDPWD/$APK_PATH" .
+          cd "$OLDPWD"
+          
+          rm -rf "$TEMP_DIR"
+          
+          echo "LITE APK size after compression fix:"
+          ls -lh "$APK_PATH"
 
       - name: Upload APKs
         uses: actions/upload-artifact@v4

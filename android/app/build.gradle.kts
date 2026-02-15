@@ -60,7 +60,7 @@ android {
     productFlavors {
         create("lite") {
             dimension = "bundle"
-            // EN-only build — non-EN PDFs stripped at build time
+            // EN-only build — non-EN PDFs stripped in CI via post-build script
         }
         create("full") {
             dimension = "bundle"
@@ -83,32 +83,8 @@ android {
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
-
-    packaging {
-        resources {
-            // Exclude non-English PDFs from lite flavor
-            // These are downloaded on-demand instead of being bundled
-            excludes += "assets/docs/Nanoplastics_Report_CS_compressed.pdf"
-            excludes += "assets/docs/Nanoplastics_Report_ES_compressed.pdf"
-            excludes += "assets/docs/Nanoplastics_Report_FR_compressed.pdf"
-            excludes += "assets/docs/Nanoplastics_Report_RU_compressed.pdf"
-            excludes += "assets/docs/CS_WATER_compressed.pdf"
-        }
-    }
 }
 
 flutter {
     source = "../.."
-}
-
-// Flavor-specific packaging options for asset inclusion
-android.applicationVariants.all variant@{
-    val variantName = name
-    if (variantName.startsWith("full")) {
-        // Full flavor includes all language assets
-        println("Building full flavor: including all language PDFs")
-    } else if (variantName.startsWith("lite")) {
-        // Lite flavor uses packagingOptions.exclude above
-        println("Building lite flavor: excluding non-EN PDFs from assets")
-    }
 }
