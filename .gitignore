@@ -69,3 +69,4 @@ fire_base_publish.sh
 firebase.json
 
 android/app/google-services.json
+lib/l10n/app_localizations*.dart
