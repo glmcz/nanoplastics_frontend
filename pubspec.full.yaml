@@ -1,0 +1,10 @@
+# FULL flavor: All language PDFs bundled
+flutter:
+  assets:
+    - assets/docs/Nanoplastics_Report_EN_compressed.pdf
+    - assets/docs/Nanoplastics_Report_CS_compressed.pdf
+    - assets/docs/Nanoplastics_Report_ES_compressed.pdf
+    - assets/docs/Nanoplastics_Report_FR_compressed.pdf
+    - assets/docs/Nanoplastics_Report_RU_compressed.pdf
+    - assets/docs/CS_WATER_compressed.pdf
+    - assets/docs/EN_WATER_compressed.pdf

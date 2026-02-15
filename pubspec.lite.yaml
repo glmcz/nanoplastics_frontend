@@ -1,0 +1,5 @@
+# LITE flavor: EN PDFs only
+flutter:
+  assets:
+    - assets/docs/Nanoplastics_Report_EN_compressed.pdf
+    - assets/docs/EN_WATER_compressed.pdf

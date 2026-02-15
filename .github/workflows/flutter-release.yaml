@@ -57,6 +57,28 @@ jobs:
           echo "KEY_ALIAS=${{ secrets.KEY_ALIAS }}" >> $GITHUB_ENV
           echo "KEY_PASSWORD=${{ secrets.KEY_PASSWORD }}" >> $GITHUB_ENV
 
+      # ---------- INSTALL YQ ----------
+      - name: Install yq
+        run: |
+          sudo wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
+          sudo chmod +x /usr/local/bin/yq
+
+      # ---------- GENERATE FULL PUBSPEC ------
+      - name: Generate FULL pubspec
+        if: contains(github.ref_name, 'full')
+        run: |
+          yq eval-all '. as $item ireduce ({}; . * $item )' \
+            pubspec.base.yaml pubspec.full.yaml > pubspec.yaml
+          echo "Generated FULL pubspec.yaml"
+
+      # ---------- GENERATE LITE PUBSPEC ------
+      - name: Generate LITE pubspec
+        if: contains(github.ref_name, 'lite')
+        run: |
+          yq eval-all '. as $item ireduce ({}; . * $item )' \
+            pubspec.base.yaml pubspec.lite.yaml > pubspec.yaml
+          echo "Generated LITE pubspec.yaml"
+
       # ---------------- DEPENDENCIES ----------------
       - name: Install dependencies
         run: flutter pub get
@@ -81,42 +103,6 @@ jobs:
           flutter build apk --release --flavor lite --dart-define=BUNDLE_ALL_LANGS=false --target-platform android-arm64
           # Rename to lite specific name
           mv build/app/outputs/flutter-apk/app-lite-release.apk build/app/outputs/flutter-apk/nanoplastics_app_lite.apk || true
-
-      # Strip non-EN PDFs from LITE APK to reduce size
-      - name: Strip non-EN PDFs from LITE APK
-        run: |
-          # Use absolute path
-          APK_PATH="$GITHUB_WORKSPACE/build/app/outputs/flutter-apk/nanoplastics_app_lite.apk"
-          TEMP_DIR=$(mktemp -d)
-          
-          echo "Original LITE APK size:"
-          ls -lh "$APK_PATH"
-
-          echo "Extracting LITE APK..."
-          unzip -q "$APK_PATH" -d "$TEMP_DIR"
-          
-          echo "Searching and removing non-EN PDF files..."
-          # Find files matching the non-EN patterns and remove them
-          find "$TEMP_DIR" -name "*_CS_compressed.pdf" -delete
-          find "$TEMP_DIR" -name "*_ES_compressed.pdf" -delete
-          find "$TEMP_DIR" -name "*_FR_compressed.pdf" -delete
-          find "$TEMP_DIR" -name "*_RU_compressed.pdf" -delete
-          find "$TEMP_DIR" -name "CS_WATER_compressed.pdf" -delete
-          
-          echo "Repackaging LITE APK..."
-          # Remove the original un-stripped APK so zip creates a fresh one
-          rm "$APK_PATH"
-          cd "$TEMP_DIR"
-          zip -q -9 -r "$APK_PATH" .
-          cd -
-          
-          rm -rf "$TEMP_DIR"
-          
-          echo "FINAL LITE APK size after stripping:"
-          ls -lh "$APK_PATH"
-
-          # IMPORTANT: Remove the original generated files so they don't get uploaded twice
-          rm -f build/app/outputs/flutter-apk/app-*-release.apk
 
       - name: Upload APKs
         uses: actions/upload-artifact@v4

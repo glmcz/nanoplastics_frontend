@@ -1,0 +1,58 @@
+name: nanoplastics_app
+description: NanoSolve Hive - Crowdsourcing R&D solutions for nanoplastic pollution
+publish_to: 'none'
+version: 1.0.4
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  intl: any
+  http: ^1.1.0
+  uuid: ^4.0.0
+  firebase_core: ^2.32.0
+  firebase_crashlytics: ^3.4.0
+  shared_preferences: ^2.1.1
+  flutter_secure_storage: ^9.0.0
+  url_launcher: ^6.2.0
+  flutter_custom_tabs: ^2.1.0
+  pdfx: ^2.6.0
+  file_picker: ^8.1.0
+  share_plus: ^10.0.0
+  path_provider: ^2.1.0
+  qr_flutter: ^4.1.0
+  package_info_plus: ^4.2.0
+  in_app_update: ^4.2.3
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+  flutter_launcher_icons: ^0.13.1
+
+flutter_launcher_icons:
+  android: true
+  ios: false
+  web:
+    generate: true
+  image_path: "assets/images/app_logo.png"
+  min_sdk_android: 10
+  adaptive_icon_background: "#FFFFFF"
+  adaptive_icon_foreground: "assets/images/app_logo.png"
+
+flutter:
+  generate: true
+  uses-material-design: true
+
+  # Universal assets (images, localization files, onboarding)
+  assets:
+    - assets/images/
+    - assets/l10n/app_cs.arb
+    - assets/l10n/app_en.arb
+    - assets/onboarding/slide1_ocean_plastic.jpg
+    - assets/onboarding/slide2_missions.jpg
+    - assets/onboarding/slide3_collaboration.jpg
