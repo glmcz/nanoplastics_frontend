@@ -65,11 +65,19 @@ jobs:
       - name: Build FULL APK
         run: |
           flutter build apk --release --flavor full --dart-define=BUNDLE_ALL_LANGS=true --analyze-size --target-platform android-arm64
+          # Rename to preserve full build
+          mv build/app/outputs/flutter-apk/app-full-release.apk build/app/outputs/flutter-apk/nanoplastics_app_full.apk || true
 
+      - name: Check APK files before publishing
+        run: |
+          echo "Files in flutter-apk directory:"
+          ls -lh build/app/outputs/flutter-apk/ || echo "Directory not found!"
       # ---------------- LITE FLAVOR ----------------
       - name: Build LITE APK
         run: |
-          flutter build apk --release --flavor lite --analyze-size --target-platform android-arm64
+          flutter build apk --release --flavor lite --dart-define=BUNDLE_ALL_LANGS=false --target-platform android-arm64
+          # Rename to preserve lite build
+          mv build/app/outputs/flutter-apk/app-lite-release.apk build/app/outputs/flutter-apk/nanoplastics_app_lite.apk || true
 
       - name: Upload APKs
         uses: actions/upload-artifact@v4
