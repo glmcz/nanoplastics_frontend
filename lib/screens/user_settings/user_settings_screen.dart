@@ -348,8 +348,8 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (context) => WillPopScope(
-        onWillPop: () async => false,
+      builder: (context) => PopScope(
+        canPop: false,
         child: AlertDialog(
           backgroundColor: const Color(0xFF1A1A24),
           content: Row(
@@ -388,30 +388,7 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
     } catch (e) {
       if (mounted) {
         Navigator.of(context).pop();
-        showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            backgroundColor: const Color(0xFF1A1A24),
-            title: Text(
-              'Error',
-              style: AppTypography.of(context).title.copyWith(
-                    color: Colors.white,
-                  ),
-            ),
-            content: Text(
-              'Failed to check for updates: $e',
-              style: AppTypography.of(context).body.copyWith(
-                    color: Colors.white.withValues(alpha: 0.8),
-                  ),
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: const Text('OK'),
-              ),
-            ],
-          ),
-        );
+        _showErrorDialog('Failed to check for updates: $e');
       }
     }
   }
@@ -499,6 +476,33 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
     );
   }
 
+  void _showErrorDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: const Color(0xFF1A1A24),
+        title: Text(
+          'Error',
+          style: AppTypography.of(context).title.copyWith(
+                color: Colors.white,
+              ),
+        ),
+        content: Text(
+          message,
+          style: AppTypography.of(context).body.copyWith(
+                color: Colors.white.withValues(alpha: 0.8),
+              ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('OK'),
+          ),
+        ],
+      ),
+    );
+  }
+
   Future<void> _startUpdateProcess() async {
     Navigator.of(context).pop();
 
@@ -538,60 +542,15 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
         Navigator.of(context).pop();
 
         if (!success) {
-          // Show error dialog
-          showDialog(
-            context: context,
-            builder: (context) => AlertDialog(
-              backgroundColor: const Color(0xFF1A1A24),
-              title: Text(
-                'Update Failed',
-                style: AppTypography.of(context).title.copyWith(
-                      color: Colors.white,
-                    ),
-              ),
-              content: Text(
-                'Failed to start the update process. Please try again later or download manually.',
-                style: AppTypography.of(context).body.copyWith(
-                      color: Colors.white.withValues(alpha: 0.8),
-                    ),
-              ),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  child: const Text('OK'),
-                ),
-              ],
-            ),
+          _showErrorDialog(
+            'Failed to start the update process. Please try again later or download manually.',
           );
         }
       }
     } catch (e) {
       if (mounted) {
         Navigator.of(context).pop();
-        showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            backgroundColor: const Color(0xFF1A1A24),
-            title: Text(
-              'Error',
-              style: AppTypography.of(context).title.copyWith(
-                    color: Colors.white,
-                  ),
-            ),
-            content: Text(
-              'An unexpected error occurred: $e',
-              style: AppTypography.of(context).body.copyWith(
-                    color: Colors.white.withValues(alpha: 0.8),
-                  ),
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: const Text('OK'),
-              ),
-            ],
-          ),
-        );
+        _showErrorDialog('An unexpected error occurred: $e');
       }
     }
   }

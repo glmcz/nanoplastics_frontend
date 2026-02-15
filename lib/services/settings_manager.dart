@@ -26,6 +26,8 @@ class SettingsManager {
   static const String _latestVersionKey = 'latest_version';
   static const String _updateDownloadUrlKey = 'update_download_url';
   static const String _lastVersionCheckKey = 'last_version_check';
+  static const String _lastReleaseTagIdKey = 'last_release_tag_id';
+  static const String _lastUpdateCheckTimeKey = 'last_update_check_time';
 
   // Build type identifier
   static const String _buildTypeKey = 'build_type';
@@ -360,5 +362,31 @@ class SettingsManager {
   Future<void> setLastVersionCheck(DateTime dateTime) async {
     _checkInitialized();
     await _prefs.setString(_lastVersionCheckKey, dateTime.toIso8601String());
+  }
+
+  /// Get last release tag ID
+  String? get lastReleaseTagId {
+    _checkInitialized();
+    return _prefs.getString(_lastReleaseTagIdKey);
+  }
+
+  /// Set last release tag ID
+  Future<void> setLastReleaseTagId(String tagId) async {
+    _checkInitialized();
+    await _prefs.setString(_lastReleaseTagIdKey, tagId);
+  }
+
+  /// Get last update check time
+  DateTime? get lastUpdateCheckTime {
+    _checkInitialized();
+    final timestamp = _prefs.getString(_lastUpdateCheckTimeKey);
+    if (timestamp == null) return null;
+    return DateTime.tryParse(timestamp);
+  }
+
+  /// Set last update check time
+  Future<void> setLastUpdateCheckTime(DateTime dateTime) async {
+    _checkInitialized();
+    await _prefs.setString(_lastUpdateCheckTimeKey, dateTime.toIso8601String());
   }
 }

@@ -6,29 +6,52 @@ import 'dart:convert';
 import 'settings_manager.dart';
 import 'logger_service.dart';
 
-/// Version metadata response from backend
-class VersionMetadata {
-  final String latestVersion;
-  final String minSupportedVersion;
-  final String downloadUrl;
+/// GitHub release metadata from GitHub API
+class GitHubRelease {
+  final String tagName;
+  final String name;
+  final bool isPrerelease;
+  final DateTime publishedAt;
+  final String? fullBuildUrl;
+  final String? liteBuildUrl;
 
-  VersionMetadata({
-    required this.latestVersion,
-    required this.minSupportedVersion,
-    required this.downloadUrl,
+  GitHubRelease({
+    required this.tagName,
+    required this.name,
+    required this.isPrerelease,
+    required this.publishedAt,
+    this.fullBuildUrl,
+    this.liteBuildUrl,
   });
 
-  factory VersionMetadata.fromJson(Map<String, dynamic> json) {
-    return VersionMetadata(
-      latestVersion: json['latest_version'] ?? '1.0.0',
-      minSupportedVersion: json['min_supported_version'] ?? '1.0.0',
-      downloadUrl: json['download_url'] ?? '',
+  factory GitHubRelease.fromJson(Map<String, dynamic> json) {
+    final assets = (json['assets'] as List<dynamic>?) ?? [];
+    String? fullUrl;
+    String? liteUrl;
+
+    for (final asset in assets) {
+      final assetName = asset['name'] ?? '';
+      if (assetName == 'nanoplastics_app.apk') {
+        fullUrl = asset['browser_download_url'];
+      } else if (assetName == 'nanoplastics_app_lite.apk') {
+        liteUrl = asset['browser_download_url'];
+      }
+    }
+
+    return GitHubRelease(
+      tagName: json['tag_name'] ?? 'unknown',
+      name: json['name'] ?? 'Release',
+      isPrerelease: json['prerelease'] ?? false,
+      publishedAt:
+          DateTime.tryParse(json['published_at'] ?? '') ?? DateTime.now(),
+      fullBuildUrl: fullUrl,
+      liteBuildUrl: liteUrl,
     );
   }
 }
 
 /// Service for handling in-app updates
-/// Checks for new versions from backend and manages Android flexible updates
+/// Checks for new versions from GitHub releases and manages Android flexible updates
 class UpdateService {
   static final UpdateService _instance = UpdateService._internal();
 
@@ -38,53 +61,82 @@ class UpdateService {
 
   UpdateService._internal();
 
-  final String _versionEndpoint = 'http://37.27.247.129/meta/version';
+  static const String _githubApiUrl =
+      'https://api.github.com/repos/glmcz/nanoplastics_frontend/releases/latest';
+  static const Duration _checkInterval = Duration(hours: 12); // 2x per day
 
-  /// Check if update is available and notify user
+  /// Check if update is available based on GitHub release tag
+  /// Returns true only if a new release tag is detected (not already saved)
   Future<bool> checkForUpdates() async {
     try {
-      // Get current app version
-      final packageInfo = await PackageInfo.fromPlatform();
-      final currentVersion = packageInfo.version;
+      final settingsManager = SettingsManager();
 
-      LoggerService().logUserAction(
-        'Checking for updates',
-        params: {'current_version': currentVersion},
-      );
+      // Check if enough time has passed since last check (12 hour interval = 2x per day)
+      final lastCheck = settingsManager.lastUpdateCheckTime;
+      if (lastCheck != null) {
+        final timeSinceLastCheck = DateTime.now().difference(lastCheck);
+        if (timeSinceLastCheck < _checkInterval) {
+          LoggerService().logUserAction(
+            'Skipping update check - checked recently',
+            params: {'minutes_ago': (timeSinceLastCheck.inMinutes)},
+          );
+          return false; // Don't check again yet
+        }
+      }
 
-      // Fetch version metadata from backend
-      final versionMetadata = await _fetchVersionMetadata();
-      if (versionMetadata == null) {
-        LoggerService().logUserAction('Failed to fetch version metadata');
+      // Fetch latest release from GitHub
+      final release = await _fetchLatestRelease();
+      if (release == null) {
+        LoggerService().logUserAction('Failed to fetch GitHub release');
+        await settingsManager.setLastUpdateCheckTime(DateTime.now());
         return false;
       }
 
-      // Save last checked time
-      final settingsManager = SettingsManager();
-      await settingsManager.setLastVersionCheck(DateTime.now());
+      // Update check timestamp
+      await settingsManager.setLastUpdateCheckTime(DateTime.now());
 
-      // Compare versions
-      if (_isVersionGreater(
-        versionMetadata.latestVersion,
-        currentVersion,
-      )) {
-        // Update available
+      // Get previously saved tag ID
+      final savedTagId = settingsManager.lastReleaseTagId;
+      final currentTagId = release.tagName;
+
+      // If tag is different (new release), update is available
+      if (savedTagId != currentTagId) {
+        // Get appropriate download URL based on build type
+        final buildType = settingsManager.buildType;
+        String? downloadUrl;
+
+        if (buildType.toLowerCase() == 'full') {
+          downloadUrl = release.fullBuildUrl;
+        } else {
+          downloadUrl = release.liteBuildUrl;
+        }
+
+        if (downloadUrl == null) {
+          LoggerService().logUserAction('APK URL not found in GitHub release',
+              params: {'build_type': buildType});
+          return false;
+        }
+
+        // Save new tag ID and update info
+        await settingsManager.setLastReleaseTagId(currentTagId);
         await settingsManager.setUpdateAvailable(true);
-        await settingsManager.setLatestVersion(versionMetadata.latestVersion);
-        await settingsManager.setUpdateDownloadUrl(versionMetadata.downloadUrl);
+        await settingsManager.setLatestVersion(currentTagId);
+        await settingsManager.setUpdateDownloadUrl(downloadUrl);
 
         LoggerService().logUserAction(
-          'Update available',
+          'New release detected',
           params: {
-            'current': currentVersion,
-            'latest': versionMetadata.latestVersion,
+            'tag': currentTagId,
+            'build_type': buildType,
+            'url': downloadUrl,
           },
         );
-        return true;
+        return true; // New release available
       } else {
+        // Same tag - no new update
         await settingsManager.setUpdateAvailable(false);
-        LoggerService().logUserAction('App is up to date',
-            params: {'version': currentVersion});
+        LoggerService()
+            .logUserAction('App is up to date', params: {'tag': currentTagId});
         return false;
       }
     } catch (e, stackTrace) {
@@ -97,53 +149,31 @@ class UpdateService {
     }
   }
 
-  /// Fetch version metadata from backend
-  Future<VersionMetadata?> _fetchVersionMetadata() async {
+  /// Fetch latest release from GitHub API
+  Future<GitHubRelease?> _fetchLatestRelease() async {
     try {
       final response = await http.get(
-        Uri.parse(_versionEndpoint),
-        headers: {'Content-Type': 'application/json'},
+        Uri.parse(_githubApiUrl),
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/vnd.github.v3+json',
+        },
       ).timeout(
         const Duration(seconds: 10),
-        onTimeout: () => throw TimeoutException('Version check timeout'),
+        onTimeout: () => throw TimeoutException('GitHub API timeout'),
       );
 
       if (response.statusCode == 200) {
         final json = jsonDecode(response.body);
-        return VersionMetadata.fromJson(json);
+        return GitHubRelease.fromJson(json);
       } else {
-        throw Exception('Failed to fetch version: ${response.statusCode}');
+        throw Exception(
+            'Failed to fetch GitHub release: ${response.statusCode}');
       }
     } catch (e) {
       LoggerService().logError(
-          'Error fetching version metadata', e.toString(), StackTrace.current);
+          'Error fetching GitHub release', e.toString(), StackTrace.current);
       return null;
-    }
-  }
-
-  /// Compare version strings (e.g., "1.0.5" > "1.0.4")
-  bool _isVersionGreater(String version1, String version2) {
-    try {
-      final v1Parts = version1.split('.').map(int.parse).toList();
-      final v2Parts = version2.split('.').map(int.parse).toList();
-
-      // Pad with zeros
-      while (v1Parts.length < v2Parts.length) {
-        v1Parts.add(0);
-      }
-      while (v2Parts.length < v1Parts.length) {
-        v2Parts.add(0);
-      }
-
-      for (int i = 0; i < v1Parts.length; i++) {
-        if (v1Parts[i] > v2Parts[i]) return true;
-        if (v1Parts[i] < v2Parts[i]) return false;
-      }
-      return false;
-    } catch (e) {
-      LoggerService().logError(
-          'Error comparing versions', e.toString(), StackTrace.current);
-      return false;
     }
   }
 

@@ -7,7 +7,6 @@ import 'screens/main_screen.dart';
 import 'l10n/app_localizations.dart';
 import 'services/settings_manager.dart';
 import 'services/logger_service.dart';
-import 'services/update_service.dart';
 import 'utils/route_observer.dart';
 
 void main() async {
