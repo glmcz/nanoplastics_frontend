@@ -65,8 +65,8 @@ jobs:
       - name: Build FULL APK
         run: |
           flutter build apk --release --flavor full --dart-define=BUNDLE_ALL_LANGS=true --analyze-size --target-platform android-arm64
-          # Rename to preserve full build
-          mv build/app/outputs/flutter-apk/app-full-release.apk build/app/outputs/flutter-apk/nanoplastics_app_full.apk || true
+          # Rename to match backend default download URL
+          mv build/app/outputs/flutter-apk/app-full-release.apk build/app/outputs/flutter-apk/nanoplastics_app.apk || true
 
       # Clean only APK and app build cache for next flavor (keeps pub/gradle cache)
       - name: Prepare for LITE build
@@ -79,52 +79,58 @@ jobs:
       - name: Build LITE APK
         run: |
           flutter build apk --release --flavor lite --dart-define=BUNDLE_ALL_LANGS=false --target-platform android-arm64
-          # Rename to preserve lite build
+          # Rename to lite specific name
           mv build/app/outputs/flutter-apk/app-lite-release.apk build/app/outputs/flutter-apk/nanoplastics_app_lite.apk || true
 
       # Strip non-EN PDFs from LITE APK to reduce size
       - name: Strip non-EN PDFs from LITE APK
         run: |
-          APK_PATH="build/app/outputs/flutter-apk/nanoplastics_app_lite.apk"
+          # Use absolute path
+          APK_PATH="$GITHUB_WORKSPACE/build/app/outputs/flutter-apk/nanoplastics_app_lite.apk"
           TEMP_DIR=$(mktemp -d)
           
+          echo "Original LITE APK size:"
+          ls -lh "$APK_PATH"
+
           echo "Extracting LITE APK..."
           unzip -q "$APK_PATH" -d "$TEMP_DIR"
           
-          echo "Removing non-EN PDF files (~20MB total)..."
-          # Detailed removal with size tracking
-          for f in "$TEMP_DIR/assets/flutter_assets/assets/docs/Nanoplastics_Report_CS_compressed.pdf" \
-                   "$TEMP_DIR/assets/flutter_assets/assets/docs/Nanoplastics_Report_ES_compressed.pdf" \
-                   "$TEMP_DIR/assets/flutter_assets/assets/docs/Nanoplastics_Report_FR_compressed.pdf" \
-                   "$TEMP_DIR/assets/flutter_assets/assets/docs/Nanoplastics_Report_RU_compressed.pdf" \
-                   "$TEMP_DIR/assets/flutter_assets/assets/docs/CS_WATER_compressed.pdf"; do
-            if [ -f "$f" ]; then
-              rm "$f"
-              echo "Removed: $(basename "$f")"
-            fi
-          done
+          echo "Searching and removing non-EN PDF files..."
+          # Find files matching the non-EN patterns and remove them
+          find "$TEMP_DIR" -name "*_CS_compressed.pdf" -delete
+          find "$TEMP_DIR" -name "*_ES_compressed.pdf" -delete
+          find "$TEMP_DIR" -name "*_FR_compressed.pdf" -delete
+          find "$TEMP_DIR" -name "*_RU_compressed.pdf" -delete
+          find "$TEMP_DIR" -name "CS_WATER_compressed.pdf" -delete
           
-          echo "Repackaging APK (this shrinks the final file)..."
+          echo "Repackaging LITE APK..."
+          # Remove the original un-stripped APK so zip creates a fresh one
+          rm "$APK_PATH"
           cd "$TEMP_DIR"
-          zip -q -r "$OLDPWD/$APK_PATH" .
-          cd "$OLDPWD"
+          zip -q -9 -r "$APK_PATH" .
+          cd -
           
           rm -rf "$TEMP_DIR"
           
-          echo "LITE APK size after compression fix:"
+          echo "FINAL LITE APK size after stripping:"
           ls -lh "$APK_PATH"
+
+          # IMPORTANT: Remove the original generated files so they don't get uploaded twice
+          rm -f build/app/outputs/flutter-apk/app-*-release.apk
 
       - name: Upload APKs
         uses: actions/upload-artifact@v4
         with:
           name: release-apks
-          path: build/app/outputs/flutter-apk/*.apk
+          # Upload only our specifically named files
+          path: build/app/outputs/flutter-apk/nanoplastics_app*.apk
 
       # ---------------- CREATE RELEASE ----------------
       - name: Publish Release
         uses: softprops/action-gh-release@v2
         with:
-          files: build/app/outputs/flutter-apk/*.apk
+          # Only release our specifically named files
+          files: build/app/outputs/flutter-apk/nanoplastics_app*.apk
           # LOGIC: Use the Git Tag if available, otherwise use the version from pubspec
           tag_name: ${{ github.ref_type == 'tag' && github.ref_name || env.VERSION }}
           name: Release ${{ github.ref_type == 'tag' && github.ref_name || env.VERSION }}

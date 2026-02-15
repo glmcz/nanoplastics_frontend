@@ -26,6 +26,7 @@ dependencies:
   path_provider: ^2.1.0
   qr_flutter: ^4.1.0
   package_info_plus: ^4.2.0
+  in_app_update: ^4.2.3
 
 dev_dependencies:
   flutter_test:
@@ -62,3 +63,5 @@ flutter:
     - assets/onboarding/slide1_ocean_plastic.jpg
     - assets/onboarding/slide2_missions.jpg
     - assets/onboarding/slide3_collaboration.jpg
+
+# The 'flavors' key is not supported by standard Flutter; removing experimental config.
