@@ -21,6 +21,15 @@ class SettingsManager {
   static const String _emailNotificationsKey = 'email_notifications';
   static const String _pushNotificationsKey = 'push_notifications';
 
+  // Update-related keys
+  static const String _updateAvailableKey = 'update_available';
+  static const String _latestVersionKey = 'latest_version';
+  static const String _updateDownloadUrlKey = 'update_download_url';
+  static const String _lastVersionCheckKey = 'last_version_check';
+
+  // Build type identifier
+  static const String _buildTypeKey = 'build_type';
+
   static final SettingsManager _instance = SettingsManager._internal();
   static bool _isInitialized = false;
 
@@ -152,6 +161,18 @@ class SettingsManager {
   Future<void> resetToDefaults() async {
     _checkInitialized();
     await clearAll();
+  }
+
+  /// Get build type (FULL or LITE)
+  String get buildType {
+    _checkInitialized();
+    return _prefs.getString(_buildTypeKey) ?? 'UNKNOWN';
+  }
+
+  /// Set build type identifier
+  Future<void> setBuildType(String type) async {
+    _checkInitialized();
+    await _prefs.setString(_buildTypeKey, type);
   }
 
   // Draft idea persistence (per category)
@@ -287,5 +308,57 @@ class SettingsManager {
   Future<void> setPushNotificationsEnabled(bool enabled) async {
     _checkInitialized();
     await _prefs.setBool(_pushNotificationsKey, enabled);
+  }
+
+  // Update-related getters and setters
+
+  /// Check if an update is available
+  bool get updateAvailable {
+    _checkInitialized();
+    return _prefs.getBool(_updateAvailableKey) ?? false;
+  }
+
+  /// Set update available status
+  Future<void> setUpdateAvailable(bool available) async {
+    _checkInitialized();
+    await _prefs.setBool(_updateAvailableKey, available);
+  }
+
+  /// Get latest available version
+  String? get latestVersion {
+    _checkInitialized();
+    return _prefs.getString(_latestVersionKey);
+  }
+
+  /// Set latest available version
+  Future<void> setLatestVersion(String version) async {
+    _checkInitialized();
+    await _prefs.setString(_latestVersionKey, version);
+  }
+
+  /// Get update download URL
+  String? get updateDownloadUrl {
+    _checkInitialized();
+    return _prefs.getString(_updateDownloadUrlKey);
+  }
+
+  /// Set update download URL
+  Future<void> setUpdateDownloadUrl(String url) async {
+    _checkInitialized();
+    await _prefs.setString(_updateDownloadUrlKey, url);
+  }
+
+  /// Get last version check timestamp
+  DateTime? get lastVersionCheck {
+    _checkInitialized();
+    final timestamp = _prefs.getString(_lastVersionCheckKey);
+    if (timestamp == null) return null;
+    return DateTime.tryParse(timestamp);
+  }
+
+  /// Set last version check timestamp
+  Future<void> setLastVersionCheck(DateTime dateTime) async {
+    _checkInitialized();
+    await _prefs.setString(_lastVersionCheckKey, dateTime.toIso8601String());
   }
 }

@@ -15,6 +15,7 @@ import 'sources_screen.dart';
 import 'results_screen.dart';
 import 'user_settings/user_settings_screen.dart';
 import '../services/logger_service.dart';
+import '../services/settings_manager.dart';
 
 enum ImpactType { human, planet }
 
@@ -108,8 +109,7 @@ class _MainScreenState extends State<MainScreen> {
     return Padding(
       padding: EdgeInsets.symmetric(
           horizontal: spacing.contentPaddingH,
-          vertical: spacing.contentPaddingV
-      ),
+          vertical: spacing.contentPaddingV),
       child: Column(
         children: [
           NanosolveLogo(height: sizing.logoHeight),
@@ -117,17 +117,14 @@ class _MainScreenState extends State<MainScreen> {
           Text(
             _selectedTab == ImpactType.human ? l10n.tabHuman : l10n.tabPlanet,
             style: typography.display.copyWith(
-              color: Colors.white,
-              fontSize: typography.display.fontSize
-            ),
+                color: Colors.white, fontSize: typography.display.fontSize),
           ),
           const SizedBox(height: AppConstants.space4),
           Text(
             l10n.appSubtitle,
             style: typography.label.copyWith(
-              color: AppColors.textMuted,
-              fontSize: typography.label.fontSize
-            ),
+                color: AppColors.textMuted,
+                fontSize: typography.label.fontSize),
           ),
         ],
       ),
@@ -289,9 +286,11 @@ class _MainScreenState extends State<MainScreen> {
 
     return Padding(
       padding: EdgeInsets.only(
-        left: spacing.md*1.5,
-        right: spacing.md*1.5, /// TODO refactor me. 
-        top: spacing.md*2.0,
+        left: spacing.md * 1.5,
+        right: spacing.md * 1.5,
+
+        /// TODO refactor me.
+        top: spacing.md * 2.0,
         bottom: spacing.md,
       ),
       child: Column(children: rows),

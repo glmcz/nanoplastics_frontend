@@ -7,6 +7,7 @@ import 'screens/main_screen.dart';
 import 'l10n/app_localizations.dart';
 import 'services/settings_manager.dart';
 import 'services/logger_service.dart';
+import 'services/update_service.dart';
 import 'utils/route_observer.dart';
 
 void main() async {
@@ -19,6 +20,17 @@ void main() async {
 
   // Initialize Settings Manager
   await SettingsManager.init();
+
+  // Detect and persist build type on first launch
+  final settingsManager = SettingsManager();
+  if (settingsManager.buildType == 'UNKNOWN') {
+    const bundleAllLangs =
+        bool.fromEnvironment('BUNDLE_ALL_LANGS', defaultValue: false);
+    await settingsManager.setBuildType(bundleAllLangs ? 'FULL' : 'LITE');
+    LoggerService().logUserAction('build_type_detected', params: {
+      'type': bundleAllLangs ? 'FULL' : 'LITE',
+    });
+  }
 
   // Set status bar style
   SystemChrome.setSystemUIOverlayStyle(
@@ -36,6 +48,11 @@ void main() async {
   ]);
 
   // Note: Firebase is already initialized in LoggerService.initialize()
+
+  // Schedule version check after 5 seconds
+  Future.delayed(const Duration(seconds: 5), () {
+    UpdateService().checkForUpdates();
+  });
 
   runApp(const RestartableApp());
 }

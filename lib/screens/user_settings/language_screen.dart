@@ -6,8 +6,10 @@ import '../../utils/app_spacing.dart';
 import '../../utils/app_sizing.dart';
 import '../../utils/app_typography.dart';
 import '../../services/settings_manager.dart';
+import '../../utils/pdf_utils.dart';
 import '../../widgets/nanosolve_logo.dart';
 import '../../main.dart';
+import '../pdf_viewer_screen.dart';
 
 class LanguageScreen extends StatefulWidget {
   final Function(Locale)? onLanguageChanged;
@@ -47,6 +49,18 @@ class _LanguageScreenState extends State<LanguageScreen> {
     setState(() => _selectedLanguage = code);
     await _settingsManager.setUserLanguage(code);
 
+    // Download PDFs for non-EN languages in LITE build with progress
+    if (code != 'en' && _settingsManager.buildType == 'LITE') {
+      final success = await _downloadPDFForLanguageWithProgress(code);
+      if (!success) {
+        // Show offline fallback dialog
+        if (mounted) {
+          _showOfflineFallbackDialog(code);
+          return;
+        }
+      }
+    }
+
     if (widget.onLanguageChanged != null) {
       widget.onLanguageChanged!(Locale(code));
     }
@@ -65,8 +79,141 @@ class _LanguageScreenState extends State<LanguageScreen> {
               borderRadius: BorderRadius.circular(AppConstants.radiusMedium)),
         ),
       );
+
+      // After restart, navigate to PDF viewer for non-EN languages in LITE build
+      if (code != 'en' && _settingsManager.buildType == 'LITE') {
+        Future.delayed(const Duration(milliseconds: 500), () async {
+          if (mounted) {
+            final pdfPath = await resolveMainReport(code);
+            if (pdfPath != null) {
+              await Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (_) => PDFViewerScreen(
+                    title: _languages.firstWhere((l) => l.code == code).name,
+                    startPage: 1,
+                    endPage: 0,
+                    description: 'Language report for ${_languages.firstWhere((l) => l.code == code).name}',
+                    pdfAssetPath: pdfPath.isAsset ? pdfPath.path : null,
+                  ),
+                ),
+              );
+            }
+          }
+        });
+      }
     }
   }
+
+  Future<bool> _downloadPDFForLanguageWithProgress(String langCode) async {
+    try {
+      // Check if already downloaded
+      final resolved = await resolveMainReport(langCode);
+      if (resolved != null) return true;
+
+      // Show progress dialog
+      if (!mounted) return false;
+      
+      double progress = 0;
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              backgroundColor: const Color(0xFF1A1A2E),
+              title: Text(
+                'Downloading ${_languages.firstWhere((l) => l.code == langCode).name}',
+                style: const TextStyle(color: AppColors.pastelAqua),
+              ),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: LinearProgressIndicator(
+                      value: progress,
+                      minHeight: 8,
+                      backgroundColor: Colors.white12,
+                      valueColor: const AlwaysStoppedAnimation<Color>(
+                        AppColors.pastelAqua,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  Text(
+                    '${(progress * 100).toStringAsFixed(0)}%',
+                    style: const TextStyle(
+                      color: Colors.white70,
+                      fontSize: 14,
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
+      );
+
+      // Download with progress callback
+      await downloadReport(
+        langCode,
+        onProgress: (progressValue) {
+          // Update the dialog with progress
+          if (mounted) {
+            setState(() => progress = progressValue);
+          }
+        },
+      );
+
+      // Close progress dialog
+      if (mounted) {
+        Navigator.of(context).pop();
+      }
+      return true;
+    } catch (e) {
+      // Close progress dialog if still open
+      if (mounted) {
+        try {
+          Navigator.of(context).pop();
+        } catch (_) {}
+      }
+      return false;
+    }
+  }
+
+  void _showOfflineFallbackDialog(String attemptedLanguage) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: const Color(0xFF1A1A2E),
+        title: const Text('Download Failed', 
+          style: TextStyle(color: AppColors.pastelAqua)),
+        content: Text(
+          'Unable to download ${_languages.firstWhere((l) => l.code == attemptedLanguage).name} language files. Would you like to retry or use English?',
+          style: const TextStyle(color: Colors.white70),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+              _selectLanguage('en'); // Fallback to English
+            },
+            child: const Text('Use English', 
+              style: TextStyle(color: AppColors.pastelMint)),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+              _selectLanguage(attemptedLanguage); // Retry
+            },
+            child: const Text('Retry', 
+              style: TextStyle(color: AppColors.pastelAqua)),
+          ),
+        ],
+      ),
+    );
+  }
+
 
   @override
   Widget build(BuildContext context) {

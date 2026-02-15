@@ -8,6 +8,7 @@ import '../../utils/app_sizing.dart';
 import '../../utils/app_typography.dart';
 import '../../widgets/nanosolve_logo.dart';
 import '../../services/settings_manager.dart';
+import '../../services/update_service.dart';
 import 'user_profile.dart';
 import 'language_screen.dart';
 import 'privacy_security_screen.dart';
@@ -74,34 +75,63 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
 
     return Padding(
       padding: EdgeInsets.symmetric(
-        horizontal: spacing.contentPaddingH,
-        vertical: spacing.contentPaddingV),
-        child: Column(
+          horizontal: spacing.contentPaddingH,
+          vertical: spacing.contentPaddingV),
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           SizedBox(
             width: double.infinity,
-            child: InkWell(
-              onTap: () => Navigator.of(context).maybePop(),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Icon(Icons.arrow_back_ios,
-                      color: Colors.white, size: sizing.backIcon),
-                  const SizedBox(width: AppConstants.space4),
-                  Flexible(
-                    child: Text(
-                      l10n.categoryDetailBackToOverview,
-                      style: typography.back.copyWith(
-                        color: Colors.white,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Back button
+                InkWell(
+                  onTap: () => Navigator.of(context).maybePop(),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Icon(Icons.arrow_back_ios,
+                          color: Colors.white, size: sizing.backIcon),
+                      const SizedBox(width: AppConstants.space4),
+                      Flexible(
+                        child: Text(
+                          l10n.categoryDetailBackToOverview,
+                          style: typography.back.copyWith(
+                            color: Colors.white,
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.fade,
+                          softWrap: true,
+                        ),
                       ),
-                      maxLines: 2,
-                      overflow: TextOverflow.fade,
-                      softWrap: true,
+                    ],
+                  ),
+                ),
+                // Settings wheel icon for version check
+                InkWell(
+                  onTap: _checkVersionAndShowDialog,
+                  customBorder: const CircleBorder(),
+                  child: Container(
+                    width: 44,
+                    height: 44,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: AppColors.hubKnobBg.withValues(alpha: 0.3),
+                      border: Border.all(
+                        color: Colors.white.withValues(alpha: 0.2),
+                        width: 1,
+                      ),
+                    ),
+                    child: Icon(
+                      Icons.settings,
+                      color: Colors.white,
+                      size: sizing.hubKnobIconSize,
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
           SizedBox(height: spacing.headerSpacing),
@@ -118,8 +148,8 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
 
     return SingleChildScrollView(
       padding: EdgeInsets.symmetric(
-        horizontal: spacing.contentPaddingH,
-        vertical: spacing.contentPaddingV),
+          horizontal: spacing.contentPaddingH,
+          vertical: spacing.contentPaddingV),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -175,6 +205,32 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
               MaterialPageRoute(builder: (_) => const AboutScreen()),
             ),
           ),
+          SizedBox(height: spacing.cardSpacing),
+          _buildSettingItem(
+            title: 'Build Type',
+            icon: Icons.build_circle,
+            subtitle: '${_settingsManager.buildType} build',
+            color: AppColors.pastelAqua,
+            spacing: spacing,
+            sizing: sizing,
+            typography: typography,
+            onTap: () {
+              // TODO: Implement build type switcher
+              // This will allow users to switch between FULL and LITE builds
+              // by changing their build type identifier and downloading/deleting PDFs accordingly
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: const Text('Build type switcher - Coming soon!'),
+                  backgroundColor: AppColors.pastelAqua.withValues(alpha: 0.9),
+                  behavior: SnackBarBehavior.floating,
+                  shape: RoundedRectangleBorder(
+                    borderRadius:
+                        BorderRadius.circular(AppConstants.radiusMedium),
+                  ),
+                ),
+              );
+            },
+          ),
         ],
       ),
     );
@@ -214,6 +270,7 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
     required AppSpacing spacing,
     required AppSizing sizing,
     required AppTypography typography,
+    String? subtitle,
     VoidCallback? onTap,
   }) {
     return GestureDetector(
@@ -249,13 +306,30 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
             ),
             SizedBox(width: spacing.cardSpacing),
             Expanded(
-              child: Text(
-                title,
-                style: typography.title.copyWith(
-                  color: Colors.white,
-                ),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: typography.title.copyWith(
+                      color: Colors.white,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  if (subtitle != null)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 4.0),
+                      child: Text(
+                        subtitle,
+                        style: typography.bodySm.copyWith(
+                          color: Colors.white54,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                ],
               ),
             ),
             Icon(
@@ -267,5 +341,258 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
         ),
       ),
     );
+  }
+
+  Future<void> _checkVersionAndShowDialog() async {
+    // Show loading dialog
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => WillPopScope(
+        onWillPop: () async => false,
+        child: AlertDialog(
+          backgroundColor: const Color(0xFF1A1A24),
+          content: Row(
+            children: [
+              const CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(AppColors.neonCyan),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Text(
+                  'Checking for updates...',
+                  style: AppTypography.of(context).body.copyWith(
+                        color: Colors.white,
+                      ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+
+    try {
+      final updateService = UpdateService();
+      final updateAvailable = await updateService.checkForUpdates();
+
+      if (mounted) {
+        Navigator.of(context).pop(); // Close loading dialog
+
+        if (updateAvailable) {
+          _showUpdateAvailableDialog();
+        } else {
+          _showAppIsCurrentDialog();
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        Navigator.of(context).pop();
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            backgroundColor: const Color(0xFF1A1A24),
+            title: Text(
+              'Error',
+              style: AppTypography.of(context).title.copyWith(
+                    color: Colors.white,
+                  ),
+            ),
+            content: Text(
+              'Failed to check for updates: $e',
+              style: AppTypography.of(context).body.copyWith(
+                    color: Colors.white.withValues(alpha: 0.8),
+                  ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
+      }
+    }
+  }
+
+  void _showAppIsCurrentDialog() {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (context) => AlertDialog(
+        backgroundColor: const Color(0xFF1A1A24),
+        title: Text(
+          'App is Up to Date',
+          style: AppTypography.of(context).title.copyWith(
+                color: Colors.white,
+              ),
+        ),
+        content: Text(
+          'You are using the latest version of NanoSolve Hive.',
+          style: AppTypography.of(context).body.copyWith(
+                color: Colors.white.withValues(alpha: 0.8),
+              ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('OK'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showUpdateAvailableDialog() {
+    final latestVersion = _settingsManager.latestVersion ?? 'unknown';
+
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (context) => AlertDialog(
+        backgroundColor: const Color(0xFF1A1A24),
+        title: Text(
+          'Update Available',
+          style: AppTypography.of(context).title.copyWith(
+                color: Colors.white,
+              ),
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'A new version ($latestVersion) is available.',
+              style: AppTypography.of(context).body.copyWith(
+                    color: Colors.white.withValues(alpha: 0.8),
+                  ),
+            ),
+            const SizedBox(height: 16),
+            Text(
+              'Update now to get the latest features and improvements.',
+              style: AppTypography.of(context).body.copyWith(
+                    color: Colors.white.withValues(alpha: 0.6),
+                    fontSize: 13,
+                  ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text(
+              'Later',
+              style: TextStyle(color: Colors.white.withValues(alpha: 0.6)),
+            ),
+          ),
+          ElevatedButton(
+            onPressed: _startUpdateProcess,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.neonCrimson,
+              foregroundColor: Colors.white,
+            ),
+            child: const Text('Update Now'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _startUpdateProcess() async {
+    Navigator.of(context).pop();
+
+    // Show loading dialog
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => PopScope(
+        canPop: false,
+        child: AlertDialog(
+          backgroundColor: const Color(0xFF1A1A24),
+          content: Row(
+            children: [
+              const CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(AppColors.neonCyan),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Text(
+                  'Starting update...',
+                  style: AppTypography.of(context).body.copyWith(
+                        color: Colors.white,
+                      ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+
+    try {
+      final updateService = UpdateService();
+      final success = await updateService.startUpdate();
+
+      if (mounted) {
+        Navigator.of(context).pop();
+
+        if (!success) {
+          // Show error dialog
+          showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              backgroundColor: const Color(0xFF1A1A24),
+              title: Text(
+                'Update Failed',
+                style: AppTypography.of(context).title.copyWith(
+                      color: Colors.white,
+                    ),
+              ),
+              content: Text(
+                'Failed to start the update process. Please try again later or download manually.',
+                style: AppTypography.of(context).body.copyWith(
+                      color: Colors.white.withValues(alpha: 0.8),
+                    ),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: const Text('OK'),
+                ),
+              ],
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        Navigator.of(context).pop();
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            backgroundColor: const Color(0xFF1A1A24),
+            title: Text(
+              'Error',
+              style: AppTypography.of(context).title.copyWith(
+                    color: Colors.white,
+                  ),
+            ),
+            content: Text(
+              'An unexpected error occurred: $e',
+              style: AppTypography.of(context).body.copyWith(
+                    color: Colors.white.withValues(alpha: 0.8),
+                  ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
+      }
+    }
   }
 }
