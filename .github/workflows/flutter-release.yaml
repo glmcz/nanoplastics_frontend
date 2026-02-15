@@ -63,21 +63,45 @@ jobs:
           sudo wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
           sudo chmod +x /usr/local/bin/yq
 
+      # ---------- BACKUP ORIGINAL PUBSPEC ------
+      - name: Backup original pubspec
+        run: cp pubspec.yaml pubspec.yaml.bak
+
       # ---------- GENERATE FULL PUBSPEC ------
       - name: Generate FULL pubspec
         if: contains(github.ref_name, 'full')
         run: |
-          yq eval-all '. as $item ireduce ({}; . * $item )' \
-            pubspec.base.yaml pubspec.full.yaml > pubspec.yaml
+          cp pubspec.base.yaml pubspec.yaml
+          yq -i '.flutter.assets += load("pubspec.full.yaml").flutter.assets' pubspec.yaml
           echo "Generated FULL pubspec.yaml"
+          cat pubspec.yaml
 
       # ---------- GENERATE LITE PUBSPEC ------
       - name: Generate LITE pubspec
         if: contains(github.ref_name, 'lite')
         run: |
-          yq eval-all '. as $item ireduce ({}; . * $item )' \
-            pubspec.base.yaml pubspec.lite.yaml > pubspec.yaml
+          cp pubspec.base.yaml pubspec.yaml
           echo "Generated LITE pubspec.yaml"
+          cat pubspec.yaml
+
+      # ---------- RESTORE PUBSPEC IF NO MATCH ------
+      - name: Restore pubspec if no flavor specified
+        if: ${{ !contains(github.ref_name, 'full') && !contains(github.ref_name, 'lite') }}
+        run: mv pubspec.yaml.bak pubspec.yaml
+
+      # ---------- VALIDATE PUBSPEC ------
+      - name: Validate pubspec.yaml
+        run: |
+          echo "Validating pubspec.yaml..."
+          if ! grep -q "^name:" pubspec.yaml; then
+            echo "ERROR: pubspec.yaml is invalid - missing 'name' field"
+            exit 1
+          fi
+          if ! grep -q "^version:" pubspec.yaml; then
+            echo "ERROR: pubspec.yaml is invalid - missing 'version' field"
+            exit 1
+          fi
+          echo "pubspec.yaml is valid"
 
       # ---------------- DEPENDENCIES ----------------
       - name: Install dependencies
@@ -85,6 +109,7 @@ jobs:
 
       # ---------------- FULL FLAVOR ----------------
       - name: Build FULL APK
+        if: contains(github.ref_name, 'full')
         run: |
           flutter build apk --release --flavor full --dart-define=BUNDLE_ALL_LANGS=true --analyze-size --target-platform android-arm64
           # Rename to match backend default download URL
@@ -92,6 +117,7 @@ jobs:
 
       # Clean only APK and app build cache for next flavor (keeps pub/gradle cache)
       - name: Prepare for LITE build
+        if: contains(github.ref_name, 'lite')
         run: |
           rm -rf build/app/outputs/flutter-apk/app-lite-release.apk
           rm -rf android/app/build/outputs/flutter-apk/app-lite-release.apk
@@ -99,6 +125,7 @@ jobs:
 
       # ---------------- LITE FLAVOR ----------------
       - name: Build LITE APK
+        if: contains(github.ref_name, 'lite')
         run: |
           flutter build apk --release --flavor lite --dart-define=BUNDLE_ALL_LANGS=false --target-platform android-arm64
           # Rename to lite specific name

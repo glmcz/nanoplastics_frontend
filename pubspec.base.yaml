@@ -48,7 +48,6 @@ flutter:
   generate: true
   uses-material-design: true
 
-  # Universal assets (images, localization files, onboarding)
   assets:
     - assets/images/
     - assets/l10n/app_cs.arb
@@ -56,3 +55,6 @@ flutter:
     - assets/onboarding/slide1_ocean_plastic.jpg
     - assets/onboarding/slide2_missions.jpg
     - assets/onboarding/slide3_collaboration.jpg
+    - assets/docs/Nanoplastics_Report_EN_compressed.pdf
+    - assets/docs/EN_WATER_compressed.pdf
+

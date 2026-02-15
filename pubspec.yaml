@@ -48,20 +48,13 @@ flutter:
   generate: true
   uses-material-design: true
 
-  # App icons and background images
   assets:
     - assets/images/
     - assets/l10n/app_cs.arb
     - assets/l10n/app_en.arb
-    - assets/docs/Nanoplastics_Report_EN_compressed.pdf
-    - assets/docs/Nanoplastics_Report_CS_compressed.pdf
-    - assets/docs/Nanoplastics_Report_ES_compressed.pdf
-    - assets/docs/Nanoplastics_Report_FR_compressed.pdf
-    - assets/docs/Nanoplastics_Report_RU_compressed.pdf
-    - assets/docs/CS_WATER_compressed.pdf
-    - assets/docs/EN_WATER_compressed.pdf
     - assets/onboarding/slide1_ocean_plastic.jpg
     - assets/onboarding/slide2_missions.jpg
     - assets/onboarding/slide3_collaboration.jpg
+    - assets/docs/Nanoplastics_Report_EN_compressed.pdf
+    - assets/docs/EN_WATER_compressed.pdf
 
-# The 'flavors' key is not supported by standard Flutter; removing experimental config.
