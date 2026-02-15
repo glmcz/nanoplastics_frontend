@@ -1,7 +1,4 @@
-import 'privacy_policy_screen.dart';
-import 'terms_of_service_screen.dart';
 import 'package:flutter/material.dart';
-import 'dart:ui';
 import 'package:flutter_custom_tabs/flutter_custom_tabs.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:package_info_plus/package_info_plus.dart';

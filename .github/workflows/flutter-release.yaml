@@ -64,12 +64,12 @@ jobs:
       # ---------------- FULL FLAVOR ----------------
       - name: Build FULL APK
         run: |
-          flutter build apk --release --flavor full --dart-define=BUNDLE_ALL_LANGS=true
+          flutter build apk --release --flavor full --dart-define=BUNDLE_ALL_LANGS=true --analyze-size --target-platform android-arm64
 
       # ---------------- LITE FLAVOR ----------------
       - name: Build LITE APK
         run: |
-          flutter build apk --release --flavor lite
+          flutter build apk --release --flavor lite --analyze-size --target-platform android-arm64
 
       - name: Upload APKs
         uses: actions/upload-artifact@v4

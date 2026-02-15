@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'dart:ui';
 import '../../l10n/app_localizations.dart';
 import '../../widgets/nanosolve_logo.dart';
 import '../../config/app_colors.dart';

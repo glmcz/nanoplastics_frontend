@@ -70,9 +70,29 @@ android {
 
     buildTypes {
         release {
-            signingConfig = signingConfigs.getByName("release")
+            val keystorePath = System.getenv("KEYSTORE_PATH")
+            val keystorePassword = System.getenv("KEYSTORE_PASSWORD")
+            
+            // Only set signing config if environment variables are available (CI/CD)
+            if (!keystorePath.isNullOrEmpty() && !keystorePassword.isNullOrEmpty()) {
+                signingConfig = signingConfigs.getByName("release")
+            }
+            // Local builds will use debug signing
+            
             isMinifyEnabled = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+        }
+    }
+
+    packaging {
+        resources {
+            // Exclude non-English PDFs from lite flavor
+            // These are downloaded on-demand instead of being bundled
+            excludes += "assets/docs/Nanoplastics_Report_CS_compressed.pdf"
+            excludes += "assets/docs/Nanoplastics_Report_ES_compressed.pdf"
+            excludes += "assets/docs/Nanoplastics_Report_FR_compressed.pdf"
+            excludes += "assets/docs/Nanoplastics_Report_RU_compressed.pdf"
+            excludes += "assets/docs/CS_WATER_compressed.pdf"
         }
     }
 }
@@ -81,25 +101,14 @@ flutter {
     source = "../.."
 }
 
-// Strip non-EN PDF assets from lite flavor builds
+// Flavor-specific packaging options for asset inclusion
 android.applicationVariants.all variant@{
     val variantName = name
-    if (variantName.startsWith("lite")) {
-        mergeAssetsProvider.configure {
-            doLast {
-                val outputDir = outputDir.get().asFile
-                outputDir.walkTopDown()
-                    .filter { file -> file.isFile && file.name.endsWith(".pdf") }
-                    .filter { file ->
-                        val n = file.name
-                        n.contains("_CS_") || n.contains("_ES_") ||
-                        n.contains("_FR_") || n.contains("_RU_")
-                    }
-                    .forEach { file ->
-                        println("Lite flavor: removing ${file.name}")
-                        file.delete()
-                    }
-            }
-        }
+    if (variantName.startsWith("full")) {
+        // Full flavor includes all language assets
+        println("Building full flavor: including all language PDFs")
+    } else if (variantName.startsWith("lite")) {
+        // Lite flavor uses packagingOptions.exclude above
+        println("Building lite flavor: excluding non-EN PDFs from assets")
     }
 }

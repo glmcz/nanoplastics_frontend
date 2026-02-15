@@ -1,7 +1,7 @@
 name: nanoplastics_app
 description: NanoSolve Hive - Crowdsourcing R&D solutions for nanoplastic pollution
 publish_to: 'none'
-version: 1.0.3
+version: 1.0.4
 
 environment:
   sdk: '>=3.0.0 <4.0.0'
@@ -46,16 +46,6 @@ flutter_launcher_icons:
 flutter:
   generate: true
   uses-material-design: true
-
-  # URL Launcher configuration - use external browser for iOS
-  # This is a Dart comment, actual config is in plugin configuration
-  # To disable WebView on iOS, we need to handle it in code with LaunchMode.externalApplication
-  # fonts:
-  #   - family: SFProDisplay
-  #     fonts:
-  #       - asset: fonts/SFProDisplay-Regular.ttf
-  #       - asset: fonts/SFProDisplay-Bold.ttf
-  #         weight: 700
 
   # App icons and background images
   assets:

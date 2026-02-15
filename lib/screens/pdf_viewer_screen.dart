@@ -584,7 +584,7 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            '${widget.title} • str. ${widget.startPage}-${_actualEndPage}',
+            '${widget.title} • str. ${widget.startPage}-$_actualEndPage',
             style: Theme.of(context).textTheme.labelMedium?.copyWith(
                   color: AppColors.pastelLavender,
                 ),
@@ -799,7 +799,7 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                'Page $_currentPage/${_actualEndPage}',
+                'Page $_currentPage/$_actualEndPage',
                 style: const TextStyle(
                   color: AppColors.textMuted,
                   fontSize: 12,

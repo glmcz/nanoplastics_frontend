@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'dart:ui';
 import 'package:flutter_custom_tabs/flutter_custom_tabs.dart';
 import '../config/app_colors.dart';
 import '../config/app_constants.dart';

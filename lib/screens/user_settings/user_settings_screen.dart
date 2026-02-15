@@ -28,8 +28,8 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
     try {
       final email = _settingsManager.email;
       final displayName = _settingsManager.displayName;
-      final hasEmail = email != null && email.isNotEmpty;
-      final hasDisplayName = displayName != null && displayName.isNotEmpty;
+      final hasEmail = email.isNotEmpty;
+      final hasDisplayName = displayName.isNotEmpty;
       return hasEmail && hasDisplayName;
     } catch (e) {
       return false;
