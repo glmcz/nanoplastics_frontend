@@ -1,4 +1,7 @@
+import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:path_provider/path_provider.dart';
+import 'dart:io';
 import 'encryption_service.dart';
 
 class SettingsManager {
@@ -37,10 +40,30 @@ class SettingsManager {
 
   late SharedPreferences _prefs;
 
+  // Listeners for reactive updates
+  final List<Function(String)> _displayNameListeners = [];
+
   SettingsManager._internal();
 
   factory SettingsManager() {
     return _instance;
+  }
+
+  /// Subscribe to display name changes
+  void addDisplayNameListener(Function(String) callback) {
+    _displayNameListeners.add(callback);
+  }
+
+  /// Unsubscribe from display name changes
+  void removeDisplayNameListener(Function(String) callback) {
+    _displayNameListeners.remove(callback);
+  }
+
+  /// Notify all listeners of display name change
+  void _notifyDisplayNameListeners(String newName) {
+    for (final callback in _displayNameListeners) {
+      callback(newName);
+    }
   }
 
   /// Initialize the settings manager
@@ -151,6 +174,11 @@ class SettingsManager {
     await _prefs.clear();
   }
 
+  @visibleForTesting
+  static void resetForTesting() {
+    _isInitialized = false;
+  }
+
   /// Check if manager is initialized
   void _checkInitialized() {
     if (!_isInitialized) {
@@ -210,6 +238,8 @@ class SettingsManager {
   Future<void> setDisplayName(String name) async {
     _checkInitialized();
     await _prefs.setString(_displayNameKey, name);
+    // Notify all listeners that display name has changed
+    _notifyDisplayNameListeners(name);
   }
 
   /// Get email
@@ -388,5 +418,104 @@ class SettingsManager {
   Future<void> setLastUpdateCheckTime(DateTime dateTime) async {
     _checkInitialized();
     await _prefs.setString(_lastUpdateCheckTimeKey, dateTime.toIso8601String());
+  }
+
+  /// Save PDF file locally for offline access
+  /// Language-specific PDFs are stored in app documents directory
+  Future<void> savePdfLocally(String language, List<int> fileBytes) async {
+    try {
+      final appDocDir = await getApplicationDocumentsDirectory();
+      final pdfsDir = Directory('${appDocDir.path}/pdfs');
+
+      // Create pdfs directory if it doesn't exist
+      if (!await pdfsDir.exists()) {
+        await pdfsDir.create(recursive: true);
+      }
+
+      final filename =
+          'Nanoplastics_Report_${language.toUpperCase()}_compressed.pdf';
+      final file = File('${pdfsDir.path}/$filename');
+
+      // Write file to disk
+      await file.writeAsBytes(fileBytes);
+    } catch (e) {
+      // Error is logged but not thrown to prevent UI disruption
+      print('Error saving PDF locally: $e');
+    }
+  }
+
+  /// Delete cached PDF for language (optional cleanup)
+  Future<void> deleteCachedPdf(String language) async {
+    try {
+      final appDocDir = await getApplicationDocumentsDirectory();
+      final filename =
+          'Nanoplastics_Report_${language.toUpperCase()}_compressed.pdf';
+      final file = File('${appDocDir.path}/pdfs/$filename');
+
+      if (await file.exists()) {
+        await file.delete();
+      }
+    } catch (e) {
+      print('Error deleting cached PDF: $e');
+    }
+  }
+
+  /// Get list of all cached PDF languages (utility method)
+  Future<List<String>> getCachedPdfLanguages() async {
+    try {
+      final appDocDir = await getApplicationDocumentsDirectory();
+      final pdfsDir = Directory('${appDocDir.path}/pdfs');
+
+      if (!await pdfsDir.exists()) {
+        return [];
+      }
+
+      final files = await pdfsDir.list().toList();
+      final languages = <String>[];
+
+      for (final file in files) {
+        if (file is File && file.path.endsWith('_compressed.pdf')) {
+          final filename = file.path.split('/').last;
+          final match = RegExp(r'Nanoplastics_Report_(\w+)_compressed\.pdf')
+              .firstMatch(filename);
+          if (match != null) {
+            languages.add(match.group(1)!.toLowerCase());
+          }
+        }
+      }
+
+      return languages;
+    } catch (e) {
+      print('Error getting cached PDF languages: $e');
+      return [];
+    }
+  }
+
+  /// Get PDF file for language if cached, null if needs download
+  /// This is the ONLY method to access PDFs from any screen
+  /// Returns File if PDF is cached, null if it needs to be downloaded
+  ///
+  /// Usage:
+  ///   final pdf = await _settingsManager.getPdfForLanguage('en');
+  ///   if (pdf != null) {
+  ///     // Display PDF from file.path
+  ///   } else {
+  ///     // Download via UpdateService.downloadPdf()
+  ///   }
+  Future<File?> getPdfForLanguage(String language) async {
+    try {
+      final appDocDir = await getApplicationDocumentsDirectory();
+      final filename =
+          'Nanoplastics_Report_${language.toUpperCase()}_compressed.pdf';
+      final file = File('${appDocDir.path}/pdfs/$filename');
+
+      if (await file.exists()) {
+        return file;
+      }
+      return null;
+    } catch (e) {
+      print('Error getting PDF for language: $e');
+      return null;
+    }
   }
 }

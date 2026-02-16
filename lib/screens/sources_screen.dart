@@ -8,9 +8,9 @@ import '../utils/app_typography.dart';
 import '../widgets/nanosolve_logo.dart';
 import '../l10n/app_localizations.dart';
 import '../models/pdf_source.dart';
-import 'pdf_viewer_screen.dart';
 import '../services/logger_service.dart';
 import '../services/settings_manager.dart';
+import '../services/service_locator.dart';
 
 enum SourceType { webLinks, videoLinks }
 
@@ -78,11 +78,10 @@ class _SourcesScreenState extends State<SourcesScreen> {
     final typography = AppTypography.of(context);
 
     return Padding(
-        padding: EdgeInsets.symmetric(
+      padding: EdgeInsets.symmetric(
           horizontal: spacing.contentPaddingH,
-          vertical: spacing.contentPaddingV
-          ),
-        child: Column(
+          vertical: spacing.contentPaddingV),
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           SizedBox(
@@ -128,21 +127,20 @@ class _SourcesScreenState extends State<SourcesScreen> {
           'report': 'nanoplastics_main_report',
         });
 
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => const PDFViewerScreen(
+        ServiceLocator().pdfService.openPdf(
+              context: context,
               title: 'Nanoplastics: Global Report',
-              startPage: 1,
-              endPage: 198,
               description:
                   'The comprehensive global report on nanoplastics pollution and its effects',
-            ),
-          ),
-        );
+              startPage: 1,
+              endPage: 198,
+            );
       },
       child: Container(
         margin: EdgeInsets.symmetric(
-          horizontal: spacing.contentPaddingH, /// TODO: refactor me
+          horizontal: spacing.contentPaddingH,
+
+          /// TODO: refactor me
           vertical: spacing.md,
         ),
         padding: EdgeInsets.symmetric(
@@ -337,9 +335,8 @@ class _SourcesScreenState extends State<SourcesScreen> {
     if (_expandedSection == null) {
       return SingleChildScrollView(
         padding: EdgeInsets.symmetric(
-          horizontal: spacing.contentPaddingH,
-          vertical: spacing.contentPaddingV
-          ),
+            horizontal: spacing.contentPaddingH,
+            vertical: spacing.contentPaddingV),
         child: Column(
           children: [
             for (final s in sections) ...[
@@ -366,10 +363,9 @@ class _SourcesScreenState extends State<SourcesScreen> {
 
     return Padding(
       padding: EdgeInsets.symmetric(
-        horizontal: spacing.contentPaddingH,
-        vertical: spacing.contentPaddingV
-        ),
-        child: Column(
+          horizontal: spacing.contentPaddingH,
+          vertical: spacing.contentPaddingV),
+      child: Column(
         children: [
           // Sticky header for expanded section
           _buildSectionHeader(
@@ -488,11 +484,10 @@ class _SourcesScreenState extends State<SourcesScreen> {
     final videos = allVideoSources[userLanguage] ?? videoSourcesEn;
 
     return SingleChildScrollView(
-        padding: EdgeInsets.symmetric(
+      padding: EdgeInsets.symmetric(
           horizontal: spacing.contentPaddingH,
-          vertical: spacing.contentPaddingV
-          ),
-        child: Column(
+          vertical: spacing.contentPaddingV),
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Video list
@@ -651,17 +646,26 @@ class _SourcesScreenState extends State<SourcesScreen> {
           'endPage': source.endPage,
         });
 
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => PDFViewerScreen(
-              title: source.title,
-              startPage: source.startPage,
-              endPage: source.endPage,
-              description: source.description,
-              pdfAssetPath: source.pdfAssetPath,
-            ),
-          ),
-        );
+        // Use openPdfFromAsset if custom asset path is provided (for water PDFs, etc.)
+        if (source.pdfAssetPath != null && source.pdfAssetPath!.isNotEmpty) {
+          ServiceLocator().pdfService.openPdfFromAsset(
+                context: context,
+                assetPath: source.pdfAssetPath!,
+                title: source.title,
+                description: source.description,
+                startPage: source.startPage,
+                endPage: source.endPage,
+              );
+        } else {
+          // Use openPdf for standard language-based reports
+          ServiceLocator().pdfService.openPdf(
+                context: context,
+                title: source.title,
+                description: source.description,
+                startPage: source.startPage,
+                endPage: source.endPage,
+              );
+        }
       },
       child: Container(
         width: double.infinity,

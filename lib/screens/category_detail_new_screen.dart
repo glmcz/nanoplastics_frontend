@@ -9,9 +9,9 @@ import '../widgets/nanosolve_logo.dart';
 import '../widgets/brainstorm_box.dart';
 import '../models/category_detail_data.dart';
 import '../l10n/app_localizations.dart';
-import 'pdf_viewer_screen.dart';
 import '../services/logger_service.dart';
 import '../services/api_service.dart';
+import '../services/service_locator.dart';
 
 class CategoryDetailNewScreen extends StatefulWidget {
   final CategoryDetailData categoryData;
@@ -193,9 +193,8 @@ class _CategoryDetailNewScreenState extends State<CategoryDetailNewScreen>
     return Padding(
       padding: EdgeInsets.symmetric(
           horizontal: spacing.contentPaddingH,
-          vertical: spacing.contentPaddingV
-          ),
-        child: Column(
+          vertical: spacing.contentPaddingV),
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           SizedBox(
@@ -526,28 +525,21 @@ class _CategoryDetailNewScreenState extends State<CategoryDetailNewScreen>
   Future<void> _handleSourceLink(SourceLink sourceLink) async {
     // Check if this is a PDF asset link
     if (sourceLink.pdfAssetPath != null) {
-      _launchPdfAsset(sourceLink);
+      _openPdfFromSource(sourceLink);
     } else {
       // Otherwise launch as web URL
       _launchUrl(sourceLink.url);
     }
   }
 
-  void _launchPdfAsset(SourceLink sourceLink) {
-    debugPrint('📄 [PDF] Opening PDF asset: ${sourceLink.pdfAssetPath}');
-    final startPage = sourceLink.pdfStartPage ?? 1;
-    final endPage = sourceLink.pdfEndPage ?? 999;
-
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => PDFViewerScreen(
-          title: sourceLink.title,
-          startPage: startPage,
-          endPage: endPage,
-          description: sourceLink.source,
-          pdfAssetPath: sourceLink.pdfAssetPath!,
-        ),
-      ),
+  void _openPdfFromSource(SourceLink sourceLink) {
+    print('📄 [PDF] Opening PDF: ${sourceLink.title}'); //TODO: maybe remove
+    ServiceLocator().pdfService.openPdf(
+      context: context,
+      title: sourceLink.title,
+      description: sourceLink.source,
+      startPage: sourceLink.pdfStartPage ?? 1,
+      endPage: sourceLink.pdfEndPage ?? 999,
     );
   }
 
@@ -618,16 +610,12 @@ class _CategoryDetailNewScreenState extends State<CategoryDetailNewScreen>
                   },
                 );
 
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => PDFViewerScreen(
-                      title: entry.highlight,
-                      startPage: entry.pdfStartPage!,
-                      endPage: entry.pdfEndPage!,
-                      description:
-                          entry.pdfCategory ?? widget.categoryData.title,
-                    ),
-                  ),
+                ServiceLocator().pdfService.openPdf(
+                  context: context,
+                  title: entry.highlight,
+                  description: entry.pdfCategory ?? widget.categoryData.title,
+                  startPage: entry.pdfStartPage!,
+                  endPage: entry.pdfEndPage!,
                 );
               }
             },

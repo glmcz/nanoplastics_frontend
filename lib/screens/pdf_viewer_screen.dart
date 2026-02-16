@@ -11,8 +11,6 @@ import '../utils/app_typography.dart';
 import '../widgets/nanosolve_logo.dart';
 import '../l10n/app_localizations.dart';
 import '../services/logger_service.dart';
-import '../services/settings_manager.dart';
-import '../utils/pdf_utils.dart';
 import 'dart:async';
 import 'dart:io';
 import 'package:file_picker/file_picker.dart';
@@ -24,7 +22,7 @@ class PDFViewerScreen extends StatefulWidget {
   final int startPage;
   final int endPage;
   final String description;
-  final String? pdfAssetPath; // Optional custom PDF asset path
+  final String pdfPath; // File system path to the PDF
 
   const PDFViewerScreen({
     super.key,
@@ -32,7 +30,7 @@ class PDFViewerScreen extends StatefulWidget {
     required this.startPage,
     required this.endPage,
     required this.description,
-    this.pdfAssetPath,
+    required this.pdfPath,
   });
 
   @override
@@ -43,8 +41,6 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
   late PdfControllerPinch _pdfController;
   late PdfDocument _pdfDocument;
   bool _isLoading = true;
-  bool _isDownloading = false;
-  double _downloadProgress = 0.0;
   String? _error;
   int _currentPage = 1;
   int _stablePageBeforeRotation = 1; // Stores page before rotation starts
@@ -78,35 +74,16 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
     try {
       PdfDocument document;
 
-      if (widget.pdfAssetPath != null) {
-        // Explicit asset path provided (e.g. water PDFs, or language-specific)
-        _resolvedPath = widget.pdfAssetPath;
-        _pdfIsAsset = true;
-        document = await PdfDocument.openAsset(widget.pdfAssetPath!);
-      } else {
-        // Resolve main report for current language
-        final resolved = await resolveMainReport();
-
-        if (resolved != null) {
-          // Available locally (EN bundled or previously downloaded)
-          _resolvedPath = resolved.path;
-          _pdfIsAsset = resolved.isAsset;
-          document = resolved.isAsset
-              ? await PdfDocument.openAsset(resolved.path)
-              : await PdfDocument.openFile(resolved.path);
-        } else {
-          // Need to download for current language
-          await _downloadAndOpenReport();
-          return;
-        }
-      }
+      // Open PDF from file system path (provided by PdfService)
+      _resolvedPath = widget.pdfPath;
+      _pdfIsAsset = false;
+      document = await PdfDocument.openFile(widget.pdfPath);
 
       _openDocument(document, startTime);
     } catch (e) {
       final loadTime = DateTime.now().difference(startTime).inMilliseconds;
       setState(() {
         _isLoading = false;
-        _isDownloading = false;
         _error = 'Failed to load PDF: $e';
       });
 
@@ -119,53 +96,11 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
     }
   }
 
-  Future<void> _downloadAndOpenReport() async {
-    final startTime = DateTime.now();
-    setState(() {
-      _isDownloading = true;
-      _downloadProgress = 0.0;
-    });
-
-    try {
-      final langCode = SettingsManager().userLanguage;
-      final localPath = await downloadReport(
-        langCode,
-        onProgress: (progress) {
-          if (mounted) {
-            setState(() => _downloadProgress = progress);
-          }
-        },
-      );
-
-      if (!mounted) return;
-
-      _resolvedPath = localPath;
-      _pdfIsAsset = false;
-      final document = await PdfDocument.openFile(localPath);
-      _openDocument(document, startTime);
-    } catch (e) {
-      final loadTime = DateTime.now().difference(startTime).inMilliseconds;
-      if (mounted) {
-        setState(() {
-          _isLoading = false;
-          _isDownloading = false;
-          _error = 'Failed to download PDF: $e';
-        });
-      }
-
-      LoggerService().logError(
-        'PDFDownloadFailed',
-        e,
-        null,
-        {'title': widget.title, 'loadTime': loadTime},
-      );
-    }
-  }
-
   void _openDocument(PdfDocument document, DateTime startTime) {
     _pdfController = PdfControllerPinch(
       document: Future.value(document),
-      initialPage: widget.startPage,
+      initialPage:
+          widget.startPage - 1, // Convert from 1-based to 0-based for pdfx
     );
 
     _pdfDocument = document;
@@ -174,7 +109,6 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
 
     setState(() {
       _isLoading = false;
-      _isDownloading = false;
       _currentPage = widget.startPage;
       _stablePageBeforeRotation = widget.startPage;
       // Clamp endPage to actual PDF page count (replaces sentinel 1 << 30)
@@ -184,7 +118,8 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
-        _safeJumpToPage(widget.startPage);
+        _safeJumpToPage(
+            widget.startPage - 1); // Convert from 1-based to 0-based for pdfx
         _initialPageSet = true;
       }
     });
@@ -237,8 +172,7 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (!mounted) return;
 
-        // jumpToPage(N) lands on onPageChanged(N+1), so subtract 1
-        // to restore the exact _currentPage value from before rotation.
+        // pdfx uses 0-based indexing, so convert to 0-based
         _safeJumpToPage(pageToPreserve - 1);
 
         Future.delayed(const Duration(milliseconds: 200), () {
@@ -282,26 +216,64 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
   }
 
   void _jumpToPage(String pageText) {
-    if (pageText.isEmpty) return;
+    if (pageText.isEmpty) {
+      LoggerService().logDebug(
+        'pdf_page_input_empty',
+        'User tried to jump to page but input was empty',
+      );
+      return;
+    }
 
     try {
       final int pageNumber = int.parse(pageText);
 
-      // Validate page number is within range
-      if (pageNumber < widget.startPage || pageNumber > widget.endPage) {
+      LoggerService().logDebug(
+        'pdf_page_input_parsed',
+        'User input parsed: "$pageText" -> page number: $pageNumber',
+      );
+
+      // Validate page number is within PDF bounds (1 to total pages)
+      // Note: startPage-endPage (e.g., 71-91) are just recommendations for context,
+      // users can navigate anywhere in the full PDF
+      if (pageNumber < 1 || pageNumber > _pdfDocument.pagesCount) {
+        LoggerService().logUserAction('pdf_page_jump_out_of_range', params: {
+          'input': pageNumber,
+          'total_pages': _pdfDocument.pagesCount,
+          'suggested_range': '${widget.startPage}-${widget.endPage}',
+          'current_page': _currentPage,
+        });
         return;
       }
 
-      // Jump to the specified page
-      _pdfController.jumpToPage(pageNumber);
+      final oldPage = _currentPage;
 
-      LoggerService().logUserAction('pdf_page_jump', params: {
-        'from_page': _currentPage,
+      // Convert from 1-based (user-facing) to 0-based (pdfx internal)
+      _pdfController.jumpToPage(pageNumber - 1);
+
+      // Update current page state manually
+      setState(() {
+        _currentPage = pageNumber;
+        _stablePageBeforeRotation = pageNumber;
+      });
+
+      LoggerService().logUserAction('pdf_page_jump_successful', params: {
+        'from_page': oldPage,
         'to_page': pageNumber,
+        'total_pages': _pdfDocument.pagesCount,
+        'suggested_range': '${widget.startPage}-${widget.endPage}',
         'title': widget.title,
       });
+
+      LoggerService().logDebug(
+        'pdf_page_updated',
+        'Page successfully updated from $oldPage to $pageNumber (PDF has ${_pdfDocument.pagesCount} total pages)',
+      );
     } catch (e) {
-      // Invalid input, ignore
+      LoggerService().logUserAction('pdf_page_jump_invalid_input', params: {
+        'input': pageText,
+        'error': e.toString(),
+        'current_page': _currentPage,
+      });
     }
   }
 
@@ -611,36 +583,19 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              if (_isDownloading) ...[
-                CircularProgressIndicator(
-                  value: _downloadProgress > 0 ? _downloadProgress : null,
-                  valueColor: const AlwaysStoppedAnimation<Color>(
-                    AppColors.pastelAqua,
-                  ),
+              const CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(
+                  AppColors.pastelAqua,
                 ),
-                const SizedBox(height: 16),
-                Text(
-                  'Downloading report... ${(_downloadProgress * 100).toInt()}%',
-                  style: const TextStyle(
-                    color: AppColors.textMuted,
-                    fontSize: 14,
-                  ),
+              ),
+              const SizedBox(height: 16),
+              const Text(
+                'Loading PDF...',
+                style: TextStyle(
+                  color: AppColors.textMuted,
+                  fontSize: 14,
                 ),
-              ] else ...[
-                const CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(
-                    AppColors.pastelAqua,
-                  ),
-                ),
-                const SizedBox(height: 16),
-                const Text(
-                  'Loading PDF...',
-                  style: TextStyle(
-                    color: AppColors.textMuted,
-                    fontSize: 14,
-                  ),
-                ),
-              ],
+              ),
             ],
           ),
         ),

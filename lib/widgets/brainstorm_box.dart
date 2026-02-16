@@ -29,20 +29,48 @@ class BrainstormBox extends StatefulWidget {
 class _BrainstormBoxState extends State<BrainstormBox> {
   final TextEditingController _controller = TextEditingController();
   String? _username;
+  bool _isSubmitting = false;
+  late final SettingsManager _settingsManager;
 
   @override
   void dispose() {
     _controller.removeListener(_saveDraft);
     _controller.dispose();
+    // Remove listener to SettingsManager
+    _settingsManager.removeDisplayNameListener(_onDisplayNameChanged);
     super.dispose();
   }
 
   @override
   void initState() {
     super.initState();
+    _settingsManager = SettingsManager();
     _loadUsername();
     _loadDraft();
     _controller.addListener(_saveDraft);
+    // Subscribe to SettingsManager display name changes for reactive updates
+    _settingsManager.addDisplayNameListener(_onDisplayNameChanged);
+  }
+
+  @override
+  void didUpdateWidget(BrainstormBox oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // If parent props changed (e.g., category or username), reload draft/username
+    if (oldWidget.category != widget.category) {
+      _loadDraft();
+    }
+    if (oldWidget.username != widget.username) {
+      _loadUsername();
+    }
+  }
+
+  void _onDisplayNameChanged(String newDisplayName) {
+    if (mounted) {
+      setState(() {
+        _username =
+            newDisplayName.isNotEmpty ? newDisplayName : widget.username;
+      });
+    }
   }
 
   void _loadUsername() {
@@ -77,6 +105,11 @@ class _BrainstormBoxState extends State<BrainstormBox> {
   }
 
   Future<void> _handleSubmit() async {
+    // Double-submit protection: if already submitting, return early
+    if (_isSubmitting) {
+      return;
+    }
+
     final text = _controller.text.trim();
     if (text.length < 10) {
       if (mounted) {
@@ -96,6 +129,8 @@ class _BrainstormBoxState extends State<BrainstormBox> {
     final l10n = AppLocalizations.of(context)!;
 
     try {
+      // Set submitting state to prevent rapid re-submission
+      setState(() => _isSubmitting = true);
       await widget.onSubmit?.call(text);
       _controller.clear();
       if (widget.category != null) {
@@ -127,6 +162,11 @@ class _BrainstormBoxState extends State<BrainstormBox> {
             duration: const Duration(seconds: 3),
           ),
         );
+      }
+    } finally {
+      // Always clear submitting state when done
+      if (mounted) {
+        setState(() => _isSubmitting = false);
       }
     }
   }
@@ -288,7 +328,8 @@ class _BrainstormBoxState extends State<BrainstormBox> {
                           color: Colors.white.withValues(alpha: 0.5),
                         ),
                         border: InputBorder.none,
-                        contentPadding: const EdgeInsets.all(AppConstants.space12),
+                        contentPadding:
+                            const EdgeInsets.all(AppConstants.space12),
                       ),
                     ),
                   ),
@@ -298,7 +339,7 @@ class _BrainstormBoxState extends State<BrainstormBox> {
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
-                      onPressed: _handleSubmit,
+                      onPressed: _isSubmitting ? null : _handleSubmit,
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.all(AppConstants.space12),
                         backgroundColor: Colors.transparent,
@@ -319,13 +360,18 @@ class _BrainstormBoxState extends State<BrainstormBox> {
                       ),
                       child: Ink(
                         decoration: BoxDecoration(
-                          gradient: const LinearGradient(
+                          gradient: LinearGradient(
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
-                            colors: [
-                              AppColors.pastelAqua,
-                              AppColors.pastelMint,
-                            ],
+                            colors: _isSubmitting
+                                ? [
+                                    AppColors.pastelAqua.withValues(alpha: 0.5),
+                                    AppColors.pastelMint.withValues(alpha: 0.5),
+                                  ]
+                                : const [
+                                    AppColors.pastelAqua,
+                                    AppColors.pastelMint,
+                                  ],
                           ),
                           borderRadius:
                               BorderRadius.circular(AppConstants.radiusMedium),
@@ -341,28 +387,44 @@ class _BrainstormBoxState extends State<BrainstormBox> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  Flexible(
-                                    child: Text(
-                                      widget.submitText ??
-                                          AppLocalizations.of(context)!
-                                              .categoryDetailBrainstormSubmit,
+                                  if (_isSubmitting)
+                                    const SizedBox(
+                                      height: 20,
+                                      width: 20,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                        valueColor:
+                                            AlwaysStoppedAnimation<Color>(
+                                          Color(0xFF0A0A12),
+                                        ),
+                                      ),
+                                    )
+                                  else
+                                    Flexible(
+                                      child: Text(
+                                        widget.submitText ??
+                                            AppLocalizations.of(context)!
+                                                .categoryDetailBrainstormSubmit,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium
+                                            ?.copyWith(
+                                              fontWeight: FontWeight.w800,
+                                              letterSpacing: 1,
+                                              color: const Color(0xFF0A0A12),
+                                            ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
+                                  if (!_isSubmitting)
+                                    const SizedBox(width: AppConstants.space8),
+                                  if (!_isSubmitting)
+                                    Text(
+                                      '🚀',
                                       style: Theme.of(context)
                                           .textTheme
-                                          .bodyMedium
-                                          ?.copyWith(
-                                            fontWeight: FontWeight.w800,
-                                            letterSpacing: 1,
-                                            color: const Color(0xFF0A0A12),
-                                          ),
-                                      textAlign: TextAlign.center,
+                                          .bodyMedium,
                                     ),
-                                  ),
-                                  const SizedBox(width: AppConstants.space8),
-                                  Text(
-                                    '🚀',
-                                    style:
-                                        Theme.of(context).textTheme.bodyMedium,
-                                  ),
                                 ],
                               ),
                             ],

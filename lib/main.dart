@@ -6,31 +6,35 @@ import 'screens/onboarding_screen.dart';
 import 'screens/main_screen.dart';
 import 'l10n/app_localizations.dart';
 import 'services/settings_manager.dart';
-import 'services/logger_service.dart';
-import 'services/update_service.dart';
+import 'services/service_locator.dart';
 import 'utils/route_observer.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Initialize Logger Service (Firebase & Crashlytics)
-  final logger = LoggerService();
-  await logger.initialize();
-  logger.logAppLifecycle('App Starting...');
-
   // Initialize Settings Manager
   await SettingsManager.init();
 
-  // Detect and persist build type on first launch
+  // Detect and persist build type FIRST (before ServiceLocator init)
+  // This ensures PdfService knows which languages to extract
   final settingsManager = SettingsManager();
   if (settingsManager.buildType == 'UNKNOWN') {
     const bundleAllLangs =
         bool.fromEnvironment('BUNDLE_ALL_LANGS', defaultValue: false);
     await settingsManager.setBuildType(bundleAllLangs ? 'FULL' : 'LITE');
-    LoggerService().logUserAction('build_type_detected', params: {
-      'type': bundleAllLangs ? 'FULL' : 'LITE',
-    });
   }
+
+  // Initialize Service Locator (all singleton services)
+  // Now PdfService will know correct build type from SettingsManager
+  // This initializes: LoggerService, PdfService, UpdateService
+  await ServiceLocator().initialize();
+
+  final serviceLocator = ServiceLocator();
+  final logger = serviceLocator.loggerService;
+  logger.logAppLifecycle('App Starting...');
+  logger.logUserAction('build_type_set', params: {
+    'type': settingsManager.buildType,
+  });
 
   // Set status bar style
   SystemChrome.setSystemUIOverlayStyle(
@@ -51,7 +55,7 @@ void main() async {
 
   // Schedule version check after 5 seconds
   Future.delayed(const Duration(seconds: 5), () {
-    UpdateService().checkForUpdates();
+    ServiceLocator().updateService.checkForUpdates();
   });
 
   runApp(const RestartableApp());

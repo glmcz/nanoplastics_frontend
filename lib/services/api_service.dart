@@ -5,13 +5,16 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 import '../models/solver.dart';
+import '../config/backend_config.dart';
 import 'logger_service.dart';
 import 'settings_manager.dart';
 
 class ApiService {
-  /// TODO buy a domain and add SSL
-  // 'http://10.0.2.2:3000'; // For Android emulator
-  static const String baseUrl = 'http://37.27.247.129';
+  /// Get backend base URL from centralized config
+  /// Can be overridden at build time using:
+  ///   flutter run --dart-define=BACKEND_URL=http://10.0.2.2:3000
+  /// Or via GitHub Actions secrets at build time
+  static String get baseUrl => BackendConfig.getBaseUrl();
 
   /// Get or create user UUID for consistent identification across submissions
   static Future<String> getUserId() async {
@@ -126,7 +129,8 @@ class ApiService {
         return {
           'success': false,
           'type': 'connection',
-          'message': 'Server is temporarily unavailable. Please try again later.',
+          'message':
+              'Server is temporarily unavailable. Please try again later.',
           'error': response.body,
         };
       } else {
@@ -194,8 +198,8 @@ class ApiService {
                 ))
             .toList();
       } else {
-        LoggerService().logError(
-          'Failed to load solvers: ${response.statusCode}', '');
+        LoggerService()
+            .logError('Failed to load solvers: ${response.statusCode}', '');
         return [];
       }
     } on SocketException catch (e, stackTrace) {

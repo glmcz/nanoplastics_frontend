@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'dart:ui';
 import '../../l10n/app_localizations.dart';
 import '../../config/app_colors.dart';
 import '../../config/app_constants.dart';
@@ -9,6 +8,7 @@ import '../../utils/app_typography.dart';
 import '../../widgets/nanosolve_logo.dart';
 import '../../services/settings_manager.dart';
 import '../../services/update_service.dart';
+import '../../services/service_locator.dart';
 import 'user_profile.dart';
 import 'language_screen.dart';
 import 'privacy_security_screen.dart';
@@ -22,7 +22,13 @@ class UserSettingsScreen extends StatefulWidget {
 }
 
 class _UserSettingsScreenState extends State<UserSettingsScreen> {
-  final _settingsManager = SettingsManager();
+  late SettingsManager _settingsManager;
+
+  @override
+  void initState() {
+    super.initState();
+    _settingsManager = ServiceLocator().settingsManager;
+  }
 
   bool _checkProfileCompletion() {
     // Check if email and display name are filled
@@ -57,9 +63,7 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
           child: Column(
             children: [
               _buildHeader(),
-              Expanded(
-                child: _buildContent(),
-              ),
+              Expanded(child: _buildContent()),
             ],
           ),
         ),
@@ -75,8 +79,9 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
 
     return Padding(
       padding: EdgeInsets.symmetric(
-          horizontal: spacing.contentPaddingH,
-          vertical: spacing.contentPaddingV),
+        horizontal: spacing.contentPaddingH,
+        vertical: spacing.contentPaddingV,
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -87,26 +92,30 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Back button
-                InkWell(
-                  onTap: () => Navigator.of(context).maybePop(),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Icon(Icons.arrow_back_ios,
-                          color: Colors.white, size: sizing.backIcon),
-                      const SizedBox(width: AppConstants.space4),
-                      Flexible(
-                        child: Text(
-                          l10n.categoryDetailBackToOverview,
-                          style: typography.back.copyWith(
-                            color: Colors.white,
-                          ),
-                          maxLines: 2,
-                          overflow: TextOverflow.fade,
-                          softWrap: true,
+                Expanded(
+                  child: InkWell(
+                    onTap: () => Navigator.of(context).maybePop(),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Icon(
+                          Icons.arrow_back_ios,
+                          color: Colors.white,
+                          size: sizing.backIcon,
                         ),
-                      ),
-                    ],
+                        const SizedBox(width: AppConstants.space4),
+                        Flexible(
+                          child: Text(
+                            l10n.categoryDetailBackToOverview,
+                            style:
+                                typography.back.copyWith(color: Colors.white),
+                            maxLines: 2,
+                            overflow: TextOverflow.fade,
+                            softWrap: true,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
                 // Settings wheel icon for version check
@@ -148,8 +157,9 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
 
     return SingleChildScrollView(
       padding: EdgeInsets.symmetric(
-          horizontal: spacing.contentPaddingH,
-          vertical: spacing.contentPaddingV),
+        horizontal: spacing.contentPaddingH,
+        vertical: spacing.contentPaddingV,
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -174,9 +184,9 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
             spacing: spacing,
             sizing: sizing,
             typography: typography,
-            onTap: () => Navigator.of(context).push(
-              MaterialPageRoute(builder: (_) => const LanguageScreen()),
-            ),
+            onTap: () => Navigator.of(
+              context,
+            ).push(MaterialPageRoute(builder: (_) => const LanguageScreen())),
           ),
           SizedBox(height: spacing.cardSpacing),
           _buildSettingItem(
@@ -189,7 +199,8 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
             onTap: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
-                    builder: (_) => const PrivacySecurityScreen()),
+                  builder: (_) => const PrivacySecurityScreen(),
+                ),
               );
             },
           ),
@@ -201,9 +212,9 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
             spacing: spacing,
             sizing: sizing,
             typography: typography,
-            onTap: () => Navigator.of(context).push(
-              MaterialPageRoute(builder: (_) => const AboutScreen()),
-            ),
+            onTap: () => Navigator.of(
+              context,
+            ).push(MaterialPageRoute(builder: (_) => const AboutScreen())),
           ),
           SizedBox(height: spacing.cardSpacing),
           _buildSettingItem(
@@ -224,8 +235,9 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
                   backgroundColor: AppColors.pastelAqua.withValues(alpha: 0.9),
                   behavior: SnackBarBehavior.floating,
                   shape: RoundedRectangleBorder(
-                    borderRadius:
-                        BorderRadius.circular(AppConstants.radiusMedium),
+                    borderRadius: BorderRadius.circular(
+                      AppConstants.radiusMedium,
+                    ),
                   ),
                 ),
               );
@@ -298,11 +310,7 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
                 color: color.withValues(alpha: 0.2),
                 borderRadius: BorderRadius.circular(AppConstants.radiusMedium),
               ),
-              child: Icon(
-                icon,
-                size: sizing.iconMd,
-                color: color,
-              ),
+              child: Icon(icon, size: sizing.iconMd, color: color),
             ),
             SizedBox(width: spacing.cardSpacing),
             Expanded(
@@ -311,9 +319,7 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
                 children: [
                   Text(
                     title,
-                    style: typography.title.copyWith(
-                      color: Colors.white,
-                    ),
+                    style: typography.title.copyWith(color: Colors.white),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -361,9 +367,9 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
               Expanded(
                 child: Text(
                   'Checking for updates...',
-                  style: AppTypography.of(context).body.copyWith(
-                        color: Colors.white,
-                      ),
+                  style: AppTypography.of(
+                    context,
+                  ).body.copyWith(color: Colors.white),
                 ),
               ),
             ],
@@ -401,15 +407,13 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
         backgroundColor: const Color(0xFF1A1A24),
         title: Text(
           'App is Up to Date',
-          style: AppTypography.of(context).title.copyWith(
-                color: Colors.white,
-              ),
+          style: AppTypography.of(context).title.copyWith(color: Colors.white),
         ),
         content: Text(
           'You are using the latest version of NanoSolve Hive.',
-          style: AppTypography.of(context).body.copyWith(
-                color: Colors.white.withValues(alpha: 0.8),
-              ),
+          style: AppTypography.of(
+            context,
+          ).body.copyWith(color: Colors.white.withValues(alpha: 0.8)),
         ),
         actions: [
           TextButton(
@@ -431,9 +435,7 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
         backgroundColor: const Color(0xFF1A1A24),
         title: Text(
           'Update Available',
-          style: AppTypography.of(context).title.copyWith(
-                color: Colors.white,
-              ),
+          style: AppTypography.of(context).title.copyWith(color: Colors.white),
         ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
@@ -441,9 +443,9 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
           children: [
             Text(
               'A new version ($latestVersion) is available.',
-              style: AppTypography.of(context).body.copyWith(
-                    color: Colors.white.withValues(alpha: 0.8),
-                  ),
+              style: AppTypography.of(
+                context,
+              ).body.copyWith(color: Colors.white.withValues(alpha: 0.8)),
             ),
             const SizedBox(height: 16),
             Text(
@@ -483,15 +485,13 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
         backgroundColor: const Color(0xFF1A1A24),
         title: Text(
           'Error',
-          style: AppTypography.of(context).title.copyWith(
-                color: Colors.white,
-              ),
+          style: AppTypography.of(context).title.copyWith(color: Colors.white),
         ),
         content: Text(
           message,
-          style: AppTypography.of(context).body.copyWith(
-                color: Colors.white.withValues(alpha: 0.8),
-              ),
+          style: AppTypography.of(
+            context,
+          ).body.copyWith(color: Colors.white.withValues(alpha: 0.8)),
         ),
         actions: [
           TextButton(
@@ -523,9 +523,9 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
               Expanded(
                 child: Text(
                   'Starting update...',
-                  style: AppTypography.of(context).body.copyWith(
-                        color: Colors.white,
-                      ),
+                  style: AppTypography.of(
+                    context,
+                  ).body.copyWith(color: Colors.white),
                 ),
               ),
             ],

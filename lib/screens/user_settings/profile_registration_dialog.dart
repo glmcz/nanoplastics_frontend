@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../config/app_colors.dart';
 import '../../config/app_constants.dart';
 import '../../services/settings_manager.dart';
+import '../../services/service_locator.dart';
 
 
 class ProfileRegistrationDialog extends StatefulWidget {
@@ -18,12 +19,13 @@ class _ProfileRegistrationDialogState extends State<ProfileRegistrationDialog> {
   late TextEditingController _nameController;
   late TextEditingController _emailController;
   late TextEditingController _specialtyController;
-  final _settingsManager = SettingsManager();
+  late SettingsManager _settingsManager;
   bool _isLoading = false;
 
   @override
   void initState() {
     super.initState();
+    _settingsManager = ServiceLocator().settingsManager;
     _nameController = TextEditingController(
       text: _settingsManager.displayName,
     );

@@ -7,6 +7,7 @@ import '../../utils/app_spacing.dart';
 import '../../utils/app_sizing.dart';
 import '../../utils/app_typography.dart';
 import '../../services/settings_manager.dart';
+import '../../services/service_locator.dart';
 import '../../widgets/nanosolve_logo.dart';
 
 class UserProfileScreen extends StatefulWidget {
@@ -17,7 +18,7 @@ class UserProfileScreen extends StatefulWidget {
 }
 
 class _UserProfileScreenState extends State<UserProfileScreen> {
-  final _settingsManager = SettingsManager();
+  late SettingsManager _settingsManager;
 
   late TextEditingController _displayNameController;
   late TextEditingController _emailController;
@@ -35,6 +36,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   @override
   void initState() {
     super.initState();
+    _settingsManager = ServiceLocator().settingsManager;
     _loadSettings();
   }
 

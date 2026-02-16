@@ -6,6 +6,7 @@ import '../../utils/app_spacing.dart';
 import '../../utils/app_sizing.dart';
 import '../../utils/app_typography.dart';
 import '../../services/settings_manager.dart';
+import '../../services/service_locator.dart';
 import '../../widgets/nanosolve_logo.dart';
 
 class PrivacySecurityScreen extends StatefulWidget {
@@ -16,13 +17,13 @@ class PrivacySecurityScreen extends StatefulWidget {
 }
 
 class _PrivacySecurityScreenState extends State<PrivacySecurityScreen> {
-  final _settingsManager = SettingsManager();
-
+  late SettingsManager _settingsManager;
   bool _analyticsEnabled = true;
 
   @override
   void initState() {
     super.initState();
+    _settingsManager = ServiceLocator().settingsManager;
     _loadSettings();
   }
 

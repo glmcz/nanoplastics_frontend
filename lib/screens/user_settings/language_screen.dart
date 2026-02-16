@@ -7,9 +7,9 @@ import '../../utils/app_sizing.dart';
 import '../../utils/app_typography.dart';
 import '../../services/settings_manager.dart';
 import '../../utils/pdf_utils.dart';
+import '../../services/service_locator.dart';
 import '../../widgets/nanosolve_logo.dart';
 import '../../main.dart';
-import '../pdf_viewer_screen.dart';
 
 class LanguageScreen extends StatefulWidget {
   final Function(Locale)? onLanguageChanged;
@@ -21,7 +21,7 @@ class LanguageScreen extends StatefulWidget {
 }
 
 class _LanguageScreenState extends State<LanguageScreen> {
-  final _settingsManager = SettingsManager();
+  late SettingsManager _settingsManager;
   late String _selectedLanguage;
 
   final List<LanguageOption> _languages = [
@@ -40,6 +40,7 @@ class _LanguageScreenState extends State<LanguageScreen> {
   @override
   void initState() {
     super.initState();
+    _settingsManager = ServiceLocator().settingsManager;
     _selectedLanguage = _settingsManager.userLanguage;
   }
 
@@ -82,22 +83,17 @@ class _LanguageScreenState extends State<LanguageScreen> {
 
       // After restart, navigate to PDF viewer for non-EN languages in LITE build
       if (code != 'en' && _settingsManager.buildType == 'LITE') {
-        Future.delayed(const Duration(milliseconds: 500), () async {
+        Future.delayed(const Duration(milliseconds: 500), () {
           if (mounted) {
-            final pdfPath = await resolveMainReport(code);
-            if (pdfPath != null) {
-              await Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (_) => PDFViewerScreen(
-                    title: _languages.firstWhere((l) => l.code == code).name,
-                    startPage: 1,
-                    endPage: 0,
-                    description: 'Language report for ${_languages.firstWhere((l) => l.code == code).name}',
-                    pdfAssetPath: pdfPath.isAsset ? pdfPath.path : null,
-                  ),
-                ),
-              );
-            }
+            final langName = _languages.firstWhere((l) => l.code == code).name;
+            ServiceLocator().pdfService.openPdf(
+                  context: context,
+                  title: langName,
+                  description: 'Language report for $langName',
+                  startPage: 1,
+                  endPage: 198,
+                  language: code,
+                );
           }
         });
       }
@@ -112,7 +108,7 @@ class _LanguageScreenState extends State<LanguageScreen> {
 
       // Show progress dialog
       if (!mounted) return false;
-      
+
       double progress = 0;
       showDialog(
         context: context,
@@ -186,8 +182,8 @@ class _LanguageScreenState extends State<LanguageScreen> {
       context: context,
       builder: (context) => AlertDialog(
         backgroundColor: const Color(0xFF1A1A2E),
-        title: const Text('Download Failed', 
-          style: TextStyle(color: AppColors.pastelAqua)),
+        title: const Text('Download Failed',
+            style: TextStyle(color: AppColors.pastelAqua)),
         content: Text(
           'Unable to download ${_languages.firstWhere((l) => l.code == attemptedLanguage).name} language files. Would you like to retry or use English?',
           style: const TextStyle(color: Colors.white70),
@@ -198,22 +194,21 @@ class _LanguageScreenState extends State<LanguageScreen> {
               Navigator.pop(context);
               _selectLanguage('en'); // Fallback to English
             },
-            child: const Text('Use English', 
-              style: TextStyle(color: AppColors.pastelMint)),
+            child: const Text('Use English',
+                style: TextStyle(color: AppColors.pastelMint)),
           ),
           TextButton(
             onPressed: () {
               Navigator.pop(context);
               _selectLanguage(attemptedLanguage); // Retry
             },
-            child: const Text('Retry', 
-              style: TextStyle(color: AppColors.pastelAqua)),
+            child: const Text('Retry',
+                style: TextStyle(color: AppColors.pastelAqua)),
           ),
         ],
       ),
     );
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -251,9 +246,9 @@ class _LanguageScreenState extends State<LanguageScreen> {
 
     return Padding(
       padding: EdgeInsets.symmetric(
-        horizontal: spacing.contentPaddingH,
-        vertical: spacing.contentPaddingV),
-        child: Column(
+          horizontal: spacing.contentPaddingH,
+          vertical: spacing.contentPaddingV),
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           SizedBox(
@@ -295,8 +290,8 @@ class _LanguageScreenState extends State<LanguageScreen> {
 
     return SingleChildScrollView(
       padding: EdgeInsets.symmetric(
-        horizontal: spacing.contentPaddingH,
-        vertical: spacing.contentPaddingV),
+          horizontal: spacing.contentPaddingH,
+          vertical: spacing.contentPaddingV),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
