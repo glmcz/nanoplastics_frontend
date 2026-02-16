@@ -1,7 +1,7 @@
 name: nanoplastics_app
 description: NanoSolve Hive - Crowdsourcing R&D solutions for nanoplastic pollution
 publish_to: 'none'
-version: 1.0.4
+version: 1.0.5
 
 environment:
   sdk: '>=3.0.0 <4.0.0'
