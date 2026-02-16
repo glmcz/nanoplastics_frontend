@@ -13,8 +13,8 @@ A mobile application providing science-backed information about nanoplastics and
 ## 📥 Downloads
 
 **Latest Release:**
-- [app-full-release-ci.apk](https://github.com/glmcz/nanoplastics_frontend/releases/latest/download/app-full-release.apk) - Full (All languages)
-- [app-lite-release-ci.apk](https://github.com/glmcz/nanoplastics_frontend/releases/latest/download/app-lite-release.apk) - Lite (English only)
+- [nanoplastics_app.apk](https://github.com/glmcz/nanoplastics_frontend/releases/latest/download/nanoplastics_app.apk) - Full (All languages)
+- [nanoplastics_app_lite.apk](https://github.com/glmcz/nanoplastics_frontend/releases/latest/download/nanoplastics_app_lite.apk) - Lite (English only)
 
 **All Versions:**
 - **[GitHub Releases](https://github.com/glmcz/nanoplastics_frontend/releases)** - Full & Lite variants
