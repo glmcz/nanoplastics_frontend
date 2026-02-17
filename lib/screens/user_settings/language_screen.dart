@@ -9,6 +9,7 @@ import '../../services/settings_manager.dart';
 import '../../utils/pdf_utils.dart';
 import '../../services/service_locator.dart';
 import '../../widgets/nanosolve_logo.dart';
+import '../../widgets/glowing_header_separator.dart';
 import '../../main.dart';
 
 class LanguageScreen extends StatefulWidget {
@@ -230,7 +231,18 @@ class _LanguageScreenState extends State<LanguageScreen> {
           child: Column(
             children: [
               _buildHeader(),
-              Expanded(child: _buildContent()),
+              Expanded(
+                child: Stack(
+                  children: [
+                    Positioned.fill(
+                      child: _buildContent(),
+                    ),
+                    ...GlowingHeaderSeparator.build(
+                      glowColor: AppColors.energy,
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
         ),

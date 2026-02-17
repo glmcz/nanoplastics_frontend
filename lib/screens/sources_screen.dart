@@ -6,6 +6,7 @@ import '../utils/app_spacing.dart';
 import '../utils/app_sizing.dart';
 import '../utils/app_typography.dart';
 import '../widgets/nanosolve_logo.dart';
+import '../widgets/glowing_header_separator.dart';
 import '../l10n/app_localizations.dart';
 import '../models/pdf_source.dart';
 import '../services/logger_service.dart';
@@ -57,8 +58,19 @@ class _SourcesScreenState extends State<SourcesScreen> {
           child: Column(
             children: [
               _buildHeader(),
-              _buildMainReportCard(),
-              _buildTabsNavigation(),
+              Stack(
+                children: [
+                  Column(
+                    children: [
+                      _buildMainReportCard(),
+                      _buildTabsNavigation(),
+                    ],
+                  ),
+                  ...GlowingHeaderSeparator.build(
+                    glowColor: AppColors.energy,
+                  ),
+                ],
+              ),
               Expanded(
                 child: _selectedTab == SourceType.webLinks
                     ? _buildWebLinksTab()

@@ -9,6 +9,7 @@ import '../../utils/app_typography.dart';
 import '../../services/settings_manager.dart';
 import '../../services/service_locator.dart';
 import '../../widgets/nanosolve_logo.dart';
+import '../../widgets/glowing_header_separator.dart';
 
 class UserProfileScreen extends StatefulWidget {
   const UserProfileScreen({super.key});
@@ -134,7 +135,16 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
             children: [
               _buildHeader(),
               Expanded(
-                child: _buildContent(),
+                child: Stack(
+                  children: [
+                    Positioned.fill(
+                      child: _buildContent(),
+                    ),
+                    ...GlowingHeaderSeparator.build(
+                      glowColor: AppColors.energy,
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
@@ -151,9 +161,9 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
 
     return Padding(
       padding: EdgeInsets.symmetric(
-        horizontal: spacing.contentPaddingH,
-        vertical: spacing.contentPaddingV),
-        child: Column(
+          horizontal: spacing.contentPaddingH,
+          vertical: spacing.contentPaddingV),
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           SizedBox(
@@ -195,9 +205,9 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
 
     return SingleChildScrollView(
       padding: EdgeInsets.symmetric(
-        horizontal: spacing.contentPaddingH,
-        vertical: spacing.contentPaddingV),
-        child: Column(
+          horizontal: spacing.contentPaddingH,
+          vertical: spacing.contentPaddingV),
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildTitleSection(typography),

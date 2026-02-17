@@ -6,6 +6,7 @@ import '../../utils/app_spacing.dart';
 import '../../utils/app_sizing.dart';
 import '../../utils/app_typography.dart';
 import '../../widgets/nanosolve_logo.dart';
+import '../../widgets/glowing_header_separator.dart';
 import '../../services/settings_manager.dart';
 import '../../services/update_service.dart';
 import '../../services/service_locator.dart';
@@ -63,7 +64,18 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
           child: Column(
             children: [
               _buildHeader(),
-              Expanded(child: _buildContent()),
+              Expanded(
+                child: Stack(
+                  children: [
+                    Positioned.fill(
+                      child: _buildContent(),
+                    ),
+                    ...GlowingHeaderSeparator.build(
+                      glowColor: AppColors.energy,
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
         ),
@@ -78,9 +90,11 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
     final typography = AppTypography.of(context);
 
     return Padding(
-      padding: EdgeInsets.symmetric(
-        horizontal: spacing.contentPaddingH,
-        vertical: spacing.contentPaddingV,
+      padding: EdgeInsets.only(
+        top: spacing.contentPaddingV,
+        bottom: spacing.contentPaddingV,
+        left: spacing.contentPaddingH,
+        right: spacing.contentPaddingH,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -158,7 +172,7 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
     return SingleChildScrollView(
       padding: EdgeInsets.symmetric(
         horizontal: spacing.contentPaddingH,
-        vertical: spacing.contentPaddingV,
+        vertical: spacing.contentPaddingV * 7,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -218,7 +232,7 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
           ),
           SizedBox(height: spacing.cardSpacing),
           _buildSettingItem(
-            title: 'Build Type',
+            title: 'Multi language app switch',
             icon: Icons.build_circle,
             subtitle: '${_settingsManager.buildType} build',
             color: AppColors.pastelAqua,
@@ -231,7 +245,7 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
               // by changing their build type identifier and downloading/deleting PDFs accordingly
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: const Text('Build type switcher - Coming soon!'),
+                  content: const Text('Multi language switcher - Coming soon!'),
                   backgroundColor: AppColors.pastelAqua.withValues(alpha: 0.9),
                   behavior: SnackBarBehavior.floating,
                   shape: RoundedRectangleBorder(

@@ -6,6 +6,7 @@ import '../utils/app_spacing.dart';
 import '../utils/app_sizing.dart';
 import '../utils/app_typography.dart';
 import '../widgets/nanosolve_logo.dart';
+import '../widgets/glowing_header_separator.dart';
 import 'solvers_leaderboard_screen.dart';
 import '../services/logger_service.dart';
 
@@ -47,7 +48,16 @@ class _ResultsScreenState extends State<ResultsScreen> {
             children: [
               _buildHeader(),
               Expanded(
-                child: _buildContent(),
+                child: Stack(
+                  children: [
+                    Positioned.fill(
+                      child: _buildContent(),
+                    ),
+                    ...GlowingHeaderSeparator.build(
+                      glowColor: AppColors.energy,
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
@@ -64,9 +74,9 @@ class _ResultsScreenState extends State<ResultsScreen> {
 
     return Padding(
       padding: EdgeInsets.symmetric(
-        horizontal: spacing.contentPaddingH,
-        vertical: spacing.contentPaddingV),
-        child: Column(
+          horizontal: spacing.contentPaddingH,
+          vertical: spacing.contentPaddingV),
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           SizedBox(
@@ -109,9 +119,8 @@ class _ResultsScreenState extends State<ResultsScreen> {
 
     return SingleChildScrollView(
       padding: EdgeInsets.symmetric(
-          horizontal: spacing.contentPaddingH, 
-          vertical: spacing.contentPaddingV
-      ),
+          horizontal: spacing.contentPaddingH,
+          vertical: spacing.contentPaddingV),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [

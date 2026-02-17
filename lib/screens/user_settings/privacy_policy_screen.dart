@@ -6,6 +6,7 @@ import '../../utils/app_spacing.dart';
 import '../../utils/app_sizing.dart';
 import '../../utils/app_typography.dart';
 import '../../widgets/nanosolve_logo.dart';
+import '../../widgets/glowing_header_separator.dart';
 
 class PrivacyPolicyScreen extends StatelessWidget {
   const PrivacyPolicyScreen({super.key});
@@ -30,7 +31,18 @@ class PrivacyPolicyScreen extends StatelessWidget {
           child: Column(
             children: [
               _buildHeader(context),
-              Expanded(child: _buildContent(context)),
+              Expanded(
+                child: Stack(
+                  children: [
+                    Positioned.fill(
+                      child: _buildContent(context),
+                    ),
+                    ...GlowingHeaderSeparator.build(
+                      glowColor: AppColors.energy,
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
         ),
@@ -46,8 +58,8 @@ class PrivacyPolicyScreen extends StatelessWidget {
 
     return Padding(
       padding: EdgeInsets.symmetric(
-        horizontal: spacing.contentPaddingH,
-        vertical: spacing.contentPaddingV),
+          horizontal: spacing.contentPaddingH,
+          vertical: spacing.contentPaddingV),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [

@@ -9,6 +9,7 @@ import '../../utils/app_spacing.dart';
 import '../../utils/app_sizing.dart';
 import '../../utils/app_typography.dart';
 import '../../widgets/nanosolve_logo.dart';
+import '../../widgets/glowing_header_separator.dart';
 
 class AboutScreen extends StatefulWidget {
   const AboutScreen({super.key});
@@ -45,9 +46,10 @@ class _AboutScreenState extends State<AboutScreen> {
 
   String _getDownloadUrl() {
     if (_selectedVariant == 'lite') {
-      return 'https://github.com/glmcz/nanoplastics_frontend/releases/latest/download/app-lite-release.apk';
+      /// Have to be same as in CI flutter-release.yaml
+      return 'https://github.com/glmcz/nanoplastics_frontend/releases/latest/download/nanoplastics_app_lite.apk';
     } else {
-      return 'https://github.com/glmcz/nanoplastics_frontend/releases/latest/download/app-full-release.apk';
+      return 'https://github.com/glmcz/nanoplastics_frontend/releases/latest/download/nanoplastics_app.apk';
     }
   }
 
@@ -83,7 +85,18 @@ class _AboutScreenState extends State<AboutScreen> {
             children: [
               _buildHeader(context, spacing, sizing, l10n, typography),
               Expanded(
-                  child: _buildContent(context, spacing, sizing, typography)),
+                child: Stack(
+                  children: [
+                    Positioned.fill(
+                      child:
+                          _buildContent(context, spacing, sizing, typography),
+                    ),
+                    ...GlowingHeaderSeparator.build(
+                      glowColor: AppColors.energy,
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
         ),
@@ -94,9 +107,8 @@ class _AboutScreenState extends State<AboutScreen> {
   Widget _buildHeader(context, spacing, sizing, l10n, typography) {
     return Padding(
       padding: EdgeInsets.symmetric(
-        horizontal: spacing.contentPaddingH,
-        vertical: spacing.contentPaddingV
-      ),
+          horizontal: spacing.contentPaddingH,
+          vertical: spacing.contentPaddingV),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -140,8 +152,8 @@ class _AboutScreenState extends State<AboutScreen> {
   ) {
     return SingleChildScrollView(
       padding: EdgeInsets.symmetric(
-        horizontal: spacing.contentPaddingH,
-        vertical: spacing.contentPaddingV),
+          horizontal: spacing.contentPaddingH,
+          vertical: spacing.contentPaddingV),
       child: Column(
         children: [
           _buildAppInfo(context, spacing, sizing, typography),

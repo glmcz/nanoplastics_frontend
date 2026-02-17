@@ -8,6 +8,7 @@ import '../../utils/app_typography.dart';
 import '../../services/settings_manager.dart';
 import '../../services/service_locator.dart';
 import '../../widgets/nanosolve_logo.dart';
+import '../../widgets/glowing_header_separator.dart';
 
 class PrivacySecurityScreen extends StatefulWidget {
   const PrivacySecurityScreen({super.key});
@@ -56,7 +57,18 @@ class _PrivacySecurityScreenState extends State<PrivacySecurityScreen> {
           child: Column(
             children: [
               _buildHeader(),
-              Expanded(child: _buildContent()),
+              Expanded(
+                child: Stack(
+                  children: [
+                    Positioned.fill(
+                      child: _buildContent(),
+                    ),
+                    ...GlowingHeaderSeparator.build(
+                      glowColor: AppColors.energy,
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
         ),
@@ -72,9 +84,8 @@ class _PrivacySecurityScreenState extends State<PrivacySecurityScreen> {
 
     return Padding(
       padding: EdgeInsets.symmetric(
-        horizontal: spacing.contentPaddingH,
-        vertical: spacing.contentPaddingV
-        ),
+          horizontal: spacing.contentPaddingH,
+          vertical: spacing.contentPaddingV),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -126,8 +137,8 @@ class _PrivacySecurityScreenState extends State<PrivacySecurityScreen> {
 
     return SingleChildScrollView(
       padding: EdgeInsets.symmetric(
-        horizontal: spacing.contentPaddingH,
-        vertical: spacing.contentPaddingV),
+          horizontal: spacing.contentPaddingH,
+          vertical: spacing.contentPaddingV),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
