@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:in_app_update/in_app_update.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'dart:convert';
 import 'logger_service.dart';
 import 'service_locator.dart';
@@ -114,10 +115,10 @@ class UpdateService {
   }
 
   /// Check if update is available based on GitHub release tag
-  /// Returns true only if a new release tag is detected (not already saved)
+  /// Returns true only if a new release is newer than the installed app version
   /// Notifies listeners of state changes during check
   /// Returns false if no internet connection (offline mode)
-  Future<bool> checkForUpdates() async {
+  Future<bool> checkForUpdates({bool force = false}) async {
     final internetService = ServiceLocator().internetService;
 
     // Check internet first - skip if offline
@@ -137,15 +138,17 @@ class UpdateService {
       final settingsManager = ServiceLocator().settingsManager;
 
       // Check if enough time has passed since last check (12 hour interval = 2x per day)
-      final lastCheck = settingsManager.lastUpdateCheckTime;
-      if (lastCheck != null) {
-        final timeSinceLastCheck = DateTime.now().difference(lastCheck);
-        if (timeSinceLastCheck < _checkInterval) {
-          LoggerService().logUserAction(
-            'Skipping update check - checked recently',
-            params: {'minutes_ago': (timeSinceLastCheck.inMinutes)},
-          );
-          return false; // Don't check again yet
+      if (!force) {
+        final lastCheck = settingsManager.lastUpdateCheckTime;
+        if (lastCheck != null) {
+          final timeSinceLastCheck = DateTime.now().difference(lastCheck);
+          if (timeSinceLastCheck < _checkInterval) {
+            LoggerService().logUserAction(
+              'Skipping update check - checked recently',
+              params: {'minutes_ago': (timeSinceLastCheck.inMinutes)},
+            );
+            return false; // Don't check again yet
+          }
         }
       }
 
@@ -160,13 +163,15 @@ class UpdateService {
       // Update check timestamp
       await settingsManager.setLastUpdateCheckTime(DateTime.now());
 
-      // Get previously saved tag ID
+      // Get installed app version (fallback to last known tag if needed)
+      final installedVersion = await _getInstalledVersion();
       final savedTagId = settingsManager.lastReleaseTagId;
       final currentTagId = release.tagName;
 
       // If tag is different (new release), update is available
       // Use semantic version comparison to handle version numbering correctly
-      if (savedTagId == null || isNewerVersion(currentTagId, savedTagId)) {
+      final compareBase = installedVersion ?? savedTagId;
+      if (compareBase == null || isNewerVersion(currentTagId, compareBase)) {
         // Get appropriate download URL based on build type
         final buildType = settingsManager.buildType;
         String? downloadUrl;
@@ -215,6 +220,21 @@ class UpdateService {
       );
       _notifyStateChange(UpdateState.failed);
       return false;
+    }
+  }
+
+  /// Get installed app version string (e.g., "1.2.3")
+  Future<String?> _getInstalledVersion() async {
+    try {
+      final info = await PackageInfo.fromPlatform();
+      return info.version;
+    } catch (e) {
+      LoggerService().logError(
+        'Error reading installed app version',
+        e.toString(),
+        StackTrace.current,
+      );
+      return null;
     }
   }
 

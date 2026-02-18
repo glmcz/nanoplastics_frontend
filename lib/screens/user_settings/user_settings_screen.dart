@@ -394,7 +394,7 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
 
     try {
       final updateService = UpdateService();
-      final updateAvailable = await updateService.checkForUpdates();
+      final updateAvailable = await updateService.checkForUpdates(force: true);
 
       if (mounted) {
         Navigator.of(context).pop(); // Close loading dialog
