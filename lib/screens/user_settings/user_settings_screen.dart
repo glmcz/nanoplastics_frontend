@@ -524,11 +524,11 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
       builder: (context) => AlertDialog(
         backgroundColor: const Color(0xFF1A1A24),
         title: Text(
-          'Download Started',
+          'Download Complete',
           style: AppTypography.of(context).title.copyWith(color: Colors.white),
         ),
         content: Text(
-          'When the download completes, open the APK from your Downloads and follow the install prompts. If asked, enable “Install unknown apps” for your browser.',
+          'The installer will open automatically. If not, find the APK in your Downloads folder and tap it to install.',
           style: AppTypography.of(
             context,
           ).body.copyWith(color: Colors.white.withValues(alpha: 0.8)),
@@ -545,37 +545,130 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
 
   Future<void> _startUpdateProcess() async {
     Navigator.of(context).pop();
+    final updateService = UpdateService();
+    Function(UpdateState, double)? stateListener;
 
-    // Show loading dialog
+    // Show download progress dialog
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (context) => PopScope(
+      builder: (dialogContext) => PopScope(
         canPop: false,
-        child: AlertDialog(
-          backgroundColor: const Color(0xFF1A1A24),
-          content: Row(
-            children: [
-              const CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(AppColors.neonCyan),
+        onPopInvokedWithResult: (didPop, result) {
+          // Remove listener when dialog is dismissed
+          if (stateListener != null) {
+            updateService.removeStateListener(stateListener!);
+          }
+        },
+        child: StatefulBuilder(
+          builder: (context, setState) {
+            // Add listener only once
+            if (stateListener == null) {
+              stateListener = (state, progress) {
+                if (mounted) {
+                  setState(() {});
+                }
+              };
+              updateService.addStateListener(stateListener!);
+            }
+
+            String statusText = 'Starting update...';
+            if (updateService.currentState.name == 'downloading') {
+              final percent =
+                  (updateService.downloadProgress * 100).toStringAsFixed(1);
+              statusText = 'Downloading APK... $percent%';
+            } else if (updateService.currentState.name == 'downloaded') {
+              statusText = 'Launching installer...';
+            } else if (updateService.currentState.name == 'installing') {
+              statusText = 'Opening installer...';
+            }
+
+            return AlertDialog(
+              backgroundColor: const Color(0xFF1A1A24),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const CircularProgressIndicator(
+                    valueColor:
+                        AlwaysStoppedAnimation<Color>(AppColors.neonCyan),
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    statusText,
+                    style: AppTypography.of(context)
+                        .body
+                        .copyWith(color: Colors.white),
+                  ),
+                  const SizedBox(height: 8),
+                  if (updateService.currentState.name == 'downloading')
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(4),
+                      child: LinearProgressIndicator(
+                        value: updateService.downloadProgress,
+                        backgroundColor: Colors.white.withValues(alpha: 0.1),
+                        valueColor: const AlwaysStoppedAnimation<Color>(
+                          AppColors.neonCyan,
+                        ),
+                        minHeight: 4,
+                      ),
+                    ),
+                  if (updateService.currentState.name == 'downloading')
+                    Padding(
+                      padding: const EdgeInsets.only(top: 16.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          ElevatedButton.icon(
+                            onPressed: () {
+                              if (updateService.isPaused) {
+                                updateService.resumeDownload();
+                              } else {
+                                updateService.pauseDownload();
+                              }
+                              setState(() {});
+                            },
+                            icon: Icon(updateService.isPaused
+                                ? Icons.play_arrow
+                                : Icons.pause),
+                            label: Text(
+                              updateService.isPaused ? 'Resume' : 'Pause',
+                            ),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor:
+                                  Colors.white.withValues(alpha: 0.1),
+                              foregroundColor: Colors.white,
+                            ),
+                          ),
+                          ElevatedButton.icon(
+                            onPressed: () {
+                              updateService.cancelDownload();
+                              if (stateListener != null) {
+                                updateService
+                                    .removeStateListener(stateListener!);
+                              }
+                              if (Navigator.of(context).canPop()) {
+                                Navigator.of(context).pop();
+                              }
+                            },
+                            icon: const Icon(Icons.close),
+                            label: const Text('Cancel'),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.neonCrimson,
+                              foregroundColor: Colors.white,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                ],
               ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Text(
-                  'Starting update...',
-                  style: AppTypography.of(
-                    context,
-                  ).body.copyWith(color: Colors.white),
-                ),
-              ),
-            ],
-          ),
+            );
+          },
         ),
       ),
     );
 
     try {
-      final updateService = UpdateService();
       final success = await updateService.startUpdate();
 
       if (mounted) {

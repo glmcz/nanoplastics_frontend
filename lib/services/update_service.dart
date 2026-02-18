@@ -3,8 +3,8 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:in_app_update/in_app_update.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:flutter_custom_tabs/flutter_custom_tabs.dart' as custom_tabs;
 import 'package:url_launcher/url_launcher.dart';
+import 'package:path_provider/path_provider.dart';
 import 'dart:convert';
 import 'logger_service.dart';
 import 'service_locator.dart';
@@ -84,6 +84,9 @@ class UpdateService {
   // State and progress tracking
   UpdateState _currentState = UpdateState.idle;
   double _downloadProgress = 0.0;
+  bool _isPaused = false;
+  bool _isCancelled = false;
+  StreamSubscription<List<int>>? _downloadSubscription;
   final List<Function(UpdateState, double)> _stateListeners = [];
 
   /// Get current update state
@@ -91,6 +94,9 @@ class UpdateService {
 
   /// Get current download progress (0.0 to 1.0)
   double get downloadProgress => _downloadProgress;
+
+  /// Check if download is paused
+  bool get isPaused => _isPaused;
 
   /// Subscribe to state changes
   /// Callback receives (state, progress) tuple
@@ -103,6 +109,36 @@ class UpdateService {
   /// Unsubscribe from state changes
   void removeStateListener(Function(UpdateState, double) callback) {
     _stateListeners.remove(callback);
+  }
+
+  /// Pause the download
+  void pauseDownload() {
+    if (_currentState.name == 'downloading' && !_isPaused) {
+      _isPaused = true;
+      LoggerService().logUserAction('Download paused');
+    }
+  }
+
+  /// Resume the download
+  void resumeDownload() {
+    if (_isPaused) {
+      _isPaused = false;
+      LoggerService().logUserAction('Download resumed');
+    }
+  }
+
+  /// Cancel the download
+  void cancelDownload() {
+    _isCancelled = true;
+    _downloadSubscription?.cancel();
+    LoggerService().logUserAction('Download cancelled');
+    _notifyStateChange(UpdateState.idle);
+  }
+
+  /// Reset download state (called before new download)
+  void _resetDownloadState() {
+    _isPaused = false;
+    _isCancelled = false;
   }
 
   /// Notify all listeners of state change
@@ -355,7 +391,7 @@ class UpdateService {
     }
   }
 
-  /// Start update process (GitHub APK download in custom tab)
+  /// Start update process (in-app APK download with installer launch)
   /// Returns true if update was successfully started, false if offline or error
   /// Notifies listeners of state changes during download and installation
   Future<bool> startUpdate() async {
@@ -384,75 +420,149 @@ class UpdateService {
     }
 
     try {
-      LoggerService().logUserAction('Starting in-app update');
+      LoggerService().logUserAction('Starting in-app update download');
 
       if (Platform.isAndroid) {
-        _notifyStateChange(UpdateState.downloading);
-        final updateUri = Uri.parse(updateDownloadUrl);
-        var launched = false;
-
-        try {
-          final options = custom_tabs.CustomTabsOptions(
-            shareState: custom_tabs.CustomTabsShareState.off,
-            urlBarHidingEnabled: true,
-            showTitle: true,
-            browser: const custom_tabs.CustomTabsBrowserConfiguration(
-              fallbackCustomTabs: [
-                'com.android.chrome',
-                'com.chrome.beta',
-                'com.chrome.dev',
-              ],
-            ),
-          );
-
-          await custom_tabs.launchUrl(
-            updateUri,
-            customTabsOptions: options,
-            safariVCOptions: const custom_tabs.SafariViewControllerOptions(
-              barCollapsingEnabled: true,
-              dismissButtonStyle:
-                  custom_tabs.SafariViewControllerDismissButtonStyle.close,
-            ),
-          );
-          launched = true;
-          LoggerService()
-              .logUserAction('Android update URL launched in custom tab');
-        } catch (e) {
-          LoggerService().logUserAction(
-            'Custom tabs launch failed, falling back to browser',
-            params: {'error': e.toString()},
-          );
-        }
-
-        if (!launched) {
-          final fallbackLaunched = await launchUrl(
-            updateUri,
-            mode: LaunchMode.externalApplication,
-          );
-
-          if (!fallbackLaunched) {
-            LoggerService().logUserAction('Android update URL launch failed');
-            _notifyStateChange(UpdateState.failed);
-            return false;
-          }
-        }
-
-        LoggerService().logUserAction('Android update download started');
-        _notifyStateChange(UpdateState.downloaded);
+        return await _downloadAndInstallApk(updateDownloadUrl);
       } else if (Platform.isIOS) {
         // iOS: Redirect to App Store
-        // Note: Actual implementation requires URL_LAUNCHER package
-        // TODO: Implement iOS App Store redirect
         LoggerService()
             .logUserAction('iOS update redirect not yet implemented');
         _notifyStateChange(UpdateState.failed);
         return false;
       }
 
-      return true;
+      return false;
     } catch (e, stackTrace) {
       LoggerService().logError(
         'Error starting update',
+        e.toString(),
+        stackTrace,
+      );
+      _notifyStateChange(UpdateState.failed);
+      return false;
+    }
+  }
+
+  /// Download APK from GitHub and launch installer
+  /// Tracks download progress and notifies listeners
+  /// Supports pause, resume, and cancel
+  Future<bool> _downloadAndInstallApk(String downloadUrl) async {
+    try {
+      _resetDownloadState();
+      _notifyStateChange(UpdateState.downloading);
+
+      // Get downloads directory
+      final downloadsDir = await getDownloadsDirectory();
+      if (downloadsDir == null) {
+        LoggerService().logUserAction('Downloads directory not available');
+        _notifyStateChange(UpdateState.failed);
+        return false;
+      }
+
+      // Generate filename from URL
+      final filename = downloadUrl.split('/').last;
+      final filePath = '${downloadsDir.path}/$filename';
+      final file = File(filePath);
+
+      // Download APK with progress tracking
+      final uri = Uri.parse(downloadUrl);
+      final request = http.Request('GET', uri);
+      final response = await http.Client().send(request);
+
+      if (response.statusCode != 200) {
+        LoggerService().logUserAction(
+          'APK download failed',
+          params: {'status_code': response.statusCode},
+        );
+        _notifyStateChange(UpdateState.failed);
+        return false;
+      }
+
+      // Calculate total bytes
+      final contentLength = response.contentLength ?? 0;
+      var downloadedBytes = 0;
+
+      // Stream download to file with progress
+      final sink = file.openWrite();
+      _downloadSubscription = response.stream.listen((chunk) {
+        if (!_isCancelled) {
+          sink.add(chunk);
+          downloadedBytes += chunk.length;
+          if (contentLength > 0) {
+            final progress = downloadedBytes / contentLength;
+            _notifyStateChange(UpdateState.downloading, progress: progress);
+          }
+        }
+      });
+
+      // Monitor pause/resume state
+      Timer? pauseCheckTimer;
+      pauseCheckTimer = Timer.periodic(const Duration(milliseconds: 100), (_) {
+        if (_isPaused) {
+          _downloadSubscription?.pause();
+        } else {
+          _downloadSubscription?.resume();
+        }
+      });
+
+      // Wait for stream to complete
+      await _downloadSubscription?.asFuture();
+      pauseCheckTimer?.cancel();
+      await sink.close();
+
+      if (_isCancelled) {
+        LoggerService().logUserAction('APK download cancelled');
+        await file.delete();
+        _notifyStateChange(UpdateState.idle);
+        return false;
+      }
+
+      LoggerService().logUserAction(
+        'APK downloaded successfully',
+        params: {'path': filePath, 'size': downloadedBytes},
+      );
+      _notifyStateChange(UpdateState.downloaded);
+
+      // Launch installer intent
+      return await _launchApkInstaller(filePath);
+    } catch (e, stackTrace) {
+      LoggerService().logError(
+        'Error downloading APK',
+        e.toString(),
+        stackTrace,
+      );
+      _notifyStateChange(UpdateState.failed);
+      return false;
+    }
+  }
+
+  /// Launch Android installer for APK file using intent
+  /// Returns true if installer was launched successfully
+  Future<bool> _launchApkInstaller(String filePath) async {
+    try {
+      _notifyStateChange(UpdateState.installing);
+      final fileUri = Uri.file(filePath);
+
+      // Use platform channel to launch installer
+      if (await launchUrl(
+        fileUri,
+        mode: LaunchMode.externalApplication,
+      )) {
+        LoggerService().logUserAction(
+          'APK installer launched',
+          params: {'path': filePath},
+        );
+        _notifyStateChange(UpdateState.installed);
+        return true;
+      } else {
+        LoggerService().logUserAction('Failed to launch APK installer');
+        _notifyStateChange(UpdateState.failed);
+        return false;
+      }
+    } catch (e, stackTrace) {
+      LoggerService().logError(
+        'Error launching APK installer',
         e.toString(),
         stackTrace,
       );
