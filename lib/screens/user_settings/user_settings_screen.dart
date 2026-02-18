@@ -463,7 +463,7 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
             ),
             const SizedBox(height: 16),
             Text(
-              'Update now to get the latest features and improvements.',
+              'This will open the GitHub download. After it finishes, install the APK from your Downloads. You may need to allow “Install unknown apps.”',
               style: AppTypography.of(context).body.copyWith(
                     color: Colors.white.withValues(alpha: 0.6),
                     fontSize: 13,
@@ -503,6 +503,32 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
         ),
         content: Text(
           message,
+          style: AppTypography.of(
+            context,
+          ).body.copyWith(color: Colors.white.withValues(alpha: 0.8)),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('OK'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showUpdateStartedDialog() {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (context) => AlertDialog(
+        backgroundColor: const Color(0xFF1A1A24),
+        title: Text(
+          'Download Started',
+          style: AppTypography.of(context).title.copyWith(color: Colors.white),
+        ),
+        content: Text(
+          'When the download completes, open the APK from your Downloads and follow the install prompts. If asked, enable “Install unknown apps” for your browser.',
           style: AppTypography.of(
             context,
           ).body.copyWith(color: Colors.white.withValues(alpha: 0.8)),
@@ -559,6 +585,8 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
           _showErrorDialog(
             'Failed to start the update process. Please try again later or download manually.',
           );
+        } else {
+          _showUpdateStartedDialog();
         }
       }
     } catch (e) {

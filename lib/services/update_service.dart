@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:in_app_update/in_app_update.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:flutter_custom_tabs/flutter_custom_tabs.dart' as custom_tabs;
+import 'package:url_launcher/url_launcher.dart';
 import 'dart:convert';
 import 'logger_service.dart';
 import 'service_locator.dart';
@@ -168,50 +170,74 @@ class UpdateService {
       final savedTagId = settingsManager.lastReleaseTagId;
       final currentTagId = release.tagName;
 
-      // If tag is different (new release), update is available
-      // Use semantic version comparison to handle version numbering correctly
-      final compareBase = installedVersion ?? savedTagId;
-      if (compareBase == null || isNewerVersion(currentTagId, compareBase)) {
-        // Get appropriate download URL based on build type
-        final buildType = settingsManager.buildType;
-        String? downloadUrl;
-
-        if (buildType.toLowerCase() == 'full') {
-          downloadUrl = release.fullBuildUrl;
-        } else {
-          downloadUrl = release.liteBuildUrl;
-        }
-
-        if (downloadUrl == null) {
-          LoggerService().logUserAction('APK URL not found in GitHub release',
-              params: {'build_type': buildType});
+      // If installed version is known, only update when release is newer
+      if (installedVersion != null) {
+        if (!isNewerVersion(currentTagId, installedVersion)) {
+          await settingsManager.setLastReleaseTagId(currentTagId);
+          await settingsManager.setUpdateAvailable(false);
+          LoggerService().logUserAction(
+            'App is up to date',
+            params: {'tag': currentTagId, 'installed': installedVersion},
+          );
+          _notifyStateChange(UpdateState.idle);
           return false;
         }
-
-        // Save new tag ID and update info
-        await settingsManager.setLastReleaseTagId(currentTagId);
-        await settingsManager.setUpdateAvailable(true);
-        await settingsManager.setLatestVersion(currentTagId);
-        await settingsManager.setUpdateDownloadUrl(downloadUrl);
-
-        LoggerService().logUserAction(
-          'New release detected',
-          params: {
-            'tag': currentTagId,
-            'build_type': buildType,
-            'url': downloadUrl,
-          },
-        );
-        _notifyStateChange(UpdateState.available);
-        return true; // New release available
+      } else if (savedTagId != null) {
+        if (!isNewerVersion(currentTagId, savedTagId)) {
+          await settingsManager.setUpdateAvailable(false);
+          LoggerService().logUserAction(
+            'App is up to date',
+            params: {'tag': currentTagId},
+          );
+          _notifyStateChange(UpdateState.idle);
+          return false;
+        }
       } else {
-        // Same tag - no new update
+        // No installed version and no saved tag: avoid false positive
+        await settingsManager.setLastReleaseTagId(currentTagId);
         await settingsManager.setUpdateAvailable(false);
-        LoggerService()
-            .logUserAction('App is up to date', params: {'tag': currentTagId});
+        LoggerService().logUserAction(
+          'Update check skipped - no local version baseline',
+          params: {'tag': currentTagId},
+        );
         _notifyStateChange(UpdateState.idle);
         return false;
       }
+
+      // If tag is different (new release), update is available
+      // Use semantic version comparison to handle version numbering correctly
+      // Get appropriate download URL based on build type
+      final buildType = settingsManager.buildType;
+      String? downloadUrl;
+
+      if (buildType.toLowerCase() == 'full') {
+        downloadUrl = release.fullBuildUrl;
+      } else {
+        downloadUrl = release.liteBuildUrl;
+      }
+
+      if (downloadUrl == null) {
+        LoggerService().logUserAction('APK URL not found in GitHub release',
+            params: {'build_type': buildType});
+        return false;
+      }
+
+      // Save new tag ID and update info
+      await settingsManager.setLastReleaseTagId(currentTagId);
+      await settingsManager.setUpdateAvailable(true);
+      await settingsManager.setLatestVersion(currentTagId);
+      await settingsManager.setUpdateDownloadUrl(downloadUrl);
+
+      LoggerService().logUserAction(
+        'New release detected',
+        params: {
+          'tag': currentTagId,
+          'build_type': buildType,
+          'url': downloadUrl,
+        },
+      );
+      _notifyStateChange(UpdateState.available);
+      return true; // New release available
     } catch (e, stackTrace) {
       LoggerService().logError(
         'Error checking for updates',
@@ -329,11 +355,13 @@ class UpdateService {
     }
   }
 
-  /// Start update process (Android flexible update or iOS App Store redirect)
+  /// Start update process (GitHub APK download in custom tab)
   /// Returns true if update was successfully started, false if offline or error
   /// Notifies listeners of state changes during download and installation
   Future<bool> startUpdate() async {
     final internetService = ServiceLocator().internetService;
+    final settingsManager = ServiceLocator().settingsManager;
+    final updateDownloadUrl = settingsManager.updateDownloadUrl;
 
     // Check internet first - prevent starting if offline
     if (!internetService.isOnline) {
@@ -347,19 +375,70 @@ class UpdateService {
       return false; // Offline - can't download
     }
 
+    if (updateDownloadUrl == null) {
+      LoggerService().logUserAction(
+        'Update start blocked - missing download URL',
+      );
+      _notifyStateChange(UpdateState.failed);
+      return false;
+    }
+
     try {
       LoggerService().logUserAction('Starting in-app update');
 
       if (Platform.isAndroid) {
-        // Request flexible update
-        await InAppUpdate.checkForUpdate();
+        _notifyStateChange(UpdateState.downloading);
+        final updateUri = Uri.parse(updateDownloadUrl);
+        var launched = false;
 
-        // Start flexible update
-        await InAppUpdate.startFlexibleUpdate();
+        try {
+          final options = custom_tabs.CustomTabsOptions(
+            shareState: custom_tabs.CustomTabsShareState.off,
+            urlBarHidingEnabled: true,
+            showTitle: true,
+            browser: const custom_tabs.CustomTabsBrowserConfiguration(
+              fallbackCustomTabs: [
+                'com.android.chrome',
+                'com.chrome.beta',
+                'com.chrome.dev',
+              ],
+            ),
+          );
 
-        LoggerService().logUserAction('Android flexible update started');
-        // Monitor for download completion via listener
-        _setupAndroidUpdateListener();
+          await custom_tabs.launchUrl(
+            updateUri,
+            customTabsOptions: options,
+            safariVCOptions: const custom_tabs.SafariViewControllerOptions(
+              barCollapsingEnabled: true,
+              dismissButtonStyle:
+                  custom_tabs.SafariViewControllerDismissButtonStyle.close,
+            ),
+          );
+          launched = true;
+          LoggerService()
+              .logUserAction('Android update URL launched in custom tab');
+        } catch (e) {
+          LoggerService().logUserAction(
+            'Custom tabs launch failed, falling back to browser',
+            params: {'error': e.toString()},
+          );
+        }
+
+        if (!launched) {
+          final fallbackLaunched = await launchUrl(
+            updateUri,
+            mode: LaunchMode.externalApplication,
+          );
+
+          if (!fallbackLaunched) {
+            LoggerService().logUserAction('Android update URL launch failed');
+            _notifyStateChange(UpdateState.failed);
+            return false;
+          }
+        }
+
+        LoggerService().logUserAction('Android update download started');
+        _notifyStateChange(UpdateState.downloaded);
       } else if (Platform.isIOS) {
         // iOS: Redirect to App Store
         // Note: Actual implementation requires URL_LAUNCHER package
