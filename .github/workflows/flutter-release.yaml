@@ -73,7 +73,10 @@ jobs:
         run: |
           cp pubspec.base.yaml pubspec.yaml
           yq -i '.flutter.assets += load("pubspec.full.yaml").flutter.assets' pubspec.yaml
-          echo "Generated FULL pubspec.yaml"
+          # Sync version from original pubspec so APK version matches the git tag
+          ORIG_VERSION=$(grep '^version:' pubspec.yaml.bak | sed 's/version: //')
+          yq -i ".version = \"$ORIG_VERSION\"" pubspec.yaml
+          echo "Generated FULL pubspec.yaml with version $ORIG_VERSION"
 
       # ---------- VALIDATE PUBSPEC ------
       - name: Validate pubspec.yaml
@@ -117,7 +120,10 @@ jobs:
       - name: Generate LITE pubspec
         run: |
           cp pubspec.base.yaml pubspec.yaml
-          echo "Generated LITE pubspec.yaml"
+          # Sync version from original pubspec so APK version matches the git tag
+          ORIG_VERSION=$(grep '^version:' pubspec.yaml.bak | sed 's/version: //')
+          yq -i ".version = \"$ORIG_VERSION\"" pubspec.yaml
+          echo "Generated LITE pubspec.yaml with version $ORIG_VERSION"
 
       # ---------------- DEPENDENCIES FOR LITE ----------------
       - name: Install dependencies for LITE
