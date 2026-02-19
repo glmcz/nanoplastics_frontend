@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'config/app_theme.dart';
 import 'screens/onboarding_screen.dart';
 import 'screens/main_screen.dart';
@@ -14,6 +15,14 @@ void main() async {
 
   // Initialize Settings Manager
   await SettingsManager.init();
+
+  // Persist current app version from PackageInfo
+  try {
+    final info = await PackageInfo.fromPlatform();
+    await SettingsManager().setCurrentAppVersion(info.version);
+  } catch (e) {
+    debugPrint('Error reading app version: $e');
+  }
 
   // Detect and persist build type FIRST (before ServiceLocator init)
   // This ensures PdfService knows which languages to extract

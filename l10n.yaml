@@ -2,6 +2,7 @@ arb-dir: assets/l10n
 template-arb-file: app_en.arb
 output-localization-file: app_localizations.dart
 output-dir: lib/l10n
+untranslated-messages-file: /Users/martindurak/Desktop/web_rust/nanoplastics/nanoplastics_frontend/untranslated-messages-file.txt
 preferred-supported-locales:
   - cs
   - en

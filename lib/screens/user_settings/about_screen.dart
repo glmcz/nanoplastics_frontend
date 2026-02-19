@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_custom_tabs/flutter_custom_tabs.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-import 'package:package_info_plus/package_info_plus.dart';
 import '../../l10n/app_localizations.dart';
 import '../../config/app_colors.dart';
 import '../../config/app_constants.dart';
@@ -10,12 +9,10 @@ import '../../utils/app_sizing.dart';
 import '../../utils/app_typography.dart';
 import '../../widgets/nanosolve_logo.dart';
 import '../../widgets/glowing_header_separator.dart';
+import '../../services/settings_manager.dart';
 
 class AboutScreen extends StatefulWidget {
   const AboutScreen({super.key});
-
-  static const String appVersion = '1.0.0';
-  static const String buildNumber = '1';
 
   @override
   State<AboutScreen> createState() => _AboutScreenState();
@@ -23,8 +20,7 @@ class AboutScreen extends StatefulWidget {
 
 class _AboutScreenState extends State<AboutScreen> {
   String _selectedVariant = 'full'; // 'full' or 'lite'
-  String appVersion = '1.0.0';
-  String buildNumber = '1';
+  late String appVersion;
 
   @override
   void initState() {
@@ -32,16 +28,12 @@ class _AboutScreenState extends State<AboutScreen> {
     _loadVersionInfo();
   }
 
-  Future<void> _loadVersionInfo() async {
-    try {
-      final info = await PackageInfo.fromPlatform();
-      setState(() {
-        appVersion = info.version; // e.g., "1.2.3"
-        buildNumber = info.buildNumber; // e.g., "4"
-      });
-    } catch (e) {
-      debugPrint('Error loading version: $e');
-    }
+  void _loadVersionInfo() {
+    // Load version from SettingsManager (persisted on app startup)
+    final settingsManager = SettingsManager();
+    setState(() {
+      appVersion = settingsManager.currentAppVersion ?? '1.0.0';
+    });
   }
 
   String _getDownloadUrl() {
@@ -53,10 +45,11 @@ class _AboutScreenState extends State<AboutScreen> {
     }
   }
 
-  String _getVariantLabel() {
+  String _getVariantLabel(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return _selectedVariant == 'lite'
-        ? 'Lite (English)'
-        : 'Full (All Languages)';
+        ? l10n.aboutVariantLiteBuild
+        : l10n.aboutVariantFullBuild;
   }
 
   @override
@@ -150,6 +143,7 @@ class _AboutScreenState extends State<AboutScreen> {
     AppSizing sizing,
     AppTypography typography,
   ) {
+    final l10n = AppLocalizations.of(context)!;
     return SingleChildScrollView(
       padding: EdgeInsets.symmetric(
           horizontal: spacing.contentPaddingH,
@@ -191,7 +185,7 @@ class _AboutScreenState extends State<AboutScreen> {
           _buildSectionTitle(
               context, AppLocalizations.of(context)!.aboutShare, typography),
           SizedBox(height: spacing.cardSpacing),
-          _buildShareCard(context, spacing, sizing, typography),
+          _buildShareCard(context, spacing, sizing, typography, l10n),
           SizedBox(height: spacing.cardSpacing * 2),
           _buildFooter(context, spacing, typography),
           SizedBox(height: spacing.cardSpacing * 2),
@@ -209,7 +203,7 @@ class _AboutScreenState extends State<AboutScreen> {
             onTap: () => showLicensePage(
               context: context,
               applicationName: 'NanoSolve Hive',
-              applicationVersion: 'v$appVersion ($buildNumber)',
+              applicationVersion: 'v$appVersion',
             ),
           ),
         ],
@@ -262,7 +256,7 @@ class _AboutScreenState extends State<AboutScreen> {
         ),
         const SizedBox(height: AppConstants.space8),
         Text(
-          '${AppLocalizations.of(context)!.aboutVersion} $appVersion ($buildNumber)',
+          '${AppLocalizations.of(context)!.aboutVersion} $appVersion',
           style: typography.subtitle.copyWith(
             color: AppColors.textMuted,
             fontWeight: FontWeight.w600,
@@ -387,7 +381,9 @@ class _AboutScreenState extends State<AboutScreen> {
     AppSpacing spacing,
     AppSizing sizing,
     AppTypography typography,
+    AppLocalizations l10n,
   ) {
+    final l10n = AppLocalizations.of(context)!;
     final appDownloadUrl = _getDownloadUrl();
 
     return Container(
@@ -408,7 +404,7 @@ class _AboutScreenState extends State<AboutScreen> {
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
-            AppLocalizations.of(context)!.aboutShareTitle,
+            l10n.aboutShareTitle,
             style: typography.title.copyWith(
               fontWeight: FontWeight.w700,
               color: AppColors.pastelAqua,
@@ -422,15 +418,15 @@ class _AboutScreenState extends State<AboutScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               _buildVariantButton(
-                  'full', 'All Languages', spacing, sizing, typography),
+                  'full', l10n.aboutVariantFullBuild, spacing, sizing, typography),
               SizedBox(width: spacing.cardSpacing),
               _buildVariantButton(
-                  'lite', 'English Only', spacing, sizing, typography),
+                  'lite', l10n.aboutVariantLiteBuild, spacing, sizing, typography),
             ],
           ),
           const SizedBox(height: AppConstants.space16),
           Text(
-            _getVariantLabel(),
+            _getVariantLabel(context),
             style: typography.subtitle.copyWith(
               color: AppColors.pastelAqua,
               fontWeight: FontWeight.w600,
@@ -439,7 +435,7 @@ class _AboutScreenState extends State<AboutScreen> {
           ),
           const SizedBox(height: AppConstants.space16),
           Text(
-            AppLocalizations.of(context)!.aboutShareDesc,
+            l10n.aboutShareDesc,
             style: typography.subtitle.copyWith(
               color: AppColors.textMuted,
             ),
@@ -504,7 +500,7 @@ class _AboutScreenState extends State<AboutScreen> {
                   SizedBox(width: spacing.sm),
                   Flexible(
                     child: Text(
-                      AppLocalizations.of(context)!.aboutShareAppLink,
+                      l10n.aboutShareAppLink,
                       style: typography.subtitle.copyWith(
                         color: AppColors.pastelAqua,
                         fontWeight: FontWeight.w600,
@@ -527,15 +523,15 @@ class _AboutScreenState extends State<AboutScreen> {
   }
 
   Widget _buildVariantButton(
-    String variant,
+    String variantKey,
     String label,
     AppSpacing spacing,
     AppSizing sizing,
     AppTypography typography,
   ) {
-    final isSelected = _selectedVariant == variant;
+    final isSelected = _selectedVariant == variantKey;
     return GestureDetector(
-      onTap: () => setState(() => _selectedVariant = variant),
+      onTap: () => setState(() => _selectedVariant = variantKey),
       child: Container(
         padding: const EdgeInsets.symmetric(
           horizontal: AppConstants.space12,

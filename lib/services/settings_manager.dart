@@ -31,6 +31,9 @@ class SettingsManager {
   static const String _lastVersionCheckKey = 'last_version_check';
   static const String _lastReleaseTagIdKey = 'last_release_tag_id';
   static const String _lastUpdateCheckTimeKey = 'last_update_check_time';
+  static const String _currentAppVersionKey = 'current_app_version';
+  static const String _lastDownloadedApkPathKey = 'last_downloaded_apk_path';
+  static const String _lastDownloadedApkSizeKey = 'last_downloaded_apk_size';
 
   // Build type identifier
   static const String _buildTypeKey = 'build_type';
@@ -418,6 +421,50 @@ class SettingsManager {
   Future<void> setLastUpdateCheckTime(DateTime dateTime) async {
     _checkInitialized();
     await _prefs.setString(_lastUpdateCheckTimeKey, dateTime.toIso8601String());
+  }
+
+  /// Get current app version (persisted from PackageInfo on startup)
+  String? get currentAppVersion {
+    _checkInitialized();
+    return _prefs.getString(_currentAppVersionKey);
+  }
+
+  /// Set current app version (called on app startup from main.dart)
+  Future<void> setCurrentAppVersion(String version) async {
+    _checkInitialized();
+    await _prefs.setString(_currentAppVersionKey, version);
+  }
+
+  /// Get path of last downloaded APK (for tracking partial/failed updates)
+  String? get lastDownloadedApkPath {
+    _checkInitialized();
+    return _prefs.getString(_lastDownloadedApkPathKey);
+  }
+
+  /// Set path of last downloaded APK
+  Future<void> setLastDownloadedApkPath(String? path) async {
+    _checkInitialized();
+    if (path != null) {
+      await _prefs.setString(_lastDownloadedApkPathKey, path);
+    } else {
+      await _prefs.remove(_lastDownloadedApkPathKey);
+    }
+  }
+
+  /// Get size of last downloaded APK in bytes (for integrity verification)
+  int get lastDownloadedApkSize {
+    _checkInitialized();
+    return _prefs.getInt(_lastDownloadedApkSizeKey) ?? 0;
+  }
+
+  /// Set size of last downloaded APK in bytes
+  Future<void> setLastDownloadedApkSize(int sizeInBytes) async {
+    _checkInitialized();
+    if (sizeInBytes > 0) {
+      await _prefs.setInt(_lastDownloadedApkSizeKey, sizeInBytes);
+    } else {
+      await _prefs.remove(_lastDownloadedApkSizeKey);
+    }
   }
 
   /// Save PDF file locally for offline access

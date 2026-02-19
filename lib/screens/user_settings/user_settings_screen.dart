@@ -380,7 +380,7 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
               const SizedBox(width: 16),
               Expanded(
                 child: Text(
-                  'Checking for updates...',
+                  AppLocalizations.of(context)!.updateCheckingForUpdates,
                   style: AppTypography.of(
                     context,
                   ).body.copyWith(color: Colors.white),
@@ -408,7 +408,9 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
     } catch (e) {
       if (mounted) {
         Navigator.of(context).pop();
-        _showErrorDialog('Failed to check for updates: $e');
+        _showErrorDialog(
+          '${AppLocalizations.of(context)!.updateFailedToCheck}: $e',
+        );
       }
     }
   }
@@ -420,11 +422,11 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
       builder: (context) => AlertDialog(
         backgroundColor: const Color(0xFF1A1A24),
         title: Text(
-          'App is Up to Date',
+          AppLocalizations.of(context)!.updateAppUpToDateTitle,
           style: AppTypography.of(context).title.copyWith(color: Colors.white),
         ),
         content: Text(
-          'You are using the latest version of NanoSolve Hive.',
+          AppLocalizations.of(context)!.updateAppUpToDateMsg,
           style: AppTypography.of(
             context,
           ).body.copyWith(color: Colors.white.withValues(alpha: 0.8)),
@@ -432,7 +434,7 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text('OK'),
+            child: Text(AppLocalizations.of(context)!.updateButtonOk),
           ),
         ],
       ),
@@ -448,7 +450,7 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
       builder: (context) => AlertDialog(
         backgroundColor: const Color(0xFF1A1A24),
         title: Text(
-          'Update Available',
+          AppLocalizations.of(context)!.updateAvailableTitle,
           style: AppTypography.of(context).title.copyWith(color: Colors.white),
         ),
         content: Column(
@@ -456,14 +458,14 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'A new version ($latestVersion) is available.',
+              '${AppLocalizations.of(context)!.updateAvailableMsg}\n($latestVersion)',
               style: AppTypography.of(
                 context,
               ).body.copyWith(color: Colors.white.withValues(alpha: 0.8)),
             ),
             const SizedBox(height: 16),
             Text(
-              'This will open the GitHub download. After it finishes, install the APK from your Downloads. You may need to allow “Install unknown apps.”',
+              AppLocalizations.of(context)!.updateDownloadInstructions,
               style: AppTypography.of(context).body.copyWith(
                     color: Colors.white.withValues(alpha: 0.6),
                     fontSize: 13,
@@ -475,7 +477,7 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
             child: Text(
-              'Later',
+              AppLocalizations.of(context)!.updateButtonLater,
               style: TextStyle(color: Colors.white.withValues(alpha: 0.6)),
             ),
           ),
@@ -485,7 +487,7 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
               backgroundColor: AppColors.neonCrimson,
               foregroundColor: Colors.white,
             ),
-            child: const Text('Update Now'),
+            child: Text(AppLocalizations.of(context)!.updateButtonUpdateNow),
           ),
         ],
       ),
@@ -498,7 +500,7 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
       builder: (context) => AlertDialog(
         backgroundColor: const Color(0xFF1A1A24),
         title: Text(
-          'Error',
+          AppLocalizations.of(context)!.updateError,
           style: AppTypography.of(context).title.copyWith(color: Colors.white),
         ),
         content: Text(
@@ -510,7 +512,7 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text('OK'),
+            child: Text(AppLocalizations.of(context)!.updateButtonOk),
           ),
         ],
       ),
@@ -524,11 +526,11 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
       builder: (context) => AlertDialog(
         backgroundColor: const Color(0xFF1A1A24),
         title: Text(
-          'Download Complete',
+          AppLocalizations.of(context)!.updateDownloadCompleteTitle,
           style: AppTypography.of(context).title.copyWith(color: Colors.white),
         ),
         content: Text(
-          'The installer will open automatically. If not, find the APK in your Downloads folder and tap it to install.',
+          AppLocalizations.of(context)!.updateDownloadCompleteMsg,
           style: AppTypography.of(
             context,
           ).body.copyWith(color: Colors.white.withValues(alpha: 0.8)),
@@ -536,7 +538,7 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text('OK'),
+            child: Text(AppLocalizations.of(context)!.updateButtonOk),
           ),
         ],
       ),

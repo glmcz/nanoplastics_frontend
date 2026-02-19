@@ -29,6 +29,8 @@ class GitHubRelease {
   final DateTime publishedAt;
   final String? fullBuildUrl;
   final String? liteBuildUrl;
+  final int fullBuildSize; // Size in bytes from GitHub API
+  final int liteBuildSize; // Size in bytes from GitHub API
 
   GitHubRelease({
     required this.tagName,
@@ -37,19 +39,25 @@ class GitHubRelease {
     required this.publishedAt,
     this.fullBuildUrl,
     this.liteBuildUrl,
+    this.fullBuildSize = 0,
+    this.liteBuildSize = 0,
   });
 
   factory GitHubRelease.fromJson(Map<String, dynamic> json) {
     final assets = (json['assets'] as List<dynamic>?) ?? [];
     String? fullUrl;
     String? liteUrl;
+    int fullSize = 0;
+    int liteSize = 0;
 
     for (final asset in assets) {
       final assetName = asset['name'] ?? '';
       if (assetName == 'nanoplastics_app.apk') {
         fullUrl = asset['browser_download_url'];
+        fullSize = asset['size'] ?? 0; // Get file size from GitHub API
       } else if (assetName == 'nanoplastics_app_lite.apk') {
         liteUrl = asset['browser_download_url'];
+        liteSize = asset['size'] ?? 0; // Get file size from GitHub API
       }
     }
 
@@ -61,6 +69,8 @@ class GitHubRelease {
           DateTime.tryParse(json['published_at'] ?? '') ?? DateTime.now(),
       fullBuildUrl: fullUrl,
       liteBuildUrl: liteUrl,
+      fullBuildSize: fullSize,
+      liteBuildSize: liteSize,
     );
   }
 }
@@ -149,6 +159,96 @@ class UpdateService {
     }
     for (final listener in _stateListeners) {
       listener(_currentState, _downloadProgress);
+    }
+  }
+
+  /// Check if downloaded APK exists for the given version and has correct size
+  /// Returns true only if APK file exists at saved path and size matches expected size
+  /// Used to skip re-downloading if partial update already exists on disk
+  Future<bool> _isValidDownloadedApkAvailable(int expectedSize) async {
+    final settingsManager = ServiceLocator().settingsManager;
+    final apkPath = settingsManager.lastDownloadedApkPath;
+    final savedSize = settingsManager.lastDownloadedApkSize;
+
+    if (apkPath == null || savedSize == 0) {
+      return false; // No downloaded APK tracked
+    }
+
+    try {
+      final file = File(apkPath);
+      if (!await file.exists()) {
+        LoggerService().logUserAction(
+          'Downloaded APK file not found at path',
+          params: {'path': apkPath},
+        );
+        // Clear stale tracking
+        await settingsManager.setLastDownloadedApkPath(null);
+        await settingsManager.setLastDownloadedApkSize(0);
+        return false;
+      }
+
+      final actualSize = await file.length();
+      if (actualSize != expectedSize) {
+        LoggerService().logUserAction(
+          'Downloaded APK size mismatch',
+          params: {
+            'expected': expectedSize,
+            'actual': actualSize,
+          },
+        );
+        // Size mismatch - delete corrupted file and clear tracking
+        await file.delete();
+        await settingsManager.setLastDownloadedApkPath(null);
+        await settingsManager.setLastDownloadedApkSize(0);
+        return false;
+      }
+
+      LoggerService().logUserAction(
+        'Valid downloaded APK found',
+        params: {'path': apkPath, 'size': actualSize},
+      );
+      return true; // APK is valid and ready
+    } catch (e) {
+      LoggerService().logError(
+        'Error checking downloaded APK',
+        e.toString(),
+        StackTrace.current,
+      );
+      return false;
+    }
+  }
+
+  /// Clean up old downloaded APKs before starting new download
+  /// Keeps only the current download, deletes any previous APKs to save disk space
+  Future<void> _cleanupOldApks() async {
+    try {
+      final settingsManager = ServiceLocator().settingsManager;
+      final oldApkPath = settingsManager.lastDownloadedApkPath;
+
+      if (oldApkPath != null) {
+        try {
+          final oldFile = File(oldApkPath);
+          if (await oldFile.exists()) {
+            await oldFile.delete();
+            LoggerService().logUserAction(
+              'Cleaned up old APK',
+              params: {'path': oldApkPath},
+            );
+          }
+        } catch (e) {
+          LoggerService().logError(
+            'Error deleting old APK',
+            e.toString(),
+            StackTrace.current,
+          );
+        }
+      }
+    } catch (e) {
+      LoggerService().logError(
+        'Error in APK cleanup',
+        e.toString(),
+        StackTrace.current,
+      );
     }
   }
 
@@ -256,6 +356,25 @@ class UpdateService {
         LoggerService().logUserAction('APK URL not found in GitHub release',
             params: {'build_type': buildType});
         return false;
+      }
+
+      // Check if this exact version's APK is already downloaded and valid
+      // If so, skip marking as available again (it's already ready to install)
+      int expectedSize = buildType.toLowerCase() == 'full'
+          ? release.fullBuildSize
+          : release.liteBuildSize;
+      
+      if (expectedSize > 0 &&
+          await _isValidDownloadedApkAvailable(expectedSize)) {
+        LoggerService().logUserAction(
+          'Valid downloaded APK exists, skipping re-download',
+          params: {
+            'tag': currentTagId,
+            'build_type': buildType,
+          },
+        );
+        _notifyStateChange(UpdateState.downloaded);
+        return true; // APK is ready, no need to re-download
       }
 
       // Save new tag ID and update info
@@ -366,11 +485,14 @@ class UpdateService {
   /// Prevents hidden auto-retry that confuses users
   Future<GitHubRelease?> _fetchLatestRelease() async {
     try {
+      // TODO: Add GitHub API authentication for higher rate limits (60 req/hr → 5000 req/hr)
+      // TODO: Use GITHUB_TOKEN environment variable or config to add Authorization header
       final response = await http.get(
         Uri.parse(_githubApiUrl),
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/vnd.github.v3+json',
+          // TODO: Add when implemented: 'Authorization': 'token $githubToken',
         },
       ).timeout(
         const Duration(seconds: 10),
@@ -447,10 +569,15 @@ class UpdateService {
   /// Download APK from GitHub and launch installer
   /// Tracks download progress and notifies listeners
   /// Supports pause, resume, and cancel
+  /// Cleans up old APKs before starting new download
+  /// Verifies downloaded file size matches GitHub release before installing
   Future<bool> _downloadAndInstallApk(String downloadUrl) async {
     try {
       _resetDownloadState();
       _notifyStateChange(UpdateState.downloading);
+
+      // Clean up old APK before starting new download
+      await _cleanupOldApks();
 
       // Get downloads directory
       final downloadsDir = await getDownloadsDirectory();
@@ -479,7 +606,7 @@ class UpdateService {
         return false;
       }
 
-      // Calculate total bytes
+      // Calculate total bytes for integrity verification
       final contentLength = response.contentLength ?? 0;
       var downloadedBytes = 0;
 
@@ -508,7 +635,7 @@ class UpdateService {
 
       // Wait for stream to complete
       await _downloadSubscription?.asFuture();
-      pauseCheckTimer?.cancel();
+      pauseCheckTimer.cancel();
       await sink.close();
 
       if (_isCancelled) {
@@ -522,6 +649,26 @@ class UpdateService {
         'APK downloaded successfully',
         params: {'path': filePath, 'size': downloadedBytes},
       );
+
+      // Verify download size before proceeding (if we have expected size from GitHub)
+      if (contentLength > 0 && downloadedBytes != contentLength) {
+        LoggerService().logUserAction(
+          'APK size mismatch after download',
+          params: {
+            'expected': contentLength,
+            'actual': downloadedBytes,
+          },
+        );
+        await file.delete();
+        _notifyStateChange(UpdateState.failed);
+        return false;
+      }
+
+      // Track downloaded APK for next check to avoid re-downloading if install fails
+      final settingsManager = ServiceLocator().settingsManager;
+      await settingsManager.setLastDownloadedApkPath(filePath);
+      await settingsManager.setLastDownloadedApkSize(downloadedBytes);
+
       _notifyStateChange(UpdateState.downloaded);
 
       // Launch installer intent
