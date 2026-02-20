@@ -7,6 +7,8 @@ import '../../utils/app_sizing.dart';
 import '../../utils/app_typography.dart';
 import '../../services/settings_manager.dart';
 import '../../services/service_locator.dart';
+import 'privacy_policy_screen.dart';
+import 'terms_of_service_screen.dart';
 import '../../widgets/nanosolve_logo.dart';
 import '../../widgets/glowing_header_separator.dart';
 
@@ -20,6 +22,7 @@ class PrivacySecurityScreen extends StatefulWidget {
 class _PrivacySecurityScreenState extends State<PrivacySecurityScreen> {
   late SettingsManager _settingsManager;
   bool _analyticsEnabled = true;
+  bool _updateNotificationsEnabled = true;
 
   @override
   void initState() {
@@ -30,11 +33,17 @@ class _PrivacySecurityScreenState extends State<PrivacySecurityScreen> {
 
   void _loadSettings() {
     _analyticsEnabled = _settingsManager.analyticsEnabled;
+    _updateNotificationsEnabled = _settingsManager.pushNotificationsEnabled;
   }
 
   Future<void> _updateAnalytics(bool value) async {
     setState(() => _analyticsEnabled = value);
     await _settingsManager.setAnalyticsEnabled(value);
+  }
+
+  Future<void> _setUpdateNotifications(bool value) async {
+    setState(() => _updateNotificationsEnabled = value);
+    await _settingsManager.setPushNotificationsEnabled(value);
   }
 
   @override
@@ -162,6 +171,27 @@ class _PrivacySecurityScreenState extends State<PrivacySecurityScreen> {
             onChanged: _updateAnalytics,
           ),
           SizedBox(height: cardSpace * 2),
+          _buildSectionTitle(
+              AppLocalizations.of(context)!.privacyNotifications,
+              AppColors.pastelAqua,
+              cardTitleStyle),
+          SizedBox(height: cardSpace),
+          _buildToggleItem(
+            title: AppLocalizations.of(context)!.privacyUpdateNotifications,
+            subtitle:
+                AppLocalizations.of(context)!.privacyUpdateNotificationsDesc,
+            icon: Icons.system_update_outlined,
+            value: _updateNotificationsEnabled,
+            color: AppColors.pastelAqua,
+            cardPad: cardPad,
+            iconContainer: iconContainer,
+            iconSz: iconSz,
+            cardSpace: cardSpace,
+            cardTitleStyle: cardTitleStyle,
+            subtitleStyle: subtitleStyle,
+            onChanged: _setUpdateNotifications,
+          ),
+          SizedBox(height: cardSpace * 2),
           _buildSectionTitle(AppLocalizations.of(context)!.privacySecurity,
               AppColors.pastelLavender, cardTitleStyle),
           SizedBox(height: cardSpace),
@@ -204,9 +234,9 @@ class _PrivacySecurityScreenState extends State<PrivacySecurityScreen> {
             cardSpace: cardSpace,
             arrowSz: arrowSz,
             cardTitleStyle: cardTitleStyle,
-            onTap: () {
-              // Open privacy policy
-            },
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute(builder: (_) => const PrivacyPolicyScreen()),
+            ),
           ),
           SizedBox(height: cardSpace),
           _buildLinkItem(
@@ -219,9 +249,9 @@ class _PrivacySecurityScreenState extends State<PrivacySecurityScreen> {
             cardSpace: cardSpace,
             arrowSz: arrowSz,
             cardTitleStyle: cardTitleStyle,
-            onTap: () {
-              // Open terms of service
-            },
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute(builder: (_) => const TermsOfServiceScreen()),
+            ),
           ),
           SizedBox(height: cardSpace * 2),
         ],

@@ -294,6 +294,111 @@ void main() {
     });
   });
 
+  group('SettingsManager - resetToDefaults', () {
+    setUp(() async => await setupSettingsManager());
+
+    test('wipes language, profile, and app settings', () async {
+      final s = SettingsManager();
+      await s.setUserLanguage('ru');
+      await s.setDisplayName('Max');
+      await s.setEmail('max@example.com');
+      await s.setProfileRegistered(true);
+      await s.setAnalyticsEnabled(false);
+      await s.setDarkModeEnabled(false);
+
+      await s.resetToDefaults();
+
+      expect(s.userLanguage, equals('en'));
+      expect(s.displayName, equals(''));
+      expect(s.email, equals(''));
+      expect(s.isProfileRegistered, isFalse);
+      expect(s.analyticsEnabled, isTrue);
+      expect(s.darkModeEnabled, isTrue);
+    });
+
+    test('also clears userId and userName', () async {
+      final s = SettingsManager();
+      await s.setUserId('some-uuid');
+      await s.setUserName('TestUser');
+
+      await s.resetToDefaults();
+
+      expect(s.userId, isNull);
+      expect(s.userName, isNull);
+    });
+  });
+
+  group('SettingsManager - deleteAccount', () {
+    setUp(() async => await setupSettingsManager());
+
+    test('clears all profile keys', () async {
+      final s = SettingsManager();
+      await s.setUserId('uid-123');
+      await s.setUserName('Alice');
+      await s.setDisplayName('Alice Smith');
+      await s.setEmail('alice@example.com');
+      await s.setBio('Researcher');
+      await s.setAvatarPath('/avatars/alice.jpg');
+      await s.setProfileRegistered(true);
+      await s.setUserSpecialty('Biology');
+
+      await s.deleteAccount();
+
+      expect(s.userId, isNull);
+      expect(s.userName, isNull);
+      expect(s.displayName, equals(''));
+      expect(s.email, equals(''));
+      expect(s.bio, equals(''));
+      expect(s.avatarPath, isNull);
+      expect(s.isProfileRegistered, isFalse);
+      expect(s.userSpecialty, isNull);
+    });
+
+    test('preserves language preference', () async {
+      final s = SettingsManager();
+      await s.setUserLanguage('fr');
+      await s.setProfileRegistered(true);
+
+      await s.deleteAccount();
+
+      expect(s.userLanguage, equals('fr'));
+    });
+
+    test('preserves analytics preference', () async {
+      final s = SettingsManager();
+      await s.setAnalyticsEnabled(false);
+      await s.setProfileRegistered(true);
+
+      await s.deleteAccount();
+
+      expect(s.analyticsEnabled, isFalse);
+    });
+
+    test('preserves dark mode preference', () async {
+      final s = SettingsManager();
+      await s.setDarkModeEnabled(false);
+      await s.setProfileRegistered(true);
+
+      await s.deleteAccount();
+
+      expect(s.darkModeEnabled, isFalse);
+    });
+
+    test('preserves push notifications preference', () async {
+      final s = SettingsManager();
+      await s.setPushNotificationsEnabled(false);
+      await s.setProfileRegistered(true);
+
+      await s.deleteAccount();
+
+      expect(s.pushNotificationsEnabled, isFalse);
+    });
+
+    test('on already-clean state does not throw', () async {
+      await expectLater(SettingsManager().deleteAccount(), completes);
+    });
+  });
+
   group('SettingsManager - initial values from prefs', () {
     test('loads pre-existing values from SharedPreferences', () async {
       await setupSettingsManager({

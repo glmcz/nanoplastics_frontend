@@ -694,9 +694,13 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                 style: TextStyle(color: AppColors.textMuted)),
           ),
           TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-              // Delete account logic would go here
+            onPressed: () async {
+              final nav = Navigator.of(context);
+              await _settingsManager.deleteAccount();
+              if (mounted) {
+                nav.pop(); // dismiss dialog
+                nav.popUntil((route) => route.isFirst);
+              }
             },
             child: const Text('Delete',
                 style: TextStyle(color: AppColors.neonCrimson)),

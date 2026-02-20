@@ -190,10 +190,31 @@ class SettingsManager {
     }
   }
 
-  /// Reset to defaults
+  /// Reset to defaults — wipes all SharedPreferences (profile + app settings)
   Future<void> resetToDefaults() async {
     _checkInitialized();
     await clearAll();
+  }
+
+  /// Delete user account data.
+  ///
+  /// Removes personal profile keys (userId, name, email, bio, avatar,
+  /// specialty, profileRegistered) while preserving app-level preferences
+  /// (language, analytics, dark mode, notifications).
+  Future<void> deleteAccount() async {
+    _checkInitialized();
+    for (final key in [
+      _userIdKey,
+      _profileRegisteredKey,
+      _userNameKey,
+      _userSpecialtyKey,
+      _displayNameKey,
+      _emailKey,
+      _bioKey,
+      _avatarPathKey,
+    ]) {
+      await _prefs.remove(key);
+    }
   }
 
   /// Get build type (FULL or LITE)
