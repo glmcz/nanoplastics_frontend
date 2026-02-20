@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../config/app_colors.dart';
 import '../../config/app_constants.dart';
+import '../../utils/app_theme_colors.dart';
 import '../../services/settings_manager.dart';
 import '../../services/service_locator.dart';
 
@@ -128,7 +129,7 @@ class _ProfileRegistrationDialogState extends State<ProfileRegistrationDialog> {
       insetPadding: const EdgeInsets.all(AppConstants.space20),
       child: Container(
         decoration: BoxDecoration(
-          color: const Color(0xFF141928),
+          color: AppThemeColors.of(context).cardBackground,
           borderRadius: BorderRadius.circular(AppConstants.space24),
           border: Border.all(
             color: AppColors.pastelMint.withValues(alpha: 0.3),
@@ -151,7 +152,7 @@ class _ProfileRegistrationDialogState extends State<ProfileRegistrationDialog> {
               Text(
                 'Join the Community',
                 style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                      color: Colors.white,
+                      color: AppThemeColors.of(context).textMain,
                       fontWeight: FontWeight.w900,
                     ),
                 maxLines: 1,
@@ -161,7 +162,7 @@ class _ProfileRegistrationDialogState extends State<ProfileRegistrationDialog> {
               Text(
                 'Share your profile to get recognized on the leaderboard',
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: AppColors.textMuted,
+                      color: AppThemeColors.of(context).textMuted,
                       height: 1.4,
                     ),
                 maxLines: 2,
@@ -219,7 +220,7 @@ class _ProfileRegistrationDialogState extends State<ProfileRegistrationDialog> {
                       child: Text(
                         'Your data is secure and will only be used for the leaderboard',
                         style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                              color: AppColors.textMuted,
+                              color: AppThemeColors.of(context).textMuted,
                               height: 1.3,
                             ),
                         maxLines: 2,
@@ -241,10 +242,10 @@ class _ProfileRegistrationDialogState extends State<ProfileRegistrationDialog> {
                       style: TextButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: AppConstants.space12),
                       ),
-                      child: const Text(
+                      child: Text(
                         'Skip',
                         style: TextStyle(
-                          color: AppColors.textMuted,
+                          color: AppThemeColors.of(context).textMuted,
                           fontWeight: FontWeight.w600,
                         ),
                         overflow: TextOverflow.ellipsis,
@@ -306,7 +307,7 @@ class _ProfileRegistrationDialogState extends State<ProfileRegistrationDialog> {
           label,
           style: Theme.of(context).textTheme.labelLarge?.copyWith(
                 fontWeight: FontWeight.w600,
-                color: Colors.white,
+                color: AppThemeColors.of(context).textMain,
               ),
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
@@ -315,11 +316,11 @@ class _ProfileRegistrationDialogState extends State<ProfileRegistrationDialog> {
         TextField(
           controller: controller,
           enabled: !_isLoading,
-          style: const TextStyle(color: Colors.white),
+          style: TextStyle(color: AppThemeColors.of(context).textMain),
           decoration: InputDecoration(
             hintText: hint,
-            hintStyle: const TextStyle(
-              color: AppColors.textMuted,
+            hintStyle: TextStyle(
+              color: AppThemeColors.of(context).textMuted,
             ),
             prefixIcon: Icon(
               icon,
@@ -339,7 +340,7 @@ class _ProfileRegistrationDialogState extends State<ProfileRegistrationDialog> {
               ),
             ),
             filled: true,
-            fillColor: const Color(0xFF0F1419).withValues(alpha: 0.6),
+            fillColor: AppThemeColors.of(context).surfaceMid.withValues(alpha: 0.6),
             contentPadding: const EdgeInsets.symmetric(
               horizontal: AppConstants.space16,
               vertical: AppConstants.space12,

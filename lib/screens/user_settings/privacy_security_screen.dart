@@ -11,6 +11,7 @@ import 'privacy_policy_screen.dart';
 import 'terms_of_service_screen.dart';
 import '../../widgets/nanosolve_logo.dart';
 import '../../widgets/glowing_header_separator.dart';
+import '../../utils/app_theme_colors.dart';
 
 class PrivacySecurityScreen extends StatefulWidget {
   const PrivacySecurityScreen({super.key});
@@ -55,9 +56,9 @@ class _PrivacySecurityScreenState extends State<PrivacySecurityScreen> {
             center: Alignment.topCenter,
             radius: 1.5,
             colors: [
-              AppColors.pastelMint.withValues(alpha: 0.05),
-              AppColors.pastelLavender.withValues(alpha: 0.05),
-              const Color(0xFF0A0A12),
+              AppColors.pastelMint.withValues(alpha: AppThemeColors.of(context).pastelAlpha),
+              AppColors.pastelLavender.withValues(alpha: AppThemeColors.of(context).pastelAlpha),
+              AppThemeColors.of(context).gradientEnd,
             ],
             stops: const [0.0, 0.4, 1.0],
           ),
@@ -106,13 +107,13 @@ class _PrivacySecurityScreenState extends State<PrivacySecurityScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Icon(Icons.arrow_back_ios,
-                      color: Colors.white, size: sizing.backIcon),
+                      color: AppThemeColors.of(context).textMain, size: sizing.backIcon),
                   const SizedBox(width: AppConstants.space4),
                   Flexible(
                     child: Text(
                       l10n.categoryDetailBackToOverview,
                       style: typography.back.copyWith(
-                        color: Colors.white,
+                        color: AppThemeColors.of(context).textMain,
                       ),
                       maxLines: 2,
                       overflow: TextOverflow.fade,
@@ -139,10 +140,10 @@ class _PrivacySecurityScreenState extends State<PrivacySecurityScreen> {
     final iconContainer = sizing.iconContainer;
     final iconSz = sizing.iconMd;
     final arrowSz = sizing.arrowSize;
-    final titleStyle = typography.display.copyWith(color: AppColors.textMain);
-    final subtitleStyle =
-        typography.subtitle.copyWith(color: AppColors.textMuted);
-    final cardTitleStyle = typography.title.copyWith(color: AppColors.textMain);
+    final tc = AppThemeColors.of(context);
+    final titleStyle = typography.display.copyWith(color: tc.textMain);
+    final subtitleStyle = typography.subtitle.copyWith(color: tc.textMuted);
+    final cardTitleStyle = typography.title.copyWith(color: tc.textMain);
 
     return SingleChildScrollView(
       padding: EdgeInsets.symmetric(
@@ -278,7 +279,7 @@ class _PrivacySecurityScreenState extends State<PrivacySecurityScreen> {
         Text(
           AppLocalizations.of(context)!.privacySubtitle,
           style: subtitleStyle.copyWith(
-            color: AppColors.textMuted,
+            color: AppThemeColors.of(context).textMuted,
           ),
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
@@ -331,7 +332,7 @@ class _PrivacySecurityScreenState extends State<PrivacySecurityScreen> {
     return Container(
       padding: EdgeInsets.all(cardPad),
       decoration: BoxDecoration(
-        color: const Color(0xFF141928).withValues(alpha: 0.8),
+        color: AppThemeColors.of(context).cardBackground.withValues(alpha: 0.8),
         borderRadius: BorderRadius.circular(AppConstants.radiusLarge),
         border: Border.all(color: color.withValues(alpha: 0.2)),
       ),
@@ -355,7 +356,7 @@ class _PrivacySecurityScreenState extends State<PrivacySecurityScreen> {
                   title,
                   style: cardTitleStyle.copyWith(
                     fontWeight: FontWeight.w600,
-                    color: Colors.white,
+                    color: AppThemeColors.of(context).textMain,
                   ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
@@ -364,7 +365,7 @@ class _PrivacySecurityScreenState extends State<PrivacySecurityScreen> {
                 Text(
                   subtitle,
                   style: subtitleStyle.copyWith(
-                    color: AppColors.textMuted,
+                    color: AppThemeColors.of(context).textMuted,
                   ),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
@@ -378,7 +379,7 @@ class _PrivacySecurityScreenState extends State<PrivacySecurityScreen> {
             activeThumbColor: color,
             activeTrackColor: color.withValues(alpha: 0.3),
             inactiveThumbColor: AppColors.textDark,
-            inactiveTrackColor: const Color(0xFF0A0A12),
+            inactiveTrackColor: AppThemeColors.of(context).switchInactiveTrack,
           ),
         ],
       ),
@@ -400,7 +401,7 @@ class _PrivacySecurityScreenState extends State<PrivacySecurityScreen> {
     return Container(
       padding: EdgeInsets.all(cardPad),
       decoration: BoxDecoration(
-        color: const Color(0xFF141928).withValues(alpha: 0.8),
+        color: AppThemeColors.of(context).cardBackground.withValues(alpha: 0.8),
         borderRadius: BorderRadius.circular(AppConstants.radiusLarge),
         border: Border.all(color: color.withValues(alpha: 0.2)),
       ),
@@ -424,7 +425,7 @@ class _PrivacySecurityScreenState extends State<PrivacySecurityScreen> {
                   title,
                   style: cardTitleStyle.copyWith(
                     fontWeight: FontWeight.w600,
-                    color: Colors.white,
+                    color: AppThemeColors.of(context).textMain,
                   ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
@@ -433,7 +434,7 @@ class _PrivacySecurityScreenState extends State<PrivacySecurityScreen> {
                 Text(
                   subtitle,
                   style: subtitleStyle.copyWith(
-                    color: AppColors.textMuted,
+                    color: AppThemeColors.of(context).textMuted,
                   ),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
@@ -465,7 +466,7 @@ class _PrivacySecurityScreenState extends State<PrivacySecurityScreen> {
       child: Container(
         padding: EdgeInsets.all(cardPad),
         decoration: BoxDecoration(
-          color: const Color(0xFF141928).withValues(alpha: 0.8),
+          color: AppThemeColors.of(context).cardBackground.withValues(alpha: 0.8),
           borderRadius: BorderRadius.circular(AppConstants.radiusLarge),
           border: Border.all(color: color.withValues(alpha: 0.2)),
         ),
@@ -486,7 +487,7 @@ class _PrivacySecurityScreenState extends State<PrivacySecurityScreen> {
                 title,
                 style: cardTitleStyle.copyWith(
                   fontWeight: FontWeight.w600,
-                  color: Colors.white,
+                  color: AppThemeColors.of(context).textMain,
                 ),
               ),
             ),

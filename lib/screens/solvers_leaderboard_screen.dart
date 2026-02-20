@@ -12,6 +12,7 @@ import '../services/api_service.dart';
 import '../models/solver.dart';
 import 'user_settings/profile_registration_dialog.dart';
 import '../utils/route_observer.dart';
+import '../utils/app_theme_colors.dart';
 
 class SolversLeaderboardScreen extends StatefulWidget {
   const SolversLeaderboardScreen({super.key});
@@ -96,7 +97,7 @@ class _SolversLeaderboardScreenState extends State<SolversLeaderboardScreen>
             colors: [
               AppColors.pastelMint.withValues(alpha: 0.08),
               AppColors.pastelLavender.withValues(alpha: 0.05),
-              const Color(0xFF0A0A12),
+              AppThemeColors.of(context).gradientEnd,
             ],
             stops: const [0.0, 0.4, 1.0],
           ),
@@ -127,7 +128,7 @@ class _SolversLeaderboardScreenState extends State<SolversLeaderboardScreen>
         vertical: spacing.headerPadding * 8
       ),
       decoration: BoxDecoration(
-        color: const Color(0xFF141928).withValues(alpha: 0.9),
+        color: AppThemeColors.of(context).cardBackground.withValues(alpha: 0.9),
         border: Border(
           bottom: BorderSide(
             color: Colors.white.withValues(alpha: 0.1),
@@ -146,13 +147,13 @@ class _SolversLeaderboardScreenState extends State<SolversLeaderboardScreen>
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Icon(Icons.arrow_back_ios,
-                        color: Colors.white, size: sizing.backIcon),
+                        color: AppThemeColors.of(context).textMain, size: sizing.backIcon),
                     const SizedBox(width: AppConstants.space4),
                     Flexible(
                       child: Text(
                         l10n.categoryDetailBackToOverview,
                         style: typography.back.copyWith(
-                          color: Colors.white,
+                          color: AppThemeColors.of(context).textMain,
                         ),
                         maxLines: 2,
                         overflow: TextOverflow.fade,
@@ -181,7 +182,7 @@ class _SolversLeaderboardScreenState extends State<SolversLeaderboardScreen>
 
     return RefreshIndicator(
       color: AppColors.pastelMint,
-      backgroundColor: const Color(0xFF1A1F2E),
+      backgroundColor: AppThemeColors.of(context).dialogBackground,
       onRefresh: () async {
         _loadSolvers();
         await _solversFuture;
@@ -214,7 +215,7 @@ class _SolversLeaderboardScreenState extends State<SolversLeaderboardScreen>
                     const SizedBox(height: AppConstants.space16),
                     Text(
                       '${snapshot.error}',
-                      style: const TextStyle(color: Colors.white),
+                      style: TextStyle(color: AppThemeColors.of(context).textMain),
                       textAlign: TextAlign.center,
                       maxLines: 3,
                       overflow: TextOverflow.ellipsis,
@@ -299,7 +300,7 @@ class _SolversLeaderboardScreenState extends State<SolversLeaderboardScreen>
             child: Text(
               l10n.leaderboardAccessDescription,
               style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                    color: AppColors.textMuted,
+                    color: AppThemeColors.of(context).textMuted,
                   ),
               textAlign: TextAlign.center,
               maxLines: 3,
@@ -363,7 +364,7 @@ class _SolversLeaderboardScreenState extends State<SolversLeaderboardScreen>
         Text(
           l10n.leaderboardSubtitle,
           style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                color: AppColors.textMuted,
+                color: AppThemeColors.of(context).textMuted,
                 fontWeight: FontWeight.w600,
               ),
           maxLines: 2,
@@ -405,7 +406,7 @@ class _SolversLeaderboardScreenState extends State<SolversLeaderboardScreen>
       margin: const EdgeInsets.only(bottom: AppConstants.space12),
       padding: const EdgeInsets.all(AppConstants.space16),
       decoration: BoxDecoration(
-        color: const Color(0xFF141928).withValues(alpha: 0.8),
+        color: AppThemeColors.of(context).cardBackground.withValues(alpha: 0.8),
         borderRadius: BorderRadius.circular(AppConstants.radiusLarge),
         border: Border.all(
           color: isTopThree
@@ -476,7 +477,7 @@ class _SolversLeaderboardScreenState extends State<SolversLeaderboardScreen>
                       child: Text(
                         solver.name,
                         style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                              color: Colors.white,
+                              color: AppThemeColors.of(context).textMain,
                             ),
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1,
@@ -497,7 +498,7 @@ class _SolversLeaderboardScreenState extends State<SolversLeaderboardScreen>
                       child: Text(
                         '${solver.solutionsCount} realized solutions',
                         style: Theme.of(context).textTheme.labelLarge!.copyWith(
-                              color: AppColors.textMuted,
+                              color: AppThemeColors.of(context).textMuted,
                               fontWeight: FontWeight.w600,
                             ),
                         maxLines: 1,

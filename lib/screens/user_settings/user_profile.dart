@@ -10,6 +10,8 @@ import '../../services/settings_manager.dart';
 import '../../services/service_locator.dart';
 import '../../widgets/nanosolve_logo.dart';
 import '../../widgets/glowing_header_separator.dart';
+import '../../utils/app_theme_colors.dart';
+import '../../main.dart';
 
 class UserProfileScreen extends StatefulWidget {
   const UserProfileScreen({super.key});
@@ -123,9 +125,9 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
             center: Alignment.topCenter,
             radius: 1.5,
             colors: [
-              AppColors.pastelMint.withValues(alpha: 0.05),
-              AppColors.pastelLavender.withValues(alpha: 0.05),
-              const Color(0xFF0A0A12),
+              AppColors.pastelMint.withValues(alpha: AppThemeColors.of(context).pastelAlpha),
+              AppColors.pastelLavender.withValues(alpha: AppThemeColors.of(context).pastelAlpha),
+              AppThemeColors.of(context).gradientEnd,
             ],
             stops: const [0.0, 0.4, 1.0],
           ),
@@ -174,13 +176,13 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Icon(Icons.arrow_back_ios,
-                      color: Colors.white, size: sizing.backIcon),
+                      color: AppThemeColors.of(context).textMain, size: sizing.backIcon),
                   const SizedBox(width: AppConstants.space4),
                   Flexible(
                     child: Text(
                       l10n.categoryDetailBackToOverview,
                       style: typography.back.copyWith(
-                        color: Colors.white,
+                        color: AppThemeColors.of(context).textMain,
                       ),
                       maxLines: 2,
                       overflow: TextOverflow.fade,
@@ -261,12 +263,10 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
             spacing: spacing,
             sizing: sizing,
             typography: typography,
-            onChanged: (value) {
-              setState(() {
-                _darkModeEnabled = value;
-                _hasChanges = true;
-              });
-              _scheduleAutoSave();
+            onChanged: (value) async {
+              setState(() => _darkModeEnabled = value);
+              await _settingsManager.setDarkModeEnabled(value);
+              if (mounted) RestartableApp.restartApp(context);
             },
           ),
           const SizedBox(height: AppConstants.space30),
@@ -319,7 +319,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
         Text(
           AppLocalizations.of(context)!.profileSubtitle,
           style: typography.subtitle.copyWith(
-            color: AppColors.textMuted,
+            color: AppThemeColors.of(context).textMuted,
             fontWeight: FontWeight.w600,
           ),
         ),
@@ -340,7 +340,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               height: sizing.avatarMd,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: const Color(0xFF141928),
+                color: AppThemeColors.of(context).cardBackground,
                 border: Border.all(
                   color: AppColors.pastelMint.withValues(alpha: 0.5),
                   width: sizing.borderMedium,
@@ -364,7 +364,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
           Text(
             AppLocalizations.of(context)!.profileChangeAvatar,
             style: typography.label.copyWith(
-              color: AppColors.textMuted,
+              color: AppThemeColors.of(context).textMuted,
               fontWeight: FontWeight.w500,
             ),
           ),
@@ -409,10 +409,11 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     TextInputType keyboardType = TextInputType.text,
     int maxLines = 1,
   }) {
+    final tc = AppThemeColors.of(context);
     return Container(
       padding: EdgeInsets.all(spacing.sm),
       decoration: BoxDecoration(
-        color: const Color(0xFF141928).withValues(alpha: 0.8),
+        color: tc.cardBackground.withValues(alpha: 0.8),
         borderRadius: BorderRadius.circular(AppConstants.radiusLarge),
         border: Border.all(color: AppColors.pastelMint.withValues(alpha: 0.2)),
       ),
@@ -427,7 +428,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                 label,
                 style: typography.label.copyWith(
                   fontWeight: FontWeight.w600,
-                  color: AppColors.textMuted,
+                  color: tc.textMuted,
                 ),
               ),
             ],
@@ -438,16 +439,16 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
             keyboardType: keyboardType,
             maxLines: maxLines,
             style: typography.body.copyWith(
-              color: Colors.white,
+              color: tc.textMain,
               fontWeight: FontWeight.w500,
             ),
             decoration: InputDecoration(
               hintText: hint,
               hintStyle: typography.body.copyWith(
-                color: AppColors.textDark,
+                color: tc.textDark,
               ),
               filled: true,
-              fillColor: const Color(0xFF0A0A12).withValues(alpha: 0.5),
+              fillColor: tc.pageBackground.withValues(alpha: 0.5),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(AppConstants.radiusMedium),
                 borderSide: BorderSide.none,
@@ -473,10 +474,11 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     required AppTypography typography,
     required ValueChanged<bool> onChanged,
   }) {
+    final tc = AppThemeColors.of(context);
     return Container(
       padding: EdgeInsets.all(spacing.sm),
       decoration: BoxDecoration(
-        color: const Color(0xFF141928).withValues(alpha: 0.8),
+        color: tc.cardBackground.withValues(alpha: 0.8),
         borderRadius: BorderRadius.circular(AppConstants.radiusLarge),
         border: Border.all(color: color.withValues(alpha: 0.2)),
       ),
@@ -500,14 +502,14 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                   title,
                   style: typography.title.copyWith(
                     fontWeight: FontWeight.w600,
-                    color: Colors.white,
+                    color: tc.textMain,
                   ),
                 ),
                 const SizedBox(height: AppConstants.space4),
                 Text(
                   subtitle,
                   style: typography.bodySm.copyWith(
-                    color: AppColors.textMuted,
+                    color: tc.textMuted,
                   ),
                 ),
               ],
@@ -519,7 +521,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
             activeThumbColor: color,
             activeTrackColor: color.withValues(alpha: 0.3),
             inactiveThumbColor: AppColors.textDark,
-            inactiveTrackColor: const Color(0xFF0A0A12),
+            inactiveTrackColor: tc.switchInactiveTrack,
           ),
         ],
       ),
@@ -544,7 +546,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
         Container(
           padding: EdgeInsets.all(spacing.cardPadding),
           decoration: BoxDecoration(
-            color: const Color(0xFF141928).withValues(alpha: 0.8),
+            color: AppThemeColors.of(context).cardBackground.withValues(alpha: 0.8),
             borderRadius: BorderRadius.circular(AppConstants.radiusXL),
             border:
                 Border.all(color: AppColors.neonCrimson.withValues(alpha: 0.3)),
@@ -615,7 +617,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                   Text(
                     subtitle,
                     style: typography.bodySm.copyWith(
-                      color: AppColors.textMuted,
+                      color: AppThemeColors.of(context).textMuted,
                     ),
                   ),
                 ],
@@ -636,7 +638,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: const Color(0xFF141928),
+        backgroundColor: AppThemeColors.of(context).cardBackground,
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(AppConstants.radiusXL)),
         title: const Text(
@@ -675,7 +677,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: const Color(0xFF141928),
+        backgroundColor: AppThemeColors.of(context).cardBackground,
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(AppConstants.radiusXL)),
         title: const Text(

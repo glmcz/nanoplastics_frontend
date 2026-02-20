@@ -9,6 +9,7 @@ import '../widgets/nanosolve_logo.dart';
 import '../widgets/glowing_header_separator.dart';
 import 'solvers_leaderboard_screen.dart';
 import '../services/logger_service.dart';
+import '../utils/app_theme_colors.dart';
 
 class ResultsScreen extends StatefulWidget {
   const ResultsScreen({super.key});
@@ -36,9 +37,9 @@ class _ResultsScreenState extends State<ResultsScreen> {
             center: Alignment.topCenter,
             radius: 1.5,
             colors: [
-              AppColors.pastelMint.withValues(alpha: 0.05),
-              AppColors.pastelLavender.withValues(alpha: 0.05),
-              const Color(0xFF0A0A12),
+              AppColors.pastelMint.withValues(alpha: AppThemeColors.of(context).pastelAlpha),
+              AppColors.pastelLavender.withValues(alpha: AppThemeColors.of(context).pastelAlpha),
+              AppThemeColors.of(context).gradientEnd,
             ],
             stops: const [0.0, 0.4, 1.0],
           ),
@@ -87,13 +88,13 @@ class _ResultsScreenState extends State<ResultsScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Icon(Icons.arrow_back_ios,
-                      color: Colors.white, size: sizing.backIcon),
+                      color: AppThemeColors.of(context).textMain, size: sizing.backIcon),
                   const SizedBox(width: AppConstants.space4),
                   Flexible(
                     child: Text(
                       l10n.categoryDetailBackToOverview,
                       style: typography.back.copyWith(
-                        color: Colors.white,
+                        color: AppThemeColors.of(context).textMain,
                       ),
                       maxLines: 2,
                       overflow: TextOverflow.fade,
@@ -210,7 +211,7 @@ class _ResultsScreenState extends State<ResultsScreen> {
           horizontal: spacing.contentPaddingH * 0.8,
           vertical: spacing.contentPaddingV * 0.8),
       decoration: BoxDecoration(
-        color: const Color(0xFF141928).withValues(alpha: 0.8),
+        color: AppThemeColors.of(context).cardBackground.withValues(alpha: 0.8),
         borderRadius: BorderRadius.circular(AppConstants.radiusLarge),
         border: Border.all(color: color.withValues(alpha: 0.3)),
         boxShadow: [
@@ -244,7 +245,7 @@ class _ResultsScreenState extends State<ResultsScreen> {
                 Text(
                   title,
                   style: typography.label.copyWith(
-                    color: AppColors.textMuted,
+                    color: AppThemeColors.of(context).textMuted,
                   ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
@@ -317,7 +318,7 @@ class _ResultsScreenState extends State<ResultsScreen> {
           Text(
             l10n.resultsEvaluationSystemDesc1,
             style: typography.body.copyWith(
-              color: Colors.white70,
+              color: AppThemeColors.of(context).textMuted,
               height: 1.6,
             ),
             maxLines: 5,
@@ -327,7 +328,7 @@ class _ResultsScreenState extends State<ResultsScreen> {
           Text(
             l10n.resultsEvaluationSystemDesc2,
             style: typography.body.copyWith(
-              color: Colors.white70,
+              color: AppThemeColors.of(context).textMuted,
               height: 1.6,
             ),
             maxLines: 5,

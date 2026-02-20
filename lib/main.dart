@@ -45,11 +45,11 @@ void main() async {
     'type': settingsManager.buildType,
   });
 
-  // Set status bar style
+  // Set status bar style — both modes use dark surfaces, so always light icons
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
-      statusBarIconBrightness: Brightness.light,
+      statusBarIconBrightness: Brightness.light, // Both modes have dark surfaces
       statusBarBrightness: Brightness.dark,
     ),
   );
@@ -128,10 +128,14 @@ class _NanoSolveHiveAppState extends State<NanoSolveHiveApp> {
     final settingsManager = SettingsManager();
     final shouldShowOnboarding = !settingsManager.hasShownOnboarding;
 
+    final darkModeEnabled = settingsManager.darkModeEnabled;
+
     return MaterialApp(
       title: 'NanoSolve Hive',
       debugShowCheckedModeBanner: false,
-      theme: AppTheme.darkTheme,
+      theme: AppTheme.lightTheme,
+      darkTheme: AppTheme.darkTheme,
+      themeMode: darkModeEnabled ? ThemeMode.dark : ThemeMode.light,
       navigatorObservers: [routeObserver],
 
       // Localization support

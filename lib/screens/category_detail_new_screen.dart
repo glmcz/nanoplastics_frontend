@@ -12,6 +12,7 @@ import '../l10n/app_localizations.dart';
 import '../services/logger_service.dart';
 import '../services/api_service.dart';
 import '../services/service_locator.dart';
+import '../utils/app_theme_colors.dart';
 
 class CategoryDetailNewScreen extends StatefulWidget {
   final CategoryDetailData categoryData;
@@ -109,8 +110,8 @@ class _CategoryDetailNewScreenState extends State<CategoryDetailNewScreen>
             radius: 1.5,
             colors: [
               widget.categoryData.themeColor.withValues(alpha: 0.08),
-              const Color(0xFF080A10),
-              const Color(0xFF0A0A14),
+              AppThemeColors.of(context).gradientEnd,
+              AppThemeColors.of(context).gradientEnd,
             ],
             stops: const [0.0, 0.4, 1.0],
           ),
@@ -205,13 +206,13 @@ class _CategoryDetailNewScreenState extends State<CategoryDetailNewScreen>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Icon(Icons.arrow_back_ios,
-                      color: Colors.white, size: sizing.backIcon),
+                      color: AppThemeColors.of(context).textMain, size: sizing.backIcon),
                   const SizedBox(width: AppConstants.space4),
                   Flexible(
                     child: Text(
                       l10n.categoryDetailBackToOverview,
                       style: typography.back.copyWith(
-                        color: Colors.white,
+                        color: AppThemeColors.of(context).textMain,
                       ),
                       maxLines: 2,
                       overflow: TextOverflow.fade,
@@ -274,7 +275,7 @@ class _CategoryDetailNewScreenState extends State<CategoryDetailNewScreen>
           Text(
             widget.categoryData.title.toUpperCase(),
             style: typography.headline.copyWith(
-              color: Colors.white,
+              color: AppThemeColors.of(context).textMain,
             ),
             textAlign: TextAlign.center,
           ),
@@ -291,7 +292,7 @@ class _CategoryDetailNewScreenState extends State<CategoryDetailNewScreen>
 
     return Container(
       decoration: BoxDecoration(
-        color: const Color(0xFF0F141E).withValues(alpha: 0.95),
+        color: AppThemeColors.of(context).surfaceMid.withValues(alpha: 0.95),
         borderRadius: BorderRadius.circular(AppConstants.radiusXXL),
         border: Border.all(
           color: widget.categoryData.themeColor.withValues(alpha: 0.2),
@@ -392,7 +393,7 @@ class _CategoryDetailNewScreenState extends State<CategoryDetailNewScreen>
           child: Container(
             padding: const EdgeInsets.all(AppConstants.space16),
             decoration: BoxDecoration(
-              color: const Color(0xFF141928).withValues(alpha: 0.85),
+              color: AppThemeColors.of(context).cardBackground.withValues(alpha: 0.85),
               border: Border.all(
                 color: AppColors.pastelAqua.withValues(alpha: 0.3),
               ),
@@ -421,7 +422,7 @@ class _CategoryDetailNewScreenState extends State<CategoryDetailNewScreen>
                       Text(
                         l10n.categoryDetailSourcesTitle.toUpperCase(),
                         style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                              color: Colors.white,
+                              color: AppThemeColors.of(context).textMain,
                             ),
                       ),
                       const SizedBox(height: AppConstants.space4),
@@ -429,7 +430,7 @@ class _CategoryDetailNewScreenState extends State<CategoryDetailNewScreen>
                         '${widget.categoryData.sourceLinks!.length} ${l10n.categoryDetailSourcesCount}',
                         style:
                             Theme.of(context).textTheme.labelMedium?.copyWith(
-                                  color: AppColors.textMuted,
+                                  color: AppThemeColors.of(context).textMuted,
                                 ),
                       ),
                     ],
@@ -484,7 +485,7 @@ class _CategoryDetailNewScreenState extends State<CategoryDetailNewScreen>
                   Text(
                     sourceLink.title,
                     style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                          color: Colors.white,
+                          color: AppThemeColors.of(context).textMain,
                         ),
                   ),
                   const SizedBox(height: AppConstants.space4),
@@ -505,7 +506,7 @@ class _CategoryDetailNewScreenState extends State<CategoryDetailNewScreen>
                 Text(
                   '#$number',
                   style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                        color: AppColors.textMuted.withValues(alpha: 0.5),
+                        color: AppThemeColors.of(context).textMuted.withValues(alpha: 0.5),
                       ),
                 ),
                 const SizedBox(height: AppConstants.space20),
@@ -662,7 +663,7 @@ class _CategoryDetailNewScreenState extends State<CategoryDetailNewScreen>
           Text(
             entry.description,
             style: descStyle?.copyWith(
-              color: const Color(0xFFE0E0E0),
+              color: AppThemeColors.of(context).textMain,
               fontWeight: FontWeight.normal,
             ),
           ),
@@ -696,7 +697,7 @@ class _CategoryDetailNewScreenState extends State<CategoryDetailNewScreen>
                           point,
                           style:
                               Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                    color: const Color(0xFFB0B0B0),
+                                    color: AppThemeColors.of(context).textMuted,
                                   ),
                         ),
                       ),

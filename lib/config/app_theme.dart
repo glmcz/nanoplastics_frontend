@@ -19,6 +19,120 @@ extension CustomTextStyles on TextTheme {
 }
 
 class AppTheme {
+  static ThemeData get lightTheme {
+    // Deep Ocean Teal — rich saturated teal, visually unmistakable vs dark mode.
+    // Brightness.light is kept so AppThemeColors.isDark = false, while all
+    // surfaces use teal values from AppThemeColors.
+    const Color tealCard = Color(0xFF003347);
+    const Color textMain = AppColors.textMain; // white
+    const Color textMuted = Color(0xFFAAD4D8); // teal-tinted muted
+
+    return ThemeData(
+      brightness: Brightness.light,
+      scaffoldBackgroundColor: const Color(0xFF002535),
+      primaryColor: AppColors.accent,
+      colorScheme: const ColorScheme.light(
+        primary: AppColors.accent,
+        surface: tealCard,
+      ),
+      fontFamily: 'SF Pro',
+      textTheme: const TextTheme(
+        displayLarge: TextStyle(
+          fontSize: 30,
+          fontWeight: FontWeight.w900,
+          color: textMain,
+          letterSpacing: 0.5,
+          height: 1.2,
+        ),
+        displayMedium: TextStyle(
+          fontSize: 28,
+          fontWeight: FontWeight.w900,
+          color: textMain,
+          letterSpacing: 0.5,
+          height: 1.3,
+        ),
+        displaySmall: TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.w900,
+          color: textMain,
+          letterSpacing: 0.4,
+          height: 1.3,
+        ),
+        headlineLarge: TextStyle(
+          fontSize: 19.5,
+          fontWeight: FontWeight.w800,
+          color: textMain,
+          height: 1.25,
+        ),
+        headlineMedium: TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.w800,
+          color: textMain,
+          letterSpacing: 0.5,
+        ),
+        headlineSmall: TextStyle(
+          fontSize: 14,
+          fontWeight: FontWeight.w800,
+          color: textMain,
+          letterSpacing: 0.5,
+        ),
+        titleLarge: TextStyle(
+          fontSize: 15,
+          fontWeight: FontWeight.w700,
+          color: textMain,
+          height: 1.3,
+        ),
+        titleMedium: TextStyle(
+          fontSize: 14,
+          fontWeight: FontWeight.w700,
+          color: textMain,
+        ),
+        titleSmall: TextStyle(
+          fontSize: 13,
+          fontWeight: FontWeight.w700,
+          color: textMain,
+          height: 1.3,
+        ),
+        bodyLarge: TextStyle(
+          fontSize: 16,
+          color: textMuted,
+          height: 1.3,
+        ),
+        bodyMedium: TextStyle(
+          fontSize: 14,
+          color: textMuted,
+          height: 1.6,
+        ),
+        bodySmall: TextStyle(
+          fontSize: 12,
+          color: textMuted,
+          height: 1.5,
+        ),
+        labelLarge: TextStyle(
+          fontSize: 12,
+          fontWeight: FontWeight.w700,
+          color: textMuted,
+          letterSpacing: 0.8,
+        ),
+        labelMedium: TextStyle(
+          fontSize: 11,
+          fontWeight: FontWeight.w600,
+          color: textMuted,
+        ),
+        labelSmall: TextStyle(
+          fontSize: 10,
+          fontWeight: FontWeight.w700,
+          color: textMuted,
+          letterSpacing: 0.3,
+        ),
+      ),
+      appBarTheme: const AppBarTheme(
+        backgroundColor: tealCard,
+        elevation: 0,
+      ),
+    );
+  }
+
   static ThemeData get darkTheme {
     return ThemeData(
       brightness: Brightness.dark,

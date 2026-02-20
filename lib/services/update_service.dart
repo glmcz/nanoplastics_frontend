@@ -3,8 +3,8 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:in_app_update/in_app_update.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:flutter_app_installer/flutter_app_installer.dart';
 import 'dart:convert';
 import 'logger_service.dart';
 import 'service_locator.dart';
@@ -363,7 +363,7 @@ class UpdateService {
       int expectedSize = buildType.toLowerCase() == 'full'
           ? release.fullBuildSize
           : release.liteBuildSize;
-      
+
       if (expectedSize > 0 &&
           await _isValidDownloadedApkAvailable(expectedSize)) {
         LoggerService().logUserAction(
@@ -447,8 +447,12 @@ class UpdateService {
           .toList();
 
       // Pad to same length
-      while (newParts.length < currentParts.length) newParts.add(0);
-      while (currentParts.length < newParts.length) currentParts.add(0);
+      while (newParts.length < currentParts.length) {
+        newParts.add(0);
+      }
+      while (currentParts.length < newParts.length) {
+        currentParts.add(0);
+      }
 
       // Compare major.minor.patch...
       for (int i = 0; i < newParts.length; i++) {
@@ -464,20 +468,6 @@ class UpdateService {
       );
       return false; // Default to no update on error
     }
-  }
-
-  /// Setup listener for Android flexible update completion
-  /// Monitors InAppUpdate events and updates state when download completes
-  void _setupAndroidUpdateListener() {
-    // TODO: InAppUpdate plugin doesn't provide built-in listener for flexible updates
-    // This would require either:
-    // 1. Periodic polling of InAppUpdate.completeFlexibleUpdate()
-    // 2. Platform channel communication from native Android code
-    // For now, state changes must be driven by UI layer (e.g., retry button detecting completion)
-    LoggerService().logDebug(
-      'update_listener',
-      'Android update listener setup - monitoring for download completion',
-    );
   }
 
   /// Fetch latest release from GitHub API (single attempt)
@@ -684,29 +674,25 @@ class UpdateService {
     }
   }
 
-  /// Launch Android installer for APK file using intent
+  /// Launch Android installer for APK file using install_plugin
   /// Returns true if installer was launched successfully
+  /// Note: Install state changes to 'installing' immediately
+  /// UI should monitor app lifecycle to detect installation completion
   Future<bool> _launchApkInstaller(String filePath) async {
     try {
       _notifyStateChange(UpdateState.installing);
-      final fileUri = Uri.file(filePath);
 
-      // Use platform channel to launch installer
-      if (await launchUrl(
-        fileUri,
-        mode: LaunchMode.externalApplication,
-      )) {
-        LoggerService().logUserAction(
-          'APK installer launched',
-          params: {'path': filePath},
-        );
-        _notifyStateChange(UpdateState.installed);
-        return true;
-      } else {
-        LoggerService().logUserAction('Failed to launch APK installer');
-        _notifyStateChange(UpdateState.failed);
-        return false;
-      }
+      // Use flutter_app_installer for proper FileProvider support on Android 7.0+
+      final result = await FlutterAppInstaller().installApk(filePath: filePath);
+
+      LoggerService().logUserAction(
+        'APK installer launched',
+        params: {'path': filePath, 'result': result},
+      );
+
+      // Note: State remains 'installing' until app lifecycle detects completion
+      // UI should listen to AppLifecycleState changes
+      return true;
     } catch (e, stackTrace) {
       LoggerService().logError(
         'Error launching APK installer',
@@ -718,8 +704,91 @@ class UpdateService {
     }
   }
 
+  /// Check if app was updated by comparing current version with expected version
+  /// Call this when app resumes from background (after installer was launched)
+  /// Returns true if installation completed successfully
+  Future<bool> checkInstallationComplete() async {
+    try {
+      final settingsManager = ServiceLocator().settingsManager;
+      final expectedVersion = settingsManager.latestVersion;
+
+      if (expectedVersion == null) {
+        return false;
+      }
+
+      final currentVersion = await _getInstalledVersion();
+      if (currentVersion == null) {
+        return false;
+      }
+
+      // Check if current version matches the expected new version
+      if (currentVersion == expectedVersion ||
+          currentVersion == expectedVersion.replaceFirst(RegExp(r'^v'), '')) {
+        LoggerService().logUserAction(
+          'Installation completed successfully',
+          params: {
+            'expected': expectedVersion,
+            'current': currentVersion,
+          },
+        );
+        _notifyStateChange(UpdateState.installed);
+        return true;
+      }
+
+      return false;
+    } catch (e, stackTrace) {
+      LoggerService().logError(
+        'Error checking installation status',
+        e.toString(),
+        stackTrace,
+      );
+      return false;
+    }
+  }
+
+  /// Retry installation using already downloaded APK
+  /// Returns true if installer was launched, false if APK not found
+  Future<bool> retryInstallation() async {
+    try {
+      final settingsManager = ServiceLocator().settingsManager;
+      final apkPath = settingsManager.lastDownloadedApkPath;
+
+      if (apkPath == null) {
+        LoggerService().logUserAction('No downloaded APK found for retry');
+        return false;
+      }
+
+      final file = File(apkPath);
+      if (!await file.exists()) {
+        LoggerService().logUserAction('Downloaded APK file no longer exists');
+        await settingsManager.setLastDownloadedApkPath(null);
+        await settingsManager.setLastDownloadedApkSize(0);
+        return false;
+      }
+
+      LoggerService()
+          .logUserAction('Retrying installation', params: {'path': apkPath});
+      return await _launchApkInstaller(apkPath);
+    } catch (e, stackTrace) {
+      LoggerService().logError(
+        'Error retrying installation',
+        e.toString(),
+        stackTrace,
+      );
+      return false;
+    }
+  }
+
+  // ============================================================================
+  // GOOGLE PLAY STORE UPDATE METHODS (Play Store builds only)
+  // ============================================================================
+  // The following methods are for Play Store in-app update via in_app_update
+  // package. Use these when distributing through Google Play Store.
+  // For GitHub releases, use retryInstallation() and checkInstallationComplete()
+  
   /// Complete flexible update (install downloaded update)
   /// Transitions state to installing then installed
+  /// GOOGLE PLAY ONLY: Use for Play Store distributed apps
   Future<void> completeUpdate() async {
     try {
       LoggerService().logUserAction('Completing flexible update');
@@ -739,6 +808,7 @@ class UpdateService {
   /// Check if update download has completed
   /// Should be called periodically or triggered by UI when user retries
   /// Returns true if update is ready to install
+  /// GOOGLE PLAY ONLY: Use for Play Store distributed apps
   Future<bool> isUpdateDownloadComplete() async {
     try {
       if (!Platform.isAndroid) return false;

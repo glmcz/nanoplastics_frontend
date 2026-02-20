@@ -11,6 +11,7 @@ import '../utils/app_typography.dart';
 import '../widgets/nanosolve_logo.dart';
 import '../l10n/app_localizations.dart';
 import '../services/logger_service.dart';
+import '../utils/app_theme_colors.dart';
 import 'dart:async';
 import 'dart:io';
 import 'package:file_picker/file_picker.dart';
@@ -419,9 +420,9 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
             center: Alignment.topCenter,
             radius: 1.5,
             colors: [
-              AppColors.pastelAqua.withValues(alpha: 0.05),
-              AppColors.pastelLavender.withValues(alpha: 0.05),
-              const Color(0xFF0A0A12),
+              AppColors.pastelAqua.withValues(alpha: AppThemeColors.of(context).pastelAlpha),
+              AppColors.pastelLavender.withValues(alpha: AppThemeColors.of(context).pastelAlpha),
+              AppThemeColors.of(context).gradientEnd,
             ],
             stops: const [0.0, 0.4, 1.0],
           ),
@@ -462,7 +463,7 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
     return Container(
       padding: EdgeInsets.all(isPortrait ? AppConstants.space8 : 1.0),
       decoration: BoxDecoration(
-        color: const Color(0xFF141928).withValues(alpha: 0.9),
+        color: AppThemeColors.of(context).cardBackground.withValues(alpha: 0.9),
         border: Border(
           bottom: BorderSide(
             color: Colors.white.withValues(alpha: 0.1),
@@ -484,13 +485,13 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Icon(Icons.arrow_back_ios,
-                            color: Colors.white, size: sizing.backIcon),
+                            color: AppThemeColors.of(context).textMain, size: sizing.backIcon),
                         const SizedBox(width: AppConstants.space4),
                         Flexible(
                           child: Text(
                             l10n.categoryDetailBackToOverview,
                             style: typography.back.copyWith(
-                              color: Colors.white,
+                              color: AppThemeColors.of(context).textMain,
                             ),
                             maxLines: 2,
                             overflow: TextOverflow.fade,
@@ -523,7 +524,7 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
                       ),
                       border: InputBorder.none,
                       isDense: true,
-                      contentPadding: EdgeInsets.symmetric(horizontal: 10),
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 10),
                     ),
                   ),
                 ),
@@ -580,17 +581,17 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
     if (_isLoading) {
       return Container(
         color: Colors.white, // Prevent red screen flash during loading
-        child: Center(
+        child: const Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const CircularProgressIndicator(
+              CircularProgressIndicator(
                 valueColor: AlwaysStoppedAnimation<Color>(
                   AppColors.pastelAqua,
                 ),
               ),
-              const SizedBox(height: 16),
-              const Text(
+              SizedBox(height: 16),
+              Text(
                 'Loading PDF...',
                 style: TextStyle(
                   color: AppColors.textMuted,
@@ -716,7 +717,7 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
       decoration: BoxDecoration(
-        color: const Color(0xFF141928).withValues(alpha: 0.9),
+        color: AppThemeColors.of(context).cardBackground.withValues(alpha: 0.9),
         border: Border(
           top: BorderSide(
             color: Colors.white.withValues(alpha: 0.1),
@@ -756,8 +757,8 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
             children: [
               Text(
                 'Page $_currentPage/$_actualEndPage',
-                style: const TextStyle(
-                  color: AppColors.textMuted,
+                style: TextStyle(
+                  color: AppThemeColors.of(context).textMuted,
                   fontSize: 12,
                   fontWeight: FontWeight.w600,
                 ),

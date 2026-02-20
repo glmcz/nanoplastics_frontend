@@ -7,6 +7,7 @@ import '../../utils/app_sizing.dart';
 import '../../utils/app_typography.dart';
 import '../../widgets/nanosolve_logo.dart';
 import '../../widgets/glowing_header_separator.dart';
+import '../../utils/app_theme_colors.dart';
 import '../../services/settings_manager.dart';
 import '../../services/update_service.dart';
 import '../../services/service_locator.dart';
@@ -22,13 +23,44 @@ class UserSettingsScreen extends StatefulWidget {
   State<UserSettingsScreen> createState() => _UserSettingsScreenState();
 }
 
-class _UserSettingsScreenState extends State<UserSettingsScreen> {
+class _UserSettingsScreenState extends State<UserSettingsScreen>
+    with WidgetsBindingObserver {
   late SettingsManager _settingsManager;
+  bool _waitingForInstall = false;
 
   @override
   void initState() {
     super.initState();
     _settingsManager = ServiceLocator().settingsManager;
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed && _waitingForInstall) {
+      _checkInstallationResult();
+    }
+  }
+
+  Future<void> _checkInstallationResult() async {
+    final updateService = UpdateService();
+    final installed = await updateService.checkInstallationComplete();
+
+    if (!mounted) return;
+
+    _waitingForInstall = false;
+
+    if (installed) {
+      _showInstallationSuccessDialog();
+    } else {
+      _showInstallationCancelledDialog();
+    }
   }
 
   bool _checkProfileCompletion() {
@@ -53,9 +85,11 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
             center: Alignment.topCenter,
             radius: 1.5,
             colors: [
-              AppColors.pastelMint.withValues(alpha: 0.05),
-              AppColors.pastelLavender.withValues(alpha: 0.05),
-              const Color(0xFF0A0A12),
+              AppColors.pastelMint
+                  .withValues(alpha: AppThemeColors.of(context).pastelAlpha),
+              AppColors.pastelLavender
+                  .withValues(alpha: AppThemeColors.of(context).pastelAlpha),
+              AppThemeColors.of(context).gradientEnd,
             ],
             stops: const [0.0, 0.4, 1.0],
           ),
@@ -114,15 +148,15 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
                       children: [
                         Icon(
                           Icons.arrow_back_ios,
-                          color: Colors.white,
+                          color: AppThemeColors.of(context).textMain,
                           size: sizing.backIcon,
                         ),
                         const SizedBox(width: AppConstants.space4),
                         Flexible(
                           child: Text(
                             l10n.categoryDetailBackToOverview,
-                            style:
-                                typography.back.copyWith(color: Colors.white),
+                            style: typography.back.copyWith(
+                                color: AppThemeColors.of(context).textMain),
                             maxLines: 2,
                             overflow: TextOverflow.fade,
                             softWrap: true,
@@ -149,7 +183,7 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
                     ),
                     child: Icon(
                       Icons.settings,
-                      color: Colors.white,
+                      color: AppThemeColors.of(context).textMain,
                       size: sizing.hubKnobIconSize,
                     ),
                   ),
@@ -304,7 +338,8 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
       child: Container(
         padding: EdgeInsets.all(spacing.cardPadding),
         decoration: BoxDecoration(
-          color: const Color(0xFF141928).withValues(alpha: 0.8),
+          color:
+              AppThemeColors.of(context).cardBackground.withValues(alpha: 0.8),
           borderRadius: BorderRadius.circular(AppConstants.radiusLarge),
           border: Border.all(color: color.withValues(alpha: 0.3)),
           boxShadow: [
@@ -333,7 +368,8 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
                 children: [
                   Text(
                     title,
-                    style: typography.title.copyWith(color: Colors.white),
+                    style: typography.title
+                        .copyWith(color: AppThemeColors.of(context).textMain),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -343,7 +379,7 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
                       child: Text(
                         subtitle,
                         style: typography.bodySm.copyWith(
-                          color: Colors.white54,
+                          color: AppThemeColors.of(context).textDark,
                         ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
@@ -371,7 +407,7 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
       builder: (context) => PopScope(
         canPop: false,
         child: AlertDialog(
-          backgroundColor: const Color(0xFF1A1A24),
+          backgroundColor: AppThemeColors.of(context).dialogBackground,
           content: Row(
             children: [
               const CircularProgressIndicator(
@@ -383,7 +419,7 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
                   AppLocalizations.of(context)!.updateCheckingForUpdates,
                   style: AppTypography.of(
                     context,
-                  ).body.copyWith(color: Colors.white),
+                  ).body.copyWith(color: AppThemeColors.of(context).textMain),
                 ),
               ),
             ],
@@ -420,16 +456,20 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
       context: context,
       barrierDismissible: true,
       builder: (context) => AlertDialog(
-        backgroundColor: const Color(0xFF1A1A24),
+        backgroundColor: AppThemeColors.of(context).dialogBackground,
         title: Text(
           AppLocalizations.of(context)!.updateAppUpToDateTitle,
-          style: AppTypography.of(context).title.copyWith(color: Colors.white),
+          style: AppTypography.of(context)
+              .title
+              .copyWith(color: AppThemeColors.of(context).textMain),
         ),
         content: Text(
           AppLocalizations.of(context)!.updateAppUpToDateMsg,
           style: AppTypography.of(
             context,
-          ).body.copyWith(color: Colors.white.withValues(alpha: 0.8)),
+          ).body.copyWith(
+              color:
+                  AppThemeColors.of(context).textMain.withValues(alpha: 0.8)),
         ),
         actions: [
           TextButton(
@@ -448,10 +488,12 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
       context: context,
       barrierDismissible: true,
       builder: (context) => AlertDialog(
-        backgroundColor: const Color(0xFF1A1A24),
+        backgroundColor: AppThemeColors.of(context).dialogBackground,
         title: Text(
           AppLocalizations.of(context)!.updateAvailableTitle,
-          style: AppTypography.of(context).title.copyWith(color: Colors.white),
+          style: AppTypography.of(context)
+              .title
+              .copyWith(color: AppThemeColors.of(context).textMain),
         ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
@@ -461,13 +503,16 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
               '${AppLocalizations.of(context)!.updateAvailableMsg}\n($latestVersion)',
               style: AppTypography.of(
                 context,
-              ).body.copyWith(color: Colors.white.withValues(alpha: 0.8)),
+              ).body.copyWith(
+                  color: AppThemeColors.of(context)
+                      .textMain
+                      .withValues(alpha: 0.8)),
             ),
             const SizedBox(height: 16),
             Text(
               AppLocalizations.of(context)!.updateDownloadInstructions,
               style: AppTypography.of(context).body.copyWith(
-                    color: Colors.white.withValues(alpha: 0.6),
+                    color: AppThemeColors.of(context).textMuted,
                     fontSize: 13,
                   ),
             ),
@@ -478,7 +523,7 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
             onPressed: () => Navigator.of(context).pop(),
             child: Text(
               AppLocalizations.of(context)!.updateButtonLater,
-              style: TextStyle(color: Colors.white.withValues(alpha: 0.6)),
+              style: TextStyle(color: AppThemeColors.of(context).textMuted),
             ),
           ),
           ElevatedButton(
@@ -498,16 +543,20 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: const Color(0xFF1A1A24),
+        backgroundColor: AppThemeColors.of(context).dialogBackground,
         title: Text(
           AppLocalizations.of(context)!.updateError,
-          style: AppTypography.of(context).title.copyWith(color: Colors.white),
+          style: AppTypography.of(context)
+              .title
+              .copyWith(color: AppThemeColors.of(context).textMain),
         ),
         content: Text(
           message,
           style: AppTypography.of(
             context,
-          ).body.copyWith(color: Colors.white.withValues(alpha: 0.8)),
+          ).body.copyWith(
+              color:
+                  AppThemeColors.of(context).textMain.withValues(alpha: 0.8)),
         ),
         actions: [
           TextButton(
@@ -519,21 +568,23 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
     );
   }
 
-  void _showUpdateStartedDialog() {
+  void _showInstallationSuccessDialog() {
     showDialog(
       context: context,
-      barrierDismissible: true,
       builder: (context) => AlertDialog(
-        backgroundColor: const Color(0xFF1A1A24),
+        backgroundColor: AppThemeColors.of(context).dialogBackground,
         title: Text(
-          AppLocalizations.of(context)!.updateDownloadCompleteTitle,
-          style: AppTypography.of(context).title.copyWith(color: Colors.white),
+          AppLocalizations.of(context)!.updateInstallationSuccessTitle,
+          style: AppTypography.of(context).title.copyWith(
+                color: AppThemeColors.of(context).textMain,
+              ),
         ),
         content: Text(
-          AppLocalizations.of(context)!.updateDownloadCompleteMsg,
-          style: AppTypography.of(
-            context,
-          ).body.copyWith(color: Colors.white.withValues(alpha: 0.8)),
+          AppLocalizations.of(context)!.updateInstallationSuccessMsg,
+          style: AppTypography.of(context).body.copyWith(
+                color:
+                    AppThemeColors.of(context).textMain.withValues(alpha: 0.8),
+              ),
         ),
         actions: [
           TextButton(
@@ -543,6 +594,60 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
         ],
       ),
     );
+  }
+
+  void _showInstallationCancelledDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: AppThemeColors.of(context).dialogBackground,
+        title: Text(
+          AppLocalizations.of(context)!.updateInstallationCancelledTitle,
+          style: AppTypography.of(context).title.copyWith(
+                color: AppThemeColors.of(context).textMain,
+              ),
+        ),
+        content: Text(
+          AppLocalizations.of(context)!.updateInstallationCancelledMsg,
+          style: AppTypography.of(context).body.copyWith(
+                color:
+                    AppThemeColors.of(context).textMain.withValues(alpha: 0.8),
+              ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text(AppLocalizations.of(context)!.updateButtonLater),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              _retryInstallation();
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.neonCyan,
+              foregroundColor: Colors.white,
+            ),
+            child: Text(AppLocalizations.of(context)!.updateButtonRetryInstall),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _retryInstallation() async {
+    final updateService = UpdateService();
+    final success = await updateService.retryInstallation();
+
+    if (!mounted) return;
+
+    if (success) {
+      _waitingForInstall = true;
+    } else {
+      _showErrorDialog(
+        'No downloaded APK found. Please download the update again.',
+      );
+    }
   }
 
   Future<void> _startUpdateProcess() async {
@@ -586,7 +691,7 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
             }
 
             return AlertDialog(
-              backgroundColor: const Color(0xFF1A1A24),
+              backgroundColor: AppThemeColors.of(context).dialogBackground,
               content: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -599,7 +704,7 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
                     statusText,
                     style: AppTypography.of(context)
                         .body
-                        .copyWith(color: Colors.white),
+                        .copyWith(color: AppThemeColors.of(context).textMain),
                   ),
                   const SizedBox(height: 8),
                   if (updateService.currentState.name == 'downloading')
@@ -681,7 +786,7 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
             'Failed to start the update process. Please try again later or download manually.',
           );
         } else {
-          _showUpdateStartedDialog();
+          _waitingForInstall = true;
         }
       }
     } catch (e) {

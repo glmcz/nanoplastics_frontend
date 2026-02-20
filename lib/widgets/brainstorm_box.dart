@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../config/app_colors.dart';
 import '../config/app_constants.dart';
 import '../l10n/app_localizations.dart';
+import '../utils/app_theme_colors.dart';
 import '../services/settings_manager.dart';
 
 class BrainstormBox extends StatefulWidget {
@@ -320,12 +321,12 @@ class _BrainstormBoxState extends State<BrainstormBox> {
                       controller: _controller,
                       maxLines: 4,
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: Colors.white,
+                            color: AppThemeColors.of(context).textMain,
                           ),
                       decoration: InputDecoration(
                         hintText: widget.placeholder,
                         hintStyle: TextStyle(
-                          color: Colors.white.withValues(alpha: 0.5),
+                          color: AppThemeColors.of(context).textMuted,
                         ),
                         border: InputBorder.none,
                         contentPadding:

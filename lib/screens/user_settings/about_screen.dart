@@ -11,6 +11,7 @@ import '../../utils/app_typography.dart';
 import '../../widgets/nanosolve_logo.dart';
 import '../../widgets/glowing_header_separator.dart';
 import '../../services/settings_manager.dart';
+import '../../utils/app_theme_colors.dart';
 
 class AboutScreen extends StatefulWidget {
   const AboutScreen({super.key});
@@ -67,9 +68,9 @@ class _AboutScreenState extends State<AboutScreen> {
             center: Alignment.topCenter,
             radius: 1.5,
             colors: [
-              AppColors.pastelLavender.withValues(alpha: 0.05),
-              AppColors.pastelAqua.withValues(alpha: 0.05),
-              const Color(0xFF0A0A12),
+              AppColors.pastelLavender.withValues(alpha: AppThemeColors.of(context).pastelAlpha),
+              AppColors.pastelAqua.withValues(alpha: AppThemeColors.of(context).pastelAlpha),
+              AppThemeColors.of(context).gradientEnd,
             ],
             stops: const [0.0, 0.4, 1.0],
           ),
@@ -114,13 +115,13 @@ class _AboutScreenState extends State<AboutScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Icon(Icons.arrow_back_ios,
-                      color: Colors.white, size: sizing.backIcon),
+                      color: AppThemeColors.of(context).textMain, size: sizing.backIcon),
                   const SizedBox(width: AppConstants.space4),
                   Flexible(
                     child: Text(
                       l10n.categoryDetailBackToOverview,
                       style: typography.back.copyWith(
-                        color: Colors.white,
+                        color: AppThemeColors.of(context).textMain,
                       ),
                       maxLines: 2,
                       overflow: TextOverflow.fade,
@@ -225,7 +226,7 @@ class _AboutScreenState extends State<AboutScreen> {
           height: sizing.iconContainer * 2,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: const Color(0xFF141928),
+            color: AppThemeColors.of(context).cardBackground,
             border: Border.all(
               color: AppColors.pastelLavender.withValues(alpha: 0.5),
               width: sizing.borderThick,
@@ -259,7 +260,7 @@ class _AboutScreenState extends State<AboutScreen> {
         Text(
           '${AppLocalizations.of(context)!.aboutVersion} $appVersion',
           style: typography.subtitle.copyWith(
-            color: AppColors.textMuted,
+            color: AppThemeColors.of(context).textMuted,
             fontWeight: FontWeight.w600,
           ),
         ),
@@ -303,7 +304,7 @@ class _AboutScreenState extends State<AboutScreen> {
     return Container(
       padding: EdgeInsets.all(spacing.cardPadding),
       decoration: BoxDecoration(
-        color: const Color(0xFF141928).withValues(alpha: 0.8),
+        color: AppThemeColors.of(context).cardBackground.withValues(alpha: 0.8),
         borderRadius: BorderRadius.circular(AppConstants.radiusLarge),
         border:
             Border.all(color: AppColors.pastelLavender.withValues(alpha: 0.2)),
@@ -311,7 +312,7 @@ class _AboutScreenState extends State<AboutScreen> {
       child: Text(
         AppLocalizations.of(context)!.aboutDescription,
         style: typography.subtitle.copyWith(
-          color: AppColors.textMuted,
+          color: AppThemeColors.of(context).textMuted,
           height: typography.body.height ?? 1.6,
         ),
       ),
@@ -333,7 +334,7 @@ class _AboutScreenState extends State<AboutScreen> {
       child: Container(
         padding: EdgeInsets.all(spacing.cardPadding),
         decoration: BoxDecoration(
-          color: const Color(0xFF141928).withValues(alpha: 0.8),
+          color: AppThemeColors.of(context).cardBackground.withValues(alpha: 0.8),
           borderRadius: BorderRadius.circular(AppConstants.radiusLarge),
           border: Border.all(color: color.withValues(alpha: 0.2)),
         ),
@@ -357,14 +358,14 @@ class _AboutScreenState extends State<AboutScreen> {
                     title,
                     style: typography.title.copyWith(
                       fontWeight: FontWeight.w600,
-                      color: Colors.white,
+                      color: AppThemeColors.of(context).textMain,
                     ),
                   ),
                   const SizedBox(height: 4),
                   Text(
                     subtitle,
                     style: typography.subtitle
-                        .copyWith(color: AppColors.textMuted),
+                        .copyWith(color: AppThemeColors.of(context).textMuted),
                   ),
                 ],
               ),
@@ -390,7 +391,7 @@ class _AboutScreenState extends State<AboutScreen> {
     return Container(
       padding: EdgeInsets.all(spacing.cardPadding),
       decoration: BoxDecoration(
-        color: const Color(0xFF141928).withValues(alpha: 0.8),
+        color: AppThemeColors.of(context).cardBackground.withValues(alpha: 0.8),
         borderRadius: BorderRadius.circular(AppConstants.radiusLarge),
         border: Border.all(color: AppColors.pastelAqua.withValues(alpha: 0.3)),
         boxShadow: [
@@ -438,7 +439,7 @@ class _AboutScreenState extends State<AboutScreen> {
           Text(
             l10n.aboutShareDesc,
             style: typography.subtitle.copyWith(
-              color: AppColors.textMuted,
+              color: AppThemeColors.of(context).textMuted,
             ),
             textAlign: TextAlign.center,
           ),
@@ -569,7 +570,7 @@ class _AboutScreenState extends State<AboutScreen> {
         Text(
           AppLocalizations.of(context)!.aboutFooterMessage,
           style: typography.subtitle.copyWith(
-            color: AppColors.textMuted,
+            color: AppThemeColors.of(context).textMuted,
             fontWeight: FontWeight.w500,
           ),
         ),

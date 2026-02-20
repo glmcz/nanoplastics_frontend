@@ -15,7 +15,7 @@ import 'sources_screen.dart';
 import 'results_screen.dart';
 import 'user_settings/user_settings_screen.dart';
 import '../services/logger_service.dart';
-import '../services/settings_manager.dart';
+import '../utils/app_theme_colors.dart';
 
 enum ImpactType { human, planet }
 
@@ -51,8 +51,8 @@ class _MainScreenState extends State<MainScreen> {
           Positioned.fill(
             child: Container(
               color: (_selectedTab == ImpactType.planet
-                  ? const Color(0xFF0A0A14).withValues(alpha: 0.70)
-                  : const Color(0xFF0A0A14).withValues(alpha: 0.92)),
+                  ? AppThemeColors.of(context).pageBackground.withValues(alpha: 0.70)
+                  : AppThemeColors.of(context).pageBackground.withValues(alpha: 0.92)),
             ),
           ),
           // Subtle radial gradient overlay
@@ -117,13 +117,13 @@ class _MainScreenState extends State<MainScreen> {
           Text(
             _selectedTab == ImpactType.human ? l10n.tabHuman : l10n.tabPlanet,
             style: typography.display.copyWith(
-                color: Colors.white, fontSize: typography.display.fontSize),
+                color: AppThemeColors.of(context).textMain, fontSize: typography.display.fontSize),
           ),
           const SizedBox(height: AppConstants.space4),
           Text(
             l10n.appSubtitle,
             style: typography.label.copyWith(
-                color: AppColors.textMuted,
+                color: AppThemeColors.of(context).textMuted,
                 fontSize: typography.label.fontSize),
           ),
         ],
@@ -256,7 +256,7 @@ class _MainScreenState extends State<MainScreen> {
                   padding: sizing.categoryPadding,
                   titleStyle: typography.title,
                   descStyle: typography.bodySm.copyWith(
-                    color: AppColors.textMuted,
+                    color: AppThemeColors.of(context).textMuted,
                   ),
                   onTap: () => _navigateToCategoryDetail(categories[first]),
                 ),
@@ -769,7 +769,7 @@ class _CategoryCard extends StatelessWidget {
                   Text(
                     category.title,
                     style: titleStyle.copyWith(
-                      color: Colors.white,
+                      color: AppThemeColors.of(context).textMain,
                     ),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,

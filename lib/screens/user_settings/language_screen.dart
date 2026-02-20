@@ -11,6 +11,7 @@ import '../../services/service_locator.dart';
 import '../../widgets/nanosolve_logo.dart';
 import '../../widgets/glowing_header_separator.dart';
 import '../../main.dart';
+import '../../utils/app_theme_colors.dart';
 
 class LanguageScreen extends StatefulWidget {
   final Function(Locale)? onLanguageChanged;
@@ -117,7 +118,7 @@ class _LanguageScreenState extends State<LanguageScreen> {
         builder: (context) => StatefulBuilder(
           builder: (context, setState) {
             return AlertDialog(
-              backgroundColor: const Color(0xFF1A1A2E),
+              backgroundColor: AppThemeColors.of(context).dialogBackground,
               title: Text(
                 'Downloading ${_languages.firstWhere((l) => l.code == langCode).name}',
                 style: const TextStyle(color: AppColors.pastelAqua),
@@ -139,8 +140,8 @@ class _LanguageScreenState extends State<LanguageScreen> {
                   const SizedBox(height: 12),
                   Text(
                     '${(progress * 100).toStringAsFixed(0)}%',
-                    style: const TextStyle(
-                      color: Colors.white70,
+                    style: TextStyle(
+                      color: AppThemeColors.of(context).textMuted,
                       fontSize: 14,
                     ),
                   ),
@@ -187,7 +188,7 @@ class _LanguageScreenState extends State<LanguageScreen> {
             style: TextStyle(color: AppColors.pastelAqua)),
         content: Text(
           'Unable to download ${_languages.firstWhere((l) => l.code == attemptedLanguage).name} language files. Would you like to retry or use English?',
-          style: const TextStyle(color: Colors.white70),
+          style: TextStyle(color: AppThemeColors.of(context).textMuted),
         ),
         actions: [
           TextButton(
@@ -220,9 +221,9 @@ class _LanguageScreenState extends State<LanguageScreen> {
             center: Alignment.topCenter,
             radius: 1.5,
             colors: [
-              AppColors.pastelAqua.withValues(alpha: 0.05),
-              AppColors.pastelMint.withValues(alpha: 0.05),
-              const Color(0xFF0A0A12),
+              AppColors.pastelAqua.withValues(alpha: AppThemeColors.of(context).pastelAlpha),
+              AppColors.pastelMint.withValues(alpha: AppThemeColors.of(context).pastelAlpha),
+              AppThemeColors.of(context).gradientEnd,
             ],
             stops: const [0.0, 0.4, 1.0],
           ),
@@ -271,13 +272,13 @@ class _LanguageScreenState extends State<LanguageScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Icon(Icons.arrow_back_ios,
-                      color: Colors.white, size: sizing.backIcon),
+                      color: AppThemeColors.of(context).textMain, size: sizing.backIcon),
                   const SizedBox(width: AppConstants.space4),
                   Flexible(
                     child: Text(
                       l10n.categoryDetailBackToOverview,
                       style: typography.back.copyWith(
-                        color: Colors.white,
+                        color: AppThemeColors.of(context).textMain,
                       ),
                       maxLines: 2,
                       overflow: TextOverflow.fade,
@@ -346,7 +347,7 @@ class _LanguageScreenState extends State<LanguageScreen> {
         Text(
           AppLocalizations.of(context)!.languageSubtitle,
           style: typography.subtitle.copyWith(
-            color: AppColors.textMuted,
+            color: AppThemeColors.of(context).textMuted,
             fontWeight: FontWeight.w600,
           ),
           maxLines: 1,
@@ -372,7 +373,7 @@ class _LanguageScreenState extends State<LanguageScreen> {
         decoration: BoxDecoration(
           color: isSelected
               ? AppColors.pastelAqua.withValues(alpha: 0.15)
-              : const Color(0xFF141928).withValues(alpha: 0.8),
+              : AppThemeColors.of(context).cardBackground.withValues(alpha: 0.8),
           borderRadius: BorderRadius.circular(AppConstants.radiusLarge),
           border: Border.all(
             color: isSelected
@@ -405,7 +406,7 @@ class _LanguageScreenState extends State<LanguageScreen> {
                     language.name,
                     style: typography.title.copyWith(
                       fontWeight: FontWeight.w700,
-                      color: isSelected ? AppColors.pastelAqua : Colors.white,
+                      color: isSelected ? AppColors.pastelAqua : AppThemeColors.of(context).textMain,
                     ),
                   ),
                   const SizedBox(height: 4),
@@ -414,7 +415,7 @@ class _LanguageScreenState extends State<LanguageScreen> {
                     style: typography.subtitle.copyWith(
                       color: isSelected
                           ? AppColors.pastelAqua.withValues(alpha: 0.7)
-                          : AppColors.textMuted,
+                          : AppThemeColors.of(context).textMuted,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -469,7 +470,7 @@ class _LanguageScreenState extends State<LanguageScreen> {
             child: Text(
               AppLocalizations.of(context)!.languageInfoMessage,
               style: typography.subtitle.copyWith(
-                color: AppColors.textMuted,
+                color: AppThemeColors.of(context).textMuted,
                 height: 1.4,
               ),
             ),

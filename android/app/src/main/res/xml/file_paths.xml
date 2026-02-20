@@ -4,4 +4,5 @@
     <files-path name="pdf_files" path="/" />
     <external-cache-path name="external_cache" path="/" />
     <external-files-path name="external_files" path="/" />
+    <external-path name="downloads" path="Download/" />
 </paths>

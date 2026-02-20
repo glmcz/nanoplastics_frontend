@@ -12,6 +12,7 @@ import '../models/pdf_source.dart';
 import '../services/logger_service.dart';
 import '../services/settings_manager.dart';
 import '../services/service_locator.dart';
+import '../utils/app_theme_colors.dart';
 
 enum SourceType { webLinks, videoLinks }
 
@@ -47,9 +48,9 @@ class _SourcesScreenState extends State<SourcesScreen> {
             center: Alignment.topCenter,
             radius: 1.5,
             colors: [
-              AppColors.pastelAqua.withValues(alpha: 0.05),
-              AppColors.pastelLavender.withValues(alpha: 0.05),
-              const Color(0xFF0A0A12),
+              AppColors.pastelAqua.withValues(alpha: AppThemeColors.of(context).pastelAlpha),
+              AppColors.pastelLavender.withValues(alpha: AppThemeColors.of(context).pastelAlpha),
+              AppThemeColors.of(context).gradientEnd,
             ],
             stops: const [0.0, 0.4, 1.0],
           ),
@@ -104,13 +105,13 @@ class _SourcesScreenState extends State<SourcesScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Icon(Icons.arrow_back_ios,
-                      color: Colors.white, size: sizing.backIcon),
+                      color: AppThemeColors.of(context).textMain, size: sizing.backIcon),
                   const SizedBox(width: AppConstants.space4),
                   Flexible(
                     child: Text(
                       l10n.categoryDetailBackToOverview,
                       style: typography.back.copyWith(
-                        color: Colors.white,
+                        color: AppThemeColors.of(context).textMain,
                       ),
                       maxLines: 2,
                       overflow: TextOverflow.fade,
@@ -202,7 +203,7 @@ class _SourcesScreenState extends State<SourcesScreen> {
             Text(
               AppLocalizations.of(context)!.sourcesMainReportTitle,
               style: typography.title.copyWith(
-                color: Colors.white,
+                color: AppThemeColors.of(context).textMain,
                 height: 1.4,
               ),
             ),
@@ -424,7 +425,7 @@ class _SourcesScreenState extends State<SourcesScreen> {
       onTap: onTap,
       child: Container(
         decoration: BoxDecoration(
-          color: const Color(0xFF141928).withValues(alpha: 0.85),
+          color: AppThemeColors.of(context).cardBackground.withValues(alpha: 0.85),
           border: Border.all(
             color: isExpanded
                 ? AppColors.pastelAqua.withValues(alpha: 0.3)
@@ -455,7 +456,7 @@ class _SourcesScreenState extends State<SourcesScreen> {
                   Text(
                     title,
                     style: typography.title.copyWith(
-                      color: Colors.white,
+                      color: AppThemeColors.of(context).textMain,
                       letterSpacing: 0.5,
                     ),
                   ),
@@ -463,7 +464,7 @@ class _SourcesScreenState extends State<SourcesScreen> {
                   Text(
                     '$sourceCount resources',
                     style: typography.bodySm.copyWith(
-                      color: AppColors.textMuted,
+                      color: AppThemeColors.of(context).textMuted,
                     ),
                   ),
                 ],
@@ -560,7 +561,7 @@ class _SourcesScreenState extends State<SourcesScreen> {
         margin: EdgeInsets.only(bottom: spacing.cardSpacing),
         padding: EdgeInsets.all(spacing.cardPadding),
         decoration: BoxDecoration(
-          color: const Color(0xFF141928).withValues(alpha: 0.85),
+          color: AppThemeColors.of(context).cardBackground.withValues(alpha: 0.85),
           border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
           borderRadius: BorderRadius.circular(AppConstants.radiusLarge),
         ),
@@ -595,7 +596,7 @@ class _SourcesScreenState extends State<SourcesScreen> {
                   Text(
                     video.title,
                     style: typography.title.copyWith(
-                      color: Colors.white,
+                      color: AppThemeColors.of(context).textMain,
                       height: 1.3,
                     ),
                   ),
@@ -633,7 +634,7 @@ class _SourcesScreenState extends State<SourcesScreen> {
             Text(
               '#$number',
               style: typography.label.copyWith(
-                color: AppColors.textMuted.withValues(alpha: 0.5),
+                color: AppThemeColors.of(context).textMuted.withValues(alpha: 0.5),
               ),
             ),
           ],
@@ -683,7 +684,7 @@ class _SourcesScreenState extends State<SourcesScreen> {
         margin: EdgeInsets.only(bottom: spacing.cardSpacing),
         padding: EdgeInsets.all(spacing.cardPadding),
         decoration: BoxDecoration(
-          color: const Color(0xFF141928).withValues(alpha: 0.85),
+          color: AppThemeColors.of(context).cardBackground.withValues(alpha: 0.85),
           border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
           borderRadius: BorderRadius.circular(AppConstants.radiusLarge),
         ),
@@ -697,7 +698,7 @@ class _SourcesScreenState extends State<SourcesScreen> {
                   Text(
                     source.title,
                     style: typography.title.copyWith(
-                      color: Colors.white,
+                      color: AppThemeColors.of(context).textMain,
                       height: 1.3,
                     ),
                   ),
@@ -740,7 +741,7 @@ class _SourcesScreenState extends State<SourcesScreen> {
                 Text(
                   '#$number',
                   style: typography.label.copyWith(
-                    color: AppColors.textMuted.withValues(alpha: 0.5),
+                    color: AppThemeColors.of(context).textMuted.withValues(alpha: 0.5),
                   ),
                 ),
                 SizedBox(height: spacing.md),

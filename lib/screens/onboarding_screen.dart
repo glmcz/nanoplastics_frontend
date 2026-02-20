@@ -10,6 +10,7 @@ import '../l10n/app_localizations.dart';
 import '../models/onboarding_slide.dart';
 import '../services/settings_manager.dart';
 import 'main_screen.dart';
+import '../utils/app_theme_colors.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -114,19 +115,20 @@ class _OnboardingScreenState extends State<OnboardingScreen>
 
   @override
   Widget build(BuildContext context) {
+    final tc = AppThemeColors.of(context);
     return Scaffold(
       body: Stack(
         children: [
           // Base animated gradient background
           Container(
-            decoration: const BoxDecoration(
+            decoration: BoxDecoration(
               gradient: RadialGradient(
                 center: Alignment.topLeft,
                 radius: 2.0,
                 colors: [
-                  Color(0xFF1A1F2E),
-                  Color(0xFF0A0A12),
-                  Color(0xFF050508),
+                  tc.surfaceMid,
+                  tc.gradientEnd,
+                  tc.gradientEnd,
                 ],
               ),
             ),
@@ -258,9 +260,9 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: [
-                    const Color(0xFF0A0A12).withValues(alpha: 0.1),
+                    tc.gradientEnd.withValues(alpha: 0.1),
                     Colors.transparent,
-                    const Color(0xFF0A0A12).withValues(alpha: 0.15),
+                    tc.gradientEnd.withValues(alpha: 0.15),
                   ],
                 ),
               ),
@@ -283,9 +285,9 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                         colors: [
-                          const Color(0xFF141928).withValues(alpha: 0.75),
-                          const Color(0xFF0F1419).withValues(alpha: 0.8),
-                          const Color(0xFF141928).withValues(alpha: 0.75),
+                          tc.cardBackground.withValues(alpha: 0.75),
+                          tc.surfaceMid.withValues(alpha: 0.8),
+                          tc.cardBackground.withValues(alpha: 0.75),
                         ],
                       ),
                       border: Border.all(
@@ -356,7 +358,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
           IconButton(
             onPressed: _closeOnboarding,
             icon: const Icon(Icons.close, size: 32),
-            color: AppColors.textMuted,
+            color: AppThemeColors.of(context).textMuted,
             hoverColor: AppColors.pastelAqua,
           ),
         ],
@@ -544,7 +546,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                           l10n.onboardingBack,
                           style:
                               Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                    color: AppColors.textMuted,
+                                    color: AppThemeColors.of(context).textMuted,
                                   ),
                         ),
                       )

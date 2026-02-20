@@ -7,6 +7,7 @@ import '../../config/app_constants.dart';
 import '../../utils/app_spacing.dart';
 import '../../utils/app_sizing.dart';
 import '../../utils/app_typography.dart';
+import '../../utils/app_theme_colors.dart';
 
 class TermsOfServiceScreen extends StatelessWidget {
   const TermsOfServiceScreen({super.key});
@@ -20,9 +21,9 @@ class TermsOfServiceScreen extends StatelessWidget {
             center: Alignment.topCenter,
             radius: 1.5,
             colors: [
-              AppColors.pastelLavender.withValues(alpha: 0.05),
-              AppColors.pastelMint.withValues(alpha: 0.05),
-              const Color(0xFF0A0A12),
+              AppColors.pastelLavender.withValues(alpha: AppThemeColors.of(context).pastelAlpha),
+              AppColors.pastelMint.withValues(alpha: AppThemeColors.of(context).pastelAlpha),
+              AppThemeColors.of(context).gradientEnd,
             ],
             stops: const [0.0, 0.4, 1.0],
           ),
@@ -71,13 +72,13 @@ class TermsOfServiceScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Icon(Icons.arrow_back_ios,
-                      color: Colors.white, size: sizing.backIcon),
+                      color: AppThemeColors.of(context).textMain, size: sizing.backIcon),
                   const SizedBox(width: AppConstants.space4),
                   Flexible(
                     child: Text(
                       l10n.categoryDetailBackToOverview,
                       style: typography.back.copyWith(
-                        color: Colors.white,
+                        color: AppThemeColors.of(context).textMain,
                       ),
                       maxLines: 2,
                       overflow: TextOverflow.fade,
@@ -218,7 +219,7 @@ class TermsOfServiceScreen extends StatelessWidget {
           Text(
             title,
             style: Theme.of(context).textTheme.headlineSmall!.copyWith(
-                  color: Colors.white,
+                  color: AppThemeColors.of(context).textMain,
                   letterSpacing: 0.5,
                 ),
             maxLines: 2,
@@ -230,7 +231,7 @@ class TermsOfServiceScreen extends StatelessWidget {
                 child: Text(
                   text,
                   style: Theme.of(context).textTheme.labelLarge!.copyWith(
-                        color: AppColors.textMuted,
+                        color: AppThemeColors.of(context).textMuted,
                         height: 1.6,
                       ),
                 ),

@@ -385,6 +385,11 @@
   "updateButtonLater": "Později",
   "updateButtonUpdateNow": "Aktualizovat nyní",
   "updateDownloadInstructions": "Otevře se stažení z GitHubu. Po skončení instalujte APK ze složky Stažené soubory. Možná budete muset povolit \"Instalaci neznámých aplikací.\"",
+  "updateInstallationCancelledTitle": "Instalace zrušena",
+  "updateInstallationCancelledMsg": "Aktualizace aplikace byla zrušena. Instalaci můžete kdykoli opakovat v Nastavení.",
+  "updateButtonRetryInstall": "Opakovat instalaci",
+  "updateInstallationSuccessTitle": "Aktualizace dokončena",
+  "updateInstallationSuccessMsg": "NanoSolve Hive byl úspěšně aktualizován na nejnovější verzi.",
   "aboutVariantLiteBuild": "ENG",
   "aboutVariantFullBuild": "Všechny jazyky"
 }
