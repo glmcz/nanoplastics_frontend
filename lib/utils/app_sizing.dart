@@ -12,6 +12,7 @@ class AppSizing {
   final double logoScale;
   final double categoryScale;
   final bool isBig;
+  final bool isLandscape;
 
   AppSizing({
     required this.scaleW,
@@ -21,6 +22,7 @@ class AppSizing {
     required this.logoScale,
     required this.categoryScale,
     required this.isBig,
+    required this.isLandscape,
   });
 
   static AppSizing of(BuildContext context) {
@@ -37,6 +39,7 @@ class AppSizing {
       logoScale: logoScale,
       categoryScale: categoryScale,
       isBig: r.isBig,
+      isLandscape: r.isLandscape,
     );
   }
 
@@ -62,12 +65,16 @@ class AppSizing {
 
   // ── Back button (navigation) ──
 
-  double get backIcon => 17 * scaleW * compactScale; // iconMd * 0.7
+  // portrait: scales with device width; landscape: fixed base so scaleW boost doesn't enlarge it
+  double get backIcon =>
+      isLandscape ? 6.5 * compactScale : 17 * scaleW * compactScale;
 
   // ── Logos ──
 
-  double get logoHeight => 70 * scaleH * compactScale * logoScale;
-  double get logoHeightLg => logoHeight * 1.5;
+  // landscape: scaleH ≈ 0.46 makes the result ~14px regardless of multiplier — use fixed value instead
+  double get logoHeight =>
+      isLandscape ? 21.0 : 70 * scaleH * compactScale * logoScale;
+  double get logoHeightLg => isLandscape ? 21.0 : logoHeight * 1.5;
 
   // ── Hero ──
 

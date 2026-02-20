@@ -344,11 +344,11 @@ class _CategoryDetailNewScreenState extends State<CategoryDetailNewScreen>
                 AppLocalizations.of(context)!.categoryDetailBrainstormUser,
             placeholder: AppLocalizations.of(context)!
                 .categoryDetailBrainstormPlaceholder,
-            category: widget.categoryData.title,
+            category: widget.categoryData.categoryKey,
             onSubmit: (text) async {
               // Log the submission attempt
               LoggerService().logIdeaSubmission(
-                category: widget.categoryData.title,
+                category: widget.categoryData.categoryKey,
                 title: text,
                 contentLength: text.length,
               );
@@ -356,7 +356,7 @@ class _CategoryDetailNewScreenState extends State<CategoryDetailNewScreen>
               // Submit to backend
               final result = await ApiService.submitIdea(
                 description: text,
-                category: widget.categoryData.title,
+                category: widget.categoryData.categoryKey,
               );
 
               if (!result['success']) {

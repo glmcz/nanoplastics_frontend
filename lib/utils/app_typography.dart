@@ -7,15 +7,16 @@ import 'responsive_config.dart';
 class AppTypography {
   final double fontScale;
   final double titleScale;
+  final bool isLandscape;
 
-  AppTypography(this.fontScale, {required this.titleScale});
+  AppTypography(this.fontScale, {required this.titleScale, required this.isLandscape});
 
   static AppTypography of(BuildContext context) {
     final r = ResponsiveConfig.fromContext(context);
     final isSmall = r.isSmallPhone;
     final titleScale = isSmall ? 0.78 : 1.0;
     final compactScale = r.isCompact ? 0.9 : 1.0;
-    return AppTypography(r.fontScale, titleScale: titleScale * compactScale);
+    return AppTypography(r.fontScale, titleScale: titleScale * compactScale, isLandscape: r.isLandscape);
   }
 
   /// Screen titles — large, bold
@@ -93,8 +94,9 @@ class AppTypography {
       );
 
   /// Back button / navigation link
+  // landscape: fixed size so fontScale boost (clamped 1.3x) doesn't enlarge it
   TextStyle get back => TextStyle(
-        fontSize: 12.5 * fontScale,
+        fontSize: isLandscape ? 8.0 : 12.5 * fontScale,
         fontWeight: FontWeight.w700,
         letterSpacing: 1,
       );

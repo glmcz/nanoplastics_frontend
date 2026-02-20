@@ -9,8 +9,11 @@ class AppSpacing {
   final double scale;
   final double compactScale; /// change size of everything according screen size
   final double categoryScale; /// additional categor vertical boost.
+  final bool isLandscape;
   AppSpacing(this.scale,
-      {required this.compactScale, required this.categoryScale});
+      {required this.compactScale,
+      required this.categoryScale,
+      required this.isLandscape});
 
   static AppSpacing of(BuildContext context) {
     final r = ResponsiveConfig.fromContext(context);
@@ -21,7 +24,10 @@ class AppSpacing {
       a = 0.85;
     }
     final categoryScale = AppSizing.categoryScaleFor(r);
-    return AppSpacing(r.scaleW, compactScale: a, categoryScale: categoryScale);
+    return AppSpacing(r.scaleW,
+        compactScale: a,
+        categoryScale: categoryScale,
+        isLandscape: r.isLandscape);
   }
 
   // ── Base spacing scale ──
@@ -49,7 +55,8 @@ class AppSpacing {
   // ── Header (secondary screens) ──
 
   double get headerPadding => 2 * scale * compactScale;
-  double get headerSpacing => 10 * scale * compactScale;
+  // landscape: collapse gap above logo so it doesn't eat into PDF viewing space
+  double get headerSpacing => isLandscape ? 0 : 10 * scale * compactScale;
 
   // ── Bottom navigation ──
 

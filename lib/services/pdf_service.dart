@@ -9,7 +9,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
 
 /// Centralized PDF management service
 /// Handles caching, downloading, and navigation for all PDF access across app
@@ -407,7 +406,7 @@ class PdfService {
   }
 
   /// Download PDF for specified language from backend
-  /// Returns true if download was successful and file size matches
+  /// Returns true if download was successful
   /// Stores downloaded PDF locally via SettingsManager
   Future<bool> downloadPdfFromBackend(String language) async {
     try {
@@ -417,48 +416,23 @@ class PdfService {
       // Get backend URL from centralized config (can be overridden at build time)
       final String backendBaseUrl = BackendConfig.getBaseUrl();
 
-      // Fetch PDF metadata from backend
-      final response = await http.get(
-        Uri.parse('$backendBaseUrl/api/pdfs/$language'),
-        headers: {'Accept': 'application/json'},
-      ).timeout(
-        const Duration(seconds: 30),
-        onTimeout: () => throw Exception('PDF metadata request timeout'),
-      );
+      // Download the PDF directly from the /reports/ static endpoint
+      final filename =
+          'Nanoplastics_Report_${language.toUpperCase()}_compressed.pdf';
+      final pdfResponse = await http
+          .get(Uri.parse('$backendBaseUrl/reports/$filename'))
+          .timeout(
+            const Duration(seconds: 120),
+            onTimeout: () => throw Exception('PDF download timeout'),
+          );
 
-      if (response.statusCode == 404) {
+      if (pdfResponse.statusCode == 404) {
         LoggerService().logError('PDF not available', 'Language: $language');
         return false;
       }
 
-      if (response.statusCode != 200) {
-        throw Exception('Failed to fetch PDF metadata: ${response.statusCode}');
-      }
-
-      final metadata = jsonDecode(response.body);
-      final pdfUrl = metadata['url'] as String;
-      final expectedSize = metadata['size'] as int;
-
-      // Download the PDF file
-      final pdfResponse =
-          await http.get(Uri.parse('$backendBaseUrl$pdfUrl')).timeout(
-                const Duration(seconds: 120),
-                onTimeout: () => throw Exception('PDF download timeout'),
-              );
-
       if (pdfResponse.statusCode != 200) {
         throw Exception('Failed to download PDF: ${pdfResponse.statusCode}');
-      }
-
-      final actualSize = pdfResponse.bodyBytes.length;
-
-      // Verify file size matches
-      if (actualSize != expectedSize) {
-        LoggerService().logError(
-          'PDF size mismatch',
-          'Expected: $expectedSize, Actual: $actualSize',
-        );
-        return false;
       }
 
       // Save PDF to local storage
@@ -466,7 +440,7 @@ class PdfService {
 
       LoggerService().logUserAction('PDF downloaded successfully', params: {
         'language': language,
-        'size': actualSize,
+        'size': pdfResponse.bodyBytes.length,
       });
 
       return true;

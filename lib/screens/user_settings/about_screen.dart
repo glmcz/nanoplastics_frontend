@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_custom_tabs/flutter_custom_tabs.dart';
+import 'package:url_launcher/url_launcher.dart' as url_launcher;
 import 'package:qr_flutter/qr_flutter.dart';
 import '../../l10n/app_localizations.dart';
 import '../../config/app_colors.dart';
@@ -168,7 +169,7 @@ class _AboutScreenState extends State<AboutScreen> {
             spacing: spacing,
             sizing: sizing,
             typography: typography,
-            onTap: () => _launchUrl('https://nanosolve.io'),
+            onTap: () => _launchUrl('https://glmcz.github.io/nanoplastics_frontend/'),
           ),
           SizedBox(height: spacing.cardSpacing),
           _buildLinkItem(
@@ -179,7 +180,7 @@ class _AboutScreenState extends State<AboutScreen> {
             spacing: spacing,
             sizing: sizing,
             typography: typography,
-            onTap: () => _launchUrl('mailto:contact@nanosolve.io'),
+            onTap: () => url_launcher.launchUrl(Uri.parse('mailto:support@nanosolve.io')),
           ),
           SizedBox(height: spacing.cardSpacing * 2),
           _buildSectionTitle(

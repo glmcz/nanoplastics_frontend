@@ -168,7 +168,7 @@ class _SourcesScreenState extends State<SourcesScreen> {
               AppColors.pastelMint.withValues(alpha: 0.1),
             ],
           ),
-          border: Border.all(color: AppColors.pastelAqua),
+          border: Border.all(color: AppColors.pastelAqua.withValues(alpha: 0.35)),
           borderRadius: BorderRadius.circular(AppConstants.radiusXL),
           boxShadow: [
             BoxShadow(
@@ -201,10 +201,9 @@ class _SourcesScreenState extends State<SourcesScreen> {
             const SizedBox(height: AppConstants.space4),
             Text(
               AppLocalizations.of(context)!.sourcesMainReportTitle,
-              style: typography.headline.copyWith(
+              style: typography.title.copyWith(
                 color: Colors.white,
                 height: 1.4,
-                fontSize: sizing.radiusMd,
               ),
             ),
           ],

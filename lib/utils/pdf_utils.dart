@@ -2,9 +2,8 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 import '../config/build_config.dart';
+import '../config/backend_config.dart';
 import '../services/settings_manager.dart';
-
-const _baseDownloadUrl = 'https://localhost:1111';
 
 /// Filename for a given language code.
 String _reportFileName(String langCode) =>
@@ -25,7 +24,7 @@ Future<String> _localReportPath(String langCode) async {
 
 /// Download URL for a given language report.
 String _downloadUrl(String langCode) =>
-    '$_baseDownloadUrl/reports/${_reportFileName(langCode)}';
+    '${BackendConfig.getBaseUrl()}/reports/${_reportFileName(langCode)}';
 
 /// Result of resolving a PDF — either an asset path or a local file path.
 class ResolvedPdf {

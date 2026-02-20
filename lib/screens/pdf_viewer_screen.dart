@@ -438,7 +438,7 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
               final isPortrait = orientation == Orientation.portrait;
               return Column(
                 children: [
-                  _buildHeader(),
+                  _buildHeader(isPortrait: isPortrait),
                   if (isPortrait) _buildInfoCard(),
                   Expanded(
                     child: _buildPDFViewer(isPortrait: isPortrait),
@@ -453,14 +453,14 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
     );
   }
 
-  Widget _buildHeader() {
+  Widget _buildHeader({bool isPortrait = true}) {
     final l10n = AppLocalizations.of(context)!;
     final spacing = AppSpacing.of(context);
     final sizing = AppSizing.of(context);
     final typography = AppTypography.of(context);
 
     return Container(
-      padding: const EdgeInsets.all(AppConstants.space8),
+      padding: EdgeInsets.all(isPortrait ? AppConstants.space8 : 1.0),
       decoration: BoxDecoration(
         color: const Color(0xFF141928).withValues(alpha: 0.9),
         border: Border(
@@ -522,14 +522,15 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
                             ),
                       ),
                       border: InputBorder.none,
-                      contentPadding: EdgeInsets.zero,
+                      isDense: true,
+                      contentPadding: EdgeInsets.symmetric(horizontal: 10),
                     ),
                   ),
                 ),
               ],
             ),
             SizedBox(height: spacing.headerSpacing),
-            NanosolveLogo(height: sizing.logoHeightLg),
+            NanosolveLogo(height: isPortrait ? sizing.logoHeightLg : sizing.logoHeight),
           ],
         ),
       ),

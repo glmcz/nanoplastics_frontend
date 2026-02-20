@@ -3,6 +3,7 @@ import '../config/app_colors.dart';
 import '../l10n/app_localizations.dart';
 
 class CategoryDetailData {
+  final String categoryKey; // stable, language-agnostic key (matches CategoryData.id)
   final String title;
   final String subtitle;
   final IconData icon;
@@ -12,6 +13,7 @@ class CategoryDetailData {
   final List<SourceLink>? sourceLinks;
 
   const CategoryDetailData({
+    required this.categoryKey,
     required this.title,
     required this.subtitle,
     required this.icon,
@@ -64,6 +66,7 @@ class CategoryDetailDataFactory {
   // Human Body Categories
   static CategoryDetailData centralSystems(AppLocalizations l10n) =>
       CategoryDetailData(
+        categoryKey: 'human_central',
         title: l10n.detailCentralSystemsTitle,
         subtitle: l10n.detailCentralSystemsSubtitle,
         icon: Icons.psychology_outlined,
@@ -111,6 +114,7 @@ class CategoryDetailDataFactory {
 
   static CategoryDetailData filtrationDetox(AppLocalizations l10n) =>
       CategoryDetailData(
+        categoryKey: 'human_detox',
         title: l10n.detailFiltrationDetoxTitle,
         subtitle: l10n.detailFiltrationDetoxSubtitle,
         icon: Icons.water_drop_outlined,
@@ -160,6 +164,7 @@ class CategoryDetailDataFactory {
 
   static CategoryDetailData vitalityTissues(AppLocalizations l10n) =>
       CategoryDetailData(
+        categoryKey: 'human_vitality',
         title: l10n.detailVitalityTissuesTitle,
         subtitle: l10n.detailVitalityTissuesSubtitle,
         icon: Icons.favorite_outline,
@@ -201,6 +206,7 @@ class CategoryDetailDataFactory {
 
   static CategoryDetailData reproduction(AppLocalizations l10n) =>
       CategoryDetailData(
+        categoryKey: 'human_reproduction',
         title: l10n.detailReproductionTitle,
         subtitle: l10n.detailReproductionSubtitle,
         icon: Icons.child_care_outlined,
@@ -248,6 +254,7 @@ class CategoryDetailDataFactory {
 
   static CategoryDetailData entryGates(AppLocalizations l10n) =>
       CategoryDetailData(
+        categoryKey: 'human_entry',
         title: l10n.detailEntryGatesTitle,
         subtitle: l10n.detailEntryGatesSubtitle,
         icon: Icons.air_outlined,
@@ -300,6 +307,7 @@ class CategoryDetailDataFactory {
 
   static CategoryDetailData physicalAttack(AppLocalizations l10n) =>
       CategoryDetailData(
+        categoryKey: 'human_ways_of_destruction',
         title: l10n.detailPhysicalAttackTitle,
         subtitle: l10n.detailPhysicalAttackSubtitle,
         icon: Icons.science_outlined,
@@ -353,6 +361,7 @@ class CategoryDetailDataFactory {
   // Planet Earth Categories
   static CategoryDetailData worldOcean(AppLocalizations l10n) =>
       CategoryDetailData(
+        categoryKey: 'planet_ocean',
         title: l10n.detailWorldOceanTitle,
         subtitle: l10n.detailWorldOceanSubtitle,
         icon: Icons.waves_outlined,
@@ -392,6 +401,7 @@ class CategoryDetailDataFactory {
 
   static CategoryDetailData atmosphere(AppLocalizations l10n) =>
       CategoryDetailData(
+        categoryKey: 'planet_atmosphere',
         title: l10n.detailAtmosphereTitle,
         subtitle: l10n.detailAtmosphereSubtitle,
         icon: Icons.cloud_outlined,
@@ -429,6 +439,7 @@ class CategoryDetailDataFactory {
 
   static CategoryDetailData florFauna(AppLocalizations l10n) =>
       CategoryDetailData(
+        categoryKey: 'planet_bio',
         title: l10n.detailFloraFaunaTitle,
         subtitle: l10n.detailFloraFaunaSubtitle,
         icon: Icons.nature_outlined,
@@ -477,6 +488,7 @@ class CategoryDetailDataFactory {
 
   static CategoryDetailData magneticField(AppLocalizations l10n) =>
       CategoryDetailData(
+        categoryKey: 'planet_magnetic',
         title: l10n.detailMagneticFieldTitle,
         subtitle: l10n.detailMagneticFieldSubtitle,
         icon: Icons.explore_outlined,
@@ -512,6 +524,7 @@ class CategoryDetailDataFactory {
 
   static CategoryDetailData planetEntryGates(AppLocalizations l10n) =>
       CategoryDetailData(
+        categoryKey: 'planet_entry',
         title: l10n.detailPlanetEntryGatesTitle,
         subtitle: l10n.detailPlanetEntryGatesSubtitle,
         icon: Icons.delete_outline,
@@ -548,6 +561,7 @@ class CategoryDetailDataFactory {
 
   static CategoryDetailData physicalProperties(AppLocalizations l10n) =>
       CategoryDetailData(
+        categoryKey: 'planet_physical',
         title: l10n.detailPhysicalPropertiesTitle,
         subtitle: l10n.detailPhysicalPropertiesSubtitle,
         icon: Icons.hub_outlined,
