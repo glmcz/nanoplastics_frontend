@@ -27,7 +27,9 @@ dependencies:
   qr_flutter: ^4.1.0
   package_info_plus: ^4.2.0
   connectivity_plus: ^6.0.0
-  install_plugin: ^2.1.0
+  flutter_app_installer: ^1.0.2
+  # Google Play Store updates only
+  in_app_update: ^4.2.3
 
 
 
