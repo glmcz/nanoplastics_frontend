@@ -20,20 +20,20 @@ extension CustomTextStyles on TextTheme {
 
 class AppTheme {
   static ThemeData get lightTheme {
-    // Deep Ocean Teal — rich saturated teal, visually unmistakable vs dark mode.
+    // Ocean Blue — vibrant mid-dark blue, unmistakably distinct from near-black dark mode.
     // Brightness.light is kept so AppThemeColors.isDark = false, while all
-    // surfaces use teal values from AppThemeColors.
-    const Color tealCard = Color(0xFF003347);
-    const Color textMain = AppColors.textMain; // white
-    const Color textMuted = Color(0xFFAAD4D8); // teal-tinted muted
+    // surfaces use ocean blue values from AppThemeColors.
+    const Color blueCard = Color(0xFF0A3350);
+    const Color textMain = AppColors.textMain; // white (good contrast on dark blue)
+    const Color textMuted = Color(0xFF8EC8E0); // cyan-blue muted
 
     return ThemeData(
       brightness: Brightness.light,
-      scaffoldBackgroundColor: const Color(0xFF002535),
+      scaffoldBackgroundColor: const Color(0xFF0C3D5C),
       primaryColor: AppColors.accent,
       colorScheme: const ColorScheme.light(
         primary: AppColors.accent,
-        surface: tealCard,
+        surface: blueCard,
       ),
       fontFamily: 'SF Pro',
       textTheme: const TextTheme(
@@ -127,7 +127,7 @@ class AppTheme {
         ),
       ),
       appBarTheme: const AppBarTheme(
-        backgroundColor: tealCard,
+        backgroundColor: blueCard,
         elevation: 0,
       ),
     );

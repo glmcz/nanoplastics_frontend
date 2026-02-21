@@ -437,6 +437,11 @@ class _UserSettingsScreenState extends State<UserSettingsScreen>
 
         if (updateAvailable) {
           _showUpdateAvailableDialog();
+        } else if (updateService.currentState == UpdateState.failed) {
+          // Network error or GitHub API unreachable — not "up to date"
+          _showErrorDialog(
+            AppLocalizations.of(context)!.updateFailedToCheck,
+          );
         } else {
           _showAppIsCurrentDialog();
         }

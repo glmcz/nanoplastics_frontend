@@ -295,6 +295,7 @@ class UpdateService {
       if (release == null) {
         LoggerService().logUserAction('Failed to fetch GitHub release');
         await settingsManager.setLastUpdateCheckTime(DateTime.now());
+        _notifyStateChange(UpdateState.failed);
         return false;
       }
 
@@ -535,6 +536,19 @@ class UpdateService {
       LoggerService().logUserAction('Starting in-app update download');
 
       if (Platform.isAndroid) {
+        // If a valid APK was already downloaded, install it directly
+        final existingPath = settingsManager.lastDownloadedApkPath;
+        if (existingPath != null) {
+          final existingFile = File(existingPath);
+          if (await existingFile.exists()) {
+            LoggerService().logUserAction(
+              'Existing APK found — installing without re-download',
+              params: {'path': existingPath},
+            );
+            _notifyStateChange(UpdateState.downloaded);
+            return await _launchApkInstaller(existingPath);
+          }
+        }
         return await _downloadAndInstallApk(updateDownloadUrl);
       } else if (Platform.isIOS) {
         // iOS: Redirect to App Store
@@ -569,12 +583,14 @@ class UpdateService {
       // Clean up old APK before starting new download
       await _cleanupOldApks();
 
-      // Get downloads directory
-      final downloadsDir = await getDownloadsDirectory();
-      if (downloadsDir == null) {
-        LoggerService().logUserAction('Downloads directory not available');
-        _notifyStateChange(UpdateState.failed);
-        return false;
+      // Use app-private external storage — always writable on Android,
+      // covered by <external-files-path> in file_paths.xml for FileProvider.
+      // Avoids scoped-storage write restrictions on Android 10+ that affect
+      // the public Downloads directory.
+      final externalDir = await getExternalStorageDirectory();
+      final downloadsDir = externalDir ?? await getApplicationDocumentsDirectory();
+      if (!await downloadsDir.exists()) {
+        await downloadsDir.create(recursive: true);
       }
 
       // Generate filename from URL
