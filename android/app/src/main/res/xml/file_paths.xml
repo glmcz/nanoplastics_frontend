@@ -3,6 +3,8 @@
     <cache-path name="pdf_cache" path="/" />
     <files-path name="pdf_files" path="/" />
     <external-cache-path name="external_cache" path="/" />
+    <!-- android_package_installer -->
     <external-files-path name="external_files" path="/" />
-    <external-path name="downloads" path="Download/" />
+    <!-- FileProvider -->
+    <external-path name="external_files" path="." />
 </paths>
