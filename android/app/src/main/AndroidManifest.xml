@@ -41,12 +41,11 @@
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+            <!-- Intent filter for android_package_installer -->
+            <intent-filter>
+                <action android:name="com.android_package_installer.content.SESSION_API_PACKAGE_INSTALLED"/>
+            </intent-filter>
         </activity>
-        
-        <!-- Intent filter for android_package_installer -->
-        <intent-filter>
-            <action android:name="com.android_package_installer.content.SESSION_API_PACKAGE_INSTALLED"/>
-        </intent-filter>
         
         <!-- FileProvider for android_package_installer -->
         <provider
