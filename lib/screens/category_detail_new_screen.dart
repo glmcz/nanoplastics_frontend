@@ -346,7 +346,7 @@ class _CategoryDetailNewScreenState extends State<CategoryDetailNewScreen>
             placeholder: AppLocalizations.of(context)!
                 .categoryDetailBrainstormPlaceholder,
             category: widget.categoryData.categoryKey,
-            onSubmit: (text) async {
+            onSubmit: (text, attachments) async {
               // Log the submission attempt
               LoggerService().logIdeaSubmission(
                 category: widget.categoryData.categoryKey,
@@ -354,10 +354,11 @@ class _CategoryDetailNewScreenState extends State<CategoryDetailNewScreen>
                 contentLength: text.length,
               );
 
-              // Submit to backend
+              // Submit to backend with attachments
               final result = await ApiService.submitIdea(
                 description: text,
                 category: widget.categoryData.categoryKey,
+                attachments: attachments,
               );
 
               if (!result['success']) {

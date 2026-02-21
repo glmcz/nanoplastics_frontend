@@ -22,7 +22,7 @@ void main() {
           title: 'Test',
           username: 'User',
           placeholder: 'Type...',
-          onSubmit: (text) async {
+          onSubmit: (text, attachments) async {
             callCount++;
             // Simulate slow API call
             await completer.future;
@@ -62,7 +62,7 @@ void main() {
           title: 'Test',
           username: 'User',
           placeholder: 'Type...',
-          onSubmit: (text) async {
+          onSubmit: (text, attachments) async {
             callCount++;
             await completer.future;
           },
@@ -105,7 +105,7 @@ void main() {
           title: 'Test',
           username: 'User',
           placeholder: 'Type...',
-          onSubmit: (text) async {
+          onSubmit: (text, attachments) async {
             callbackCalled = true;
           },
         ),
@@ -130,7 +130,7 @@ void main() {
           title: 'Test',
           username: 'User',
           placeholder: 'Type...',
-          onSubmit: (text) async {
+          onSubmit: (text, attachments) async {
             callbackCalled = true;
           },
         ),
@@ -154,7 +154,7 @@ void main() {
           title: 'Test',
           username: 'User',
           placeholder: 'Type...',
-          onSubmit: (text) async {
+          onSubmit: (text, attachments) async {
             callCount++;
           },
         ),
@@ -200,7 +200,7 @@ void main() {
           username: 'User',
           placeholder: 'Type...',
           category: 'test_cat',
-          onSubmit: (text) async {
+          onSubmit: (text, attachments) async {
             throw Exception('Server error');
           },
         ),
@@ -235,7 +235,7 @@ void main() {
           username: 'User',
           placeholder: 'Type...',
           category: 'success_cat',
-          onSubmit: (text) async {
+          onSubmit: (text, attachments) async {
             // Simulate successful API call
           },
         ),

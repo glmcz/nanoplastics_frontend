@@ -2,9 +2,11 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 import '../models/solver.dart';
+import '../models/idea_attachment.dart';
 import '../config/backend_config.dart';
 import 'logger_service.dart';
 import 'settings_manager.dart';
@@ -51,6 +53,7 @@ class ApiService {
   static Future<Map<String, dynamic>> submitIdea({
     required String description,
     String? category,
+    List<IdeaAttachment>? attachments,
   }) async {
     try {
       final userId = await getUserId();
@@ -78,12 +81,23 @@ class ApiService {
         request.fields['email'] = userEmail;
       }
 
+      // Attach files
+      for (final att in attachments ?? []) {
+        request.files.add(await http.MultipartFile.fromPath(
+          'attachment',
+          att.path,
+          contentType: MediaType.parse(att.mimeType),
+          filename: att.name,
+        ));
+      }
+
       LoggerService().logUserAction(
         'submitting_idea_to_backend',
         params: {
           'url': uri.toString(),
           'category': category ?? 'none',
           'description_length': description.length,
+          'attachment_count': (attachments ?? []).length,
         },
       );
 
@@ -94,10 +108,11 @@ class ApiService {
         };
       }
 
+      // Extended timeout to allow large file uploads (videos, audio)
       final streamedResponse = await request.send().timeout(
-        const Duration(seconds: 30),
+        const Duration(seconds: 45),
         onTimeout: () {
-          throw TimeoutException('Request timeout after 30 seconds');
+          throw TimeoutException('Request timeout after 120 seconds');
         },
       );
 

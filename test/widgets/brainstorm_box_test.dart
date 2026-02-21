@@ -141,7 +141,7 @@ void main() {
           title: 'Title',
           username: 'User',
           placeholder: 'Placeholder',
-          onSubmit: (text) async {
+          onSubmit: (text, attachments) async {
             callbackCalled = true;
           },
         ),
@@ -170,7 +170,7 @@ void main() {
           title: 'Title',
           username: 'User',
           placeholder: 'Placeholder',
-          onSubmit: (text) async {
+          onSubmit: (text, attachments) async {
             callCount++;
           },
         ),
@@ -195,7 +195,7 @@ void main() {
           title: 'Title',
           username: 'User',
           placeholder: 'Placeholder',
-          onSubmit: (text) async {
+          onSubmit: (text, attachments) async {
             submittedText = text;
           },
         ),
@@ -216,7 +216,7 @@ void main() {
           title: 'Title',
           username: 'User',
           placeholder: 'Placeholder',
-          onSubmit: (text) async {},
+          onSubmit: (text, attachments) async {},
         ),
       ));
       await tester.pumpAndSettle();
@@ -237,7 +237,7 @@ void main() {
           title: 'Title',
           username: 'User',
           placeholder: 'Placeholder',
-          onSubmit: (text) async {},
+          onSubmit: (text, attachments) async {},
         ),
       ));
       await tester.pumpAndSettle();
@@ -257,7 +257,7 @@ void main() {
           title: 'Title',
           username: 'User',
           placeholder: 'Placeholder',
-          onSubmit: (text) async {
+          onSubmit: (text, attachments) async {
             throw Exception('Server error');
           },
         ),
@@ -280,7 +280,7 @@ void main() {
           title: 'Title',
           username: 'User',
           placeholder: 'Placeholder',
-          onSubmit: (text) async {
+          onSubmit: (text, attachments) async {
             throw Exception('Network error');
           },
         ),
