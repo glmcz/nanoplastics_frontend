@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:in_app_update/in_app_update.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:flutter_app_installer/flutter_app_installer.dart';
+import 'package:android_package_installer/android_package_installer.dart';
 import 'dart:convert';
 import 'logger_service.dart';
 import 'service_locator.dart';
@@ -690,7 +690,7 @@ class UpdateService {
     }
   }
 
-  /// Launch Android installer for APK file using install_plugin
+  /// Launch Android installer for APK file using android_package_installer
   /// Returns true if installer was launched successfully
   /// Note: Install state changes to 'installing' immediately
   /// UI should monitor app lifecycle to detect installation completion
@@ -698,12 +698,12 @@ class UpdateService {
     try {
       _notifyStateChange(UpdateState.installing);
 
-      // Use flutter_app_installer for proper FileProvider support on Android 7.0+
-      final result = await FlutterAppInstaller().installApk(filePath: filePath);
+      // Use android_package_installer for proper FileProvider support on Android 7.0+
+      await AndroidPackageInstaller.installApk(apkFilePath: filePath);
 
       LoggerService().logUserAction(
         'APK installer launched',
-        params: {'path': filePath, 'result': result},
+        params: {'path': filePath},
       );
 
       // Note: State remains 'installing' until app lifecycle detects completion

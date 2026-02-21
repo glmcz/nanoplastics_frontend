@@ -1,7 +1,7 @@
 name: nanoplastics_app
 description: NanoSolve Hive - Crowdsourcing R&D solutions for nanoplastic pollution
 publish_to: 'none'
-version: 1.0.13
+version: 1.0.14
 
 environment:
   sdk: '>=3.0.0 <4.0.0'
@@ -31,7 +31,7 @@ dependencies:
   qr_flutter: ^4.1.0
   package_info_plus: ^4.2.0
   connectivity_plus: ^6.0.0
-  flutter_app_installer: ^1.0.2
+  android_package_installer: ^0.0.3
   # Google Play Store updates only
   in_app_update: ^4.2.3
 
