@@ -63,7 +63,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '13180795130',
     projectId: 'nanoplastics',
     storageBucket: 'nanoplastics.firebasestorage.app',
-    iosBundleId: 'com.nano.app',
+    iosBundleId: 'io.github.glmcz.nanosolve',
   );
 
 }

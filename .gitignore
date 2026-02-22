@@ -70,3 +70,10 @@ firebase.json
 
 android/app/google-services.json
 lib/l10n/app_localizations*.dart
+.metadata
+run_localy.sh
+.gitignore
+run_ios.sh
+AGENTS.md
+CLAUDE.md
+run_localy_emmulator.sh

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <!-- Change to "app-store" when submitting to App Store / TestFlight -->
+    <key>method</key>
+    <string>ad-hoc</string>
+
+    <key>teamID</key>
+    <!-- Replace YOUR_TEAM_ID with your 10-character Apple team ID
+         Find it at: developer.apple.com → Account → Membership -->
+    <string>YOUR_TEAM_ID</string>
+
+    <key>compileBitcode</key>
+    <false/>
+
+    <key>uploadSymbols</key>
+    <true/>
+
+    <key>signingStyle</key>
+    <string>automatic</string>
+
+    <key>stripSwiftSymbols</key>
+    <true/>
+
+    <key>thinning</key>
+    <string>&lt;none&gt;</string>
+</dict>
+</plist>

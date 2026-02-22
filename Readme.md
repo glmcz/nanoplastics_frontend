@@ -43,6 +43,10 @@ The goal is responsive behavior via tokens, not per-widget scaling. Each screen 
 
 For other screen variants, you adjust tokens (or add variant-aware logic inside the token classes), and every screen updates automatically. This avoids per-screen magic numbers and keeps behavior consistent across small/normal/large devices.
 
+
+### App update flow
+- backend release endpoint → GitHub Actions hook → app checks backend on startup.
+
 ## License
 
 Copyright (c) 2024 Martin Durak. All rights reserved.

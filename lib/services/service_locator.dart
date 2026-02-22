@@ -132,22 +132,24 @@ class ServiceLocator {
   /// 4. PdfService - extracts bundled PDFs
   /// 5. UpdateService - checks for updates (requires internet service)
   Future<void> initialize() async {
-    // Initialize internet service FIRST (before other services)
+    // Internet connectivity — fast, needed by others.
     _internetService = InternetService._();
     await _internetService.initialize();
 
-    // Get already-initialized SettingsManager singleton
+    // Get already-initialized SettingsManager singleton.
     _settingsManager = SettingsManager();
 
-    // Initialize LoggerService first (needed for other services)
+    // Create LoggerService but fire Firebase init in the background so it
+    // doesn't block the first frame. Logs that arrive before Firebase is ready
+    // are no-ops (caught inside LoggerService.initialize).
     _loggerService = LoggerService();
-    await _loggerService.initialize();
+    _loggerService.initialize(); // intentionally not awaited
 
-    // Initialize PDF service to extract bundled PDFs
+    // PDF extraction — needed before the first screen renders.
     _pdfService = PdfService(_settingsManager);
     await _pdfService.initialize();
 
-    // Initialize Update service for version checking (uses internet service)
+    // Update service — stateless at construction, checks happen later.
     _updateService = UpdateService();
   }
 

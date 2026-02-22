@@ -5,12 +5,13 @@ import '../config/app_constants.dart';
 import '../utils/responsive_config.dart';
 import '../utils/app_spacing.dart';
 import '../utils/app_typography.dart';
+import '../utils/app_sizing.dart';
 import '../widgets/nanosolve_logo.dart';
 import '../l10n/app_localizations.dart';
 import '../models/onboarding_slide.dart';
-import '../services/settings_manager.dart';
 import 'main_screen.dart';
 import '../utils/app_theme_colors.dart';
+import '../mixins/language_selection_mixin.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -20,7 +21,7 @@ class OnboardingScreen extends StatefulWidget {
 }
 
 class _OnboardingScreenState extends State<OnboardingScreen>
-    with SingleTickerProviderStateMixin {
+    with SingleTickerProviderStateMixin, LanguageSelectionMixin {
   final PageController _pageController = PageController();
   int _currentPage = 0;
   late AnimationController _animationController;
@@ -54,6 +55,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
   @override
   void initState() {
     super.initState();
+    initLanguageSelection(); // Initialize language selection from mixin
     _animationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 500),
@@ -103,7 +105,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
   void _closeOnboarding() async {
     print('DEBUG: _closeOnboarding called');
     // Mark onboarding as shown
-    await SettingsManager().setOnboardingShown(true);
+    await settingsManager.setOnboardingShown(true);
     print('DEBUG: Onboarding marked as shown, navigating to MainScreen');
 
     _animationController.reverse().then((_) {
@@ -347,12 +349,18 @@ class _OnboardingScreenState extends State<OnboardingScreen>
       padding: EdgeInsets.all(spacing.lg),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           const Flexible(
             child: FittedBox(
               fit: BoxFit.scaleDown,
               alignment: Alignment.centerLeft,
               child: NanosolveLogo(height: AppConstants.logoMedium),
+            ),
+          ),
+          Expanded(
+            child: Center(
+              child: _buildLanguageSelector(),
             ),
           ),
           IconButton(
@@ -362,6 +370,62 @@ class _OnboardingScreenState extends State<OnboardingScreen>
             hoverColor: AppColors.pastelAqua,
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildLanguageSelector() {
+    final sizing = AppSizing.of(context);
+    return SizedBox(
+      height: sizing.minTouchTarget,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        shrinkWrap: true,
+        itemCount: LanguageSelectionMixin.supportedLanguages.length,
+        separatorBuilder: (_, __) => const SizedBox(width: 8),
+        itemBuilder: (context, index) {
+          final lang = LanguageSelectionMixin.supportedLanguages[index];
+          final isSelected = selectedLanguage == lang['code'];
+          return GestureDetector(
+            onTap: () => selectLanguage(lang['code']!),
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 200),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              decoration: BoxDecoration(
+                color: isSelected
+                    ? AppColors.pastelAqua.withValues(alpha: 0.2)
+                    : Colors.transparent,
+                border: Border.all(
+                  color: isSelected
+                      ? AppColors.pastelAqua
+                      : AppThemeColors.of(context).textMuted.withValues(alpha: 0.3),
+                  width: isSelected ? 2 : 1,
+                ),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    lang['flag']!,
+                    style: TextStyle(fontSize: sizing.iconSm + 4),
+                  ),
+                  const SizedBox(width: 4),
+                  Text(
+                    lang['code']!.toUpperCase(),
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                      color: isSelected
+                          ? AppColors.pastelAqua
+                          : AppThemeColors.of(context).textMuted,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
       ),
     );
   }

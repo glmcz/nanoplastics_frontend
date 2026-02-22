@@ -5,7 +5,9 @@ import 'package:in_app_update/in_app_update.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:android_package_installer/android_package_installer.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'dart:convert';
+import '../config/backend_config.dart';
 import 'logger_service.dart';
 import 'service_locator.dart';
 
@@ -474,32 +476,51 @@ class UpdateService {
   /// Fetch latest release from GitHub API (single attempt)
   /// User must manually retry if network fails
   /// Prevents hidden auto-retry that confuses users
+  /// Fetch latest release — tries backend first (instant), falls back to GitHub API.
   Future<GitHubRelease?> _fetchLatestRelease() async {
+    // 1. Try our own backend: no rate limits, updated immediately by CI.
     try {
-      // TODO: Add GitHub API authentication for higher rate limits (60 req/hr → 5000 req/hr)
-      // TODO: Use GITHUB_TOKEN environment variable or config to add Authorization header
+      final backendUrl = BackendConfig.getBaseUrl();
+      final response = await http
+          .get(Uri.parse('$backendUrl/api/release'))
+          .timeout(const Duration(seconds: 5));
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body) as Map<String, dynamic>;
+        final version = data['version'] as String? ?? '';
+        return GitHubRelease(
+          tagName: 'v$version',
+          name: 'v$version',
+          isPrerelease: false,
+          publishedAt: DateTime.tryParse(
+                  data['published_at'] as String? ?? '') ??
+              DateTime.now(),
+          fullBuildUrl: data['full_apk_url'] as String?,
+          liteBuildUrl: data['lite_apk_url'] as String?,
+        );
+      }
+    } catch (_) {
+      // Backend unreachable — fall through to GitHub API.
+    }
+
+    // 2. Fallback: GitHub releases API (60 req/hr unauthenticated).
+    try {
       final response = await http.get(
         Uri.parse(_githubApiUrl),
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/vnd.github.v3+json',
-          // TODO: Add when implemented: 'Authorization': 'token $githubToken',
-        },
+        headers: {'Accept': 'application/vnd.github.v3+json'},
       ).timeout(
         const Duration(seconds: 10),
         onTimeout: () => throw TimeoutException('GitHub API timeout'),
       );
 
       if (response.statusCode == 200) {
-        final json = jsonDecode(response.body);
-        return GitHubRelease.fromJson(json);
-      } else {
-        throw Exception(
-            'Failed to fetch GitHub release: ${response.statusCode}');
+        return GitHubRelease.fromJson(
+            jsonDecode(response.body) as Map<String, dynamic>);
       }
+      throw Exception('GitHub API ${response.statusCode}');
     } catch (e) {
       LoggerService().logError(
-          'Error fetching GitHub release', e.toString(), StackTrace.current);
+          'Error fetching release info', e.toString(), StackTrace.current);
       return null;
     }
   }
@@ -551,9 +572,16 @@ class UpdateService {
         }
         return await _downloadAndInstallApk(updateDownloadUrl);
       } else if (Platform.isIOS) {
-        // iOS: Redirect to App Store
-        LoggerService()
-            .logUserAction('iOS update redirect not yet implemented');
+        // iOS: Open GitHub releases page — users download via Safari
+        const releasesUrl =
+            'https://github.com/glmcz/nanoplastics_frontend/releases/latest';
+        LoggerService().logUserAction('iOS: opening GitHub releases page');
+        final uri = Uri.parse(releasesUrl);
+        if (await canLaunchUrl(uri)) {
+          await launchUrl(uri, mode: LaunchMode.externalApplication);
+          _notifyStateChange(UpdateState.idle);
+          return true;
+        }
         _notifyStateChange(UpdateState.failed);
         return false;
       }

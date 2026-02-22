@@ -40,38 +40,43 @@ class _MainScreenState extends State<MainScreen> {
         children: [
           // Background image
           Positioned.fill(
-            child: Image.asset(
-              _selectedTab == ImpactType.human
-                  ? 'assets/images/bg_human.jpg'
-                  : 'assets/images/bg_planet.jpg',
-              fit: BoxFit.cover,
-            ),
+            child: _selectedTab == ImpactType.human
+                ? Image.asset(
+                    'assets/images/bg_human.jpg',
+                    fit: BoxFit.cover,
+                  )
+                : ImageFiltered(
+                    imageFilter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
+                    child: Image.asset(
+                      'assets/images/bg_planet.jpg',
+                      fit: BoxFit.cover,
+                    ),
+                  ),
           ),
-          // Dark overlay - lighter for planet tab to show Earth image
+          // Overlay - varies by tab
           Positioned.fill(
-            child: Container(
-              color: (_selectedTab == ImpactType.planet
-                  ? AppThemeColors.of(context).pageBackground.withValues(alpha: 0.70)
-                  : AppThemeColors.of(context).pageBackground.withValues(alpha: 0.92)),
-            ),
-          ),
-          // Subtle radial gradient overlay
-          Positioned.fill(
-            child: Container(
-              decoration: BoxDecoration(
-                gradient: RadialGradient(
-                  center: Alignment.center,
-                  radius: 1.2,
-                  colors: [
-                    _selectedTab == ImpactType.human
-                        ? AppColors.neonCyan.withValues(alpha: 0.08)
-                        : AppColors.neonOcean.withValues(alpha: 0.08),
-                    Colors.transparent,
-                  ],
-                  stops: const [0.0, 1.0],
-                ),
-              ),
-            ),
+            child: _selectedTab == ImpactType.human
+                ? Container(
+                    decoration: BoxDecoration(
+                      gradient: RadialGradient(
+                        center: Alignment.center,
+                        radius: 1.3,
+                        colors: [
+                          AppThemeColors.of(context)
+                              .pageBackground
+                              .withValues(alpha: 0.35),
+                          AppThemeColors.of(context)
+                              .pageBackground
+                              .withValues(alpha: 0.65),
+                        ],
+                        stops: const [0.0, 1.0],
+                      ),
+                    ),
+                  )
+                : Container(
+                    color: AppThemeColors.of(context).pageBackground.withValues(
+                        alpha: AppThemeColors.of(context).isDark ? 0.70 : 0.85),
+                  ),
           ),
           // Main content
           SafeArea(
@@ -112,7 +117,7 @@ class _MainScreenState extends State<MainScreen> {
           vertical: spacing.contentPaddingV),
       child: Column(
         children: [
-          NanosolveLogo(height: sizing.logoHeight),
+          NanosolveLogo(height: sizing.logoHeightLg),
           const SizedBox(height: AppConstants.space4),
           Text(
             _selectedTab == ImpactType.human ? l10n.tabHuman : l10n.tabPlanet,
@@ -288,10 +293,8 @@ class _MainScreenState extends State<MainScreen> {
       padding: EdgeInsets.only(
         left: spacing.md * 1.5,
         right: spacing.md * 1.5,
-
-        /// TODO refactor me.
         top: spacing.md * 2.0,
-        bottom: spacing.md,
+        bottom: spacing.md * 0.7,
       ),
       child: Column(children: rows),
     );
