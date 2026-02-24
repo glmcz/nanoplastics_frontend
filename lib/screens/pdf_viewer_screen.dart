@@ -733,7 +733,7 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
 
   Widget _buildFooter() {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+      padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 16),
       decoration: BoxDecoration(
         color: AppThemeColors.of(context).cardBackground.withValues(alpha: 0.9),
         border: Border(
@@ -755,7 +755,7 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
               }
             },
             child: Container(
-              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+              padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 14),
               decoration: BoxDecoration(
                 color: AppColors.pastelAqua.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(8),
@@ -811,7 +811,7 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
               }
             },
             child: Container(
-              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+              padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 14),
               decoration: BoxDecoration(
                 color: AppColors.pastelAqua.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(8),

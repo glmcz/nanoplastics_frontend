@@ -84,11 +84,13 @@ Future<String> downloadReport(
   final response = await client.send(request);
 
   if (response.statusCode != 200) {
+    client.close();
     throw HttpException('Failed to download report: ${response.statusCode}');
   }
 
   final contentLength = response.contentLength ?? 0;
-  final sink = File(localPath).openWrite();
+  final file = File(localPath);
+  final sink = file.openWrite();
   int received = 0;
   final startTime = DateTime.now();
 
@@ -96,12 +98,6 @@ Future<String> downloadReport(
     await for (final chunk in response.stream) {
       // Check if download was cancelled via the token
       if (cancellationToken?.isCompleted ?? false) {
-        await sink.close();
-        try {
-          await File(localPath).delete(); // Clean up partial file
-        } catch (_) {
-          // Ignore if file doesn't exist
-        }
         throw Exception('Download cancelled');
       }
 
@@ -111,25 +107,27 @@ Future<String> downloadReport(
       // Report progress
       if (onProgress != null) {
         if (contentLength > 0) {
-          // Use Content-Length if available
           onProgress(received / contentLength);
         } else {
-          // Fallback: estimate progress based on elapsed time (1-100%)
-          // After 100ms show at least 10%, gradually increase to avoid being stuck at 0
           final elapsed = DateTime.now().difference(startTime).inMilliseconds;
           if (elapsed < 500) {
-            onProgress(0.1 + (elapsed / 500) * 0.3); // 10% to 40% in first 500ms
+            onProgress(0.1 + (elapsed / 500) * 0.3);
           } else {
-            onProgress(0.4 + (received / 1000000).clamp(0.0, 0.5)); // Up to 90%
+            onProgress(0.4 + (received / 1000000).clamp(0.0, 0.5));
           }
         }
       }
     }
-  } finally {
+  } catch (e) {
+    // Always clean up partial file on any failure so next attempt starts fresh
     await sink.close();
     client.close();
+    try { await file.delete(); } catch (_) {}
+    rethrow;
   }
 
+  await sink.close();
+  client.close();
   return localPath;
 }
 

@@ -9,7 +9,7 @@ import '../utils/responsive_config.dart';
 import 'settings_manager.dart';
 
 /// DEBUG: Set to true to always show the tour, false to respect SharedPreferences
-const bool debugForceShowTour = true;
+const bool debugForceShowTour = false;
 
 /// Extended tour state — tracks which step of the multi-screen tour we're on
 enum ExtendedTourStep {

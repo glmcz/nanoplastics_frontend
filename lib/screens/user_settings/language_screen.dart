@@ -50,6 +50,7 @@ class _LanguageScreenState extends State<LanguageScreen> {
   Future<void> _selectLanguage(String code) async {
     if (_selectedLanguage == code) return;
 
+    final previousLanguage = _selectedLanguage;
     setState(() => _selectedLanguage = code);
     await _settingsManager.setUserLanguage(code);
 
@@ -57,8 +58,10 @@ class _LanguageScreenState extends State<LanguageScreen> {
     if (code != 'en' && _settingsManager.buildType == 'LITE') {
       final success = await _downloadPDFForLanguageWithProgress(code);
       if (!success) {
-        // Show offline fallback dialog
+        // Restore previous selection so the user can retry the same language
         if (mounted) {
+          setState(() => _selectedLanguage = previousLanguage);
+          await _settingsManager.setUserLanguage(previousLanguage);
           _showOfflineFallbackDialog(code);
           return;
         }
@@ -114,12 +117,14 @@ class _LanguageScreenState extends State<LanguageScreen> {
 
       double progress = 0;
       final cancellationToken = Completer<void>();
+      void Function(VoidCallback)? updateDialog;
 
       showDialog(
         context: context,
         barrierDismissible: false,
         builder: (context) => StatefulBuilder(
-          builder: (context, setState) {
+          builder: (context, setDialogState) {
+            updateDialog = setDialogState;
             return AlertDialog(
               backgroundColor: AppThemeColors.of(context).dialogBackground,
               title: Text(
@@ -174,10 +179,7 @@ class _LanguageScreenState extends State<LanguageScreen> {
       await downloadReport(
         langCode,
         onProgress: (progressValue) {
-          // Update the dialog with progress
-          if (mounted) {
-            setState(() => progress = progressValue);
-          }
+          updateDialog?.call(() => progress = progressValue);
         },
         cancellationToken: cancellationToken,
       );
