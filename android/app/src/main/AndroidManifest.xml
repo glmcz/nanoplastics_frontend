@@ -60,10 +60,14 @@
                 tools:replace="android:resource" />
         </provider>
         
-        <!-- Auto-relaunch after self-update APK install -->
+        <!-- Auto-relaunch after self-update APK install.
+             exported=true is required: the system (different UID) sends
+             MY_PACKAGE_REPLACED, and exported=false blocks cross-UID delivery.
+             Safe because MY_PACKAGE_REPLACED is a protected broadcast — only
+             the system can send it. -->
         <receiver
             android:name=".UpdateReceiver"
-            android:exported="false">
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MY_PACKAGE_REPLACED"/>
             </intent-filter>
