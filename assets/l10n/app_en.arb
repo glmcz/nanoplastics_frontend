@@ -390,6 +390,12 @@
   "updateButtonRetryInstall": "Retry Install",
   "updateInstallationSuccessTitle": "Update Complete",
   "updateInstallationSuccessMsg": "NanoSolve Hive has been successfully updated to the latest version.",
-  "aboutVariantLiteBuild": "Lite (English)",
-  "aboutVariantFullBuild": "Full (All Languages)"
+  "aboutVariantLiteBuild": "ENG",
+  "aboutVariantFullBuild": "All Languages",
+
+  "tourCategoryGridBody": "Tap any card to explore research areas and post ideas.",
+  "tourHumanPlanetBody": "Switch between human health and planet ecosystem. Post ideas to contribute solutions.",
+  "tourSourcesButtonBody": "Access peer-reviewed research, case studies, and downloadable reports by impact category.",
+  "tourResultsButtonBody": "View community ideas ranked by AI. Submit your ideas here to compete on the leaderboard.",
+  "tourSettingsBody": "Manage your profile, language, and app preferences. Tap to adjust language, sharing options, and more."
 }

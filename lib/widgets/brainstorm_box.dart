@@ -23,6 +23,10 @@ class BrainstormBox extends StatefulWidget {
   final String? submitText;
   final Function(String, List<IdeaAttachment>)? onSubmit;
   final String? category;
+  // Tour keys
+  final GlobalKey? titleKey;
+  final GlobalKey? inputKey;
+  final GlobalKey? attachmentKey;
 
   const BrainstormBox({
     super.key,
@@ -32,6 +36,9 @@ class BrainstormBox extends StatefulWidget {
     this.submitText,
     this.onSubmit,
     this.category,
+    this.titleKey,
+    this.inputKey,
+    this.attachmentKey,
   });
 
   @override
@@ -449,27 +456,30 @@ class _BrainstormBoxState extends State<BrainstormBox>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Header
-                  Row(
-                    children: [
-                      const Icon(
-                        Icons.lightbulb_outline,
-                        color: AppColors.pastelAqua,
-                        size: AppConstants.iconMedium,
-                      ),
-                      const SizedBox(width: AppConstants.space8),
-                      Expanded(
-                        child: Text(
-                          widget.title,
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyLarge
-                              ?.copyWith(
-                                fontWeight: FontWeight.w800,
-                                color: AppColors.pastelAqua,
-                              ),
+                  KeyedSubtree(
+                    key: widget.titleKey,
+                    child: Row(
+                      children: [
+                        const Icon(
+                          Icons.lightbulb_outline,
+                          color: AppColors.pastelAqua,
+                          size: AppConstants.iconMedium,
                         ),
-                      ),
-                    ],
+                        const SizedBox(width: AppConstants.space8),
+                        Expanded(
+                          child: Text(
+                            widget.title,
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyLarge
+                                ?.copyWith(
+                                  fontWeight: FontWeight.w800,
+                                  color: AppColors.pastelAqua,
+                                ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                   const SizedBox(height: AppConstants.space8),
 
@@ -534,6 +544,7 @@ class _BrainstormBoxState extends State<BrainstormBox>
                       ),
                     ),
                     child: TextField(
+                      key: widget.inputKey,
                       controller: _controller,
                       maxLines: 4,
                       style: Theme.of(context)
@@ -553,6 +564,7 @@ class _BrainstormBoxState extends State<BrainstormBox>
 
                   // ── Attachment action bar ─────────────────────────────
                   Row(
+                    key: widget.attachmentKey,
                     children: [
                       _buildAttachBtn(
                         icon: Icons.photo_library_outlined,

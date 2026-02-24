@@ -36,7 +36,7 @@
   "planetCategoryPhysicalProperties": "Fyzikální vlastnosti",
   "planetCategoryPhysicalPropertiesDesc": "Půda, voda, vzduch",
 
-  "onboardingTitle1": "Tohle je realita. My to chceme změnit.",
+  "onboardingTitle1": "Tohle je realita. My to chceme změnit, ale potřebujeme Tvůj mozek!",
   "onboardingHighlight1": "",
   "onboardingDescription1": "Ke změně potřebujeme však tvůj mozek.",
 
@@ -391,5 +391,11 @@
   "updateInstallationSuccessTitle": "Aktualizace dokončena",
   "updateInstallationSuccessMsg": "NanoSolve Hive byl úspěšně aktualizován na nejnovější verzi.",
   "aboutVariantLiteBuild": "ENG",
-  "aboutVariantFullBuild": "Všechny jazyky"
+  "aboutVariantFullBuild": "Všechny jazyky",
+
+  "tourCategoryGridBody": "Klepnutím na libovolnou kartu prozkoumáte oblasť výzkumu a zveřejníte své nápady.",
+  "tourHumanPlanetBody": "Přepínejte mezi zdravím člověka a ekosystémem planety. Zveřejněte své nápady na řešení.",
+  "tourSourcesButtonBody": "Přístup k recenzovanému výzkumu, případným studiím a stažitelným zprávám podle kategorie dopadu.",
+  "tourResultsButtonBody": "Podívejte se na nápady komunity seřazené podle umělé inteligence. Odešlete své nápady sem, abyste soutěžili na žebříčku.",
+  "tourSettingsBody": "Spravujte svůj profil, jazyk a preference aplikace. Klepnutím upravte jazyk, možnosti sdílení a další."
 }

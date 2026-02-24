@@ -50,7 +50,7 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
   bool _initialPageSet = false; // Track if initial page has been set
   String? _resolvedPath; // The actual path used to open the PDF
   bool _pdfIsAsset = true; // Whether _resolvedPath is a Flutter asset
-  late int _actualEndPage; // Clamped endPage based on actual PDF page count
+  int _actualEndPage = 0; // Clamped endPage based on actual PDF page count; initialized on PDF load
 
   @override
   void initState() {
@@ -296,13 +296,14 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
       final sanitizedTitle =
           widget.title.replaceAll(RegExp(r'[^\w\s-]'), '').replaceAll(' ', '_');
 
-      final cacheDir = await getTemporaryDirectory();
+      // On iOS, use application documents directory (more persistent than temp)
+      final saveDir = await getApplicationDocumentsDirectory();
       final tempFile =
-          File('${cacheDir.path}/Nanoplastics_$sanitizedTitle.pdf');
+          File('${saveDir.path}/Nanoplastics_$sanitizedTitle.pdf');
       await tempFile.writeAsBytes(bytes);
 
       if (!await tempFile.exists()) {
-        throw Exception('Failed to create temporary PDF file');
+        throw Exception('Failed to create PDF file');
       }
 
       await Share.shareXFiles(
@@ -312,6 +313,13 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
 
       LoggerService().logUserAction('pdf_shared', params: {
         'title': widget.title,
+      });
+
+      // Clean up after share (with small delay to ensure share completes)
+      Future.delayed(const Duration(seconds: 2), () {
+        try {
+          tempFile.deleteSync();
+        } catch (_) {}
       });
     } catch (e) {
       LoggerService().logError('PDFShareFailed', e);
@@ -351,19 +359,35 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
       // Get PDF data from asset or local file
       final bytes = await _loadPdfBytes();
 
-      // Let user pick directory
-      String? selectedDirectory = await FilePicker.platform.getDirectoryPath();
+      // On iOS: use FilePicker.saveFile() to open Files app
+      // On Android: use getDirectoryPath() if available, else Documents directory
+      String? savePath;
 
-      if (selectedDirectory == null) {
+      if (Platform.isIOS) {
+        // iOS: use saveFile which opens Files app
+        final result = await FilePicker.platform.saveFile(
+          fileName: fileName,
+          bytes: bytes,
+          type: FileType.custom,
+          allowedExtensions: ['pdf'],
+        );
+        savePath = result;
+      } else {
+        // Android: let user pick directory
+        String? selectedDirectory = await FilePicker.platform.getDirectoryPath();
+        if (selectedDirectory != null) {
+          savePath = '$selectedDirectory/$fileName';
+          final file = File(savePath);
+          await file.writeAsBytes(bytes);
+        }
+      }
+
+      if (savePath == null) {
         LoggerService().logUserAction('pdf_download_cancelled', params: {
           'title': widget.title,
         });
         return;
       }
-
-      final savePath = '$selectedDirectory/$fileName';
-      final file = File(savePath);
-      await file.writeAsBytes(bytes);
 
       LoggerService().logUserAction('pdf_downloaded', params: {
         'title': widget.title,
@@ -384,15 +408,9 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
                   fileName,
                   style: const TextStyle(fontSize: 12),
                 ),
-                const SizedBox(height: 4),
-                Text(
-                  savePath,
-                  style: const TextStyle(fontSize: 10, color: Colors.white70),
-                  overflow: TextOverflow.ellipsis,
-                ),
               ],
             ),
-            duration: const Duration(seconds: 5),
+            duration: const Duration(seconds: 4),
           ),
         );
       }

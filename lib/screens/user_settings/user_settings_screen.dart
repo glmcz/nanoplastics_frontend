@@ -11,6 +11,7 @@ import '../../utils/app_theme_colors.dart';
 import '../../services/settings_manager.dart';
 import '../../services/update_service.dart';
 import '../../services/service_locator.dart';
+import '../../utils/responsive_config.dart';
 import 'user_profile.dart';
 import 'language_screen.dart';
 import 'privacy_security_screen.dart';
@@ -202,15 +203,30 @@ class _UserSettingsScreenState extends State<UserSettingsScreen>
     final spacing = AppSpacing.of(context);
     final sizing = AppSizing.of(context);
     final typography = AppTypography.of(context);
+    final responsive = ResponsiveConfig.fromContext(context);
 
-    return SingleChildScrollView(
-      padding: EdgeInsets.symmetric(
-        horizontal: spacing.contentPaddingH,
-        vertical: spacing.contentPaddingV * 7,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
+    // Adjust vertical padding: use smaller multiplier for normal/compact phones
+    final verticalPadding = spacing.contentPaddingV * (responsive.isBig ? 7 : 3);
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        debugPrint('=== SETTINGS CONTENT LAYOUT ===');
+        debugPrint('Screen width: ${MediaQuery.of(context).size.width}');
+        debugPrint('Screen height: ${MediaQuery.of(context).size.height}');
+        debugPrint('Available width: ${constraints.maxWidth}');
+        debugPrint('isBig: ${responsive.isBig}');
+        debugPrint('verticalPadding: $verticalPadding');
+        debugPrint('contentPaddingH: ${spacing.contentPaddingH}');
+        debugPrint('===============================');
+
+        return SingleChildScrollView(
+          padding: EdgeInsets.symmetric(
+            horizontal: spacing.contentPaddingH,
+            vertical: verticalPadding,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
           _buildTitleSection(typography),
           SizedBox(height: spacing.cardSpacing),
           _buildSettingItem(
@@ -264,35 +280,10 @@ class _UserSettingsScreenState extends State<UserSettingsScreen>
               context,
             ).push(MaterialPageRoute(builder: (_) => const AboutScreen())),
           ),
-          SizedBox(height: spacing.cardSpacing),
-          _buildSettingItem(
-            title: 'Multi language app switch',
-            icon: Icons.build_circle,
-            subtitle: '${_settingsManager.buildType} build',
-            color: AppColors.pastelAqua,
-            spacing: spacing,
-            sizing: sizing,
-            typography: typography,
-            onTap: () {
-              // TODO: Implement build type switcher
-              // This will allow users to switch between FULL and LITE builds
-              // by changing their build type identifier and downloading/deleting PDFs accordingly
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: const Text('Multi language switcher - Coming soon!'),
-                  backgroundColor: AppColors.pastelAqua.withValues(alpha: 0.9),
-                  behavior: SnackBarBehavior.floating,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(
-                      AppConstants.radiusMedium,
-                    ),
-                  ),
-                ),
-              );
-            },
-          ),
         ],
       ),
+        );
+      },
     );
   }
 

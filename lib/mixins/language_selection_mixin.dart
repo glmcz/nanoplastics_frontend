@@ -57,6 +57,7 @@ mixin LanguageSelectionMixin<T extends StatefulWidget> on State<T> {
       if (!mounted) return false;
 
       double progress = 0;
+      bool isCancelled = false;
       late StateSetter dialogSetState;
 
       showDialog(
@@ -95,6 +96,15 @@ mixin LanguageSelectionMixin<T extends StatefulWidget> on State<T> {
                   ),
                 ],
               ),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    isCancelled = true;
+                    if (mounted) Navigator.of(context).pop();
+                  },
+                  child: const Text('Cancel', style: TextStyle(color: Colors.red)),
+                ),
+              ],
             );
           },
         ),
@@ -103,9 +113,13 @@ mixin LanguageSelectionMixin<T extends StatefulWidget> on State<T> {
       await downloadReport(
         langCode,
         onProgress: (progressValue) {
-          dialogSetState(() => progress = progressValue);
+          if (!isCancelled && mounted) {
+            dialogSetState(() => progress = progressValue);
+          }
         },
       );
+
+      if (isCancelled) return false;
 
       if (mounted) {
         Navigator.of(context).pop();

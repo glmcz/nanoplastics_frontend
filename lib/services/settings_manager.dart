@@ -6,6 +6,7 @@ import 'encryption_service.dart';
 
 class SettingsManager {
   static const String _onboardingShownKey = 'onboarding_shown';
+  static const String _advisorTourShownKey = 'advisor_tour_shown';
   static const String _userLanguageKey = 'user_language';
   static const String _notificationsEnabledKey = 'notifications_enabled';
   static const String _userIdKey = 'user_id';
@@ -88,6 +89,18 @@ class SettingsManager {
   Future<void> setOnboardingShown(bool shown) async {
     _checkInitialized();
     await _prefs.setBool(_onboardingShownKey, shown);
+  }
+
+  /// Check if advisor tour has been shown
+  bool get hasShownAdvisorTour {
+    _checkInitialized();
+    return _prefs.getBool(_advisorTourShownKey) ?? false;
+  }
+
+  /// Set advisor tour as shown
+  Future<void> setAdvisorTourShown(bool shown) async {
+    _checkInitialized();
+    await _prefs.setBool(_advisorTourShownKey, shown);
   }
 
   /// Get user language preference

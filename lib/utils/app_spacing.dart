@@ -17,7 +17,7 @@ class AppSpacing {
 
   static AppSpacing of(BuildContext context) {
     final r = ResponsiveConfig.fromContext(context);
-    double a = 0;
+    double a = 1; // Default scale for normal-sized phones
     if (r.isBig) {
       a = 1;
     } else if (r.isCompact) {

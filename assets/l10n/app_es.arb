@@ -352,5 +352,11 @@
   "updateButtonUpdateNow": "Actualizar ahora",
   "updateDownloadInstructions": "Se abrirá la descarga de GitHub. Después de terminar, instala el APK desde tu carpeta de Descargas. Es posible que necesites permitir \"Instalar aplicaciones desconocidas.\"",
   "aboutVariantLiteBuild": "ENG",
-  "aboutVariantFullBuild": "Todos los Idiomas"
+  "aboutVariantFullBuild": "Todos los Idiomas",
+
+  "tourCategoryGridBody": "Toca cualquier tarjeta para explorar áreas de investigación y publica tus ideas.",
+  "tourHumanPlanetBody": "Cambia entre la salud humana y el ecosistema del planeta. Publica tus ideas para contribuir a las soluciones.",
+  "tourSourcesButtonBody": "Accede a investigaciones revisadas, estudios de casos e informes descargables por categoría de impacto.",
+  "tourResultsButtonBody": "Ver ideas de la comunidad clasificadas por IA. Envía tus ideas aquí para competir en la clasificación.",
+  "tourSettingsBody": "Administra tu perfil, idioma y preferencias de la aplicación. Toca para ajustar el idioma, opciones de uso compartido y más."
 }

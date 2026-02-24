@@ -15,6 +15,7 @@ import 'sources_screen.dart';
 import 'results_screen.dart';
 import 'user_settings/user_settings_screen.dart';
 import '../services/logger_service.dart';
+import '../services/extended_tour_service.dart';
 import '../utils/app_theme_colors.dart';
 
 enum ImpactType { human, planet }
@@ -30,6 +31,44 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   ImpactType _selectedTab = ImpactType.human;
+
+  // Tour GlobalKeys — each key is attached to the widget that the tour spotlights
+  final GlobalKey _tourLogoKey = GlobalKey(debugLabel: 'tour_logo');
+  final GlobalKey _tourCategoryGridKey =
+      GlobalKey(debugLabel: 'tour_category_grid');
+  final GlobalKey _tourHumanButtonKey = GlobalKey(debugLabel: 'tour_human');
+  final GlobalKey _tourPlanetButtonKey = GlobalKey(debugLabel: 'tour_planet');
+  final GlobalKey _tourHumanPlanetRowKey = GlobalKey(debugLabel: 'tour_human_planet_row');
+  final GlobalKey _tourSourcesButtonKey =
+      GlobalKey(debugLabel: 'tour_sources');
+  final GlobalKey _tourResultsButtonKey =
+      GlobalKey(debugLabel: 'tour_results');
+  final GlobalKey _tourCenterKnobKey = GlobalKey(debugLabel: 'tour_knob');
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance
+        .addPostFrameCallback((_) => _maybeLaunchTour());
+  }
+
+  Future<void> _maybeLaunchTour() async {
+    if (!mounted) return;
+    // Use extended tour service for multi-screen guided tour
+    await ExtendedTourService.showIfNeeded(
+      context,
+      ExtendedTourKeys(
+        logoKey: _tourLogoKey,
+        categoryGridKey: _tourCategoryGridKey,
+        humanButtonKey: _tourHumanButtonKey,
+        planetButtonKey: _tourPlanetButtonKey,
+        humanPlanetRowKey: _tourHumanPlanetRowKey,
+        sourcesButtonKey: _tourSourcesButtonKey,
+        resultsButtonKey: _tourResultsButtonKey,
+        centerKnobKey: _tourCenterKnobKey,
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +114,7 @@ class _MainScreenState extends State<MainScreen> {
                   )
                 : Container(
                     color: AppThemeColors.of(context).pageBackground.withValues(
-                        alpha: AppThemeColors.of(context).isDark ? 0.70 : 0.85),
+                        alpha: AppThemeColors.of(context).isDark ? 0.45 : 0.45),
                   ),
           ),
           // Main content
@@ -117,7 +156,7 @@ class _MainScreenState extends State<MainScreen> {
           vertical: spacing.contentPaddingV),
       child: Column(
         children: [
-          NanosolveLogo(height: sizing.logoHeightLg),
+          NanosolveLogo(key: _tourLogoKey, height: sizing.logoHeightLg),
           const SizedBox(height: AppConstants.space4),
           Text(
             _selectedTab == ImpactType.human ? l10n.tabHuman : l10n.tabPlanet,
@@ -290,6 +329,7 @@ class _MainScreenState extends State<MainScreen> {
     }
 
     return Padding(
+      key: _tourCategoryGridKey,
       padding: EdgeInsets.only(
         left: spacing.md * 1.5,
         right: spacing.md * 1.5,
@@ -349,46 +389,53 @@ class _MainScreenState extends State<MainScreen> {
                         // Top row: Human | Planet
                         Expanded(
                           child: Row(
+                            key: _tourHumanPlanetRowKey,
                             children: [
                               Expanded(
-                                child: _HubButton(
-                                  label: l10n.tabHuman,
-                                  icon: Icons.person_outline,
-                                  position: _HubButtonPosition.topLeft,
-                                  isActive: _selectedTab == ImpactType.human,
-                                  activeColor: AppColors.neonCyan,
-                                  textStyle: typography.hubLabel,
-                                  iconSize: sizing.hubButtonIconSize,
-                                  activeGlowBlur: sizing.hubActiveGlowBlur,
-                                  internalGap: spacing.hubButtonGap,
-                                  onTap: () {
-                                    setState(
-                                        () => _selectedTab = ImpactType.human);
-                                    LoggerService().logUserAction(
-                                        'tab_switched',
-                                        params: {'tab': 'human'});
-                                  },
+                                child: KeyedSubtree(
+                                  key: _tourHumanButtonKey,
+                                  child: _HubButton(
+                                    label: l10n.tabHuman,
+                                    icon: Icons.person_outline,
+                                    position: _HubButtonPosition.topLeft,
+                                    isActive: _selectedTab == ImpactType.human,
+                                    activeColor: AppColors.neonCyan,
+                                    textStyle: typography.hubLabel,
+                                    iconSize: sizing.hubButtonIconSize,
+                                    activeGlowBlur: sizing.hubActiveGlowBlur,
+                                    internalGap: spacing.hubButtonGap,
+                                    onTap: () {
+                                      setState(
+                                          () => _selectedTab = ImpactType.human);
+                                      LoggerService().logUserAction(
+                                          'tab_switched',
+                                          params: {'tab': 'human'});
+                                    },
+                                  ),
                                 ),
                               ),
                               SizedBox(width: spacing.hubGridGap),
                               Expanded(
-                                child: _HubButton(
-                                  label: l10n.tabPlanet,
-                                  icon: Icons.public_outlined,
-                                  position: _HubButtonPosition.topRight,
-                                  isActive: _selectedTab == ImpactType.planet,
-                                  activeColor: AppColors.neonOcean,
-                                  textStyle: typography.hubLabel,
-                                  iconSize: sizing.hubButtonIconSize,
-                                  activeGlowBlur: sizing.hubActiveGlowBlur,
-                                  internalGap: spacing.hubButtonGap,
-                                  onTap: () {
-                                    setState(
-                                        () => _selectedTab = ImpactType.planet);
-                                    LoggerService().logUserAction(
-                                        'tab_switched',
-                                        params: {'tab': 'planet'});
-                                  },
+                                child: KeyedSubtree(
+                                  key: _tourPlanetButtonKey,
+                                  child: _HubButton(
+                                    label: l10n.tabPlanet,
+                                    icon: Icons.public_outlined,
+                                    position: _HubButtonPosition.topRight,
+                                    isActive: _selectedTab == ImpactType.planet,
+                                    activeColor: AppColors.neonOcean,
+                                    textStyle: typography.hubLabel,
+                                    iconSize: sizing.hubButtonIconSize,
+                                    activeGlowBlur: sizing.hubActiveGlowBlur,
+                                    internalGap: spacing.hubButtonGap,
+                                    onTap: () {
+                                      setState(
+                                          () => _selectedTab = ImpactType.planet);
+                                      LoggerService().logUserAction(
+                                          'tab_switched',
+                                          params: {'tab': 'planet'});
+                                    },
+                                  ),
                                 ),
                               ),
                             ],
@@ -400,32 +447,38 @@ class _MainScreenState extends State<MainScreen> {
                           child: Row(
                             children: [
                               Expanded(
-                                child: _HubButton(
-                                  label: l10n.navSources,
-                                  icon: Icons.menu_book_outlined,
-                                  position: _HubButtonPosition.bottomLeft,
-                                  isActive: false,
-                                  activeColor: AppColors.pastelAqua,
-                                  textStyle: typography.hubLabel,
-                                  iconSize: sizing.hubButtonIconSize,
-                                  activeGlowBlur: sizing.hubActiveGlowBlur,
-                                  internalGap: spacing.hubButtonGap,
-                                  onTap: () => _navigateToResources(null),
+                                child: KeyedSubtree(
+                                  key: _tourSourcesButtonKey,
+                                  child: _HubButton(
+                                    label: l10n.navSources,
+                                    icon: Icons.menu_book_outlined,
+                                    position: _HubButtonPosition.bottomLeft,
+                                    isActive: false,
+                                    activeColor: AppColors.pastelAqua,
+                                    textStyle: typography.hubLabel,
+                                    iconSize: sizing.hubButtonIconSize,
+                                    activeGlowBlur: sizing.hubActiveGlowBlur,
+                                    internalGap: spacing.hubButtonGap,
+                                    onTap: () => _navigateToResources(null),
+                                  ),
                                 ),
                               ),
                               SizedBox(width: spacing.hubGridGap),
                               Expanded(
-                                child: _HubButton(
-                                  label: l10n.navResults,
-                                  icon: Icons.auto_graph_outlined,
-                                  position: _HubButtonPosition.bottomRight,
-                                  isActive: false,
-                                  activeColor: AppColors.pastelMint,
-                                  textStyle: typography.hubLabel,
-                                  iconSize: sizing.hubButtonIconSize,
-                                  activeGlowBlur: sizing.hubActiveGlowBlur,
-                                  internalGap: spacing.hubButtonGap,
-                                  onTap: () => _navigateToResults(),
+                                child: KeyedSubtree(
+                                  key: _tourResultsButtonKey,
+                                  child: _HubButton(
+                                    label: l10n.navResults,
+                                    icon: Icons.auto_graph_outlined,
+                                    position: _HubButtonPosition.bottomRight,
+                                    isActive: false,
+                                    activeColor: AppColors.pastelMint,
+                                    textStyle: typography.hubLabel,
+                                    iconSize: sizing.hubButtonIconSize,
+                                    activeGlowBlur: sizing.hubActiveGlowBlur,
+                                    internalGap: spacing.hubButtonGap,
+                                    onTap: () => _navigateToResults(),
+                                  ),
                                 ),
                               ),
                             ],
@@ -453,6 +506,7 @@ class _MainScreenState extends State<MainScreen> {
     final sizing = AppSizing.of(context);
 
     return Semantics(
+      key: _tourCenterKnobKey,
       button: true,
       label: 'Settings',
       child: InkWell(

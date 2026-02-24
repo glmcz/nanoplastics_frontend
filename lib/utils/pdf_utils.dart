@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:async';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 import '../config/build_config.dart';
@@ -63,9 +64,11 @@ Future<ResolvedPdf?> resolveMainReport([String? langCode]) async {
 /// Downloads the report for [langCode] and saves it locally.
 /// Calls [onProgress] with values 0.0–1.0 during download.
 /// Returns the local file path on success.
+/// Use [cancellationToken] to cancel the download from the UI.
 Future<String> downloadReport(
   String langCode, {
   void Function(double progress)? onProgress,
+  Completer<void>? cancellationToken,
 }) async {
   final code = langCode.toLowerCase();
   final url = _downloadUrl(code);
@@ -77,7 +80,8 @@ Future<String> downloadReport(
   }
 
   final request = http.Request('GET', Uri.parse(url));
-  final response = await http.Client().send(request);
+  final client = http.Client();
+  final response = await client.send(request);
 
   if (response.statusCode != 200) {
     throw HttpException('Failed to download report: ${response.statusCode}');
@@ -86,15 +90,45 @@ Future<String> downloadReport(
   final contentLength = response.contentLength ?? 0;
   final sink = File(localPath).openWrite();
   int received = 0;
+  final startTime = DateTime.now();
 
-  await for (final chunk in response.stream) {
-    sink.add(chunk);
-    received += chunk.length;
-    if (contentLength > 0 && onProgress != null) {
-      onProgress(received / contentLength);
+  try {
+    await for (final chunk in response.stream) {
+      // Check if download was cancelled via the token
+      if (cancellationToken?.isCompleted ?? false) {
+        await sink.close();
+        try {
+          await File(localPath).delete(); // Clean up partial file
+        } catch (_) {
+          // Ignore if file doesn't exist
+        }
+        throw Exception('Download cancelled');
+      }
+
+      sink.add(chunk);
+      received += chunk.length;
+
+      // Report progress
+      if (onProgress != null) {
+        if (contentLength > 0) {
+          // Use Content-Length if available
+          onProgress(received / contentLength);
+        } else {
+          // Fallback: estimate progress based on elapsed time (1-100%)
+          // After 100ms show at least 10%, gradually increase to avoid being stuck at 0
+          final elapsed = DateTime.now().difference(startTime).inMilliseconds;
+          if (elapsed < 500) {
+            onProgress(0.1 + (elapsed / 500) * 0.3); // 10% to 40% in first 500ms
+          } else {
+            onProgress(0.4 + (received / 1000000).clamp(0.0, 0.5)); // Up to 90%
+          }
+        }
+      }
     }
+  } finally {
+    await sink.close();
+    client.close();
   }
-  await sink.close();
 
   return localPath;
 }

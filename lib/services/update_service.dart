@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:in_app_update/in_app_update.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -718,12 +719,54 @@ class UpdateService {
     }
   }
 
+  /// Check if device has Android 12+ and request installation permission if needed
+  /// Returns true if permission is granted or device is below Android 12
+  /// Returns false if permission is denied
+  static const platform = MethodChannel('com.example.nanoplastics_app/update');
+
+  Future<bool> _checkAndRequestInstallPermission() async {
+    if (!Platform.isAndroid) return true;
+
+    try {
+      final int sdkVersion = await platform.invokeMethod<int>('getSdkVersion') ?? 0;
+
+      // Android 12+ (SDK 31+) requires REQUEST_INSTALL_PACKAGES permission
+      if (sdkVersion >= 31) {
+        final bool hasPermission =
+            await platform.invokeMethod<bool>('hasInstallPermission') ?? false;
+
+        if (!hasPermission) {
+          LoggerService().logUserAction(
+            'Install permission denied',
+            params: {'sdk_version': sdkVersion},
+          );
+          return false;
+        }
+      }
+      return true;
+    } catch (e) {
+      LoggerService().logError('Error checking install permission', e.toString());
+      // Assume we have permission and let the installer handle it
+      return true;
+    }
+  }
+
   /// Launch Android installer for APK file using android_package_installer
   /// Returns true if installer was launched successfully
   /// Note: Install state changes to 'installing' immediately
   /// UI should monitor app lifecycle to detect installation completion
   Future<bool> _launchApkInstaller(String filePath) async {
     try {
+      // Check installation permission on Android 12+ (SDK 31+)
+      if (!await _checkAndRequestInstallPermission()) {
+        LoggerService().logUserAction(
+          'APK installation blocked - missing permission',
+          params: {'path': filePath},
+        );
+        _notifyStateChange(UpdateState.failed);
+        return false;
+      }
+
       _notifyStateChange(UpdateState.installing);
 
       // Use android_package_installer for proper FileProvider support on Android 7.0+

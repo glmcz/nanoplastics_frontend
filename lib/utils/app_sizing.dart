@@ -74,7 +74,16 @@ class AppSizing {
   // landscape: scaleH ≈ 0.46 makes the result ~14px regardless of multiplier — use fixed value instead
   double get logoHeight =>
       isLandscape ? 21.0 : 70 * scaleH * compactScale * logoScale;
-  double get logoHeightLg => isLandscape ? 21.0 : logoHeight * 1.5;
+
+  /// Large logo for all screen headers.
+  /// On compact-height phones (≤860dp, e.g. 6.1" iPhone 16e) the 1.5× multiplier
+  /// would push the logo to ~87px while 6.5" phones get only ~58px — a 29px header
+  /// gap that shifts content toward the hub. Cap at logoHeight on short screens.
+  double get logoHeightLg {
+    if (isLandscape) return 21.0;
+    if (scaleH * 812 <= 860) return logoHeight; // skip the 1.5× boost on short screens
+    return logoHeight * 1.5;
+  }
 
   // ── Hero ──
 

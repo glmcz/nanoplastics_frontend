@@ -352,5 +352,11 @@
   "updateButtonUpdateNow": "Mettre à jour maintenant",
   "updateDownloadInstructions": "Cela ouvrira le téléchargement de GitHub. Une fois terminé, installez l'APK à partir de votre dossier Téléchargements. Vous devrez peut-être autoriser \"Installer des applications inconnues.\"",
   "aboutVariantLiteBuild": "ENG",
-  "aboutVariantFullBuild": "Toutes les langues"
+  "aboutVariantFullBuild": "Toutes les langues",
+
+  "tourCategoryGridBody": "Appuyez sur n'importe quelle carte pour explorer les domaines de recherche et publier vos idées.",
+  "tourHumanPlanetBody": "Basculez entre la santé humaine et l'écosystème planétaire. Publiez vos idées pour contribuer aux solutions.",
+  "tourSourcesButtonBody": "Accédez à des recherches examinées, des études de cas et des rapports téléchargeables par catégorie d'impact.",
+  "tourResultsButtonBody": "Afficher les idées de la communauté classées par IA. Soumettez vos idées ici pour concourir au classement.",
+  "tourSettingsBody": "Gérez votre profil, votre langue et vos préférences d'application. Appuyez pour ajuster la langue, les options de partage et plus encore."
 }

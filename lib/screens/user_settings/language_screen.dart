@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import '../../l10n/app_localizations.dart';
 import '../../config/app_colors.dart';
@@ -112,6 +113,8 @@ class _LanguageScreenState extends State<LanguageScreen> {
       if (!mounted) return false;
 
       double progress = 0;
+      final cancellationToken = Completer<void>();
+
       showDialog(
         context: context,
         barrierDismissible: false,
@@ -147,12 +150,27 @@ class _LanguageScreenState extends State<LanguageScreen> {
                   ),
                 ],
               ),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    // Trigger cancellation
+                    if (!cancellationToken.isCompleted) {
+                      cancellationToken.complete();
+                    }
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text(
+                    'CANCEL',
+                    style: TextStyle(color: AppColors.pastelMint),
+                  ),
+                ),
+              ],
             );
           },
         ),
       );
 
-      // Download with progress callback
+      // Download with progress callback and cancellation token
       await downloadReport(
         langCode,
         onProgress: (progressValue) {
@@ -161,6 +179,7 @@ class _LanguageScreenState extends State<LanguageScreen> {
             setState(() => progress = progressValue);
           }
         },
+        cancellationToken: cancellationToken,
       );
 
       // Close progress dialog

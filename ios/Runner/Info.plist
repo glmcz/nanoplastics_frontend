@@ -65,5 +65,12 @@
 	<!-- iCloud Documents — allow saving to iCloud if user chooses -->
 	<key>NSLocalizedDescription</key>
 	<string>Save and share PDF documents</string>
+	<!-- Email & URL schemes — required for mailto: and web links -->
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>mailto</string>
+		<string>http</string>
+		<string>https</string>
+	</array>
 </dict>
 </plist>

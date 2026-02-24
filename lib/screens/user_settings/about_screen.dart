@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show Clipboard, ClipboardData;
 import 'package:flutter_custom_tabs/flutter_custom_tabs.dart';
 import 'package:url_launcher/url_launcher.dart' as url_launcher;
 import 'package:qr_flutter/qr_flutter.dart';
@@ -181,7 +182,52 @@ class _AboutScreenState extends State<AboutScreen> {
             spacing: spacing,
             sizing: sizing,
             typography: typography,
-            onTap: () => url_launcher.launchUrl(Uri.parse('mailto:support@nanosolve.io')),
+            onTap: () async {
+              const email = 'support@nanosolve.io';
+              final Uri emailUri = Uri(scheme: 'mailto', path: email);
+              bool launched = false;
+              if (await url_launcher.canLaunchUrl(emailUri)) {
+                launched = await url_launcher.launchUrl(
+                  emailUri,
+                  mode: url_launcher.LaunchMode.externalApplication,
+                );
+              }
+              if (!launched && context.mounted) {
+                await showDialog<void>(
+                  context: context,
+                  builder: (ctx) => AlertDialog(
+                    backgroundColor: AppThemeColors.of(context).cardBackground,
+                    title: Text(
+                      'Contact Us',
+                      style: typography.title.copyWith(
+                          color: AppThemeColors.of(context).textMain),
+                    ),
+                    content: Text(
+                      email,
+                      style: typography.body
+                          .copyWith(color: AppColors.pastelMint),
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          Clipboard.setData(
+                              const ClipboardData(text: email));
+                          Navigator.of(ctx).pop();
+                        },
+                        child: const Text('COPY',
+                            style: TextStyle(color: AppColors.pastelMint)),
+                      ),
+                      TextButton(
+                        onPressed: () => Navigator.of(ctx).pop(),
+                        child: Text('CLOSE',
+                            style: TextStyle(
+                                color: AppThemeColors.of(context).textMuted)),
+                      ),
+                    ],
+                  ),
+                );
+              }
+            },
           ),
           SizedBox(height: spacing.cardSpacing * 2),
           _buildSectionTitle(

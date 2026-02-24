@@ -345,87 +345,89 @@ class _OnboardingScreenState extends State<OnboardingScreen>
   Widget _buildModalHeader() {
     final spacing = AppSpacing.of(context);
 
-    return Padding(
-      padding: EdgeInsets.all(spacing.lg),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          const Flexible(
-            child: FittedBox(
-              fit: BoxFit.scaleDown,
-              alignment: Alignment.centerLeft,
-              child: NanosolveLogo(height: AppConstants.logoMedium),
-            ),
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Padding(
+          padding: EdgeInsets.only(
+            left: spacing.lg,
+            right: spacing.lg,
+            top: spacing.lg,
+            bottom: spacing.sm,
           ),
-          Expanded(
-            child: Center(
-              child: _buildLanguageSelector(),
-            ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const Flexible(
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  alignment: Alignment.centerLeft,
+                  child: NanosolveLogo(height: AppConstants.logoMedium),
+                ),
+              ),
+              IconButton(
+                onPressed: _closeOnboarding,
+                icon: const Icon(Icons.close, size: 32),
+                color: AppThemeColors.of(context).textMuted,
+                hoverColor: AppColors.pastelAqua,
+              ),
+            ],
           ),
-          IconButton(
-            onPressed: _closeOnboarding,
-            icon: const Icon(Icons.close, size: 32),
-            color: AppThemeColors.of(context).textMuted,
-            hoverColor: AppColors.pastelAqua,
-          ),
-        ],
-      ),
+        ),
+        // Show language flags only on first slide
+        if (_currentPage == 0) _buildLanguageSelector(),
+      ],
     );
   }
 
   Widget _buildLanguageSelector() {
     final sizing = AppSizing.of(context);
-    return SizedBox(
-      height: sizing.minTouchTarget,
-      child: ListView.separated(
-        scrollDirection: Axis.horizontal,
-        shrinkWrap: true,
-        itemCount: LanguageSelectionMixin.supportedLanguages.length,
-        separatorBuilder: (_, __) => const SizedBox(width: 8),
-        itemBuilder: (context, index) {
-          final lang = LanguageSelectionMixin.supportedLanguages[index];
+    final spacing = AppSpacing.of(context);
+    final tc = AppThemeColors.of(context);
+
+    return Padding(
+      padding:
+          EdgeInsets.symmetric(horizontal: spacing.lg, vertical: spacing.xs),
+      child: Row(
+        children: LanguageSelectionMixin.supportedLanguages.map((lang) {
           final isSelected = selectedLanguage == lang['code'];
-          return GestureDetector(
-            onTap: () => selectLanguage(lang['code']!),
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 200),
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-              decoration: BoxDecoration(
-                color: isSelected
-                    ? AppColors.pastelAqua.withValues(alpha: 0.2)
-                    : Colors.transparent,
-                border: Border.all(
-                  color: isSelected
-                      ? AppColors.pastelAqua
-                      : AppThemeColors.of(context).textMuted.withValues(alpha: 0.3),
-                  width: isSelected ? 2 : 1,
-                ),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    lang['flag']!,
-                    style: TextStyle(fontSize: sizing.iconSm + 4),
-                  ),
-                  const SizedBox(width: 4),
-                  Text(
-                    lang['code']!.toUpperCase(),
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+          return Expanded(
+            child: Semantics(
+              button: true,
+              label: lang['name'],
+              selected: isSelected,
+              child: InkWell(
+                onTap: () => selectLanguage(lang['code']!),
+                borderRadius: BorderRadius.circular(AppConstants.radiusMedium),
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 200),
+                  height: sizing.minTouchTarget,
+                  decoration: BoxDecoration(
+                    color: isSelected
+                        ? AppColors.pastelAqua.withValues(alpha: 0.2)
+                        : Colors.transparent,
+                    border: Border.all(
                       color: isSelected
                           ? AppColors.pastelAqua
-                          : AppThemeColors.of(context).textMuted,
+                          : tc.textMuted.withValues(alpha: 0.3),
+                      width: isSelected ? 2 : 1,
+                    ),
+                    borderRadius:
+                        BorderRadius.circular(AppConstants.radiusMedium),
+                  ),
+                  child: Center(
+                    child: Text(
+                      lang['flag']!,
+                      style: TextStyle(fontSize: sizing.iconSm + 4),
                     ),
                   ),
-                ],
+                ),
               ),
             ),
           );
-        },
+        }).toList(),
       ),
     );
   }

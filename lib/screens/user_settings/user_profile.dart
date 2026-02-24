@@ -273,25 +273,6 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
           _buildSectionTitle(AppLocalizations.of(context)!.profileNotifications,
               AppColors.pastelAqua, spacing, typography),
           const SizedBox(height: AppConstants.space16),
-          _buildToggleItem(
-            title: AppLocalizations.of(context)!.profilePushNotifications,
-            subtitle:
-                AppLocalizations.of(context)!.profilePushNotificationsDesc,
-            icon: Icons.notifications_outlined,
-            value: _pushNotificationsEnabled,
-            color: AppColors.pastelAqua,
-            spacing: spacing,
-            sizing: sizing,
-            typography: typography,
-            onChanged: (value) {
-              setState(() {
-                _pushNotificationsEnabled = value;
-                _hasChanges = true;
-              });
-              _scheduleAutoSave();
-            },
-          ),
-          const SizedBox(height: AppConstants.space16),
           _buildDangerZone(spacing, sizing, typography),
           const SizedBox(height: AppConstants.space40),
         ],

@@ -148,15 +148,21 @@ class _ProfileRegistrationDialogState extends State<ProfileRegistrationDialog> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Title
-              Text(
-                'Join the Community',
-                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                      color: AppThemeColors.of(context).textMain,
-                      fontWeight: FontWeight.w900,
-                    ),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
+              // Title with shine effect
+              ShaderMask(
+                shaderCallback: (bounds) => const LinearGradient(
+                  colors: [AppColors.pastelMint, AppColors.pastelAqua],
+                ).createShader(bounds),
+                child: Text(
+                  'Join the Community',
+                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w900,
+                        letterSpacing: 0.5,
+                      ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
               const SizedBox(height: AppConstants.space8),
               Text(
