@@ -196,7 +196,8 @@ class ExtendedTourService {
         alignSkip: Alignment.topRight,
         contents: [
           TargetContent(
-            align: ContentAlign.bottom, // grid is at top of screen — always show below
+            align: ContentAlign
+                .bottom, // grid is at top of screen — always show below
             builder: (context, controller) => _TourTooltip(
               title: 'Impact Categories',
               body: AppLocalizations.of(context)!.tourCategoryGridBody,
@@ -283,320 +284,324 @@ class ExtendedTourService {
       ),
     ];
 
-      TutorialCoachMark(
-        targets: targets,
-        colorShadow: Colors.black,
-        opacityShadow: 0.85,
-        paddingFocus: 4,
-        focusAnimationDuration: const Duration(milliseconds: 300),
-        pulseAnimationDuration: const Duration(milliseconds: 800),
-        onFinish: () {
-          _currentStep = ExtendedTourStep.complete;
-          _onComplete?.call();
-        },
-        onSkip: () => true,
-      ).show(context: context);
-    }
+    TutorialCoachMark(
+      targets: targets,
+      colorShadow: Colors.black,
+      opacityShadow: 0.85,
+      paddingFocus: 4,
+      focusAnimationDuration: const Duration(milliseconds: 300),
+      pulseAnimationDuration: const Duration(milliseconds: 800),
+      onFinish: () {
+        _currentStep = ExtendedTourStep.complete;
+        _onComplete?.call();
+      },
+      onSkip: () => true,
+    ).show(context: context);
+  }
 
-    /// Show tour for brainstorm/idea posting screen
-    void showBrainstormTour(BuildContext context, ExtendedTourKeys keys) {
-      if (keys.brainstormTitleKey == null || keys.ideaInputKey == null) return;
+  /// Show tour for brainstorm/idea posting screen
+  void showBrainstormTour(BuildContext context, ExtendedTourKeys keys) {
+    if (keys.brainstormTitleKey == null || keys.ideaInputKey == null) return;
 
-      final typography = AppTypography.of(context);
-      final tc = AppThemeColors.of(context);
+    final typography = AppTypography.of(context);
+    final tc = AppThemeColors.of(context);
 
-      final targets = <TargetFocus>[
-        TargetFocus(
-          identify: 'tour_brainstorm_title',
-          keyTarget: keys.brainstormTitleKey!,
-          alignSkip: Alignment.topRight,
-          contents: [
-            TargetContent(
-              align: ContentAlign.top,
-              builder: (context, controller) => _TourTooltip(
-                title: 'Share Your Ideas',
-                body: 'Submit your innovative solutions to combat nanoplastic pollution.',
-                typography: typography,
-                tc: tc,
-                controller: controller,
-              ),
-            ),
-          ],
-        ),
-        TargetFocus(
-          identify: 'tour_idea_input',
-          keyTarget: keys.ideaInputKey!,
-          alignSkip: Alignment.topRight,
-          contents: [
-            TargetContent(
-              align: ContentAlign.top,
-              builder: (context, controller) => _TourTooltip(
-                title: 'Describe Your Idea',
-                body: 'Write a detailed description of your solution.',
-                typography: typography,
-                tc: tc,
-                controller: controller,
-              ),
-            ),
-          ],
-        ),
-        TargetFocus(
-          identify: 'tour_attachments',
-          keyTarget: keys.attachmentButtonKey ?? keys.ideaInputKey!,
-          alignSkip: Alignment.topRight,
-          contents: [
-            TargetContent(
-              align: ContentAlign.top,
-              builder: (context, controller) => _TourTooltip(
-                title: 'Add Evidence',
-                body: 'Attach photos, videos, or documents to support your idea.',
-                typography: typography,
-                tc: tc,
-                controller: controller,
-                isFinal: false,
-              ),
-            ),
-          ],
-        ),
-      ];
-
-      TutorialCoachMark(
-        targets: targets,
-        colorShadow: Colors.black,
-        opacityShadow: 0.85,
-        paddingFocus: 8,
-        focusAnimationDuration: const Duration(milliseconds: 300),
-        pulseAnimationDuration: const Duration(milliseconds: 800),
-        onFinish: () => nextScreen(context, keys),
-        onSkip: () => true,
-      ).show(context: context);
-    }
-
-    /// Show tour for sources screen
-    void showSourcesTour(BuildContext context, ExtendedTourKeys keys) {
-      if (keys.sourcesTitleKey == null || keys.searchBarKey == null) return;
-
-      final typography = AppTypography.of(context);
-      final tc = AppThemeColors.of(context);
-
-      final targets = <TargetFocus>[
-        TargetFocus(
-          identify: 'tour_sources_title',
-          keyTarget: keys.sourcesTitleKey!,
-          alignSkip: Alignment.topRight,
-          contents: [
-            TargetContent(
-              align: ContentAlign.top,
-              builder: (context, controller) => _TourTooltip(
-                title: 'Scientific References',
-                body: 'Access peer-reviewed research on nanoplastics.',
-                typography: typography,
-                tc: tc,
-                controller: controller,
-              ),
-            ),
-          ],
-        ),
-        TargetFocus(
-          identify: 'tour_search_bar',
-          keyTarget: keys.searchBarKey!,
-          alignSkip: Alignment.topRight,
-          contents: [
-            TargetContent(
-              align: ContentAlign.top,
-              builder: (context, controller) => _TourTooltip(
-                title: 'Search Sources',
-                body: 'Find references by impact category or keyword.',
-                typography: typography,
-                tc: tc,
-                controller: controller,
-              ),
-            ),
-          ],
-        ),
-        TargetFocus(
-          identify: 'tour_pdf_download',
-          keyTarget: keys.pdfDownloadKey ?? keys.searchBarKey!,
-          alignSkip: Alignment.topRight,
-          contents: [
-            TargetContent(
-              align: ContentAlign.top,
-              builder: (context, controller) => _TourTooltip(
-                title: 'Download Reports',
-                body: 'Download full research reports in your language.',
-                typography: typography,
-                tc: tc,
-                controller: controller,
-                isFinal: false,
-              ),
-            ),
-          ],
-        ),
-      ];
-
-      TutorialCoachMark(
-        targets: targets,
-        colorShadow: Colors.black,
-        opacityShadow: 0.85,
-        paddingFocus: 8,
-        focusAnimationDuration: const Duration(milliseconds: 300),
-        pulseAnimationDuration: const Duration(milliseconds: 800),
-        onFinish: () => nextScreen(context, keys),
-        onSkip: () => true,
-      ).show(context: context);
-    }
-
-    /// Show tour for leaderboard screen
-    void showLeaderboardTour(BuildContext context, ExtendedTourKeys keys) {
-      if (keys.leaderboardTitleKey == null || keys.solverCardKey == null) return;
-
-      final typography = AppTypography.of(context);
-      final tc = AppThemeColors.of(context);
-
-      final targets = <TargetFocus>[
-        TargetFocus(
-          identify: 'tour_leaderboard_title',
-          keyTarget: keys.leaderboardTitleKey!,
-          alignSkip: Alignment.topRight,
-          contents: [
-            TargetContent(
-              align: ContentAlign.top,
-              builder: (context, controller) => _TourTooltip(
-                title: 'Leaderboard',
-                body: 'Compete with other innovators to rank by contributions.',
-                typography: typography,
-                tc: tc,
-                controller: controller,
-              ),
-            ),
-          ],
-        ),
-        TargetFocus(
-          identify: 'tour_solver_card',
-          keyTarget: keys.solverCardKey!,
-          alignSkip: Alignment.topRight,
-          contents: [
-            TargetContent(
-              align: ContentAlign.top,
-              builder: (context, controller) => _TourTooltip(
-                title: 'Top Solvers',
-                body: 'See who is leading the community with their ideas.',
-                typography: typography,
-                tc: tc,
-                controller: controller,
-              ),
-            ),
-          ],
-        ),
-        TargetFocus(
-          identify: 'tour_rankings',
-          keyTarget: keys.rankingKey ?? keys.solverCardKey!,
-          alignSkip: Alignment.topRight,
-          contents: [
-            TargetContent(
-              align: ContentAlign.top,
-              builder: (context, controller) => _TourTooltip(
-                title: 'Earn Your Rank',
-                body: 'Submit quality ideas to climb the rankings and get recognized.',
-                typography: typography,
-                tc: tc,
-                controller: controller,
-                isFinal: false,
-              ),
-            ),
-          ],
-        ),
-      ];
-
-      TutorialCoachMark(
-        targets: targets,
-        colorShadow: Colors.black,
-        opacityShadow: 0.85,
-        paddingFocus: 8,
-        focusAnimationDuration: const Duration(milliseconds: 300),
-        pulseAnimationDuration: const Duration(milliseconds: 800),
-        onFinish: () => nextScreen(context, keys),
-        onSkip: () => true,
-      ).show(context: context);
-    }
-
-    /// Show tour for settings screen with QR code sharing
-    void showSettingsTour(BuildContext context, ExtendedTourKeys keys) {
-      if (keys.settingsTitleKey == null || keys.shareAppKey == null) return;
-
-      final typography = AppTypography.of(context);
-      final tc = AppThemeColors.of(context);
-
-      final targets = <TargetFocus>[
-        TargetFocus(
-          identify: 'tour_settings_title',
-          keyTarget: keys.settingsTitleKey!,
-          alignSkip: Alignment.topRight,
-          contents: [
-            TargetContent(
-              align: ContentAlign.top,
-              builder: (context, controller) => _TourTooltip(
-                title: 'Your Profile',
-                body: 'Manage your account and app settings.',
-                typography: typography,
-                tc: tc,
-                controller: controller,
-              ),
-            ),
-          ],
-        ),
-        TargetFocus(
-          identify: 'tour_share_app',
-          keyTarget: keys.shareAppKey!,
-          alignSkip: Alignment.topRight,
-          contents: [
-            TargetContent(
-              align: ContentAlign.top,
-              builder: (context, controller) => _TourTooltip(
-                title: 'Share with Others',
-                body: 'Scan QR code or share link to invite friends to join the community.',
-                typography: typography,
-                tc: tc,
-                controller: controller,
-              ),
-            ),
-          ],
-        ),
-        TargetFocus(
-          identify: 'tour_profile_section',
-          keyTarget: keys.profileSectionKey ?? keys.shareAppKey!,
-          alignSkip: Alignment.topRight,
-          contents: [
-            TargetContent(
-              align: ContentAlign.top,
-              builder: (context, controller) => _TourTooltip(
-                title: 'Tour Complete!',
-                body: 'You\'re ready to explore and contribute. Happy innovating!',
-                typography: typography,
-                tc: tc,
-                controller: controller,
-                isFinal: true,
-              ),
-            ),
-          ],
-        ),
-      ];
-
-      TutorialCoachMark(
-        targets: targets,
-        colorShadow: Colors.black,
-        opacityShadow: 0.85,
-        textSkip: 'SKIP TOUR',
+    final targets = <TargetFocus>[
+      TargetFocus(
+        identify: 'tour_brainstorm_title',
+        keyTarget: keys.brainstormTitleKey!,
         alignSkip: Alignment.topRight,
-        paddingFocus: 8,
-        focusAnimationDuration: const Duration(milliseconds: 300),
-        pulseAnimationDuration: const Duration(milliseconds: 800),
-        onFinish: () {
-          _currentStep = ExtendedTourStep.complete;
-          _onComplete?.call();
-        },
-        onSkip: () => true,
-      ).show(context: context);
+        contents: [
+          TargetContent(
+            align: ContentAlign.top,
+            builder: (context, controller) => _TourTooltip(
+              title: 'Share Your Ideas',
+              body:
+                  'Submit your innovative solutions to combat nanoplastic pollution.',
+              typography: typography,
+              tc: tc,
+              controller: controller,
+            ),
+          ),
+        ],
+      ),
+      TargetFocus(
+        identify: 'tour_idea_input',
+        keyTarget: keys.ideaInputKey!,
+        alignSkip: Alignment.topRight,
+        contents: [
+          TargetContent(
+            align: ContentAlign.top,
+            builder: (context, controller) => _TourTooltip(
+              title: 'Describe Your Idea',
+              body: 'Write a detailed description of your solution.',
+              typography: typography,
+              tc: tc,
+              controller: controller,
+            ),
+          ),
+        ],
+      ),
+      TargetFocus(
+        identify: 'tour_attachments',
+        keyTarget: keys.attachmentButtonKey ?? keys.ideaInputKey!,
+        alignSkip: Alignment.topRight,
+        contents: [
+          TargetContent(
+            align: ContentAlign.top,
+            builder: (context, controller) => _TourTooltip(
+              title: 'Add Evidence',
+              body: 'Attach photos, videos, or documents to support your idea.',
+              typography: typography,
+              tc: tc,
+              controller: controller,
+              isFinal: false,
+            ),
+          ),
+        ],
+      ),
+    ];
+
+    TutorialCoachMark(
+      targets: targets,
+      colorShadow: Colors.black,
+      opacityShadow: 0.85,
+      paddingFocus: 8,
+      focusAnimationDuration: const Duration(milliseconds: 300),
+      pulseAnimationDuration: const Duration(milliseconds: 800),
+      onFinish: () => nextScreen(context, keys),
+      onSkip: () => true,
+    ).show(context: context);
+  }
+
+  /// Show tour for sources screen
+  void showSourcesTour(BuildContext context, ExtendedTourKeys keys) {
+    if (keys.sourcesTitleKey == null || keys.searchBarKey == null) return;
+
+    final typography = AppTypography.of(context);
+    final tc = AppThemeColors.of(context);
+
+    final targets = <TargetFocus>[
+      TargetFocus(
+        identify: 'tour_sources_title',
+        keyTarget: keys.sourcesTitleKey!,
+        alignSkip: Alignment.topRight,
+        contents: [
+          TargetContent(
+            align: ContentAlign.top,
+            builder: (context, controller) => _TourTooltip(
+              title: 'Scientific References',
+              body: 'Access peer-reviewed research on nanoplastics.',
+              typography: typography,
+              tc: tc,
+              controller: controller,
+            ),
+          ),
+        ],
+      ),
+      TargetFocus(
+        identify: 'tour_search_bar',
+        keyTarget: keys.searchBarKey!,
+        alignSkip: Alignment.topRight,
+        contents: [
+          TargetContent(
+            align: ContentAlign.top,
+            builder: (context, controller) => _TourTooltip(
+              title: 'Search Sources',
+              body: 'Find references by impact category or keyword.',
+              typography: typography,
+              tc: tc,
+              controller: controller,
+            ),
+          ),
+        ],
+      ),
+      TargetFocus(
+        identify: 'tour_pdf_download',
+        keyTarget: keys.pdfDownloadKey ?? keys.searchBarKey!,
+        alignSkip: Alignment.topRight,
+        contents: [
+          TargetContent(
+            align: ContentAlign.top,
+            builder: (context, controller) => _TourTooltip(
+              title: 'Download Reports',
+              body: 'Download full research reports in your language.',
+              typography: typography,
+              tc: tc,
+              controller: controller,
+              isFinal: false,
+            ),
+          ),
+        ],
+      ),
+    ];
+
+    TutorialCoachMark(
+      targets: targets,
+      colorShadow: Colors.black,
+      opacityShadow: 0.85,
+      paddingFocus: 8,
+      focusAnimationDuration: const Duration(milliseconds: 300),
+      pulseAnimationDuration: const Duration(milliseconds: 800),
+      onFinish: () => nextScreen(context, keys),
+      onSkip: () => true,
+    ).show(context: context);
+  }
+
+  /// Show tour for leaderboard screen
+  void showLeaderboardTour(BuildContext context, ExtendedTourKeys keys) {
+    if (keys.leaderboardTitleKey == null || keys.solverCardKey == null) return;
+
+    final typography = AppTypography.of(context);
+    final tc = AppThemeColors.of(context);
+
+    final targets = <TargetFocus>[
+      TargetFocus(
+        identify: 'tour_leaderboard_title',
+        keyTarget: keys.leaderboardTitleKey!,
+        alignSkip: Alignment.topRight,
+        contents: [
+          TargetContent(
+            align: ContentAlign.top,
+            builder: (context, controller) => _TourTooltip(
+              title: 'Leaderboard',
+              body: 'Compete with other innovators to rank by contributions.',
+              typography: typography,
+              tc: tc,
+              controller: controller,
+            ),
+          ),
+        ],
+      ),
+      TargetFocus(
+        identify: 'tour_solver_card',
+        keyTarget: keys.solverCardKey!,
+        alignSkip: Alignment.topRight,
+        contents: [
+          TargetContent(
+            align: ContentAlign.top,
+            builder: (context, controller) => _TourTooltip(
+              title: 'Top Solvers',
+              body: 'See who is leading the community with their ideas.',
+              typography: typography,
+              tc: tc,
+              controller: controller,
+            ),
+          ),
+        ],
+      ),
+      TargetFocus(
+        identify: 'tour_rankings',
+        keyTarget: keys.rankingKey ?? keys.solverCardKey!,
+        alignSkip: Alignment.topRight,
+        contents: [
+          TargetContent(
+            align: ContentAlign.top,
+            builder: (context, controller) => _TourTooltip(
+              title: 'Earn Your Rank',
+              body:
+                  'Submit quality ideas to climb the rankings and get recognized.',
+              typography: typography,
+              tc: tc,
+              controller: controller,
+              isFinal: false,
+            ),
+          ),
+        ],
+      ),
+    ];
+
+    TutorialCoachMark(
+      targets: targets,
+      colorShadow: Colors.black,
+      opacityShadow: 0.85,
+      paddingFocus: 8,
+      focusAnimationDuration: const Duration(milliseconds: 300),
+      pulseAnimationDuration: const Duration(milliseconds: 800),
+      onFinish: () => nextScreen(context, keys),
+      onSkip: () => true,
+    ).show(context: context);
+  }
+
+  /// Show tour for settings screen with QR code sharing
+  void showSettingsTour(BuildContext context, ExtendedTourKeys keys) {
+    if (keys.settingsTitleKey == null || keys.shareAppKey == null) return;
+
+    final typography = AppTypography.of(context);
+    final tc = AppThemeColors.of(context);
+
+    final targets = <TargetFocus>[
+      TargetFocus(
+        identify: 'tour_settings_title',
+        keyTarget: keys.settingsTitleKey!,
+        alignSkip: Alignment.topRight,
+        contents: [
+          TargetContent(
+            align: ContentAlign.top,
+            builder: (context, controller) => _TourTooltip(
+              title: 'Your Profile',
+              body: 'Manage your account and app settings.',
+              typography: typography,
+              tc: tc,
+              controller: controller,
+            ),
+          ),
+        ],
+      ),
+      TargetFocus(
+        identify: 'tour_share_app',
+        keyTarget: keys.shareAppKey!,
+        alignSkip: Alignment.topRight,
+        contents: [
+          TargetContent(
+            align: ContentAlign.top,
+            builder: (context, controller) => _TourTooltip(
+              title: 'Share with Others',
+              body:
+                  'Scan QR code or share link to invite friends to join the community.',
+              typography: typography,
+              tc: tc,
+              controller: controller,
+            ),
+          ),
+        ],
+      ),
+      TargetFocus(
+        identify: 'tour_profile_section',
+        keyTarget: keys.profileSectionKey ?? keys.shareAppKey!,
+        alignSkip: Alignment.topRight,
+        contents: [
+          TargetContent(
+            align: ContentAlign.top,
+            builder: (context, controller) => _TourTooltip(
+              title: 'Tour Complete!',
+              body:
+                  'You\'re ready to explore and contribute. Happy innovating!',
+              typography: typography,
+              tc: tc,
+              controller: controller,
+              isFinal: true,
+            ),
+          ),
+        ],
+      ),
+    ];
+
+    TutorialCoachMark(
+      targets: targets,
+      colorShadow: Colors.black,
+      opacityShadow: 0.85,
+      textSkip: 'SKIP TOUR',
+      alignSkip: Alignment.topRight,
+      paddingFocus: 8,
+      focusAnimationDuration: const Duration(milliseconds: 300),
+      pulseAnimationDuration: const Duration(milliseconds: 800),
+      onFinish: () {
+        _currentStep = ExtendedTourStep.complete;
+        _onComplete?.call();
+      },
+      onSkip: () => true,
+    ).show(context: context);
   }
 }
 
@@ -685,7 +690,8 @@ class _TourTooltip extends StatelessWidget {
               children: [
                 TextButton(
                   style: TextButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     minimumSize: Size.zero,
                     tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   ),
@@ -701,7 +707,8 @@ class _TourTooltip extends StatelessWidget {
                 const Spacer(),
                 TextButton(
                   style: TextButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     minimumSize: Size.zero,
                     tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   ),

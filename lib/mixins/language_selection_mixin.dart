@@ -102,7 +102,8 @@ mixin LanguageSelectionMixin<T extends StatefulWidget> on State<T> {
                     isCancelled = true;
                     if (mounted) Navigator.of(context).pop();
                   },
-                  child: const Text('Cancel', style: TextStyle(color: Colors.red)),
+                  child:
+                      const Text('Cancel', style: TextStyle(color: Colors.red)),
                 ),
               ],
             );

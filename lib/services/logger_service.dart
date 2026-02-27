@@ -265,10 +265,10 @@ class LoggerService {
     String level = 'INFO',
   ]) {
     final timestamp = DateTime.now().toIso8601String();
-    print('[$timestamp] [$level] $title: $message');
+    debugPrint('[$timestamp] [$level] $title: $message');
 
     if (stackTrace != null && kDebugMode) {
-      print('StackTrace:\n$stackTrace');
+      debugPrint('StackTrace:\n$stackTrace');
     }
   }
 

@@ -37,7 +37,7 @@ Future<void> generateLogoPNG({
   if (bytes != null) {
     final file = File(outputPath);
     await file.writeAsBytes(bytes.buffer.asUint8List());
-    print('Logo PNG generated at: $outputPath');
+    debugPrint('Logo PNG generated at: $outputPath');
   }
 }
 

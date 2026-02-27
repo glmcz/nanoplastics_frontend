@@ -50,7 +50,8 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
   bool _initialPageSet = false; // Track if initial page has been set
   String? _resolvedPath; // The actual path used to open the PDF
   bool _pdfIsAsset = true; // Whether _resolvedPath is a Flutter asset
-  int _actualEndPage = 0; // Clamped endPage based on actual PDF page count; initialized on PDF load
+  int _actualEndPage =
+      0; // Clamped endPage based on actual PDF page count; initialized on PDF load
 
   @override
   void initState() {
@@ -298,8 +299,7 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
 
       // On iOS, use application documents directory (more persistent than temp)
       final saveDir = await getApplicationDocumentsDirectory();
-      final tempFile =
-          File('${saveDir.path}/Nanoplastics_$sanitizedTitle.pdf');
+      final tempFile = File('${saveDir.path}/Nanoplastics_$sanitizedTitle.pdf');
       await tempFile.writeAsBytes(bytes);
 
       if (!await tempFile.exists()) {
@@ -374,7 +374,8 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
         savePath = result;
       } else {
         // Android: let user pick directory
-        String? selectedDirectory = await FilePicker.platform.getDirectoryPath();
+        String? selectedDirectory =
+            await FilePicker.platform.getDirectoryPath();
         if (selectedDirectory != null) {
           savePath = '$selectedDirectory/$fileName';
           final file = File(savePath);
@@ -438,8 +439,10 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
             center: Alignment.topCenter,
             radius: 1.5,
             colors: [
-              AppColors.pastelAqua.withValues(alpha: AppThemeColors.of(context).pastelAlpha),
-              AppColors.pastelLavender.withValues(alpha: AppThemeColors.of(context).pastelAlpha),
+              AppColors.pastelAqua
+                  .withValues(alpha: AppThemeColors.of(context).pastelAlpha),
+              AppColors.pastelLavender
+                  .withValues(alpha: AppThemeColors.of(context).pastelAlpha),
               AppThemeColors.of(context).gradientEnd,
             ],
             stops: const [0.0, 0.4, 1.0],
@@ -503,7 +506,8 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Icon(Icons.arrow_back_ios,
-                            color: AppThemeColors.of(context).textMain, size: sizing.backIcon),
+                            color: AppThemeColors.of(context).textMain,
+                            size: sizing.backIcon),
                         const SizedBox(width: AppConstants.space4),
                         Flexible(
                           child: Text(
@@ -542,14 +546,16 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
                       ),
                       border: InputBorder.none,
                       isDense: true,
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 10),
+                      contentPadding:
+                          const EdgeInsets.symmetric(horizontal: 10),
                     ),
                   ),
                 ),
               ],
             ),
             SizedBox(height: spacing.headerSpacing),
-            NanosolveLogo(height: isPortrait ? sizing.logoHeightLg : sizing.logoHeight),
+            NanosolveLogo(
+                height: isPortrait ? sizing.logoHeightLg : sizing.logoHeight),
           ],
         ),
       ),

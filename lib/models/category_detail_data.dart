@@ -3,7 +3,8 @@ import '../config/app_colors.dart';
 import '../l10n/app_localizations.dart';
 
 class CategoryDetailData {
-  final String categoryKey; // stable, language-agnostic key (matches CategoryData.id)
+  final String
+      categoryKey; // stable, language-agnostic key (matches CategoryData.id)
   final String title;
   final String subtitle;
   final IconData icon;

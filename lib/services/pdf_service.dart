@@ -3,7 +3,6 @@ import '../screens/pdf_viewer_screen.dart';
 import '../config/backend_config.dart';
 import 'settings_manager.dart';
 import 'logger_service.dart';
-import 'service_locator.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:path_provider/path_provider.dart';
@@ -48,20 +47,15 @@ class PdfService {
     }
   }
 
-  /// Open PDF from unified documents directory or download if needed
-  /// All PDFs are stored in the same directory (bundled on init, downloaded on demand)
-  Future<void> openPdf({
-    required BuildContext context,
-    required String title,
-    required String description,
-    required int startPage,
-    required int endPage,
-    String? language,
+  /// Resolve PDF file from unified documents directory or download if needed
+  /// Returns the File if successful, null if unable to resolve
+  /// This is a pure service method with no UI dependencies
+  Future<File?> resolvePdf({
+    required String language,
   }) async {
-    // Use provided language or current user language
-    final lang = language ?? settingsManager.userLanguage;
-
     try {
+      final lang = language;
+
       // Check if PDF exists in unified documents directory
       final pdf = await settingsManager.getPdfForLanguage(lang);
 
@@ -71,121 +65,30 @@ class PdfService {
       );
 
       if (pdf != null && await pdf.exists()) {
-        // PDF exists, open immediately
+        // PDF exists, return it
         LoggerService().logDebug(
-          'pdf_open',
-          'Opening PDF for language: $lang',
+          'pdf_resolve_success',
+          'Resolved PDF for language: $lang',
         );
-        _navigateToPdfViewer(
-          context,
-          title,
-          description,
-          startPage,
-          endPage,
-          pdf.path,
-        );
+        return pdf;
       } else {
-        // PDF not available, download it
+        // PDF not available, try to download it
         LoggerService().logDebug(
           'pdf_download_needed',
           'PDF not available, downloading: $lang',
         );
-        await _downloadAndOpenPdf(
-          context,
-          title,
-          description,
-          startPage,
-          endPage,
-          lang,
-        );
+        final success = await downloadPdfFromBackend(lang);
+        if (success) {
+          return await settingsManager.getPdfForLanguage(lang);
+        }
+        return null;
       }
     } catch (e) {
       LoggerService().logError(
-        'pdf_open_failed',
-        'Error opening PDF: $e',
+        'pdf_resolve_failed',
+        'Error resolving PDF: $e',
       );
-      _showErrorDialog(context, 'Failed to open PDF: $e');
-    }
-  }
-
-  /// Download PDF and open after successful download
-  Future<void> _downloadAndOpenPdf(
-    BuildContext context,
-    String title,
-    String description,
-    int startPage,
-    int endPage,
-    String language,
-  ) async {
-    if (!context.mounted) return;
-
-    // Show loading dialog with progress indicator
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (dialogContext) => AlertDialog(
-        title: Text('Downloading $language PDF'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const SizedBox(height: 16),
-            const CircularProgressIndicator(),
-            const SizedBox(height: 16),
-            Text(
-              'Please wait...',
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
-          ],
-        ),
-      ),
-    );
-
-    try {
-      // Download PDF
-      final success =
-          await ServiceLocator().pdfService.downloadPdfFromBackend(language);
-
-      if (!context.mounted) return;
-
-      // Close loading dialog
-      Navigator.of(context).pop();
-
-      if (success) {
-        // Download succeeded, get the file and open
-        final pdf = await settingsManager.getPdfForLanguage(language);
-
-        if (pdf != null && await pdf.exists()) {
-          if (context.mounted) {
-            _navigateToPdfViewer(
-              context,
-              title,
-              description,
-              startPage,
-              endPage,
-              pdf.path,
-            );
-          }
-        }
-      } else {
-        // Download failed
-        if (context.mounted) {
-          _showErrorDialog(
-            context,
-            'Failed to download $language PDF. Please check your internet connection and try again.',
-          );
-        }
-      }
-    } catch (e) {
-      if (context.mounted) {
-        Navigator.of(context).pop(); // Close loading dialog
-        _showErrorDialog(context, 'Error downloading PDF: $e');
-      }
-
-      // Log error
-      LoggerService().logError(
-        'pdf_download_failed',
-        'Language: $language, Error: $e',
-      );
+      return null;
     }
   }
 
@@ -379,6 +282,7 @@ class PdfService {
       }
 
       // Open the cached file
+      if (!context.mounted) return;
       _navigateToPdfViewer(
         context,
         title,
@@ -392,6 +296,7 @@ class PdfService {
         'asset_pdf_open_failed',
         'Error opening PDF from asset $assetPath: $e',
       );
+      if (!context.mounted) return;
       _showErrorDialog(context, 'Failed to open PDF: $e');
     }
   }

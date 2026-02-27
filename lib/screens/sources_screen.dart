@@ -13,6 +13,7 @@ import '../services/logger_service.dart';
 import '../services/settings_manager.dart';
 import '../services/service_locator.dart';
 import '../utils/app_theme_colors.dart';
+import 'pdf_viewer_screen.dart';
 
 enum SourceType { webLinks, videoLinks }
 
@@ -48,8 +49,10 @@ class _SourcesScreenState extends State<SourcesScreen> {
             center: Alignment.topCenter,
             radius: 1.5,
             colors: [
-              AppColors.pastelAqua.withValues(alpha: AppThemeColors.of(context).pastelAlpha),
-              AppColors.pastelLavender.withValues(alpha: AppThemeColors.of(context).pastelAlpha),
+              AppColors.pastelAqua
+                  .withValues(alpha: AppThemeColors.of(context).pastelAlpha),
+              AppColors.pastelLavender
+                  .withValues(alpha: AppThemeColors.of(context).pastelAlpha),
               AppThemeColors.of(context).gradientEnd,
             ],
             stops: const [0.0, 0.4, 1.0],
@@ -105,7 +108,8 @@ class _SourcesScreenState extends State<SourcesScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Icon(Icons.arrow_back_ios,
-                      color: AppThemeColors.of(context).textMain, size: sizing.backIcon),
+                      color: AppThemeColors.of(context).textMain,
+                      size: sizing.backIcon),
                   const SizedBox(width: AppConstants.space4),
                   Flexible(
                     child: Text(
@@ -135,19 +139,34 @@ class _SourcesScreenState extends State<SourcesScreen> {
     final typography = AppTypography.of(context);
 
     return GestureDetector(
-      onTap: () {
+      onTap: () async {
         LoggerService().logUserAction('main_report_opened', params: {
           'report': 'nanoplastics_main_report',
         });
 
-        ServiceLocator().pdfService.openPdf(
-              context: context,
-              title: 'Nanoplastics: Global Report',
-              description:
-                  'The comprehensive global report on nanoplastics pollution and its effects',
-              startPage: 1,
-              endPage: 198,
+        final pdf = await ServiceLocator().pdfService.resolvePdf(
+              language: ServiceLocator().settingsManager.userLanguage,
             );
+        if (!context.mounted) return;
+
+        if (pdf != null) {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (_) => PDFViewerScreen(
+                title: 'Nanoplastics: Global Report',
+                pdfPath: pdf.path,
+                startPage: 1,
+                endPage: 198,
+                description:
+                    'The comprehensive global report on nanoplastics pollution and its effects',
+              ),
+            ),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Failed to load PDF')),
+          );
+        }
       },
       child: Container(
         margin: EdgeInsets.symmetric(
@@ -169,7 +188,8 @@ class _SourcesScreenState extends State<SourcesScreen> {
               AppColors.pastelMint.withValues(alpha: 0.1),
             ],
           ),
-          border: Border.all(color: AppColors.pastelAqua.withValues(alpha: 0.35)),
+          border:
+              Border.all(color: AppColors.pastelAqua.withValues(alpha: 0.35)),
           borderRadius: BorderRadius.circular(AppConstants.radiusXL),
           boxShadow: [
             BoxShadow(
@@ -425,7 +445,8 @@ class _SourcesScreenState extends State<SourcesScreen> {
       onTap: onTap,
       child: Container(
         decoration: BoxDecoration(
-          color: AppThemeColors.of(context).cardBackground.withValues(alpha: 0.85),
+          color:
+              AppThemeColors.of(context).cardBackground.withValues(alpha: 0.85),
           border: Border.all(
             color: isExpanded
                 ? AppColors.pastelAqua.withValues(alpha: 0.3)
@@ -561,7 +582,8 @@ class _SourcesScreenState extends State<SourcesScreen> {
         margin: EdgeInsets.only(bottom: spacing.cardSpacing),
         padding: EdgeInsets.all(spacing.cardPadding),
         decoration: BoxDecoration(
-          color: AppThemeColors.of(context).cardBackground.withValues(alpha: 0.85),
+          color:
+              AppThemeColors.of(context).cardBackground.withValues(alpha: 0.85),
           border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
           borderRadius: BorderRadius.circular(AppConstants.radiusLarge),
         ),
@@ -634,7 +656,8 @@ class _SourcesScreenState extends State<SourcesScreen> {
             Text(
               '#$number',
               style: typography.label.copyWith(
-                color: AppThemeColors.of(context).textMuted.withValues(alpha: 0.5),
+                color:
+                    AppThemeColors.of(context).textMuted.withValues(alpha: 0.5),
               ),
             ),
           ],
@@ -651,7 +674,7 @@ class _SourcesScreenState extends State<SourcesScreen> {
     required AppTypography typography,
   }) {
     return GestureDetector(
-      onTap: () {
+      onTap: () async {
         LoggerService().logUserAction('pdf_source_clicked', params: {
           'source': source.title,
           'startPage': source.startPage,
@@ -669,14 +692,29 @@ class _SourcesScreenState extends State<SourcesScreen> {
                 endPage: source.endPage,
               );
         } else {
-          // Use openPdf for standard language-based reports
-          ServiceLocator().pdfService.openPdf(
-                context: context,
-                title: source.title,
-                description: source.description,
-                startPage: source.startPage,
-                endPage: source.endPage,
+          // Use resolvePdf for standard language-based reports
+          final pdf = await ServiceLocator().pdfService.resolvePdf(
+                language: ServiceLocator().settingsManager.userLanguage,
               );
+          if (!context.mounted) return;
+
+          if (pdf != null) {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (_) => PDFViewerScreen(
+                  title: source.title,
+                  pdfPath: pdf.path,
+                  startPage: source.startPage,
+                  endPage: source.endPage,
+                  description: source.description,
+                ),
+              ),
+            );
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Failed to load PDF')),
+            );
+          }
         }
       },
       child: Container(
@@ -684,7 +722,8 @@ class _SourcesScreenState extends State<SourcesScreen> {
         margin: EdgeInsets.only(bottom: spacing.cardSpacing),
         padding: EdgeInsets.all(spacing.cardPadding),
         decoration: BoxDecoration(
-          color: AppThemeColors.of(context).cardBackground.withValues(alpha: 0.85),
+          color:
+              AppThemeColors.of(context).cardBackground.withValues(alpha: 0.85),
           border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
           borderRadius: BorderRadius.circular(AppConstants.radiusLarge),
         ),
@@ -741,7 +780,9 @@ class _SourcesScreenState extends State<SourcesScreen> {
                 Text(
                   '#$number',
                   style: typography.label.copyWith(
-                    color: AppThemeColors.of(context).textMuted.withValues(alpha: 0.5),
+                    color: AppThemeColors.of(context)
+                        .textMuted
+                        .withValues(alpha: 0.5),
                   ),
                 ),
                 SizedBox(height: spacing.md),

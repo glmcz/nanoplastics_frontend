@@ -13,6 +13,7 @@ import '../../widgets/nanosolve_logo.dart';
 import '../../widgets/glowing_header_separator.dart';
 import '../../main.dart';
 import '../../utils/app_theme_colors.dart';
+import '../pdf_viewer_screen.dart';
 
 class LanguageScreen extends StatefulWidget {
   final Function(Locale)? onLanguageChanged;
@@ -89,17 +90,31 @@ class _LanguageScreenState extends State<LanguageScreen> {
 
       // After restart, navigate to PDF viewer for non-EN languages in LITE build
       if (code != 'en' && _settingsManager.buildType == 'LITE') {
-        Future.delayed(const Duration(milliseconds: 500), () {
+        Future.delayed(const Duration(milliseconds: 500), () async {
           if (mounted) {
             final langName = _languages.firstWhere((l) => l.code == code).name;
-            ServiceLocator().pdfService.openPdf(
-                  context: context,
-                  title: langName,
-                  description: 'Language report for $langName',
-                  startPage: 1,
-                  endPage: 198,
+            final pdf = await ServiceLocator().pdfService.resolvePdf(
                   language: code,
                 );
+            if (!mounted) return;
+
+            if (pdf != null) {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (_) => PDFViewerScreen(
+                    title: langName,
+                    pdfPath: pdf.path,
+                    startPage: 1,
+                    endPage: 198,
+                    description: 'Language report for $langName',
+                  ),
+                ),
+              );
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Failed to load PDF')),
+              );
+            }
           }
         });
       }
@@ -242,8 +257,10 @@ class _LanguageScreenState extends State<LanguageScreen> {
             center: Alignment.topCenter,
             radius: 1.5,
             colors: [
-              AppColors.pastelAqua.withValues(alpha: AppThemeColors.of(context).pastelAlpha),
-              AppColors.pastelMint.withValues(alpha: AppThemeColors.of(context).pastelAlpha),
+              AppColors.pastelAqua
+                  .withValues(alpha: AppThemeColors.of(context).pastelAlpha),
+              AppColors.pastelMint
+                  .withValues(alpha: AppThemeColors.of(context).pastelAlpha),
               AppThemeColors.of(context).gradientEnd,
             ],
             stops: const [0.0, 0.4, 1.0],
@@ -293,7 +310,8 @@ class _LanguageScreenState extends State<LanguageScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Icon(Icons.arrow_back_ios,
-                      color: AppThemeColors.of(context).textMain, size: sizing.backIcon),
+                      color: AppThemeColors.of(context).textMain,
+                      size: sizing.backIcon),
                   const SizedBox(width: AppConstants.space4),
                   Flexible(
                     child: Text(
@@ -394,7 +412,9 @@ class _LanguageScreenState extends State<LanguageScreen> {
         decoration: BoxDecoration(
           color: isSelected
               ? AppColors.pastelAqua.withValues(alpha: 0.15)
-              : AppThemeColors.of(context).cardBackground.withValues(alpha: 0.8),
+              : AppThemeColors.of(context)
+                  .cardBackground
+                  .withValues(alpha: 0.8),
           borderRadius: BorderRadius.circular(AppConstants.radiusLarge),
           border: Border.all(
             color: isSelected
@@ -427,7 +447,9 @@ class _LanguageScreenState extends State<LanguageScreen> {
                     language.name,
                     style: typography.title.copyWith(
                       fontWeight: FontWeight.w700,
-                      color: isSelected ? AppColors.pastelAqua : AppThemeColors.of(context).textMain,
+                      color: isSelected
+                          ? AppColors.pastelAqua
+                          : AppThemeColors.of(context).textMain,
                     ),
                   ),
                   const SizedBox(height: 4),

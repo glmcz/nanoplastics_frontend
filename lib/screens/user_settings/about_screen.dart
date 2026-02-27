@@ -69,8 +69,10 @@ class _AboutScreenState extends State<AboutScreen> {
             center: Alignment.topCenter,
             radius: 1.5,
             colors: [
-              AppColors.pastelLavender.withValues(alpha: AppThemeColors.of(context).pastelAlpha),
-              AppColors.pastelAqua.withValues(alpha: AppThemeColors.of(context).pastelAlpha),
+              AppColors.pastelLavender
+                  .withValues(alpha: AppThemeColors.of(context).pastelAlpha),
+              AppColors.pastelAqua
+                  .withValues(alpha: AppThemeColors.of(context).pastelAlpha),
               AppThemeColors.of(context).gradientEnd,
             ],
             stops: const [0.0, 0.4, 1.0],
@@ -116,7 +118,8 @@ class _AboutScreenState extends State<AboutScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Icon(Icons.arrow_back_ios,
-                      color: AppThemeColors.of(context).textMain, size: sizing.backIcon),
+                      color: AppThemeColors.of(context).textMain,
+                      size: sizing.backIcon),
                   const SizedBox(width: AppConstants.space4),
                   Flexible(
                     child: Text(
@@ -171,7 +174,8 @@ class _AboutScreenState extends State<AboutScreen> {
             spacing: spacing,
             sizing: sizing,
             typography: typography,
-            onTap: () => _launchUrl('https://glmcz.github.io/nanoplastics_frontend/'),
+            onTap: () =>
+                _launchUrl('https://glmcz.github.io/nanoplastics_frontend/'),
           ),
           SizedBox(height: spacing.cardSpacing),
           _buildLinkItem(
@@ -199,19 +203,18 @@ class _AboutScreenState extends State<AboutScreen> {
                     backgroundColor: AppThemeColors.of(context).cardBackground,
                     title: Text(
                       'Contact Us',
-                      style: typography.title.copyWith(
-                          color: AppThemeColors.of(context).textMain),
+                      style: typography.title
+                          .copyWith(color: AppThemeColors.of(context).textMain),
                     ),
                     content: Text(
                       email,
-                      style: typography.body
-                          .copyWith(color: AppColors.pastelMint),
+                      style:
+                          typography.body.copyWith(color: AppColors.pastelMint),
                     ),
                     actions: [
                       TextButton(
                         onPressed: () {
-                          Clipboard.setData(
-                              const ClipboardData(text: email));
+                          Clipboard.setData(const ClipboardData(text: email));
                           Navigator.of(ctx).pop();
                         },
                         child: const Text('COPY',
@@ -380,7 +383,8 @@ class _AboutScreenState extends State<AboutScreen> {
       child: Container(
         padding: EdgeInsets.all(spacing.cardPadding),
         decoration: BoxDecoration(
-          color: AppThemeColors.of(context).cardBackground.withValues(alpha: 0.8),
+          color:
+              AppThemeColors.of(context).cardBackground.withValues(alpha: 0.8),
           borderRadius: BorderRadius.circular(AppConstants.radiusLarge),
           border: Border.all(color: color.withValues(alpha: 0.2)),
         ),
@@ -465,11 +469,11 @@ class _AboutScreenState extends State<AboutScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              _buildVariantButton(
-                  'full', l10n.aboutVariantFullBuild, spacing, sizing, typography),
+              _buildVariantButton('full', l10n.aboutVariantFullBuild, spacing,
+                  sizing, typography),
               SizedBox(width: spacing.cardSpacing),
-              _buildVariantButton(
-                  'lite', l10n.aboutVariantLiteBuild, spacing, sizing, typography),
+              _buildVariantButton('lite', l10n.aboutVariantLiteBuild, spacing,
+                  sizing, typography),
             ],
           ),
           const SizedBox(height: AppConstants.space16),

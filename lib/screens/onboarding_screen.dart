@@ -103,10 +103,8 @@ class _OnboardingScreenState extends State<OnboardingScreen>
   }
 
   void _closeOnboarding() async {
-    print('DEBUG: _closeOnboarding called');
     // Mark onboarding as shown
     await settingsManager.setOnboardingShown(true);
-    print('DEBUG: Onboarding marked as shown, navigating to MainScreen');
 
     _animationController.reverse().then((_) {
       Navigator.of(context).pushReplacement(

@@ -493,9 +493,9 @@ class UpdateService {
           tagName: 'v$version',
           name: 'v$version',
           isPrerelease: false,
-          publishedAt: DateTime.tryParse(
-                  data['published_at'] as String? ?? '') ??
-              DateTime.now(),
+          publishedAt:
+              DateTime.tryParse(data['published_at'] as String? ?? '') ??
+                  DateTime.now(),
           fullBuildUrl: data['full_apk_url'] as String?,
           liteBuildUrl: data['lite_apk_url'] as String?,
         );
@@ -617,7 +617,8 @@ class UpdateService {
       // Avoids scoped-storage write restrictions on Android 10+ that affect
       // the public Downloads directory.
       final externalDir = await getExternalStorageDirectory();
-      final downloadsDir = externalDir ?? await getApplicationDocumentsDirectory();
+      final downloadsDir =
+          externalDir ?? await getApplicationDocumentsDirectory();
       if (!await downloadsDir.exists()) {
         await downloadsDir.create(recursive: true);
       }
@@ -728,7 +729,8 @@ class UpdateService {
     if (!Platform.isAndroid) return true;
 
     try {
-      final int sdkVersion = await platform.invokeMethod<int>('getSdkVersion') ?? 0;
+      final int sdkVersion =
+          await platform.invokeMethod<int>('getSdkVersion') ?? 0;
 
       // Android 12+ (SDK 31+) requires REQUEST_INSTALL_PACKAGES permission
       if (sdkVersion >= 31) {
@@ -745,7 +747,8 @@ class UpdateService {
       }
       return true;
     } catch (e) {
-      LoggerService().logError('Error checking install permission', e.toString());
+      LoggerService()
+          .logError('Error checking install permission', e.toString());
       // Assume we have permission and let the installer handle it
       return true;
     }
@@ -872,7 +875,7 @@ class UpdateService {
   // The following methods are for Play Store in-app update via in_app_update
   // package. Use these when distributing through Google Play Store.
   // For GitHub releases, use retryInstallation() and checkInstallationComplete()
-  
+
   /// Complete flexible update (install downloaded update)
   /// Transitions state to installing then installed
   /// GOOGLE PLAY ONLY: Use for Play Store distributed apps

@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:nanoplastics_app/screens/main_screen.dart';
 import 'package:nanoplastics_app/screens/category_detail_new_screen.dart';
 import 'package:nanoplastics_app/screens/sources_screen.dart';
-import 'package:nanoplastics_app/screens/results_screen.dart';
+import 'package:nanoplastics_app/screens/solvers_leaderboard_screen.dart';
 import 'package:nanoplastics_app/screens/user_settings/user_settings_screen.dart';
 import '../helpers/test_app.dart';
 import '../helpers/settings_test_helper.dart';
@@ -105,7 +105,7 @@ void main() {
       expect(find.byType(SourcesScreen), findsOneWidget);
     });
 
-    testWidgets('tapping Results button navigates to ResultsScreen',
+    testWidgets('tapping Results button navigates to SolversLeaderboardScreen',
         (tester) async {
       await tester.pumpWidget(buildMainScreenApp());
       await tester.pumpAndSettle();
@@ -113,7 +113,7 @@ void main() {
       await tester.tap(find.textContaining('RESULTS'));
       await tester.pumpAndSettle();
 
-      expect(find.byType(ResultsScreen), findsOneWidget);
+      expect(find.byType(SolversLeaderboardScreen), findsOneWidget);
     });
 
     testWidgets('tapping settings knob navigates to UserSettingsScreen',

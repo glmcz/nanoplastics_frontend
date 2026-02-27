@@ -17,9 +17,12 @@ Future<void> setupSettingsManager([
 /// Sets up both SettingsManager and ServiceLocator for widget tests.
 ///
 /// This skips Firebase initialization (LoggerService won't call Firebase).
+/// `advisor_tour_shown: true` is injected by default so the TutorialCoachMark
+/// overlay never fires during tests (prevents pending-timer assertion failures).
 Future<void> setupServiceLocator([
   Map<String, Object> values = const {},
 ]) async {
-  await setupSettingsManager(values);
+  final defaults = <String, Object>{'advisor_tour_shown': true};
+  await setupSettingsManager({...defaults, ...values});
   await ServiceLocator().initializeForTesting();
 }

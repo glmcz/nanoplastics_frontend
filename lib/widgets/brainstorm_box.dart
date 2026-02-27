@@ -144,8 +144,8 @@ class _BrainstormBoxState extends State<BrainstormBox>
       context: context,
       backgroundColor: AppThemeColors.of(context).dialogBackground,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(
-            top: Radius.circular(AppConstants.radiusXL)),
+        borderRadius:
+            BorderRadius.vertical(top: Radius.circular(AppConstants.radiusXL)),
       ),
       builder: (_) => _MediaSourceSheet(),
     );
@@ -184,7 +184,8 @@ class _BrainstormBoxState extends State<BrainstormBox>
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
-              content: Text('Video is too large (max 95 MB). Please trim it first.'),
+              content:
+                  Text('Video is too large (max 95 MB). Please trim it first.'),
               backgroundColor: Colors.orange,
               behavior: SnackBarBehavior.floating,
             ),
@@ -279,8 +280,7 @@ class _BrainstormBoxState extends State<BrainstormBox>
     });
 
     if (path == null) return;
-    final name =
-        'voice_${DateTime.now().millisecondsSinceEpoch}.m4a';
+    final name = 'voice_${DateTime.now().millisecondsSinceEpoch}.m4a';
     final att = IdeaAttachment(
       path: path,
       name: name,
@@ -382,8 +382,7 @@ class _BrainstormBoxState extends State<BrainstormBox>
             child: Text(l10n.categoryDetailBrainstormCancel),
           ),
           TextButton(
-            onPressed: () =>
-                Navigator.of(context).pop(controller.text.trim()),
+            onPressed: () => Navigator.of(context).pop(controller.text.trim()),
             child: Text(l10n.categoryDetailBrainstormSave),
           ),
         ],
@@ -469,13 +468,11 @@ class _BrainstormBoxState extends State<BrainstormBox>
                         Expanded(
                           child: Text(
                             widget.title,
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyLarge
-                                ?.copyWith(
-                                  fontWeight: FontWeight.w800,
-                                  color: AppColors.pastelAqua,
-                                ),
+                            style:
+                                Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                      fontWeight: FontWeight.w800,
+                                      color: AppColors.pastelAqua,
+                                    ),
                           ),
                         ),
                       ],
@@ -492,8 +489,7 @@ class _BrainstormBoxState extends State<BrainstormBox>
                         vertical: AppConstants.space4,
                       ),
                       decoration: BoxDecoration(
-                        color:
-                            AppColors.pastelLavender.withValues(alpha: 0.1),
+                        color: AppColors.pastelLavender.withValues(alpha: 0.1),
                         borderRadius:
                             BorderRadius.circular(AppConstants.radiusMedium),
                       ),
@@ -530,15 +526,12 @@ class _BrainstormBoxState extends State<BrainstormBox>
                     decoration: BoxDecoration(
                       color: Colors.black.withValues(alpha: 0.2),
                       borderRadius: const BorderRadius.only(
-                        topLeft:
-                            Radius.circular(AppConstants.radiusMedium),
-                        topRight:
-                            Radius.circular(AppConstants.radiusMedium),
+                        topLeft: Radius.circular(AppConstants.radiusMedium),
+                        topRight: Radius.circular(AppConstants.radiusMedium),
                       ),
                       border: Border(
                         bottom: BorderSide(
-                          color:
-                              AppColors.pastelAqua.withValues(alpha: 0.3),
+                          color: AppColors.pastelAqua.withValues(alpha: 0.3),
                           width: 2,
                         ),
                       ),
@@ -607,11 +600,11 @@ class _BrainstormBoxState extends State<BrainstormBox>
                         itemCount: _attachments.length,
                         separatorBuilder: (_, __) =>
                             SizedBox(width: spacing.xs),
-                        itemBuilder: (_, i) =>
-                            _buildChip(i, _attachments[i], tc,
-                                spacing: spacing,
-                                sizing: sizing,
-                                typography: typography),
+                        itemBuilder: (_, i) => _buildChip(
+                            i, _attachments[i], tc,
+                            spacing: spacing,
+                            sizing: sizing,
+                            typography: typography),
                       ),
                     ),
                   ],
@@ -624,20 +617,18 @@ class _BrainstormBoxState extends State<BrainstormBox>
                     child: ElevatedButton(
                       onPressed: _isSubmitting ? null : _handleSubmit,
                       style: ElevatedButton.styleFrom(
-                        padding:
-                            const EdgeInsets.all(AppConstants.space12),
+                        padding: const EdgeInsets.all(AppConstants.space12),
                         backgroundColor: Colors.transparent,
                         foregroundColor: const Color(0xFF0A0A12),
                         shadowColor:
                             AppColors.pastelAqua.withValues(alpha: 0.5),
                         elevation: 5,
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(
-                              AppConstants.radiusMedium),
+                          borderRadius:
+                              BorderRadius.circular(AppConstants.radiusMedium),
                         ),
                       ).copyWith(
-                        backgroundColor:
-                            WidgetStateProperty.resolveWith<Color>(
+                        backgroundColor: WidgetStateProperty.resolveWith<Color>(
                           (_) => Colors.transparent,
                         ),
                       ),
@@ -648,22 +639,19 @@ class _BrainstormBoxState extends State<BrainstormBox>
                             end: Alignment.bottomRight,
                             colors: _isSubmitting
                                 ? [
-                                    AppColors.pastelAqua
-                                        .withValues(alpha: 0.5),
-                                    AppColors.pastelMint
-                                        .withValues(alpha: 0.5),
+                                    AppColors.pastelAqua.withValues(alpha: 0.5),
+                                    AppColors.pastelMint.withValues(alpha: 0.5),
                                   ]
                                 : const [
                                     AppColors.pastelAqua,
                                     AppColors.pastelMint,
                                   ],
                           ),
-                          borderRadius: BorderRadius.circular(
-                              AppConstants.radiusMedium),
+                          borderRadius:
+                              BorderRadius.circular(AppConstants.radiusMedium),
                         ),
                         child: Container(
-                          padding:
-                              const EdgeInsets.all(AppConstants.space12),
+                          padding: const EdgeInsets.all(AppConstants.space12),
                           alignment: Alignment.center,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -675,8 +663,7 @@ class _BrainstormBoxState extends State<BrainstormBox>
                                   width: 20,
                                   child: CircularProgressIndicator(
                                     strokeWidth: 2,
-                                    valueColor:
-                                        AlwaysStoppedAnimation<Color>(
+                                    valueColor: AlwaysStoppedAnimation<Color>(
                                       Color(0xFF0A0A12),
                                     ),
                                   ),
@@ -698,12 +685,10 @@ class _BrainstormBoxState extends State<BrainstormBox>
                                     textAlign: TextAlign.center,
                                   ),
                                 ),
-                                const SizedBox(
-                                    width: AppConstants.space8),
+                                const SizedBox(width: AppConstants.space8),
                                 Text('🚀',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodyMedium),
+                                    style:
+                                        Theme.of(context).textTheme.bodyMedium),
                               ],
                             ],
                           ),
@@ -836,8 +821,7 @@ class _BrainstormBoxState extends State<BrainstormBox>
       decoration: BoxDecoration(
         color: tc.cardBackground.withValues(alpha: 0.8),
         borderRadius: BorderRadius.circular(r),
-        border: Border.all(
-            color: AppColors.pastelAqua.withValues(alpha: 0.2)),
+        border: Border.all(color: AppColors.pastelAqua.withValues(alpha: 0.2)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -854,8 +838,7 @@ class _BrainstormBoxState extends State<BrainstormBox>
                 width: chipH,
                 height: chipH,
                 fit: BoxFit.cover,
-                errorBuilder: (_, __, ___) =>
-                    _chipIcon(att, sizing: sizing),
+                errorBuilder: (_, __, ___) => _chipIcon(att, sizing: sizing),
               ),
             )
           else
@@ -865,8 +848,8 @@ class _BrainstormBoxState extends State<BrainstormBox>
             ),
           SizedBox(width: spacing.xs),
           ConstrainedBox(
-            constraints:
-                BoxConstraints(maxWidth: 80 * sizing.scaleW * sizing.compactScale),
+            constraints: BoxConstraints(
+                maxWidth: 80 * sizing.scaleW * sizing.compactScale),
             child: Text(
               att.name,
               style: typography.labelXs.copyWith(
@@ -920,8 +903,7 @@ class _MediaSourceSheet extends StatelessWidget {
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.symmetric(
-            vertical: AppConstants.space16,
-            horizontal: AppConstants.space8),
+            vertical: AppConstants.space16, horizontal: AppConstants.space8),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [

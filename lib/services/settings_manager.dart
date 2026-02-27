@@ -1,51 +1,23 @@
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:path_provider/path_provider.dart';
+import 'dart:convert';
 import 'dart:io';
-import 'encryption_service.dart';
+import 'managers/user_profile_manager.dart';
+import 'managers/app_preferences_manager.dart';
+import 'managers/pdf_cache_manager.dart';
+import 'managers/update_state_manager.dart';
 
+/// Centralized settings coordinator
+/// Delegates to specialized managers for different concerns
 class SettingsManager {
-  static const String _onboardingShownKey = 'onboarding_shown';
-  static const String _advisorTourShownKey = 'advisor_tour_shown';
-  static const String _userLanguageKey = 'user_language';
-  static const String _notificationsEnabledKey = 'notifications_enabled';
-  static const String _userIdKey = 'user_id';
-  static const String _profileRegisteredKey = 'profile_registered';
-  static const String _userNameKey = 'user_name';
-  static const String _userSpecialtyKey = 'user_specialty';
-
-  // Profile settings keys
-  static const String _displayNameKey = 'display_name';
-  static const String _emailKey = 'email';
-  static const String _bioKey = 'bio';
-  static const String _avatarPathKey = 'avatar_path';
-  static const String _darkModeKey = 'dark_mode';
-  static const String _dataCollectionKey = 'data_collection_enabled';
-  static const String _analyticsKey = 'analytics_enabled';
-  static const String _emailNotificationsKey = 'email_notifications';
-  static const String _pushNotificationsKey = 'push_notifications';
-
-  // Update-related keys
-  static const String _updateAvailableKey = 'update_available';
-  static const String _latestVersionKey = 'latest_version';
-  static const String _updateDownloadUrlKey = 'update_download_url';
-  static const String _lastVersionCheckKey = 'last_version_check';
-  static const String _lastReleaseTagIdKey = 'last_release_tag_id';
-  static const String _lastUpdateCheckTimeKey = 'last_update_check_time';
-  static const String _currentAppVersionKey = 'current_app_version';
-  static const String _lastDownloadedApkPathKey = 'last_downloaded_apk_path';
-  static const String _lastDownloadedApkSizeKey = 'last_downloaded_apk_size';
-
-  // Build type identifier
-  static const String _buildTypeKey = 'build_type';
-
   static final SettingsManager _instance = SettingsManager._internal();
   static bool _isInitialized = false;
 
   late SharedPreferences _prefs;
-
-  // Listeners for reactive updates
-  final List<Function(String)> _displayNameListeners = [];
+  late UserProfileManager _profileManager;
+  late AppPreferencesManager _preferencesManager;
+  late PdfCacheManager _pdfCacheManager;
+  late UpdateStateManager _updateStateManager;
 
   SettingsManager._internal();
 
@@ -53,20 +25,11 @@ class SettingsManager {
     return _instance;
   }
 
-  /// Subscribe to display name changes
-  void addDisplayNameListener(Function(String) callback) {
-    _displayNameListeners.add(callback);
-  }
-
-  /// Unsubscribe from display name changes
-  void removeDisplayNameListener(Function(String) callback) {
-    _displayNameListeners.remove(callback);
-  }
-
-  /// Notify all listeners of display name change
-  void _notifyDisplayNameListeners(String newName) {
-    for (final callback in _displayNameListeners) {
-      callback(newName);
+  void _checkInitialized() {
+    if (!_isInitialized) {
+      throw Exception(
+        'SettingsManager must be initialized first. Call SettingsManager.init() before using.',
+      );
     }
   }
 
@@ -74,529 +37,382 @@ class SettingsManager {
   static Future<void> init() async {
     if (!_isInitialized) {
       _instance._prefs = await SharedPreferences.getInstance();
+      _instance._migrateLegacyBase64Fields();
+
+      // Initialize delegated managers
+      _instance._profileManager = UserProfileManager(_instance._prefs);
+      _instance._preferencesManager = AppPreferencesManager(_instance._prefs);
+      _instance._pdfCacheManager = PdfCacheManager();
+      _instance._updateStateManager = UpdateStateManager(_instance._prefs);
+
       _isInitialized = true;
     }
   }
 
-  /// Check if onboarding has been shown
-  bool get hasShownOnboarding {
-    _checkInitialized();
-    final value = _prefs.getBool(_onboardingShownKey) ?? false;
-    return value;
+  /// One-time migration: decode legacy base64-stored fields to plain text
+  void _migrateLegacyBase64Fields() {
+    if (_prefs.getBool('legacy_base64_migrated') ?? false) return;
+    for (final key in ['user_id', 'user_name', 'user_specialty']) {
+      final raw = _prefs.getString(key);
+      if (raw == null) continue;
+      try {
+        final decoded = utf8.decode(base64Decode(raw));
+        _prefs.setString(key, decoded);
+      } catch (_) {
+        // Already plain text
+      }
+    }
+    _prefs.setBool('legacy_base64_migrated', true);
   }
 
-  /// Set onboarding as shown
-  Future<void> setOnboardingShown(bool shown) async {
+  // ===== Profile Manager Delegation =====
+  void addDisplayNameListener(Function(String) callback) {
     _checkInitialized();
-    await _prefs.setBool(_onboardingShownKey, shown);
+    _profileManager.addDisplayNameListener(callback);
   }
 
-  /// Check if advisor tour has been shown
-  bool get hasShownAdvisorTour {
+  void removeDisplayNameListener(Function(String) callback) {
     _checkInitialized();
-    return _prefs.getBool(_advisorTourShownKey) ?? false;
+    _profileManager.removeDisplayNameListener(callback);
   }
 
-  /// Set advisor tour as shown
-  Future<void> setAdvisorTourShown(bool shown) async {
-    _checkInitialized();
-    await _prefs.setBool(_advisorTourShownKey, shown);
-  }
-
-  /// Get user language preference
-  String get userLanguage {
-    _checkInitialized();
-    return _prefs.getString(_userLanguageKey) ?? 'en';
-  }
-
-  /// Set user language preference
-  Future<void> setUserLanguage(String language) async {
-    _checkInitialized();
-    await _prefs.setString(_userLanguageKey, language);
-  }
-
-  /// Check if notifications are enabled
-  bool get notificationsEnabled {
-    _checkInitialized();
-    return _prefs.getBool(_notificationsEnabledKey) ?? true;
-  }
-
-  /// Set notifications enabled/disabled
-  Future<void> setNotificationsEnabled(bool enabled) async {
-    _checkInitialized();
-    await _prefs.setBool(_notificationsEnabledKey, enabled);
-  }
-
-  /// Get user ID (encrypted)
   String? get userId {
     _checkInitialized();
-    final encrypted = _prefs.getString(_userIdKey);
-    if (encrypted == null) return null;
-    return EncryptionService.decryptString(encrypted);
+    return _profileManager.userId;
   }
 
-  /// Set user ID (encrypted)
   Future<void> setUserId(String id) async {
     _checkInitialized();
-    final encrypted = EncryptionService.encryptString(id);
-    await _prefs.setString(_userIdKey, encrypted);
+    await _profileManager.setUserId(id);
   }
 
-  /// Check if user profile is registered
   bool get isProfileRegistered {
     _checkInitialized();
-    return _prefs.getBool(_profileRegisteredKey) ?? false;
+    return _profileManager.isProfileRegistered;
   }
 
-  /// Set profile registration status
   Future<void> setProfileRegistered(bool registered) async {
     _checkInitialized();
-    await _prefs.setBool(_profileRegisteredKey, registered);
+    await _profileManager.setProfileRegistered(registered);
   }
 
-  /// Get user name (encrypted)
   String? get userName {
     _checkInitialized();
-    final encrypted = _prefs.getString(_userNameKey);
-    if (encrypted == null) return null;
-    return EncryptionService.decryptString(encrypted);
+    return _profileManager.userName;
   }
 
-  /// Set user name (encrypted)
   Future<void> setUserName(String name) async {
     _checkInitialized();
-    final encrypted = EncryptionService.encryptString(name);
-    await _prefs.setString(_userNameKey, encrypted);
+    await _profileManager.setUserName(name);
   }
 
-  /// Get user specialty (encrypted)
   String? get userSpecialty {
     _checkInitialized();
-    final encrypted = _prefs.getString(_userSpecialtyKey);
-    if (encrypted == null) return null;
-    return EncryptionService.decryptString(encrypted);
+    return _profileManager.userSpecialty;
   }
 
-  /// Set user specialty (encrypted)
   Future<void> setUserSpecialty(String specialty) async {
     _checkInitialized();
-    final encrypted = EncryptionService.encryptString(specialty);
-    await _prefs.setString(_userSpecialtyKey, encrypted);
+    await _profileManager.setUserSpecialty(specialty);
   }
 
-  /// Clear all settings
+  String get displayName {
+    _checkInitialized();
+    return _profileManager.displayName;
+  }
+
+  Future<void> setDisplayName(String name) async {
+    _checkInitialized();
+    await _profileManager.setDisplayName(name);
+  }
+
+  String get email {
+    _checkInitialized();
+    return _profileManager.email;
+  }
+
+  Future<void> setEmail(String email) async {
+    _checkInitialized();
+    await _profileManager.setEmail(email);
+  }
+
+  String get bio {
+    _checkInitialized();
+    return _profileManager.bio;
+  }
+
+  Future<void> setBio(String bio) async {
+    _checkInitialized();
+    await _profileManager.setBio(bio);
+  }
+
+  String? get avatarPath {
+    _checkInitialized();
+    return _profileManager.avatarPath;
+  }
+
+  Future<void> setAvatarPath(String? path) async {
+    _checkInitialized();
+    await _profileManager.setAvatarPath(path);
+  }
+
+  // ===== Preferences Manager Delegation =====
+  bool get hasShownOnboarding {
+    _checkInitialized();
+    return _preferencesManager.hasShownOnboarding;
+  }
+
+  Future<void> setOnboardingShown(bool shown) async {
+    _checkInitialized();
+    await _preferencesManager.setOnboardingShown(shown);
+  }
+
+  bool get hasShownAdvisorTour {
+    _checkInitialized();
+    return _preferencesManager.hasShownAdvisorTour;
+  }
+
+  Future<void> setAdvisorTourShown(bool shown) async {
+    _checkInitialized();
+    await _preferencesManager.setAdvisorTourShown(shown);
+  }
+
+  String get userLanguage {
+    _checkInitialized();
+    return _preferencesManager.userLanguage;
+  }
+
+  Future<void> setUserLanguage(String language) async {
+    _checkInitialized();
+    await _preferencesManager.setUserLanguage(language);
+  }
+
+  bool get notificationsEnabled {
+    _checkInitialized();
+    return _preferencesManager.notificationsEnabled;
+  }
+
+  Future<void> setNotificationsEnabled(bool enabled) async {
+    _checkInitialized();
+    await _preferencesManager.setNotificationsEnabled(enabled);
+  }
+
+  bool get darkModeEnabled {
+    _checkInitialized();
+    return _preferencesManager.darkModeEnabled;
+  }
+
+  Future<void> setDarkModeEnabled(bool enabled) async {
+    _checkInitialized();
+    await _preferencesManager.setDarkModeEnabled(enabled);
+  }
+
+  bool get analyticsEnabled {
+    _checkInitialized();
+    return _preferencesManager.analyticsEnabled;
+  }
+
+  Future<void> setAnalyticsEnabled(bool enabled) async {
+    _checkInitialized();
+    await _preferencesManager.setAnalyticsEnabled(enabled);
+  }
+
+  bool get dataCollectionEnabled {
+    _checkInitialized();
+    return _preferencesManager.dataCollectionEnabled;
+  }
+
+  Future<void> setDataCollectionEnabled(bool enabled) async {
+    _checkInitialized();
+    await _preferencesManager.setDataCollectionEnabled(enabled);
+  }
+
+  bool get emailNotificationsEnabled {
+    _checkInitialized();
+    return _preferencesManager.emailNotificationsEnabled;
+  }
+
+  Future<void> setEmailNotificationsEnabled(bool enabled) async {
+    _checkInitialized();
+    await _preferencesManager.setEmailNotificationsEnabled(enabled);
+  }
+
+  bool get pushNotificationsEnabled {
+    _checkInitialized();
+    return _preferencesManager.pushNotificationsEnabled;
+  }
+
+  Future<void> setPushNotificationsEnabled(bool enabled) async {
+    _checkInitialized();
+    await _preferencesManager.setPushNotificationsEnabled(enabled);
+  }
+
+  // ===== PDF Cache Manager Delegation =====
+  Future<File?> getPdfForLanguage(String language) async {
+    _checkInitialized();
+    return await _pdfCacheManager.getPdfForLanguage(language);
+  }
+
+  Future<List<String>> getCachedPdfLanguages() async {
+    _checkInitialized();
+    return await _pdfCacheManager.getCachedPdfLanguages();
+  }
+
+  Future<void> savePdfLocally(String language, List<int> bytes) async {
+    _checkInitialized();
+    await _pdfCacheManager.savePdfLocally(language, bytes);
+  }
+
+  Future<void> deleteCachedPdf(String language) async {
+    _checkInitialized();
+    await _pdfCacheManager.deleteCachedPdf(language);
+  }
+
+  // ===== Update State Manager Delegation =====
+  bool get updateAvailable {
+    _checkInitialized();
+    return _updateStateManager.updateAvailable;
+  }
+
+  Future<void> setUpdateAvailable(bool available) async {
+    _checkInitialized();
+    await _updateStateManager.setUpdateAvailable(available);
+  }
+
+  String? get latestVersion {
+    _checkInitialized();
+    return _updateStateManager.latestVersion;
+  }
+
+  Future<void> setLatestVersion(String version) async {
+    _checkInitialized();
+    await _updateStateManager.setLatestVersion(version);
+  }
+
+  String? get updateDownloadUrl {
+    _checkInitialized();
+    return _updateStateManager.updateDownloadUrl;
+  }
+
+  Future<void> setUpdateDownloadUrl(String url) async {
+    _checkInitialized();
+    await _updateStateManager.setUpdateDownloadUrl(url);
+  }
+
+  DateTime? get lastVersionCheck {
+    _checkInitialized();
+    return _updateStateManager.lastVersionCheck;
+  }
+
+  Future<void> setLastVersionCheck(DateTime time) async {
+    _checkInitialized();
+    await _updateStateManager.setLastVersionCheck(time);
+  }
+
+  String? get lastReleaseTagId {
+    _checkInitialized();
+    return _updateStateManager.lastReleaseTagId;
+  }
+
+  Future<void> setLastReleaseTagId(String id) async {
+    _checkInitialized();
+    await _updateStateManager.setLastReleaseTagId(id);
+  }
+
+  DateTime? get lastUpdateCheckTime {
+    _checkInitialized();
+    return _updateStateManager.lastUpdateCheckTime;
+  }
+
+  Future<void> setLastUpdateCheckTime(DateTime time) async {
+    _checkInitialized();
+    await _updateStateManager.setLastUpdateCheckTime(time);
+  }
+
+  String? get currentAppVersion {
+    _checkInitialized();
+    return _updateStateManager.currentAppVersion;
+  }
+
+  Future<void> setCurrentAppVersion(String version) async {
+    _checkInitialized();
+    await _updateStateManager.setCurrentAppVersion(version);
+  }
+
+  String? get lastDownloadedApkPath {
+    _checkInitialized();
+    return _updateStateManager.lastDownloadedApkPath;
+  }
+
+  Future<void> setLastDownloadedApkPath(String? path) async {
+    _checkInitialized();
+    await _updateStateManager.setLastDownloadedApkPath(path);
+  }
+
+  int? get lastDownloadedApkSize {
+    _checkInitialized();
+    return _updateStateManager.lastDownloadedApkSize;
+  }
+
+  Future<void> setLastDownloadedApkSize(int size) async {
+    _checkInitialized();
+    await _updateStateManager.setLastDownloadedApkSize(size);
+  }
+
+  String get buildType {
+    _checkInitialized();
+    return _updateStateManager.buildType;
+  }
+
+  Future<void> setBuildType(String type) async {
+    _checkInitialized();
+    await _updateStateManager.setBuildType(type);
+  }
+
+  // ===== Draft Ideas (kept in SettingsManager) =====
+  String? getDraftIdea(String categoryKey) {
+    _checkInitialized();
+    return _prefs.getString('draft_idea_$categoryKey');
+  }
+
+  Future<void> setDraftIdea(String categoryKey, String text) async {
+    _checkInitialized();
+    if (text.isEmpty) {
+      await _prefs.remove('draft_idea_$categoryKey');
+    } else {
+      await _prefs.setString('draft_idea_$categoryKey', text);
+    }
+  }
+
+  Future<void> clearDraftIdea(String categoryKey) async {
+    _checkInitialized();
+    await _prefs.remove('draft_idea_$categoryKey');
+  }
+
+  // ===== Lifecycle Management =====
+  /// Clear all settings (for testing or reset)
   Future<void> clearAll() async {
     _checkInitialized();
     await _prefs.clear();
   }
 
+  /// Reset to defaults for account deletion
+  Future<void> resetToDefaults() async {
+    _checkInitialized();
+    await _profileManager.clearProfile();
+    await _preferencesManager.resetToDefaults();
+    await _updateStateManager.clearUpdateState();
+  }
+
+  /// Delete account data (clears profile but preserves preferences)
+  Future<void> deleteAccount() async {
+    _checkInitialized();
+    await _profileManager.clearProfile();
+    await _updateStateManager.clearUpdateState();
+  }
+
   @visibleForTesting
   static void resetForTesting() {
     _isInitialized = false;
-  }
-
-  /// Check if manager is initialized
-  void _checkInitialized() {
-    if (!_isInitialized) {
-      throw Exception(
-          'SettingsManager must be initialized first. Call SettingsManager.init() in main()');
-    }
-  }
-
-  /// Reset to defaults — wipes all SharedPreferences (profile + app settings)
-  Future<void> resetToDefaults() async {
-    _checkInitialized();
-    await clearAll();
-  }
-
-  /// Delete user account data.
-  ///
-  /// Removes personal profile keys (userId, name, email, bio, avatar,
-  /// specialty, profileRegistered) while preserving app-level preferences
-  /// (language, analytics, dark mode, notifications).
-  Future<void> deleteAccount() async {
-    _checkInitialized();
-    for (final key in [
-      _userIdKey,
-      _profileRegisteredKey,
-      _userNameKey,
-      _userSpecialtyKey,
-      _displayNameKey,
-      _emailKey,
-      _bioKey,
-      _avatarPathKey,
-    ]) {
-      await _prefs.remove(key);
-    }
-  }
-
-  /// Get build type (FULL or LITE)
-  String get buildType {
-    _checkInitialized();
-    return _prefs.getString(_buildTypeKey) ?? 'UNKNOWN';
-  }
-
-  /// Set build type identifier
-  Future<void> setBuildType(String type) async {
-    _checkInitialized();
-    await _prefs.setString(_buildTypeKey, type);
-  }
-
-  // Draft idea persistence (per category)
-
-  String? getDraftIdea(String category) {
-    _checkInitialized();
-    return _prefs.getString('draft_idea_$category');
-  }
-
-  Future<void> setDraftIdea(String category, String text) async {
-    _checkInitialized();
-    if (text.isEmpty) {
-      await _prefs.remove('draft_idea_$category');
-    } else {
-      await _prefs.setString('draft_idea_$category', text);
-    }
-  }
-
-  Future<void> clearDraftIdea(String category) async {
-    _checkInitialized();
-    await _prefs.remove('draft_idea_$category');
-  }
-
-  // Profile settings getters and setters
-
-  /// Get display name
-  String get displayName {
-    _checkInitialized();
-    return _prefs.getString(_displayNameKey) ?? '';
-  }
-
-  /// Set display name
-  Future<void> setDisplayName(String name) async {
-    _checkInitialized();
-    await _prefs.setString(_displayNameKey, name);
-    // Notify all listeners that display name has changed
-    _notifyDisplayNameListeners(name);
-  }
-
-  /// Get email
-  String get email {
-    _checkInitialized();
-    return _prefs.getString(_emailKey) ?? '';
-  }
-
-  /// Set email
-  Future<void> setEmail(String email) async {
-    _checkInitialized();
-    await _prefs.setString(_emailKey, email);
-  }
-
-  /// Get bio
-  String get bio {
-    _checkInitialized();
-    return _prefs.getString(_bioKey) ?? '';
-  }
-
-  /// Set bio
-  Future<void> setBio(String bio) async {
-    _checkInitialized();
-    await _prefs.setString(_bioKey, bio);
-  }
-
-  /// Get avatar path
-  String? get avatarPath {
-    _checkInitialized();
-    return _prefs.getString(_avatarPathKey);
-  }
-
-  /// Set avatar path
-  Future<void> setAvatarPath(String? path) async {
-    _checkInitialized();
-    if (path != null) {
-      await _prefs.setString(_avatarPathKey, path);
-    } else {
-      await _prefs.remove(_avatarPathKey);
-    }
-  }
-
-  /// Check if dark mode is enabled
-  bool get darkModeEnabled {
-    _checkInitialized();
-    return _prefs.getBool(_darkModeKey) ?? true;
-  }
-
-  /// Set dark mode
-  Future<void> setDarkModeEnabled(bool enabled) async {
-    _checkInitialized();
-    await _prefs.setBool(_darkModeKey, enabled);
-  }
-
-  /// Check if data collection is enabled
-  bool get dataCollectionEnabled {
-    _checkInitialized();
-    return _prefs.getBool(_dataCollectionKey) ?? false;
-  }
-
-  /// Set data collection
-  Future<void> setDataCollectionEnabled(bool enabled) async {
-    _checkInitialized();
-    await _prefs.setBool(_dataCollectionKey, enabled);
-  }
-
-  /// Check if analytics is enabled
-  bool get analyticsEnabled {
-    _checkInitialized();
-    return _prefs.getBool(_analyticsKey) ?? true;
-  }
-
-  /// Set analytics
-  Future<void> setAnalyticsEnabled(bool enabled) async {
-    _checkInitialized();
-    await _prefs.setBool(_analyticsKey, enabled);
-  }
-
-  /// Check if email notifications are enabled
-  bool get emailNotificationsEnabled {
-    _checkInitialized();
-    return _prefs.getBool(_emailNotificationsKey) ?? true;
-  }
-
-  /// Set email notifications
-  Future<void> setEmailNotificationsEnabled(bool enabled) async {
-    _checkInitialized();
-    await _prefs.setBool(_emailNotificationsKey, enabled);
-  }
-
-  /// Check if push notifications are enabled
-  bool get pushNotificationsEnabled {
-    _checkInitialized();
-    return _prefs.getBool(_pushNotificationsKey) ?? true;
-  }
-
-  /// Set push notifications
-  Future<void> setPushNotificationsEnabled(bool enabled) async {
-    _checkInitialized();
-    await _prefs.setBool(_pushNotificationsKey, enabled);
-  }
-
-  // Update-related getters and setters
-
-  /// Check if an update is available
-  bool get updateAvailable {
-    _checkInitialized();
-    return _prefs.getBool(_updateAvailableKey) ?? false;
-  }
-
-  /// Set update available status
-  Future<void> setUpdateAvailable(bool available) async {
-    _checkInitialized();
-    await _prefs.setBool(_updateAvailableKey, available);
-  }
-
-  /// Get latest available version
-  String? get latestVersion {
-    _checkInitialized();
-    return _prefs.getString(_latestVersionKey);
-  }
-
-  /// Set latest available version
-  Future<void> setLatestVersion(String version) async {
-    _checkInitialized();
-    await _prefs.setString(_latestVersionKey, version);
-  }
-
-  /// Get update download URL
-  String? get updateDownloadUrl {
-    _checkInitialized();
-    return _prefs.getString(_updateDownloadUrlKey);
-  }
-
-  /// Set update download URL
-  Future<void> setUpdateDownloadUrl(String url) async {
-    _checkInitialized();
-    await _prefs.setString(_updateDownloadUrlKey, url);
-  }
-
-  /// Get last version check timestamp
-  DateTime? get lastVersionCheck {
-    _checkInitialized();
-    final timestamp = _prefs.getString(_lastVersionCheckKey);
-    if (timestamp == null) return null;
-    return DateTime.tryParse(timestamp);
-  }
-
-  /// Set last version check timestamp
-  Future<void> setLastVersionCheck(DateTime dateTime) async {
-    _checkInitialized();
-    await _prefs.setString(_lastVersionCheckKey, dateTime.toIso8601String());
-  }
-
-  /// Get last release tag ID
-  String? get lastReleaseTagId {
-    _checkInitialized();
-    return _prefs.getString(_lastReleaseTagIdKey);
-  }
-
-  /// Set last release tag ID
-  Future<void> setLastReleaseTagId(String tagId) async {
-    _checkInitialized();
-    await _prefs.setString(_lastReleaseTagIdKey, tagId);
-  }
-
-  /// Get last update check time
-  DateTime? get lastUpdateCheckTime {
-    _checkInitialized();
-    final timestamp = _prefs.getString(_lastUpdateCheckTimeKey);
-    if (timestamp == null) return null;
-    return DateTime.tryParse(timestamp);
-  }
-
-  /// Set last update check time
-  Future<void> setLastUpdateCheckTime(DateTime dateTime) async {
-    _checkInitialized();
-    await _prefs.setString(_lastUpdateCheckTimeKey, dateTime.toIso8601String());
-  }
-
-  /// Get current app version (persisted from PackageInfo on startup)
-  String? get currentAppVersion {
-    _checkInitialized();
-    return _prefs.getString(_currentAppVersionKey);
-  }
-
-  /// Set current app version (called on app startup from main.dart)
-  Future<void> setCurrentAppVersion(String version) async {
-    _checkInitialized();
-    await _prefs.setString(_currentAppVersionKey, version);
-  }
-
-  /// Get path of last downloaded APK (for tracking partial/failed updates)
-  String? get lastDownloadedApkPath {
-    _checkInitialized();
-    return _prefs.getString(_lastDownloadedApkPathKey);
-  }
-
-  /// Set path of last downloaded APK
-  Future<void> setLastDownloadedApkPath(String? path) async {
-    _checkInitialized();
-    if (path != null) {
-      await _prefs.setString(_lastDownloadedApkPathKey, path);
-    } else {
-      await _prefs.remove(_lastDownloadedApkPathKey);
-    }
-  }
-
-  /// Get size of last downloaded APK in bytes (for integrity verification)
-  int get lastDownloadedApkSize {
-    _checkInitialized();
-    return _prefs.getInt(_lastDownloadedApkSizeKey) ?? 0;
-  }
-
-  /// Set size of last downloaded APK in bytes
-  Future<void> setLastDownloadedApkSize(int sizeInBytes) async {
-    _checkInitialized();
-    if (sizeInBytes > 0) {
-      await _prefs.setInt(_lastDownloadedApkSizeKey, sizeInBytes);
-    } else {
-      await _prefs.remove(_lastDownloadedApkSizeKey);
-    }
-  }
-
-  /// Save PDF file locally for offline access
-  /// Language-specific PDFs are stored in app documents directory
-  Future<void> savePdfLocally(String language, List<int> fileBytes) async {
-    try {
-      final appDocDir = await getApplicationDocumentsDirectory();
-      final pdfsDir = Directory('${appDocDir.path}/pdfs');
-
-      // Create pdfs directory if it doesn't exist
-      if (!await pdfsDir.exists()) {
-        await pdfsDir.create(recursive: true);
-      }
-
-      final filename =
-          'Nanoplastics_Report_${language.toUpperCase()}_compressed.pdf';
-      final file = File('${pdfsDir.path}/$filename');
-
-      // Write file to disk
-      await file.writeAsBytes(fileBytes);
-    } catch (e) {
-      // Error is logged but not thrown to prevent UI disruption
-      print('Error saving PDF locally: $e');
-    }
-  }
-
-  /// Delete cached PDF for language (optional cleanup)
-  Future<void> deleteCachedPdf(String language) async {
-    try {
-      final appDocDir = await getApplicationDocumentsDirectory();
-      final filename =
-          'Nanoplastics_Report_${language.toUpperCase()}_compressed.pdf';
-      final file = File('${appDocDir.path}/pdfs/$filename');
-
-      if (await file.exists()) {
-        await file.delete();
-      }
-    } catch (e) {
-      print('Error deleting cached PDF: $e');
-    }
-  }
-
-  /// Get list of all cached PDF languages (utility method)
-  Future<List<String>> getCachedPdfLanguages() async {
-    try {
-      final appDocDir = await getApplicationDocumentsDirectory();
-      final pdfsDir = Directory('${appDocDir.path}/pdfs');
-
-      if (!await pdfsDir.exists()) {
-        return [];
-      }
-
-      final files = await pdfsDir.list().toList();
-      final languages = <String>[];
-
-      for (final file in files) {
-        if (file is File && file.path.endsWith('_compressed.pdf')) {
-          final filename = file.path.split('/').last;
-          final match = RegExp(r'Nanoplastics_Report_(\w+)_compressed\.pdf')
-              .firstMatch(filename);
-          if (match != null) {
-            languages.add(match.group(1)!.toLowerCase());
-          }
-        }
-      }
-
-      return languages;
-    } catch (e) {
-      print('Error getting cached PDF languages: $e');
-      return [];
-    }
-  }
-
-  /// Get PDF file for language if cached, null if needs download
-  /// This is the ONLY method to access PDFs from any screen
-  /// Returns File if PDF is cached, null if it needs to be downloaded
-  ///
-  /// Usage:
-  ///   final pdf = await _settingsManager.getPdfForLanguage('en');
-  ///   if (pdf != null) {
-  ///     // Display PDF from file.path
-  ///   } else {
-  ///     // Download via UpdateService.downloadPdf()
-  ///   }
-  Future<File?> getPdfForLanguage(String language) async {
-    try {
-      final appDocDir = await getApplicationDocumentsDirectory();
-      final filename =
-          'Nanoplastics_Report_${language.toUpperCase()}_compressed.pdf';
-      final file = File('${appDocDir.path}/pdfs/$filename');
-
-      if (await file.exists()) {
-        return file;
-      }
-      return null;
-    } catch (e) {
-      print('Error getting PDF for language: $e');
-      return null;
-    }
   }
 }

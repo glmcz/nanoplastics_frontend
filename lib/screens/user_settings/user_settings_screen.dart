@@ -64,19 +64,6 @@ class _UserSettingsScreenState extends State<UserSettingsScreen>
     }
   }
 
-  bool _checkProfileCompletion() {
-    // Check if email and display name are filled
-    try {
-      final email = _settingsManager.email;
-      final displayName = _settingsManager.displayName;
-      final hasEmail = email.isNotEmpty;
-      final hasDisplayName = displayName.isNotEmpty;
-      return hasEmail && hasDisplayName;
-    } catch (e) {
-      return false;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -206,7 +193,8 @@ class _UserSettingsScreenState extends State<UserSettingsScreen>
     final responsive = ResponsiveConfig.fromContext(context);
 
     // Adjust vertical padding: use smaller multiplier for normal/compact phones
-    final verticalPadding = spacing.contentPaddingV * (responsive.isBig ? 7 : 3);
+    final verticalPadding =
+        spacing.contentPaddingV * (responsive.isBig ? 7 : 3);
 
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -227,61 +215,62 @@ class _UserSettingsScreenState extends State<UserSettingsScreen>
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-          _buildTitleSection(typography),
-          SizedBox(height: spacing.cardSpacing),
-          _buildSettingItem(
-            title: AppLocalizations.of(context)!.settingsProfile,
-            icon: Icons.person_outline,
-            color: AppColors.pastelMint,
-            spacing: spacing,
-            sizing: sizing,
-            typography: typography,
-            onTap: () => Navigator.of(context).push(
-              MaterialPageRoute(builder: (_) => const UserProfileScreen()),
-            ),
-          ),
-          SizedBox(height: spacing.cardSpacing),
-          _buildSettingItem(
-            title: AppLocalizations.of(context)!.settingsLanguage,
-            icon: Icons.language,
-            color: AppColors.pastelAqua,
-            spacing: spacing,
-            sizing: sizing,
-            typography: typography,
-            onTap: () => Navigator.of(
-              context,
-            ).push(MaterialPageRoute(builder: (_) => const LanguageScreen())),
-          ),
-          SizedBox(height: spacing.cardSpacing),
-          _buildSettingItem(
-            title: AppLocalizations.of(context)!.settingsPrivacySecurity,
-            icon: Icons.lock_outline,
-            color: AppColors.pastelMint,
-            spacing: spacing,
-            sizing: sizing,
-            typography: typography,
-            onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (_) => const PrivacySecurityScreen(),
+              _buildTitleSection(typography),
+              SizedBox(height: spacing.cardSpacing),
+              _buildSettingItem(
+                title: AppLocalizations.of(context)!.settingsProfile,
+                icon: Icons.person_outline,
+                color: AppColors.pastelMint,
+                spacing: spacing,
+                sizing: sizing,
+                typography: typography,
+                onTap: () => Navigator.of(context).push(
+                  MaterialPageRoute(builder: (_) => const UserProfileScreen()),
                 ),
-              );
-            },
+              ),
+              SizedBox(height: spacing.cardSpacing),
+              _buildSettingItem(
+                title: AppLocalizations.of(context)!.settingsLanguage,
+                icon: Icons.language,
+                color: AppColors.pastelAqua,
+                spacing: spacing,
+                sizing: sizing,
+                typography: typography,
+                onTap: () => Navigator.of(
+                  context,
+                ).push(
+                    MaterialPageRoute(builder: (_) => const LanguageScreen())),
+              ),
+              SizedBox(height: spacing.cardSpacing),
+              _buildSettingItem(
+                title: AppLocalizations.of(context)!.settingsPrivacySecurity,
+                icon: Icons.lock_outline,
+                color: AppColors.pastelMint,
+                spacing: spacing,
+                sizing: sizing,
+                typography: typography,
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) => const PrivacySecurityScreen(),
+                    ),
+                  );
+                },
+              ),
+              SizedBox(height: spacing.cardSpacing),
+              _buildSettingItem(
+                title: AppLocalizations.of(context)!.settingsAbout,
+                icon: Icons.info_outline,
+                color: AppColors.pastelLavender,
+                spacing: spacing,
+                sizing: sizing,
+                typography: typography,
+                onTap: () => Navigator.of(
+                  context,
+                ).push(MaterialPageRoute(builder: (_) => const AboutScreen())),
+              ),
+            ],
           ),
-          SizedBox(height: spacing.cardSpacing),
-          _buildSettingItem(
-            title: AppLocalizations.of(context)!.settingsAbout,
-            icon: Icons.info_outline,
-            color: AppColors.pastelLavender,
-            spacing: spacing,
-            sizing: sizing,
-            typography: typography,
-            onTap: () => Navigator.of(
-              context,
-            ).push(MaterialPageRoute(builder: (_) => const AboutScreen())),
-          ),
-        ],
-      ),
         );
       },
     );

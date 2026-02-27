@@ -5,7 +5,6 @@ import '../../utils/app_theme_colors.dart';
 import '../../services/settings_manager.dart';
 import '../../services/service_locator.dart';
 
-
 class ProfileRegistrationDialog extends StatefulWidget {
   final VoidCallback? onProfileShared;
 
@@ -208,7 +207,8 @@ class _ProfileRegistrationDialogState extends State<ProfileRegistrationDialog> {
                 padding: const EdgeInsets.all(AppConstants.space12),
                 decoration: BoxDecoration(
                   color: AppColors.pastelMint.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(AppConstants.radiusMedium),
+                  borderRadius:
+                      BorderRadius.circular(AppConstants.radiusMedium),
                   border: Border.all(
                     color: AppColors.pastelMint.withValues(alpha: 0.2),
                   ),
@@ -225,10 +225,11 @@ class _ProfileRegistrationDialogState extends State<ProfileRegistrationDialog> {
                     Expanded(
                       child: Text(
                         'Your data is secure and will only be used for the leaderboard',
-                        style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                              color: AppThemeColors.of(context).textMuted,
-                              height: 1.3,
-                            ),
+                        style:
+                            Theme.of(context).textTheme.labelMedium?.copyWith(
+                                  color: AppThemeColors.of(context).textMuted,
+                                  height: 1.3,
+                                ),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -246,7 +247,8 @@ class _ProfileRegistrationDialogState extends State<ProfileRegistrationDialog> {
                       onPressed:
                           _isLoading ? null : () => Navigator.of(context).pop(),
                       style: TextButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: AppConstants.space12),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: AppConstants.space12),
                       ),
                       child: Text(
                         'Skip',
@@ -265,9 +267,11 @@ class _ProfileRegistrationDialogState extends State<ProfileRegistrationDialog> {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.pastelMint,
                         padding: const EdgeInsets.symmetric(
-                            vertical: AppConstants.space12, horizontal: AppConstants.space8),
+                            vertical: AppConstants.space12,
+                            horizontal: AppConstants.space8),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(AppConstants.radiusMedium),
+                          borderRadius:
+                              BorderRadius.circular(AppConstants.radiusMedium),
                         ),
                       ),
                       child: _isLoading
@@ -346,7 +350,8 @@ class _ProfileRegistrationDialogState extends State<ProfileRegistrationDialog> {
               ),
             ),
             filled: true,
-            fillColor: AppThemeColors.of(context).surfaceMid.withValues(alpha: 0.6),
+            fillColor:
+                AppThemeColors.of(context).surfaceMid.withValues(alpha: 0.6),
             contentPadding: const EdgeInsets.symmetric(
               horizontal: AppConstants.space16,
               vertical: AppConstants.space12,

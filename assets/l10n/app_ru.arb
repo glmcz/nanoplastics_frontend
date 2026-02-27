@@ -351,6 +351,11 @@
   "updateButtonLater": "Позже",
   "updateButtonUpdateNow": "Обновить сейчас",
   "updateDownloadInstructions": "Это откроет загрузку с GitHub. После завершения установите APK из папки Загрузки. Вам может потребоваться разрешить \"Установить неизвестные приложения.\"",
+  "updateInstallationCancelledTitle": "Установка отменена",
+  "updateInstallationCancelledMsg": "Обновление приложения было отменено. Вы можете повторить установку в любое время в Настройках.",
+  "updateButtonRetryInstall": "Повторить установку",
+  "updateInstallationSuccessTitle": "Обновление завершено",
+  "updateInstallationSuccessMsg": "NanoSolve Hive успешно обновлён до последней версии.",
   "aboutVariantLiteBuild": "ENG",
   "aboutVariantFullBuild": "все языки",
 

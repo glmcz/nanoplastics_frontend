@@ -56,8 +56,10 @@ class _PrivacySecurityScreenState extends State<PrivacySecurityScreen> {
             center: Alignment.topCenter,
             radius: 1.5,
             colors: [
-              AppColors.pastelMint.withValues(alpha: AppThemeColors.of(context).pastelAlpha),
-              AppColors.pastelLavender.withValues(alpha: AppThemeColors.of(context).pastelAlpha),
+              AppColors.pastelMint
+                  .withValues(alpha: AppThemeColors.of(context).pastelAlpha),
+              AppColors.pastelLavender
+                  .withValues(alpha: AppThemeColors.of(context).pastelAlpha),
               AppThemeColors.of(context).gradientEnd,
             ],
             stops: const [0.0, 0.4, 1.0],
@@ -107,7 +109,8 @@ class _PrivacySecurityScreenState extends State<PrivacySecurityScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Icon(Icons.arrow_back_ios,
-                      color: AppThemeColors.of(context).textMain, size: sizing.backIcon),
+                      color: AppThemeColors.of(context).textMain,
+                      size: sizing.backIcon),
                   const SizedBox(width: AppConstants.space4),
                   Flexible(
                     child: Text(
@@ -172,10 +175,8 @@ class _PrivacySecurityScreenState extends State<PrivacySecurityScreen> {
             onChanged: _updateAnalytics,
           ),
           SizedBox(height: cardSpace * 2),
-          _buildSectionTitle(
-              AppLocalizations.of(context)!.privacyNotifications,
-              AppColors.pastelAqua,
-              cardTitleStyle),
+          _buildSectionTitle(AppLocalizations.of(context)!.privacyNotifications,
+              AppColors.pastelAqua, cardTitleStyle),
           SizedBox(height: cardSpace),
           _buildToggleItem(
             title: AppLocalizations.of(context)!.privacyUpdateNotifications,
@@ -466,7 +467,8 @@ class _PrivacySecurityScreenState extends State<PrivacySecurityScreen> {
       child: Container(
         padding: EdgeInsets.all(cardPad),
         decoration: BoxDecoration(
-          color: AppThemeColors.of(context).cardBackground.withValues(alpha: 0.8),
+          color:
+              AppThemeColors.of(context).cardBackground.withValues(alpha: 0.8),
           borderRadius: BorderRadius.circular(AppConstants.radiusLarge),
           border: Border.all(color: color.withValues(alpha: 0.2)),
         ),

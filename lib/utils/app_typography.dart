@@ -9,14 +9,16 @@ class AppTypography {
   final double titleScale;
   final bool isLandscape;
 
-  AppTypography(this.fontScale, {required this.titleScale, required this.isLandscape});
+  AppTypography(this.fontScale,
+      {required this.titleScale, required this.isLandscape});
 
   static AppTypography of(BuildContext context) {
     final r = ResponsiveConfig.fromContext(context);
     final isSmall = r.isSmallPhone;
     final titleScale = isSmall ? 0.78 : 1.0;
     final compactScale = r.isCompact ? 0.9 : 1.0;
-    return AppTypography(r.fontScale, titleScale: titleScale * compactScale, isLandscape: r.isLandscape);
+    return AppTypography(r.fontScale,
+        titleScale: titleScale * compactScale, isLandscape: r.isLandscape);
   }
 
   /// Screen titles — large, bold

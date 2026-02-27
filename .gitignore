@@ -77,3 +77,4 @@ run_ios.sh
 AGENTS.md
 CLAUDE.md
 run_localy_emmulator.sh
+lib/firebase_options.dart

@@ -10,9 +10,9 @@ import '../widgets/brainstorm_box.dart';
 import '../models/category_detail_data.dart';
 import '../l10n/app_localizations.dart';
 import '../services/logger_service.dart';
-import '../services/api_service.dart';
 import '../services/service_locator.dart';
 import '../utils/app_theme_colors.dart';
+import 'pdf_viewer_screen.dart';
 
 class CategoryDetailNewScreen extends StatefulWidget {
   final CategoryDetailData categoryData;
@@ -206,7 +206,8 @@ class _CategoryDetailNewScreenState extends State<CategoryDetailNewScreen>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Icon(Icons.arrow_back_ios,
-                      color: AppThemeColors.of(context).textMain, size: sizing.backIcon),
+                      color: AppThemeColors.of(context).textMain,
+                      size: sizing.backIcon),
                   const SizedBox(width: AppConstants.space4),
                   Flexible(
                     child: Text(
@@ -355,11 +356,11 @@ class _CategoryDetailNewScreenState extends State<CategoryDetailNewScreen>
               );
 
               // Submit to backend with attachments
-              final result = await ApiService.submitIdea(
-                description: text,
-                category: widget.categoryData.categoryKey,
-                attachments: attachments,
-              );
+              final result = await ServiceLocator().apiService.submitIdea(
+                    description: text,
+                    category: widget.categoryData.categoryKey,
+                    attachments: attachments,
+                  );
 
               if (!result['success']) {
                 // Log error if submission failed
@@ -394,7 +395,9 @@ class _CategoryDetailNewScreenState extends State<CategoryDetailNewScreen>
           child: Container(
             padding: const EdgeInsets.all(AppConstants.space16),
             decoration: BoxDecoration(
-              color: AppThemeColors.of(context).cardBackground.withValues(alpha: 0.85),
+              color: AppThemeColors.of(context)
+                  .cardBackground
+                  .withValues(alpha: 0.85),
               border: Border.all(
                 color: AppColors.pastelAqua.withValues(alpha: 0.3),
               ),
@@ -507,7 +510,9 @@ class _CategoryDetailNewScreenState extends State<CategoryDetailNewScreen>
                 Text(
                   '#$number',
                   style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                        color: AppThemeColors.of(context).textMuted.withValues(alpha: 0.5),
+                        color: AppThemeColors.of(context)
+                            .textMuted
+                            .withValues(alpha: 0.5),
                       ),
                 ),
                 const SizedBox(height: AppConstants.space20),
@@ -534,15 +539,29 @@ class _CategoryDetailNewScreenState extends State<CategoryDetailNewScreen>
     }
   }
 
-  void _openPdfFromSource(SourceLink sourceLink) {
-    print('📄 [PDF] Opening PDF: ${sourceLink.title}'); //TODO: maybe remove
-    ServiceLocator().pdfService.openPdf(
-      context: context,
-      title: sourceLink.title,
-      description: sourceLink.source,
-      startPage: sourceLink.pdfStartPage ?? 1,
-      endPage: sourceLink.pdfEndPage ?? 999,
-    );
+  Future<void> _openPdfFromSource(SourceLink sourceLink) async {
+    final pdf = await ServiceLocator().pdfService.resolvePdf(
+          language: ServiceLocator().settingsManager.userLanguage,
+        );
+    if (!context.mounted) return;
+
+    if (pdf != null) {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (_) => PDFViewerScreen(
+            title: sourceLink.title,
+            pdfPath: pdf.path,
+            startPage: sourceLink.pdfStartPage ?? 1,
+            endPage: sourceLink.pdfEndPage ?? 999,
+            description: sourceLink.source,
+          ),
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Failed to load PDF')),
+      );
+    }
   }
 
   Future<void> _launchUrl(String url) async {
@@ -599,7 +618,7 @@ class _CategoryDetailNewScreenState extends State<CategoryDetailNewScreen>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           GestureDetector(
-            onTap: () {
+            onTap: () async {
               // Navigate to PDF viewer if PDF page info is available
               if (entry.pdfStartPage != null && entry.pdfEndPage != null) {
                 LoggerService().logUserAction(
@@ -612,13 +631,29 @@ class _CategoryDetailNewScreenState extends State<CategoryDetailNewScreen>
                   },
                 );
 
-                ServiceLocator().pdfService.openPdf(
-                  context: context,
-                  title: entry.highlight,
-                  description: entry.pdfCategory ?? widget.categoryData.title,
-                  startPage: entry.pdfStartPage!,
-                  endPage: entry.pdfEndPage!,
-                );
+                final pdf = await ServiceLocator().pdfService.resolvePdf(
+                      language: ServiceLocator().settingsManager.userLanguage,
+                    );
+                if (!context.mounted) return;
+
+                if (pdf != null) {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) => PDFViewerScreen(
+                        title: entry.highlight,
+                        pdfPath: pdf.path,
+                        startPage: entry.pdfStartPage!,
+                        endPage: entry.pdfEndPage!,
+                        description:
+                            entry.pdfCategory ?? widget.categoryData.title,
+                      ),
+                    ),
+                  );
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Failed to load PDF')),
+                  );
+                }
               }
             },
             child: Container(

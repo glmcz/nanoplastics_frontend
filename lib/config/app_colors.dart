@@ -13,30 +13,30 @@ class AppColors {
   static const Color textDarker = Color(0xFF666666);
   static const Color textRed = Color.fromARGB(255, 251, 37, 101);
 
-
   // Accent colors
   static const Color accent = Color(0xFF3B82F6);
   static const Color accentGlow = Color(0x663B82F6);
 
   // HUMAN BODY PATH - Neon Colors
-  static const Color neonCyan = Color(0xFF06B6D4);      // Lungs/Brain/Central Systems
-  static const Color neonLime = Color(0xFFA3E635);      // Liver/Detox/Filtration
-  static const Color neonCrimson = Color(0xFFF43F5E);   // Heart/Blood/Vitality
-  static const Color neonViolet = Color(0xFFA855F7);    // Reproduction/Placenta
-  static const Color neonOrange = Color(0xFFF97316);    // Entry Points
-  static const Color neonWhite = Color(0xFFE2E8F0);     // Physical Attack
+  static const Color neonCyan =
+      Color(0xFF06B6D4); // Lungs/Brain/Central Systems
+  static const Color neonLime = Color(0xFFA3E635); // Liver/Detox/Filtration
+  static const Color neonCrimson = Color(0xFFF43F5E); // Heart/Blood/Vitality
+  static const Color neonViolet = Color(0xFFA855F7); // Reproduction/Placenta
+  static const Color neonOrange = Color(0xFFF97316); // Entry Points
+  static const Color neonWhite = Color(0xFFE2E8F0); // Physical Attack
 
   // PLANET EARTH PATH - Planetary Colors
-  static const Color neonOcean = Color(0xFF00B4D8);     // Ocean/Hydrosphere
-  static const Color neonAtmos = Color(0xFF90E0EF);     // Atmosphere
-  static const Color neonBio = Color(0xFF4ADE80);       // Biosphere/Flora/Fauna
-  static const Color neonMagma = Color(0xFFD946EF);     // Core/Magma/Magnetic Field
-  static const Color neonSource = Color(0xFFFBBF24);    // Sources/Entry Gates
-  static const Color neonPhysics = Color(0xFFE5E7EB);   // Physics Properties
+  static const Color neonOcean = Color(0xFF00B4D8); // Ocean/Hydrosphere
+  static const Color neonAtmos = Color(0xFF90E0EF); // Atmosphere
+  static const Color neonBio = Color(0xFF4ADE80); // Biosphere/Flora/Fauna
+  static const Color neonMagma = Color(0xFFD946EF); // Core/Magma/Magnetic Field
+  static const Color neonSource = Color(0xFFFBBF24); // Sources/Entry Gates
+  static const Color neonPhysics = Color(0xFFE5E7EB); // Physics Properties
 
   // PASTEL ACCENTS - New Design System
-  static const Color pastelAqua = Color(0xFFAEEEEE);    // Resources/Library
-  static const Color pastelMint = Color(0xFF98FB98);    // Results/Actions
+  static const Color pastelAqua = Color(0xFFAEEEEE); // Resources/Library
+  static const Color pastelMint = Color(0xFF98FB98); // Results/Actions
   static const Color pastelLavender = Color(0xFFC7CEFF); // Ideas/Brainstorm
 
   // Legacy colors (kept for backward compatibility)
@@ -58,7 +58,6 @@ class AppColors {
   static const Color aiBadgeBackground = Color(0x268B5CF6);
   static const Color aiBadgeBorder = Color(0x4D8B5CF6);
   static const Color aiBadgeText = Color(0xFFA78BFA);
-
 
   // Glow colors for neon effects
   static Color neonCyanGlow = neonCyan.withValues(alpha: 0.4);

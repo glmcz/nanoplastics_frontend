@@ -79,24 +79,4 @@ class EncryptionService {
       secureWrite(_userSpecialtyKey, specialty);
   static Future<String?> getSecureUserSpecialty() =>
       secureRead(_userSpecialtyKey);
-
-  // Legacy methods - now use secure storage internally
-  // These are kept for backward compatibility but now delegate to secure storage
-  @Deprecated('Use secureWrite instead for new code')
-  static String encryptString(String plaintext) {
-    // For backward compatibility, return base64 encoded string
-    // New code should use async secureWrite method
-    return base64Encode(utf8.encode(plaintext));
-  }
-
-  @Deprecated('Use secureRead instead for new code')
-  static String decryptString(String encrypted) {
-    try {
-      // For backward compatibility, decode base64
-      return utf8.decode(base64Decode(encrypted));
-    } catch (e) {
-      LoggerService().logError('DecryptionError', e, null, {});
-      return '';
-    }
-  }
 }

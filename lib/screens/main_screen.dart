@@ -12,7 +12,7 @@ import '../models/category_data.dart';
 import '../models/category_detail_data.dart';
 import 'category_detail_new_screen.dart';
 import 'sources_screen.dart';
-import 'results_screen.dart';
+import 'solvers_leaderboard_screen.dart';
 import 'user_settings/user_settings_screen.dart';
 import '../services/logger_service.dart';
 import '../services/extended_tour_service.dart';
@@ -38,18 +38,16 @@ class _MainScreenState extends State<MainScreen> {
       GlobalKey(debugLabel: 'tour_category_grid');
   final GlobalKey _tourHumanButtonKey = GlobalKey(debugLabel: 'tour_human');
   final GlobalKey _tourPlanetButtonKey = GlobalKey(debugLabel: 'tour_planet');
-  final GlobalKey _tourHumanPlanetRowKey = GlobalKey(debugLabel: 'tour_human_planet_row');
-  final GlobalKey _tourSourcesButtonKey =
-      GlobalKey(debugLabel: 'tour_sources');
-  final GlobalKey _tourResultsButtonKey =
-      GlobalKey(debugLabel: 'tour_results');
+  final GlobalKey _tourHumanPlanetRowKey =
+      GlobalKey(debugLabel: 'tour_human_planet_row');
+  final GlobalKey _tourSourcesButtonKey = GlobalKey(debugLabel: 'tour_sources');
+  final GlobalKey _tourResultsButtonKey = GlobalKey(debugLabel: 'tour_results');
   final GlobalKey _tourCenterKnobKey = GlobalKey(debugLabel: 'tour_knob');
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance
-        .addPostFrameCallback((_) => _maybeLaunchTour());
+    WidgetsBinding.instance.addPostFrameCallback((_) => _maybeLaunchTour());
   }
 
   Future<void> _maybeLaunchTour() async {
@@ -161,7 +159,8 @@ class _MainScreenState extends State<MainScreen> {
           Text(
             _selectedTab == ImpactType.human ? l10n.tabHuman : l10n.tabPlanet,
             style: typography.display.copyWith(
-                color: AppThemeColors.of(context).textMain, fontSize: typography.display.fontSize),
+                color: AppThemeColors.of(context).textMain,
+                fontSize: typography.display.fontSize),
           ),
           const SizedBox(height: AppConstants.space4),
           Text(
@@ -405,8 +404,8 @@ class _MainScreenState extends State<MainScreen> {
                                     activeGlowBlur: sizing.hubActiveGlowBlur,
                                     internalGap: spacing.hubButtonGap,
                                     onTap: () {
-                                      setState(
-                                          () => _selectedTab = ImpactType.human);
+                                      setState(() =>
+                                          _selectedTab = ImpactType.human);
                                       LoggerService().logUserAction(
                                           'tab_switched',
                                           params: {'tab': 'human'});
@@ -429,8 +428,8 @@ class _MainScreenState extends State<MainScreen> {
                                     activeGlowBlur: sizing.hubActiveGlowBlur,
                                     internalGap: spacing.hubButtonGap,
                                     onTap: () {
-                                      setState(
-                                          () => _selectedTab = ImpactType.planet);
+                                      setState(() =>
+                                          _selectedTab = ImpactType.planet);
                                       LoggerService().logUserAction(
                                           'tab_switched',
                                           params: {'tab': 'planet'});
@@ -625,7 +624,7 @@ class _MainScreenState extends State<MainScreen> {
   void _navigateToResults() {
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (_) => const ResultsScreen(),
+        builder: (_) => const SolversLeaderboardScreen(),
       ),
     );
   }

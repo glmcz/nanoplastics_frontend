@@ -125,8 +125,10 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
             center: Alignment.topCenter,
             radius: 1.5,
             colors: [
-              AppColors.pastelMint.withValues(alpha: AppThemeColors.of(context).pastelAlpha),
-              AppColors.pastelLavender.withValues(alpha: AppThemeColors.of(context).pastelAlpha),
+              AppColors.pastelMint
+                  .withValues(alpha: AppThemeColors.of(context).pastelAlpha),
+              AppColors.pastelLavender
+                  .withValues(alpha: AppThemeColors.of(context).pastelAlpha),
               AppThemeColors.of(context).gradientEnd,
             ],
             stops: const [0.0, 0.4, 1.0],
@@ -176,7 +178,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Icon(Icons.arrow_back_ios,
-                      color: AppThemeColors.of(context).textMain, size: sizing.backIcon),
+                      color: AppThemeColors.of(context).textMain,
+                      size: sizing.backIcon),
                   const SizedBox(width: AppConstants.space4),
                   Flexible(
                     child: Text(
@@ -527,7 +530,9 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
         Container(
           padding: EdgeInsets.all(spacing.cardPadding),
           decoration: BoxDecoration(
-            color: AppThemeColors.of(context).cardBackground.withValues(alpha: 0.8),
+            color: AppThemeColors.of(context)
+                .cardBackground
+                .withValues(alpha: 0.8),
             borderRadius: BorderRadius.circular(AppConstants.radiusXL),
             border:
                 Border.all(color: AppColors.neonCrimson.withValues(alpha: 0.3)),
@@ -639,9 +644,10 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
           ),
           TextButton(
             onPressed: () async {
+              final nav = Navigator.of(context);
               await _settingsManager.resetToDefaults();
               if (mounted) {
-                Navigator.pop(context);
+                nav.pop();
                 _loadSettings();
                 setState(() {});
               }

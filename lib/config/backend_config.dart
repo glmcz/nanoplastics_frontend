@@ -11,8 +11,7 @@ class BackendConfig {
   /// If not provided, defaults to placeholder (will fail at runtime to catch misconfiguration)
   static const String defaultBackendUrl = String.fromEnvironment(
     'BACKEND_URL',
-    defaultValue:
-        'http://10.0.2.2:3000',
+    defaultValue: 'http://10.0.2.2:3000',
   );
 
   /// Get the current backend base URL

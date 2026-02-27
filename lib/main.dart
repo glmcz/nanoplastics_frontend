@@ -49,7 +49,8 @@ void main() async {
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
-      statusBarIconBrightness: Brightness.light, // Both modes have dark surfaces
+      statusBarIconBrightness:
+          Brightness.light, // Both modes have dark surfaces
       statusBarBrightness: Brightness.dark,
     ),
   );
@@ -115,12 +116,6 @@ class _NanoSolveHiveAppState extends State<NanoSolveHiveApp> {
     final settingsManager = SettingsManager();
     final languageCode = settingsManager.userLanguage;
     _locale = Locale(languageCode);
-  }
-
-  void _updateLocale(Locale locale) {
-    setState(() {
-      _locale = locale;
-    });
   }
 
   @override

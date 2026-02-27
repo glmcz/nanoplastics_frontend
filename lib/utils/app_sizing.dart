@@ -81,7 +81,9 @@ class AppSizing {
   /// gap that shifts content toward the hub. Cap at logoHeight on short screens.
   double get logoHeightLg {
     if (isLandscape) return 21.0;
-    if (scaleH * 812 <= 860) return logoHeight; // skip the 1.5× boost on short screens
+    if (scaleH * 812 <= 860) {
+      return logoHeight; // skip the 1.5× boost on short screens
+    }
     return logoHeight * 1.5;
   }
 

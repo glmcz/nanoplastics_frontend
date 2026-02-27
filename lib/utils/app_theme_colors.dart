@@ -36,12 +36,10 @@ class AppThemeColors {
   Color get textMain => Colors.white;
 
   /// Secondary text — subtitles, descriptions
-  Color get textMuted =>
-      isDark ? AppColors.textMuted : const Color(0xFF8EC8E0);
+  Color get textMuted => isDark ? AppColors.textMuted : const Color(0xFF8EC8E0);
 
   /// Tertiary text — hints, disabled labels
-  Color get textDark =>
-      isDark ? AppColors.textDark : const Color(0xFF5A9AB8);
+  Color get textDark => isDark ? AppColors.textDark : const Color(0xFF5A9AB8);
 
   /// Switch inactive track (visible on both card backgrounds)
   Color get switchInactiveTrack =>

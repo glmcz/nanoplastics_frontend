@@ -53,12 +53,6 @@
 	<!-- Photo library — required by image_picker -->
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Used to select photos and videos to attach to your ideas.</string>
-	<!-- Network — allow HTTP to the backend API server -->
-	<key>NSAppTransportSecurity</key>
-	<dict>
-		<key>NSAllowsArbitraryLoads</key>
-		<true/>
-	</dict>
 	<!-- File access — required for saving and sharing PDFs -->
 	<key>NSDocumentUsageDescription</key>
 	<string>Used to save and share PDF reports from the app.</string>

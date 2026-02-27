@@ -8,7 +8,7 @@ import '../utils/app_spacing.dart';
 import '../utils/app_sizing.dart';
 import '../widgets/nanosolve_logo.dart';
 import '../services/settings_manager.dart';
-import '../services/api_service.dart';
+import '../services/service_locator.dart';
 import '../models/solver.dart';
 import 'user_settings/profile_registration_dialog.dart';
 import '../utils/route_observer.dart';
@@ -61,7 +61,7 @@ class _SolversLeaderboardScreenState extends State<SolversLeaderboardScreen>
 
   void _loadSolvers() {
     setState(() {
-      _solversFuture = ApiService.getTopSolvers();
+      _solversFuture = ServiceLocator().apiService.getTopSolvers();
     });
   }
 
@@ -124,9 +124,8 @@ class _SolversLeaderboardScreenState extends State<SolversLeaderboardScreen>
 
     return Container(
       padding: EdgeInsets.symmetric(
-        horizontal: spacing.headerPadding * 15,
-        vertical: spacing.headerPadding * 8
-      ),
+          horizontal: spacing.headerPadding * 15,
+          vertical: spacing.headerPadding * 8),
       decoration: BoxDecoration(
         color: AppThemeColors.of(context).cardBackground.withValues(alpha: 0.9),
         border: Border(
@@ -147,7 +146,8 @@ class _SolversLeaderboardScreenState extends State<SolversLeaderboardScreen>
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Icon(Icons.arrow_back_ios,
-                        color: AppThemeColors.of(context).textMain, size: sizing.backIcon),
+                        color: AppThemeColors.of(context).textMain,
+                        size: sizing.backIcon),
                     const SizedBox(width: AppConstants.space4),
                     Flexible(
                       child: Text(
@@ -215,7 +215,8 @@ class _SolversLeaderboardScreenState extends State<SolversLeaderboardScreen>
                     const SizedBox(height: AppConstants.space16),
                     Text(
                       '${snapshot.error}',
-                      style: TextStyle(color: AppThemeColors.of(context).textMain),
+                      style:
+                          TextStyle(color: AppThemeColors.of(context).textMain),
                       textAlign: TextAlign.center,
                       maxLines: 3,
                       overflow: TextOverflow.ellipsis,
@@ -259,9 +260,7 @@ class _SolversLeaderboardScreenState extends State<SolversLeaderboardScreen>
       BuildContext context, AppLocalizations l10n) {
     return SingleChildScrollView(
       padding: const EdgeInsets.symmetric(
-        horizontal: AppConstants.space24,
-        vertical: AppConstants.space4
-      ),
+          horizontal: AppConstants.space24, vertical: AppConstants.space4),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

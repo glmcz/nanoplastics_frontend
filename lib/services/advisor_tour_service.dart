@@ -268,9 +268,8 @@ class _TourTooltip extends StatelessWidget {
                 ),
                 const SizedBox(width: 8),
                 TextButton(
-                  onPressed: () => isFinal
-                      ? controller.finish()
-                      : controller.next(),
+                  onPressed: () =>
+                      isFinal ? controller.finish() : controller.next(),
                   child: Text(
                     isFinal ? 'DONE' : 'NEXT',
                     style: typography.label.copyWith(

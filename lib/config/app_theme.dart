@@ -4,18 +4,18 @@ import 'app_colors.dart';
 /// Extension for custom text styles beyond Material's TextTheme
 extension CustomTextStyles on TextTheme {
   TextStyle get headlineXL => const TextStyle(
-    fontSize: 24,
-    fontWeight: FontWeight.w800,
-    color: AppColors.textMain,
-    height: 1.25,
-  );
+        fontSize: 24,
+        fontWeight: FontWeight.w800,
+        color: AppColors.textMain,
+        height: 1.25,
+      );
 
   TextStyle get headlineXXL => const TextStyle(
-    fontSize: 28,
-    fontWeight: FontWeight.w800,
-    color: AppColors.textMain,
-    height: 1.2,
-  );
+        fontSize: 28,
+        fontWeight: FontWeight.w800,
+        color: AppColors.textMain,
+        height: 1.2,
+      );
 }
 
 class AppTheme {
@@ -24,7 +24,8 @@ class AppTheme {
     // Brightness.light is kept so AppThemeColors.isDark = false, while all
     // surfaces use ocean blue values from AppThemeColors.
     const Color blueCard = Color(0xFF0A3350);
-    const Color textMain = AppColors.textMain; // white (good contrast on dark blue)
+    const Color textMain =
+        AppColors.textMain; // white (good contrast on dark blue)
     const Color textMuted = Color(0xFF8EC8E0); // cyan-blue muted
 
     return ThemeData(
@@ -205,7 +206,6 @@ class AppTheme {
           color: AppColors.textMain,
           height: 1.3,
         ),
-
 
         bodyLarge: TextStyle(
           fontSize: 16,

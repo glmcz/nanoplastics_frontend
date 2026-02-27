@@ -351,6 +351,11 @@
   "updateButtonLater": "Más tarde",
   "updateButtonUpdateNow": "Actualizar ahora",
   "updateDownloadInstructions": "Se abrirá la descarga de GitHub. Después de terminar, instala el APK desde tu carpeta de Descargas. Es posible que necesites permitir \"Instalar aplicaciones desconocidas.\"",
+  "updateInstallationCancelledTitle": "Instalación cancelada",
+  "updateInstallationCancelledMsg": "La actualización de la aplicación fue cancelada. Puedes reintentar la instalación en cualquier momento desde Configuración.",
+  "updateButtonRetryInstall": "Reintentar instalación",
+  "updateInstallationSuccessTitle": "Actualización completa",
+  "updateInstallationSuccessMsg": "NanoSolve Hive se ha actualizado exitosamente a la última versión.",
   "aboutVariantLiteBuild": "ENG",
   "aboutVariantFullBuild": "Todos los Idiomas",
 

@@ -7,7 +7,7 @@ import '../helpers/settings_test_helper.dart';
 
 void main() {
   setUp(() async {
-    await setupSettingsManager();
+    await setupServiceLocator();
   });
 
   Widget buildOnboardingApp() {

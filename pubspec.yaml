@@ -1,7 +1,7 @@
 name: nanoplastics_app
 description: NanoSolve Hive - Crowdsourcing R&D solutions for nanoplastic pollution
 publish_to: 'none'
-version: 1.0.19
+version: 1.0.20
 
 environment:
   sdk: '>=3.0.0 <4.0.0'
@@ -35,6 +35,9 @@ dependencies:
   # Google Play Store updates only
   in_app_update: ^4.2.3
   tutorial_coach_mark: ^1.2.8
+  # Direct declarations of transitive deps actually used in lib/
+  image: ^4.0.0
+  crypto: ^3.0.0
 
 dev_dependencies:
   flutter_test:

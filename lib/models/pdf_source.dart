@@ -171,7 +171,7 @@ final List<PDFSource> humanHealthSources = [
 
 // Earth Pollution Category
 final List<PDFSource> earthPollutionSources = [
-    // Main Report - Czech (downloaded on demand)
+  // Main Report - Czech (downloaded on demand)
   PDFSource(
     title: 'Nanoplasty v biosféře - Zpráva (2025)',
     startPage: 1,

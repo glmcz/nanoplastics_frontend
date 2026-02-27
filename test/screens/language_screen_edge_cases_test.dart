@@ -64,9 +64,9 @@ void main() {
       ));
       await tester.pumpAndSettle();
 
-      // Scroll to make Czech visible and tap it (2nd item, reliably visible)
-      await tester.ensureVisible(find.text('Czech'));
-      await tester.pumpAndSettle();
+      // Czech is the 2nd item and fits in the viewport without scrolling.
+      // Avoid ensureVisible — it scrolls Czech to the top of the list, where
+      // the inner Scaffold's AppBar overlaps it and blocks the tap.
       await tester.tap(find.text('Czech'));
       await tester.pumpAndSettle();
 

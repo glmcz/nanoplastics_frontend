@@ -31,6 +31,7 @@ String _downloadUrl(String langCode) =>
 class ResolvedPdf {
   /// True when the PDF comes from Flutter assets (EN bundled).
   final bool isAsset;
+
   /// The path — either an asset key or an absolute file-system path.
   final String path;
 
@@ -122,7 +123,9 @@ Future<String> downloadReport(
     // Always clean up partial file on any failure so next attempt starts fresh
     await sink.close();
     client.close();
-    try { await file.delete(); } catch (_) {}
+    try {
+      await file.delete();
+    } catch (_) {}
     rethrow;
   }
 

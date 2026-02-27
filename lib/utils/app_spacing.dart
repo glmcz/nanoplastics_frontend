@@ -7,8 +7,12 @@ import 'app_sizing.dart';
 /// Usage: `AppSpacing.of(context).md`
 class AppSpacing {
   final double scale;
-  final double compactScale; /// change size of everything according screen size
-  final double categoryScale; /// additional categor vertical boost.
+  final double compactScale;
+
+  /// change size of everything according screen size
+  final double categoryScale;
+
+  /// additional categor vertical boost.
   final bool isLandscape;
   AppSpacing(this.scale,
       {required this.compactScale,
@@ -48,8 +52,7 @@ class AppSpacing {
   double get cardSpacing => 18 * scale * compactScale;
   double get sectionSpacing => 30 * scale * compactScale;
   double get gridSpacing => 5 * scale * compactScale;
-  double get gridRowSpacing =>
-      5 * scale * compactScale * categoryScale;
+  double get gridRowSpacing => 5 * scale * compactScale * categoryScale;
   double get gridBottomPadding => 54 * scale * compactScale;
 
   // ── Header (secondary screens) ──

@@ -4,6 +4,7 @@ import 'settings_manager.dart';
 import 'pdf_service.dart';
 import 'logger_service.dart';
 import 'update_service.dart';
+import 'api_service.dart';
 
 /// Enum representing internet connectivity states
 enum InternetState {
@@ -119,6 +120,7 @@ class ServiceLocator {
   late PdfService _pdfService;
   late UpdateService _updateService;
   late InternetService _internetService;
+  late ApiService _apiService;
 
   factory ServiceLocator() => _instance;
 
@@ -149,6 +151,9 @@ class ServiceLocator {
     _pdfService = PdfService(_settingsManager);
     await _pdfService.initialize();
 
+    // API service — singleton for backend communication.
+    _apiService = ApiService();
+
     // Update service — stateless at construction, checks happen later.
     _updateService = UpdateService();
   }
@@ -157,6 +162,7 @@ class ServiceLocator {
   Future<void> initializeForTesting() async {
     _settingsManager = SettingsManager();
     _loggerService = LoggerService();
+    _apiService = ApiService();
   }
 
   /// Get the singleton SettingsManager instance
@@ -173,4 +179,7 @@ class ServiceLocator {
 
   /// Get the singleton InternetService instance
   InternetService get internetService => _internetService;
+
+  /// Get the singleton ApiService instance
+  ApiService get apiService => _apiService;
 }
