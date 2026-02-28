@@ -18,3 +18,7 @@
 
 # Keep custom application classes
 -keep class org.nanosolve.hive.** { *; }
+
+# Google Play Core (for in-app updates and split installation)
+-keep class com.google.android.play.core.** { *; }
+-keepnames class com.google.android.play.core.splitinstall.SplitInstallException

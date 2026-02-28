@@ -92,3 +92,8 @@ android {
 flutter {
     source = "../.."
 }
+
+dependencies {
+    // Google Play Core for Play Store features (in-app updates, split installation)
+    implementation("com.google.android.play:core:1.10.3")
+}
