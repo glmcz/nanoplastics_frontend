@@ -30,6 +30,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
   late Animation<double> _fadeAnimation;
   late final _GridPatternPainter _gridPatternPainter = _GridPatternPainter();
   late final _LightStreaksPainter _lightStreaksPainter = _LightStreaksPainter();
+  late AppLocalizations _l10n;
 
   List<OnboardingSlide> _getSlides(AppLocalizations l10n) {
     return [
@@ -125,6 +126,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
   @override
   Widget build(BuildContext context) {
     final tc = AppThemeColors.of(context);
+    _l10n = AppLocalizations.of(context)!;
     return Scaffold(
       body: Stack(
         children: [
@@ -440,8 +442,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
   }
 
   Widget _buildSlidesContainer() {
-    final l10n = AppLocalizations.of(context)!;
-    final slides = _getSlides(l10n);
+    final slides = _getSlides(_l10n);
     final responsive = ResponsiveConfig.fromContext(context);
 
     final isWide = responsive.isLandscape;

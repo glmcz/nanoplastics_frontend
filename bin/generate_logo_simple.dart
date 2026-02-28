@@ -17,6 +17,7 @@ void main() async {
     );
   }
 
+  // ignore: avoid_print
   print('\n✓ All logo PNGs generated successfully!');
 }
 
@@ -44,9 +45,6 @@ Future<void> generateLogoPNG({
   final solveColor = darkMode
       ? img.ColorUint8.rgba(181, 255, 181, 255)
       : img.ColorUint8.rgba(152, 251, 152, 255);
-  final textColor = darkMode
-      ? img.ColorUint8.rgba(255, 255, 255, 255)
-      : img.ColorUint8.rgba(44, 62, 80, 255);
 
   // Scale factor for sizing elements
   final scale = size / 100;
@@ -94,6 +92,7 @@ Future<void> generateLogoPNG({
   final pngData = img.encodePng(image);
   await File(outputPath).writeAsBytes(pngData);
 
+  // ignore: avoid_print
   print('✓ Generated: $outputPath (${size}x$size)');
 }
 

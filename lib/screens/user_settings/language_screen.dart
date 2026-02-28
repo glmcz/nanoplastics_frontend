@@ -91,6 +91,7 @@ class _LanguageScreenState extends State<LanguageScreen> {
       double progress = 0;
       final cancellationToken = Completer<void>();
       void Function(VoidCallback)? updateDialog;
+      bool dialogDismissed = false;
 
       showDialog(
         context: context,
@@ -135,6 +136,7 @@ class _LanguageScreenState extends State<LanguageScreen> {
                     if (!cancellationToken.isCompleted) {
                       cancellationToken.complete();
                     }
+                    dialogDismissed = true;
                     Navigator.of(context).pop();
                   },
                   child: const Text(
@@ -157,18 +159,14 @@ class _LanguageScreenState extends State<LanguageScreen> {
         cancellationToken: cancellationToken,
       );
 
-      // Close progress dialog
-      if (mounted) {
+      // Close progress dialog (only if not already dismissed by user cancel)
+      if (!dialogDismissed && mounted) {
         Navigator.of(context).pop();
+        dialogDismissed = true;
       }
       return true;
     } catch (e) {
-      // Close progress dialog if still open
-      if (mounted) {
-        try {
-          Navigator.of(context).pop();
-        } catch (_) {}
-      }
+      // Dialog already dismissed by user cancel or on error during download—no double pop
       return false;
     }
   }

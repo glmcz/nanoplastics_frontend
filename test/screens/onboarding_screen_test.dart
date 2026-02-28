@@ -163,11 +163,9 @@ void main() {
       final mockObserver = MockNavigatorObserver();
 
       await tester.pumpWidget(
-        MaterialApp(
-          home: const Scaffold(
-            body: OnboardingScreen(isReplay: true),
-          ),
-          navigatorObservers: [mockObserver],
+        buildTestableWidget(
+          const OnboardingScreen(isReplay: true),
+          navigatorObserver: mockObserver,
         ),
       );
 

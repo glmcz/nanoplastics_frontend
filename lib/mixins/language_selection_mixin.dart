@@ -58,6 +58,7 @@ mixin LanguageSelectionMixin<T extends StatefulWidget> on State<T> {
 
       double progress = 0;
       bool isCancelled = false;
+      bool dialogDismissed = false;
       late StateSetter dialogSetState;
 
       showDialog(
@@ -100,6 +101,7 @@ mixin LanguageSelectionMixin<T extends StatefulWidget> on State<T> {
                 TextButton(
                   onPressed: () {
                     isCancelled = true;
+                    dialogDismissed = true;
                     if (mounted) Navigator.of(context).pop();
                   },
                   child:
@@ -122,16 +124,13 @@ mixin LanguageSelectionMixin<T extends StatefulWidget> on State<T> {
 
       if (isCancelled) return false;
 
-      if (mounted) {
+      if (!dialogDismissed && mounted) {
         Navigator.of(context).pop();
+        dialogDismissed = true;
       }
       return true;
     } catch (e) {
-      if (mounted) {
-        try {
-          Navigator.of(context).pop();
-        } catch (_) {}
-      }
+      // Dialog already dismissed by user cancel or error—no double pop
       return false;
     }
   }

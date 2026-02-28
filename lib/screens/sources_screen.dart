@@ -783,7 +783,7 @@ class _SourcesScreenState extends State<SourcesScreen> {
                       ),
                     ),
                     child: Text(
-                      'Pages ${source.startPage}-${source.endPage}',
+                      source.getPageRangeDisplay(),
                       style: typography.labelSm.copyWith(
                         color: AppColors.pastelAqua,
                       ),

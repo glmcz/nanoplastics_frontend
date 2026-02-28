@@ -7,6 +7,8 @@ class PDFSource {
   final String language; // 'cs' for Czech, 'en' for English
   final String?
       url; // Optional URL for web links (opens in browser instead of PDF viewer)
+  final int?
+      actualPageCount; // Optional: actual page count for main reports (when known)
 
   PDFSource({
     required this.title,
@@ -16,10 +18,31 @@ class PDFSource {
     this.pdfAssetPath,
     this.language = 'en',
     this.url,
+    this.actualPageCount,
   });
 
   /// Returns true if this source should open as a web link
   bool get isWebLink => url != null && url!.isNotEmpty;
+
+  /// Sentinel value for "all pages until end of document" (1,073,741,824)
+  /// Used to indicate a document should be read from startPage to the end
+  static const int endPageSentinel = 1 << 30;
+
+  /// Check if this source uses the "all pages to end" sentinel
+  bool get isEndPageSentinel => endPage == endPageSentinel;
+
+  /// Get a user-friendly page range display string
+  /// Shows "Pages X-Y" for regular ranges, "Pages X-Z (full document)" for sentinel+actualCount,
+  /// or "Full document" for sentinel without known page count
+  String getPageRangeDisplay() {
+    if (isEndPageSentinel) {
+      if (actualPageCount != null) {
+        return 'Pages $startPage-$actualPageCount (full document)';
+      }
+      return 'Full document';
+    }
+    return 'Pages $startPage-$endPage';
+  }
 }
 
 // Human Health Category
@@ -175,7 +198,7 @@ final List<PDFSource> earthPollutionSources = [
   PDFSource(
     title: 'Nanoplasty v biosféře - Zpráva (2025)',
     startPage: 1,
-    endPage: 999,
+    endPage: 1 << 30, // Sentinel: "all pages to end"
     description: 'Kompletní komplexní zpráva o nanoplastech',
     language: 'cs',
   ),
@@ -283,7 +306,7 @@ final List<PDFSource> earthPollutionSources = [
   PDFSource(
     title: 'Nanoplastics in the Biosphere Report (2025)',
     startPage: 1,
-    endPage: 999,
+    endPage: 1 << 30, // Sentinel: "all pages to end"
     description: 'Complete comprehensive report on nanoplastics',
     language: 'en',
     pdfAssetPath: 'assets/docs/Nanoplastics_Report_EN_compressed.pdf',
@@ -292,7 +315,7 @@ final List<PDFSource> earthPollutionSources = [
   PDFSource(
     title: 'Nanoplásticos en la Biosfera - Informe (2025)',
     startPage: 1,
-    endPage: 999,
+    endPage: 1 << 30, // Sentinel: "all pages to end"
     description: 'Informe completo e integral sobre nanoplásticos',
     language: 'es',
   ),
@@ -300,7 +323,7 @@ final List<PDFSource> earthPollutionSources = [
   PDFSource(
     title: 'Нанопластик в биосфере - Отчёт (2025)',
     startPage: 1,
-    endPage: 999,
+    endPage: 1 << 30, // Sentinel: "all pages to end"
     description: 'Полный комплексный отчет о нанопластике',
     language: 'ru',
   ),
@@ -308,7 +331,7 @@ final List<PDFSource> earthPollutionSources = [
   PDFSource(
     title: 'Les Nanoplastiques dans la Biosphère - Rapport (2025)',
     startPage: 1,
-    endPage: 999,
+    endPage: 1 << 30, // Sentinel: "all pages to end"
     description: 'Rapport complet et exhaustif sur les nanoplastiques',
     language: 'fr',
   ),

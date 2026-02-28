@@ -100,7 +100,7 @@ void main() {
       expect(languages, containsAll(['en', 'cs', 'es', 'ru', 'fr']));
     });
 
-    test('main report sources have endPage of 999', () {
+    test('main report sources have endPage sentinel for "all pages"', () {
       final mainReports = earthPollutionSources.where(
         (s) => s.title.contains('Report') || s.title.contains('Zpráva') ||
                s.title.contains('Informe') || s.title.contains('Отчёт') ||
@@ -108,8 +108,8 @@ void main() {
       );
       expect(mainReports.isNotEmpty, isTrue);
       for (final report in mainReports) {
-        expect(report.endPage, equals(999),
-            reason: '${report.title} endPage should be 999');
+        expect(report.isEndPageSentinel, isTrue,
+            reason: '${report.title} should use endPageSentinel for all pages');
       }
     });
 
@@ -122,6 +122,23 @@ void main() {
       expect(enMainReport.pdfAssetPath, isNotNull);
       expect(enMainReport.pdfAssetPath,
           contains('Nanoplastics_Report_EN_compressed.pdf'));
+    });
+
+    test('getPageRangeDisplay shows user-friendly text for sentinel', () {
+      final mainReport = earthPollutionSources.firstWhere(
+        (s) => s.language == 'en' && s.isEndPageSentinel,
+      );
+      expect(mainReport.getPageRangeDisplay(), equals('Full document'));
+    });
+
+    test('getPageRangeDisplay shows full range for regular page bounds', () {
+      final regularSource = earthPollutionSources.firstWhere(
+        (s) => s.language == 'en' && !s.isEndPageSentinel,
+      );
+      expect(
+        regularSource.getPageRangeDisplay(),
+        equals('Pages ${regularSource.startPage}-${regularSource.endPage}'),
+      );
     });
 
     test('all sources have valid page ranges', () {
@@ -137,18 +154,19 @@ void main() {
   });
 
   group('waterAbilitiesSources', () {
-    test('contains exactly 2 sources (en and cs)', () {
-      expect(waterAbilitiesSources.length, equals(2));
+    test('contains sources for all 5 languages', () {
+      expect(waterAbilitiesSources.length, equals(5));
       final languages =
           waterAbilitiesSources.map((s) => s.language).toSet();
-      expect(languages, equals({'en', 'cs'}));
+      expect(languages, equals({'en', 'cs', 'es', 'fr', 'ru'}));
     });
 
-    test('both have custom pdfAssetPath', () {
+    test('all have custom pdfAssetPath', () {
       for (final source in waterAbilitiesSources) {
         expect(source.pdfAssetPath, isNotNull,
             reason: '${source.title} should have pdfAssetPath');
-        expect(source.pdfAssetPath!.contains('WATER_compressed.pdf'), isTrue);
+        expect(source.pdfAssetPath!.contains('WATER'), isTrue,
+            reason: '${source.title} should have WATER in path');
       }
     });
   });

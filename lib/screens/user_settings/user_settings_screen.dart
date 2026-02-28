@@ -29,6 +29,7 @@ class _UserSettingsScreenState extends State<UserSettingsScreen>
     with WidgetsBindingObserver {
   late SettingsManager _settingsManager;
   bool _waitingForInstall = false;
+  late AppLocalizations _l10n;
 
   @override
   void initState() {
@@ -67,6 +68,7 @@ class _UserSettingsScreenState extends State<UserSettingsScreen>
 
   @override
   Widget build(BuildContext context) {
+    _l10n = AppLocalizations.of(context)!;
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
@@ -107,7 +109,6 @@ class _UserSettingsScreenState extends State<UserSettingsScreen>
   }
 
   Widget _buildHeader() {
-    final l10n = AppLocalizations.of(context)!;
     final spacing = AppSpacing.of(context);
     final sizing = AppSizing.of(context);
     final typography = AppTypography.of(context);
@@ -143,7 +144,7 @@ class _UserSettingsScreenState extends State<UserSettingsScreen>
                         const SizedBox(width: AppConstants.space4),
                         Flexible(
                           child: Text(
-                            l10n.categoryDetailBackToOverview,
+                            _l10n.categoryDetailBackToOverview,
                             style: typography.back.copyWith(
                                 color: AppThemeColors.of(context).textMain),
                             maxLines: 2,
@@ -210,7 +211,7 @@ class _UserSettingsScreenState extends State<UserSettingsScreen>
               _buildTitleSection(typography),
               SizedBox(height: spacing.cardSpacing),
               _buildSettingItem(
-                title: AppLocalizations.of(context)!.settingsProfile,
+                title: _l10n.settingsProfile,
                 icon: Icons.person_outline,
                 color: AppColors.pastelMint,
                 spacing: spacing,
@@ -222,7 +223,7 @@ class _UserSettingsScreenState extends State<UserSettingsScreen>
               ),
               SizedBox(height: spacing.cardSpacing),
               _buildSettingItem(
-                title: AppLocalizations.of(context)!.settingsLanguage,
+                title: _l10n.settingsLanguage,
                 icon: Icons.language,
                 color: AppColors.pastelAqua,
                 spacing: spacing,
@@ -235,7 +236,7 @@ class _UserSettingsScreenState extends State<UserSettingsScreen>
               ),
               SizedBox(height: spacing.cardSpacing),
               _buildSettingItem(
-                title: AppLocalizations.of(context)!.settingsPrivacySecurity,
+                title: _l10n.settingsPrivacySecurity,
                 icon: Icons.lock_outline,
                 color: AppColors.pastelMint,
                 spacing: spacing,
@@ -251,7 +252,7 @@ class _UserSettingsScreenState extends State<UserSettingsScreen>
               ),
               SizedBox(height: spacing.cardSpacing),
               _buildSettingItem(
-                title: AppLocalizations.of(context)!.settingsAbout,
+                title: _l10n.settingsAbout,
                 icon: Icons.info_outline,
                 color: AppColors.pastelLavender,
                 spacing: spacing,
@@ -263,8 +264,8 @@ class _UserSettingsScreenState extends State<UserSettingsScreen>
               ),
               SizedBox(height: spacing.cardSpacing),
               _buildSettingItem(
-                title: AppLocalizations.of(context)!.settingsIntroTour,
-                subtitle: AppLocalizations.of(context)!.settingsIntroTourSubtitle,
+                title: _l10n.settingsIntroTour,
+                subtitle: _l10n.settingsIntroTourSubtitle,
                 icon: Icons.play_circle_outline,
                 color: AppColors.pastelAqua,
                 spacing: spacing,
@@ -292,7 +293,7 @@ class _UserSettingsScreenState extends State<UserSettingsScreen>
             colors: [AppColors.pastelMint, AppColors.pastelAqua],
           ).createShader(bounds),
           child: Text(
-            AppLocalizations.of(context)!.settingsTitle,
+            _l10n.settingsTitle,
             style: typography.display.copyWith(
               color: Colors.white,
               letterSpacing: 0.5,
@@ -301,7 +302,7 @@ class _UserSettingsScreenState extends State<UserSettingsScreen>
         ),
         const SizedBox(height: AppConstants.space8),
         Text(
-          AppLocalizations.of(context)!.settingsSubtitle,
+          _l10n.settingsSubtitle,
           style: typography.subtitle,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
@@ -403,7 +404,7 @@ class _UserSettingsScreenState extends State<UserSettingsScreen>
               const SizedBox(width: 16),
               Expanded(
                 child: Text(
-                  AppLocalizations.of(context)!.updateCheckingForUpdates,
+                  _l10n.updateCheckingForUpdates,
                   style: AppTypography.of(
                     context,
                   ).body.copyWith(color: AppThemeColors.of(context).textMain),
@@ -427,7 +428,7 @@ class _UserSettingsScreenState extends State<UserSettingsScreen>
         } else if (updateService.currentState == UpdateState.failed) {
           // Network error or GitHub API unreachable — not "up to date"
           _showErrorDialog(
-            AppLocalizations.of(context)!.updateFailedToCheck,
+            _l10n.updateFailedToCheck,
           );
         } else {
           _showAppIsCurrentDialog();
@@ -437,7 +438,7 @@ class _UserSettingsScreenState extends State<UserSettingsScreen>
       if (mounted) {
         Navigator.of(context).pop();
         _showErrorDialog(
-          '${AppLocalizations.of(context)!.updateFailedToCheck}: $e',
+          '${_l10n.updateFailedToCheck}: $e',
         );
       }
     }
@@ -450,13 +451,13 @@ class _UserSettingsScreenState extends State<UserSettingsScreen>
       builder: (context) => AlertDialog(
         backgroundColor: AppThemeColors.of(context).dialogBackground,
         title: Text(
-          AppLocalizations.of(context)!.updateAppUpToDateTitle,
+          _l10n.updateAppUpToDateTitle,
           style: AppTypography.of(context)
               .title
               .copyWith(color: AppThemeColors.of(context).textMain),
         ),
         content: Text(
-          AppLocalizations.of(context)!.updateAppUpToDateMsg,
+          _l10n.updateAppUpToDateMsg,
           style: AppTypography.of(
             context,
           ).body.copyWith(
@@ -466,7 +467,7 @@ class _UserSettingsScreenState extends State<UserSettingsScreen>
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: Text(AppLocalizations.of(context)!.updateButtonOk),
+            child: Text(_l10n.updateButtonOk),
           ),
         ],
       ),
@@ -482,7 +483,7 @@ class _UserSettingsScreenState extends State<UserSettingsScreen>
       builder: (context) => AlertDialog(
         backgroundColor: AppThemeColors.of(context).dialogBackground,
         title: Text(
-          AppLocalizations.of(context)!.updateAvailableTitle,
+          _l10n.updateAvailableTitle,
           style: AppTypography.of(context)
               .title
               .copyWith(color: AppThemeColors.of(context).textMain),
@@ -492,7 +493,7 @@ class _UserSettingsScreenState extends State<UserSettingsScreen>
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              '${AppLocalizations.of(context)!.updateAvailableMsg}\n($latestVersion)',
+              '${_l10n.updateAvailableMsg}\n($latestVersion)',
               style: AppTypography.of(
                 context,
               ).body.copyWith(
@@ -502,7 +503,7 @@ class _UserSettingsScreenState extends State<UserSettingsScreen>
             ),
             const SizedBox(height: 16),
             Text(
-              AppLocalizations.of(context)!.updateDownloadInstructions,
+              _l10n.updateDownloadInstructions,
               style: AppTypography.of(context).body.copyWith(
                     color: AppThemeColors.of(context).textMuted,
                     fontSize: 13,
@@ -514,7 +515,7 @@ class _UserSettingsScreenState extends State<UserSettingsScreen>
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
             child: Text(
-              AppLocalizations.of(context)!.updateButtonLater,
+              _l10n.updateButtonLater,
               style: TextStyle(color: AppThemeColors.of(context).textMuted),
             ),
           ),
@@ -524,7 +525,7 @@ class _UserSettingsScreenState extends State<UserSettingsScreen>
               backgroundColor: AppColors.neonCrimson,
               foregroundColor: Colors.white,
             ),
-            child: Text(AppLocalizations.of(context)!.updateButtonUpdateNow),
+            child: Text(_l10n.updateButtonUpdateNow),
           ),
         ],
       ),
@@ -537,7 +538,7 @@ class _UserSettingsScreenState extends State<UserSettingsScreen>
       builder: (context) => AlertDialog(
         backgroundColor: AppThemeColors.of(context).dialogBackground,
         title: Text(
-          AppLocalizations.of(context)!.updateError,
+          _l10n.updateError,
           style: AppTypography.of(context)
               .title
               .copyWith(color: AppThemeColors.of(context).textMain),
@@ -553,7 +554,7 @@ class _UserSettingsScreenState extends State<UserSettingsScreen>
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: Text(AppLocalizations.of(context)!.updateButtonOk),
+            child: Text(_l10n.updateButtonOk),
           ),
         ],
       ),
@@ -566,13 +567,13 @@ class _UserSettingsScreenState extends State<UserSettingsScreen>
       builder: (context) => AlertDialog(
         backgroundColor: AppThemeColors.of(context).dialogBackground,
         title: Text(
-          AppLocalizations.of(context)!.updateInstallationSuccessTitle,
+          _l10n.updateInstallationSuccessTitle,
           style: AppTypography.of(context).title.copyWith(
                 color: AppThemeColors.of(context).textMain,
               ),
         ),
         content: Text(
-          AppLocalizations.of(context)!.updateInstallationSuccessMsg,
+          _l10n.updateInstallationSuccessMsg,
           style: AppTypography.of(context).body.copyWith(
                 color:
                     AppThemeColors.of(context).textMain.withValues(alpha: 0.8),
@@ -581,7 +582,7 @@ class _UserSettingsScreenState extends State<UserSettingsScreen>
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: Text(AppLocalizations.of(context)!.updateButtonOk),
+            child: Text(_l10n.updateButtonOk),
           ),
         ],
       ),
@@ -594,13 +595,13 @@ class _UserSettingsScreenState extends State<UserSettingsScreen>
       builder: (context) => AlertDialog(
         backgroundColor: AppThemeColors.of(context).dialogBackground,
         title: Text(
-          AppLocalizations.of(context)!.updateInstallationCancelledTitle,
+          _l10n.updateInstallationCancelledTitle,
           style: AppTypography.of(context).title.copyWith(
                 color: AppThemeColors.of(context).textMain,
               ),
         ),
         content: Text(
-          AppLocalizations.of(context)!.updateInstallationCancelledMsg,
+          _l10n.updateInstallationCancelledMsg,
           style: AppTypography.of(context).body.copyWith(
                 color:
                     AppThemeColors.of(context).textMain.withValues(alpha: 0.8),
@@ -609,7 +610,7 @@ class _UserSettingsScreenState extends State<UserSettingsScreen>
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: Text(AppLocalizations.of(context)!.updateButtonLater),
+            child: Text(_l10n.updateButtonLater),
           ),
           ElevatedButton(
             onPressed: () {
@@ -620,7 +621,7 @@ class _UserSettingsScreenState extends State<UserSettingsScreen>
               backgroundColor: AppColors.neonCyan,
               foregroundColor: Colors.white,
             ),
-            child: Text(AppLocalizations.of(context)!.updateButtonRetryInstall),
+            child: Text(_l10n.updateButtonRetryInstall),
           ),
         ],
       ),

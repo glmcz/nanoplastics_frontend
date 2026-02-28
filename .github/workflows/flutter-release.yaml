@@ -16,8 +16,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      # --- GENERATE FIREBASE OPTIONS ---
+      - name: Restore firebase_options.dart from secret
+        run: |
+          echo "${{ secrets.FIREBASE_OPTIONS_BASE64 }}" | base64 --decode > lib/firebase_options.dart
+
       # --- EXTRACT VERSION FROM PUBSPEC ---
-      # This pulls the 'version: 1.2.3+4' from your pubspec.yaml 
+      # This pulls the 'version: 1.2.3+4' from your pubspec.yaml
       # to use as a fallback if no git tag is present.
       - name: Get Version from Pubspec
         id: pubspec_version
