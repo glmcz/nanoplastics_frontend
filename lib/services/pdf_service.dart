@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-import '../screens/pdf_viewer_screen.dart';
 import '../config/backend_config.dart';
 import 'settings_manager.dart';
 import 'logger_service.dart';
@@ -10,7 +8,7 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 
 /// Centralized PDF management service
-/// Handles caching, downloading, and navigation for all PDF access across app
+/// Handles caching and downloading for all PDF access across app
 /// All PDFs (bundled + downloaded) stored in single app documents directory
 class PdfService {
   final SettingsManager settingsManager;
@@ -186,56 +184,6 @@ class PdfService {
     }
   }
 
-  /// Navigate to PDF viewer screen
-  void _navigateToPdfViewer(
-    BuildContext context,
-    String title,
-    String description,
-    int startPage,
-    int endPage,
-    String pdfPath,
-  ) {
-    LoggerService().logDebug(
-      'pdf_navigate',
-      'Navigating to PDF viewer: $title',
-    );
-
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => PDFViewerScreen(
-          title: title,
-          startPage: startPage,
-          endPage: endPage,
-          description: description,
-          pdfPath: pdfPath,
-        ),
-      ),
-    );
-
-    LoggerService().logUserAction('pdf_opened', params: {
-      'title': title,
-      'startPage': startPage,
-      'endPage': endPage,
-    });
-  }
-
-  /// Show error dialog
-  void _showErrorDialog(BuildContext context, String message) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('PDF Error'),
-        content: Text(message),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('OK'),
-          ),
-        ],
-      ),
-    );
-  }
-
   /// Get list of all available PDF languages from documents directory
   Future<List<String>> getAvailableLanguages() async {
     return await settingsManager.getCachedPdfLanguages();
@@ -247,15 +195,9 @@ class PdfService {
     return pdf != null && await pdf.exists();
   }
 
-  /// Open PDF from asset path (for bundled special PDFs like water PDFs)
-  Future<void> openPdfFromAsset({
-    required BuildContext context,
-    required String assetPath,
-    required String title,
-    required String description,
-    required int startPage,
-    required int endPage,
-  }) async {
+  /// Resolve PDF from asset path (for bundled special PDFs like water PDFs)
+  /// Extracts and caches the PDF, returns the File path
+  Future<File?> resolveAssetPdf(String assetPath) async {
     try {
       // Extract PDF name from asset path for caching
       final fileName = assetPath.split('/').last.replaceAll('.pdf', '');
@@ -281,23 +223,13 @@ class PdfService {
         );
       }
 
-      // Open the cached file
-      if (!context.mounted) return;
-      _navigateToPdfViewer(
-        context,
-        title,
-        description,
-        startPage,
-        endPage,
-        cachedFile.path,
-      );
+      return cachedFile;
     } catch (e) {
       LoggerService().logError(
-        'asset_pdf_open_failed',
-        'Error opening PDF from asset $assetPath: $e',
+        'asset_pdf_resolve_failed',
+        'Error resolving PDF from asset $assetPath: $e',
       );
-      if (!context.mounted) return;
-      _showErrorDialog(context, 'Failed to open PDF: $e');
+      return null;
     }
   }
 

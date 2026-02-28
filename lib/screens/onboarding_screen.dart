@@ -14,7 +14,9 @@ import '../utils/app_theme_colors.dart';
 import '../mixins/language_selection_mixin.dart';
 
 class OnboardingScreen extends StatefulWidget {
-  const OnboardingScreen({super.key});
+  final bool isReplay;
+
+  const OnboardingScreen({super.key, this.isReplay = false});
 
   @override
   State<OnboardingScreen> createState() => _OnboardingScreenState();
@@ -103,13 +105,20 @@ class _OnboardingScreenState extends State<OnboardingScreen>
   }
 
   void _closeOnboarding() async {
-    // Mark onboarding as shown
-    await settingsManager.setOnboardingShown(true);
+    // Only mark as shown if not replaying
+    if (!widget.isReplay) {
+      await settingsManager.setOnboardingShown(true);
+    }
 
     _animationController.reverse().then((_) {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => const MainScreen()),
-      );
+      if (!mounted) return;
+      if (widget.isReplay) {
+        Navigator.of(context).pop();
+      } else {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (_) => const MainScreen()),
+        );
+      }
     });
   }
 
@@ -374,8 +383,8 @@ class _OnboardingScreenState extends State<OnboardingScreen>
             ],
           ),
         ),
-        // Show language flags only on first slide
-        if (_currentPage == 0) _buildLanguageSelector(),
+        // Show language flags only on first slide and not in replay mode
+        if (_currentPage == 0 && !widget.isReplay) _buildLanguageSelector(),
       ],
     );
   }

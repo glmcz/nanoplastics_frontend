@@ -26,6 +26,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Tap English (already selected) — should be no-op
+      await tester.scrollUntilVisible(find.text('English').first, 200.0);
       await tester.tap(find.text('English').first);
       await tester.pumpAndSettle();
 
@@ -64,9 +65,7 @@ void main() {
       ));
       await tester.pumpAndSettle();
 
-      // Czech is the 2nd item and fits in the viewport without scrolling.
-      // Avoid ensureVisible — it scrolls Czech to the top of the list, where
-      // the inner Scaffold's AppBar overlaps it and blocks the tap.
+      // Tap Czech
       await tester.tap(find.text('Czech'));
       await tester.pumpAndSettle();
 
@@ -86,7 +85,7 @@ void main() {
       // Initially English is selected — one checkmark
       expect(find.byIcon(Icons.check), findsOneWidget);
 
-      // Tap French
+      // Tap French (visible in test viewport by default)
       await tester.tap(find.text('French'));
       await tester.pumpAndSettle();
 

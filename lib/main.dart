@@ -8,6 +8,7 @@ import 'screens/main_screen.dart';
 import 'l10n/app_localizations.dart';
 import 'services/settings_manager.dart';
 import 'services/service_locator.dart';
+import 'services/update_service.dart';
 import 'utils/route_observer.dart';
 
 void main() async {
@@ -109,6 +110,7 @@ class NanoSolveHiveApp extends StatefulWidget {
 
 class _NanoSolveHiveAppState extends State<NanoSolveHiveApp> {
   late Locale _locale;
+  late Function(UpdateState, double) _updateListener;
 
   @override
   void initState() {
@@ -116,6 +118,24 @@ class _NanoSolveHiveAppState extends State<NanoSolveHiveApp> {
     final settingsManager = SettingsManager();
     final languageCode = settingsManager.userLanguage;
     _locale = Locale(languageCode);
+
+    // Attach global update listener for automatic notifications
+    _attachUpdateListener();
+  }
+
+  void _attachUpdateListener() {
+    _updateListener = (state, progress) {
+      if (!mounted) return;
+      // Rebuild UI to show/hide update badge on settings icon
+      setState(() {});
+    };
+    ServiceLocator().updateService.addStateListener(_updateListener);
+  }
+
+  @override
+  void dispose() {
+    ServiceLocator().updateService.removeStateListener(_updateListener);
+    super.dispose();
   }
 
   @override

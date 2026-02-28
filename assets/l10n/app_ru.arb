@@ -223,6 +223,8 @@
   "settingsLanguage": "Язык",
   "settingsPrivacySecurity": "Конфиденциальность и безопасность",
   "settingsAbout": "О приложении",
+  "settingsIntroTour": "Вводный тур",
+  "settingsIntroTourSubtitle": "Посмотреть введение в приложение снова",
 
   "profileTitle": "Настройки профиля",
   "profileSubtitle": "Настройте свой профиль и предпочтения",
@@ -261,7 +263,7 @@
   "privacyAnalyticsDesc": "Помогите нам улучшить приложение, делясь анонимными данными об использовании",
   "privacySecurity": "Безопасность",
   "privacyDataEncryption": "Шифрование данных",
-  "privacyDataEncryptionDesc": "Все ваши данные зашифрованы при передаче и хранении",
+  "privacyDataEncryptionDesc": "Ваши данные зашифрованы при передаче с использованием HTTPS. Данные локального профиля надежно хранятся на вашем устройстве.",
   "privacyLocalStorage": "Локальное хранилище",
   "privacyLocalStorageDesc": "Ваши настройки безопасно хранятся на вашем устройстве",
   "privacyNotifications": "Уведомления",

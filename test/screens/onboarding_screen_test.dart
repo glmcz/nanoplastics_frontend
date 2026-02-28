@@ -5,6 +5,22 @@ import 'package:nanoplastics_app/services/settings_manager.dart';
 import '../helpers/test_app.dart';
 import '../helpers/settings_test_helper.dart';
 
+// Mock navigator observer to track navigation calls
+class MockNavigatorObserver extends NavigatorObserver {
+  final List<Route<dynamic>> pushedRoutes = [];
+  final List<Route<dynamic>> poppedRoutes = [];
+
+  @override
+  void didPush(Route<dynamic> route, Route<dynamic>? previousRoute) {
+    pushedRoutes.add(route);
+  }
+
+  @override
+  void didPop(Route<dynamic> route, Route<dynamic>? previousRoute) {
+    poppedRoutes.add(route);
+  }
+}
+
 void main() {
   setUp(() async {
     await setupServiceLocator();
@@ -125,6 +141,74 @@ void main() {
       await tester.pumpAndSettle(const Duration(seconds: 2));
 
       expect(SettingsManager().hasShownOnboarding, isTrue);
+    });
+  });
+
+  group('OnboardingScreen isReplay mode', () {
+    testWidgets('language selector is hidden on first page in replay mode',
+        (tester) async {
+      final widget = buildTestableWidget(
+        const OnboardingScreen(isReplay: true),
+      );
+      await tester.pumpWidget(widget);
+      await tester.pumpAndSettle();
+
+      // On first page (slide 0) in replay mode, language selector should be hidden
+      // Language selector icon should not be visible
+      expect(find.byIcon(Icons.language), findsNothing);
+    });
+
+    testWidgets('close button calls Navigator.pop in replay mode',
+        (tester) async {
+      final mockObserver = MockNavigatorObserver();
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: const Scaffold(
+            body: OnboardingScreen(isReplay: true),
+          ),
+          navigatorObservers: [mockObserver],
+        ),
+      );
+
+      await tester.pumpAndSettle();
+
+      // Find and tap close icon
+      final closeButton = find.byIcon(Icons.close);
+      expect(closeButton, findsOneWidget);
+
+      await tester.tap(closeButton);
+      await tester.pumpAndSettle(const Duration(seconds: 1));
+
+      // Verify pop was called (not push)
+      expect(mockObserver.poppedRoutes.isNotEmpty, isTrue);
+    });
+
+    testWidgets('hasShownOnboarding stays unchanged after close in replay mode',
+        (tester) async {
+      // Set hasShownOnboarding to true before test
+      final settingsManager = SettingsManager();
+      await settingsManager.setOnboardingShown(true);
+
+      final widget = buildTestableWidget(
+        const OnboardingScreen(isReplay: true),
+      );
+      await tester.pumpWidget(widget);
+      await tester.pumpAndSettle();
+
+      // Remember initial state
+      final initialState = settingsManager.hasShownOnboarding;
+      expect(initialState, isTrue);
+
+      // Find and tap close icon
+      final closeButton = find.byIcon(Icons.close);
+      expect(closeButton, findsOneWidget);
+
+      await tester.tap(closeButton);
+      await tester.pumpAndSettle(const Duration(seconds: 1));
+
+      // Verify state unchanged
+      expect(settingsManager.hasShownOnboarding, equals(initialState));
     });
   });
 }

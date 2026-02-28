@@ -13,7 +13,6 @@ import '../../widgets/nanosolve_logo.dart';
 import '../../widgets/glowing_header_separator.dart';
 import '../../main.dart';
 import '../../utils/app_theme_colors.dart';
-import '../pdf_viewer_screen.dart';
 
 class LanguageScreen extends StatefulWidget {
   final Function(Locale)? onLanguageChanged;
@@ -76,48 +75,7 @@ class _LanguageScreenState extends State<LanguageScreen> {
     // Restart the app to apply the new language
     if (mounted) {
       RestartableApp.restartApp(context);
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-              'Language changed to ${_languages.firstWhere((l) => l.code == code).name}'),
-          backgroundColor: AppColors.pastelAqua.withValues(alpha: 0.9),
-          behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(AppConstants.radiusMedium)),
-        ),
-      );
-
-      // After restart, navigate to PDF viewer for non-EN languages in LITE build
-      if (code != 'en' && _settingsManager.buildType == 'LITE') {
-        Future.delayed(const Duration(milliseconds: 500), () async {
-          if (mounted) {
-            final langName = _languages.firstWhere((l) => l.code == code).name;
-            final pdf = await ServiceLocator().pdfService.resolvePdf(
-                  language: code,
-                );
-            if (!mounted) return;
-
-            if (pdf != null) {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (_) => PDFViewerScreen(
-                    title: langName,
-                    pdfPath: pdf.path,
-                    startPage: 1,
-                    endPage: 198,
-                    description: 'Language report for $langName',
-                  ),
-                ),
-              );
-            } else {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Failed to load PDF')),
-              );
-            }
-          }
-        });
-      }
+      return;
     }
   }
 
@@ -404,7 +362,7 @@ class _LanguageScreenState extends State<LanguageScreen> {
   ) {
     final isSelected = _selectedLanguage == language.code;
 
-    return GestureDetector(
+    return InkWell(
       onTap: () => _selectLanguage(language.code),
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),

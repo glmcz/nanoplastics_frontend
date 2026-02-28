@@ -99,7 +99,7 @@ class ApiService {
       final streamedResponse = await request.send().timeout(
         const Duration(seconds: 45),
         onTimeout: () {
-          throw TimeoutException('Request timeout after 120 seconds');
+          throw TimeoutException('Request timeout after 45 seconds');
         },
       );
 

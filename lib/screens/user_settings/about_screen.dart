@@ -232,6 +232,17 @@ class _AboutScreenState extends State<AboutScreen> {
               }
             },
           ),
+          SizedBox(height: spacing.cardSpacing),
+          _buildLinkItem(
+            title: AppLocalizations.of(context)!.aboutPrivacyPolicy,
+            subtitle: AppLocalizations.of(context)!.aboutPrivacyPolicyDesc,
+            icon: Icons.privacy_tip_outlined,
+            color: AppColors.pastelMint,
+            spacing: spacing,
+            sizing: sizing,
+            typography: typography,
+            onTap: () => _launchUrl('https://glmcz.github.io/nanoplastics_frontend/privacy_policy.html'),
+          ),
           SizedBox(height: spacing.cardSpacing * 2),
           _buildSectionTitle(
               context, AppLocalizations.of(context)!.aboutShare, typography),
@@ -378,7 +389,7 @@ class _AboutScreenState extends State<AboutScreen> {
     required AppTypography typography,
     required VoidCallback onTap,
   }) {
-    return GestureDetector(
+    return InkWell(
       onTap: onTap,
       child: Container(
         padding: EdgeInsets.all(spacing.cardPadding),
@@ -527,7 +538,7 @@ class _AboutScreenState extends State<AboutScreen> {
             ),
           ),
           const SizedBox(height: AppConstants.space16),
-          GestureDetector(
+          InkWell(
             onTap: () => _launchUrl(appDownloadUrl),
             child: Container(
               padding: const EdgeInsets.symmetric(
@@ -582,7 +593,7 @@ class _AboutScreenState extends State<AboutScreen> {
     AppTypography typography,
   ) {
     final isSelected = _selectedVariant == variantKey;
-    return GestureDetector(
+    return InkWell(
       onTap: () => setState(() => _selectedVariant = variantKey),
       child: Container(
         padding: const EdgeInsets.symmetric(
@@ -637,7 +648,10 @@ class _AboutScreenState extends State<AboutScreen> {
 
   Future<void> _launchUrl(String url) async {
     debugPrint('🔗 [CustomTabs] Launching URL: $url');
+    final uri = Uri.parse(url);
+
     try {
+      // Try custom tabs first (Android)
       final theme = CustomTabsOptions(
         colorSchemes: CustomTabsColorSchemes.defaults(
           toolbarColor: AppColors.pastelLavender,
@@ -655,7 +669,7 @@ class _AboutScreenState extends State<AboutScreen> {
       );
 
       await launchUrl(
-        Uri.parse(url),
+        uri,
         customTabsOptions: theme,
         safariVCOptions: const SafariViewControllerOptions(
           preferredBarTintColor: AppColors.pastelLavender,
@@ -668,6 +682,23 @@ class _AboutScreenState extends State<AboutScreen> {
     } catch (e, stackTrace) {
       debugPrint('❌ [CustomTabs] Error launching $url: $e');
       debugPrint('❌ [CustomTabs] Stack trace: $stackTrace');
+
+      // Fallback to url_launcher's externalApplication mode
+      try {
+        debugPrint('🔗 [Fallback] Attempting url_launcher fallback...');
+        final bool launched = await url_launcher.launchUrl(
+          uri,
+          mode: url_launcher.LaunchMode.externalApplication,
+        );
+        if (launched) {
+          debugPrint('🔗 [Fallback] URL launched successfully via fallback');
+        } else {
+          debugPrint('❌ [Fallback] Could not launch URL');
+        }
+      } catch (fallbackError, fallbackStack) {
+        debugPrint('❌ [Fallback] Error during fallback: $fallbackError');
+        debugPrint('❌ [Fallback] Stack trace: $fallbackStack');
+      }
     }
   }
 }

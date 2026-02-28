@@ -16,6 +16,8 @@ import 'solvers_leaderboard_screen.dart';
 import 'user_settings/user_settings_screen.dart';
 import '../services/logger_service.dart';
 import '../services/extended_tour_service.dart';
+import '../services/service_locator.dart';
+import '../services/settings_manager.dart';
 import '../utils/app_theme_colors.dart';
 
 enum ImpactType { human, planet }
@@ -65,7 +67,29 @@ class _MainScreenState extends State<MainScreen> {
         resultsButtonKey: _tourResultsButtonKey,
         centerKnobKey: _tourCenterKnobKey,
       ),
+      onSwitchToHuman: () => _switchTab(ImpactType.human),
     );
+  }
+
+  /// Switch between Human and Planet tabs during tour
+  void _switchTab(ImpactType tab) {
+    if (mounted) {
+      setState(() {
+        _selectedTab = tab;
+      });
+    }
+  }
+
+  bool _isUpdateAvailable() {
+    try {
+      final updateService = ServiceLocator().updateService;
+      final settingsManager = SettingsManager();
+      // Only show badge if update is available AND notifications are enabled
+      return updateService.currentState.name == 'available' &&
+          settingsManager.pushNotificationsEnabled;
+    } catch (_) {
+      return false;
+    }
   }
 
   @override
@@ -540,10 +564,29 @@ class _MainScreenState extends State<MainScreen> {
               ),
             ],
           ),
-          child: Icon(
-            Icons.settings,
-            size: sizing.hubKnobIconSize,
-            color: Colors.white,
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              Icon(
+                Icons.settings,
+                size: sizing.hubKnobIconSize,
+                color: Colors.white,
+              ),
+              // Update available badge
+              if (_isUpdateAvailable())
+                Positioned(
+                  top: 0,
+                  right: 0,
+                  child: Container(
+                    width: sizing.iconSm,
+                    height: sizing.iconSm,
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.red,
+                    ),
+                  ),
+                ),
+            ],
           ),
         ),
       ),

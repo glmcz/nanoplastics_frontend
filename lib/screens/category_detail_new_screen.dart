@@ -382,7 +382,7 @@ class _CategoryDetailNewScreenState extends State<CategoryDetailNewScreen>
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        GestureDetector(
+        InkWell(
           onTap: () {
             setState(() {
               _isSourcesExpanded = !_isSourcesExpanded;
@@ -468,7 +468,7 @@ class _CategoryDetailNewScreenState extends State<CategoryDetailNewScreen>
     required int number,
     required SourceLink sourceLink,
   }) {
-    return GestureDetector(
+    return InkWell(
       onTap: () => _handleSourceLink(sourceLink),
       child: Container(
         width: double.infinity,
@@ -540,13 +540,16 @@ class _CategoryDetailNewScreenState extends State<CategoryDetailNewScreen>
   }
 
   Future<void> _openPdfFromSource(SourceLink sourceLink) async {
+    final navigator = Navigator.of(context);
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
+
     final pdf = await ServiceLocator().pdfService.resolvePdf(
           language: ServiceLocator().settingsManager.userLanguage,
         );
     if (!context.mounted) return;
 
     if (pdf != null) {
-      Navigator.of(context).push(
+      navigator.push(
         MaterialPageRoute(
           builder: (_) => PDFViewerScreen(
             title: sourceLink.title,
@@ -558,19 +561,14 @@ class _CategoryDetailNewScreenState extends State<CategoryDetailNewScreen>
         ),
       );
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
+      scaffoldMessenger.showSnackBar(
         const SnackBar(content: Text('Failed to load PDF')),
       );
     }
   }
 
   Future<void> _launchUrl(String url) async {
-    debugPrint('🔗 [CustomTabs] Launching URL: $url');
     try {
-      final uri = Uri.parse(url);
-      debugPrint('🔗 [CustomTabs] Parsed URI: $uri');
-      debugPrint('🔗 [CustomTabs] Using Firefox with Custom Tabs');
-
       // Add referrer to make the request look more legitimate
       final urlWithReferrer =
           '$url${url.contains('?') ? '&' : '?'}utm_source=nanoplastics_app';
@@ -617,7 +615,7 @@ class _CategoryDetailNewScreenState extends State<CategoryDetailNewScreen>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          GestureDetector(
+          InkWell(
             onTap: () async {
               // Navigate to PDF viewer if PDF page info is available
               if (entry.pdfStartPage != null && entry.pdfEndPage != null) {
@@ -631,13 +629,16 @@ class _CategoryDetailNewScreenState extends State<CategoryDetailNewScreen>
                   },
                 );
 
+                final navigator = Navigator.of(context);
+                final scaffoldMessenger = ScaffoldMessenger.of(context);
+
                 final pdf = await ServiceLocator().pdfService.resolvePdf(
                       language: ServiceLocator().settingsManager.userLanguage,
                     );
                 if (!context.mounted) return;
 
                 if (pdf != null) {
-                  Navigator.of(context).push(
+                  navigator.push(
                     MaterialPageRoute(
                       builder: (_) => PDFViewerScreen(
                         title: entry.highlight,
@@ -650,7 +651,7 @@ class _CategoryDetailNewScreenState extends State<CategoryDetailNewScreen>
                     ),
                   );
                 } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
+                  scaffoldMessenger.showSnackBar(
                     const SnackBar(content: Text('Failed to load PDF')),
                   );
                 }

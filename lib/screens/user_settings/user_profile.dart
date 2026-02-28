@@ -315,7 +315,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     return Center(
       child: Column(
         children: [
-          GestureDetector(
+          InkWell(
             onTap: () {
               // Avatar selection logic
             },
@@ -574,7 +574,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     required AppTypography typography,
     required VoidCallback onTap,
   }) {
-    return GestureDetector(
+    return InkWell(
       onTap: onTap,
       child: Container(
         padding: EdgeInsets.all(spacing.md),

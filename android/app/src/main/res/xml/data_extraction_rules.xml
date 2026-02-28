@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<data-extraction-rules>
+  <!-- Exclude Flutter shared preferences from cloud backup -->
+  <cloud-backup>
+    <exclude domain="sharedpref" path="FlutterSharedPreferences.xml"/>
+  </cloud-backup>
+</data-extraction-rules>

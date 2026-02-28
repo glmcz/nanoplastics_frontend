@@ -1,4 +1,4 @@
-package com.example.nanoplastics_app
+package org.nanosolve.hive
 
 import android.content.pm.PackageManager
 import android.os.Build
@@ -7,7 +7,7 @@ import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 
 class MainActivity : FlutterActivity() {
-  private val CHANNEL = "com.example.nanoplastics/update"
+  private val CHANNEL = "org.nanosolve.hive/update"
 
   override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
     super.configureFlutterEngine(flutterEngine)

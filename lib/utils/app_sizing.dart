@@ -54,7 +54,7 @@ class AppSizing {
   }
 
   // ── Icons ──
-
+  double get iconXss => 8 * scaleW * compactScale;
   double get iconXs => 16 * scaleW * compactScale;
   double get iconSm => 20 * scaleW * compactScale;
   double get iconMd => 24 * scaleW * compactScale;

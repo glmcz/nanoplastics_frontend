@@ -16,6 +16,7 @@ import 'user_profile.dart';
 import 'language_screen.dart';
 import 'privacy_security_screen.dart';
 import 'about_screen.dart';
+import '../onboarding_screen.dart';
 
 class UserSettingsScreen extends StatefulWidget {
   const UserSettingsScreen({super.key});
@@ -198,15 +199,6 @@ class _UserSettingsScreenState extends State<UserSettingsScreen>
 
     return LayoutBuilder(
       builder: (context, constraints) {
-        debugPrint('=== SETTINGS CONTENT LAYOUT ===');
-        debugPrint('Screen width: ${MediaQuery.of(context).size.width}');
-        debugPrint('Screen height: ${MediaQuery.of(context).size.height}');
-        debugPrint('Available width: ${constraints.maxWidth}');
-        debugPrint('isBig: ${responsive.isBig}');
-        debugPrint('verticalPadding: $verticalPadding');
-        debugPrint('contentPaddingH: ${spacing.contentPaddingH}');
-        debugPrint('===============================');
-
         return SingleChildScrollView(
           padding: EdgeInsets.symmetric(
             horizontal: spacing.contentPaddingH,
@@ -269,6 +261,21 @@ class _UserSettingsScreenState extends State<UserSettingsScreen>
                   context,
                 ).push(MaterialPageRoute(builder: (_) => const AboutScreen())),
               ),
+              SizedBox(height: spacing.cardSpacing),
+              _buildSettingItem(
+                title: AppLocalizations.of(context)!.settingsIntroTour,
+                subtitle: AppLocalizations.of(context)!.settingsIntroTourSubtitle,
+                icon: Icons.play_circle_outline,
+                color: AppColors.pastelAqua,
+                spacing: spacing,
+                sizing: sizing,
+                typography: typography,
+                onTap: () => Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => const OnboardingScreen(isReplay: true),
+                  ),
+                ),
+              ),
             ],
           ),
         );
@@ -313,7 +320,7 @@ class _UserSettingsScreenState extends State<UserSettingsScreen>
     String? subtitle,
     VoidCallback? onTap,
   }) {
-    return GestureDetector(
+    return InkWell(
       onTap: onTap,
       child: Container(
         padding: EdgeInsets.all(spacing.cardPadding),

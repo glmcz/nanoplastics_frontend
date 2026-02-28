@@ -138,8 +138,11 @@ class _SourcesScreenState extends State<SourcesScreen> {
     final sizing = AppSizing.of(context);
     final typography = AppTypography.of(context);
 
-    return GestureDetector(
+    return InkWell(
       onTap: () async {
+        final navigator = Navigator.of(context);
+        final scaffoldMessenger = ScaffoldMessenger.of(context);
+
         LoggerService().logUserAction('main_report_opened', params: {
           'report': 'nanoplastics_main_report',
         });
@@ -150,7 +153,7 @@ class _SourcesScreenState extends State<SourcesScreen> {
         if (!context.mounted) return;
 
         if (pdf != null) {
-          Navigator.of(context).push(
+          navigator.push(
             MaterialPageRoute(
               builder: (_) => PDFViewerScreen(
                 title: 'Nanoplastics: Global Report',
@@ -163,7 +166,7 @@ class _SourcesScreenState extends State<SourcesScreen> {
             ),
           );
         } else {
-          ScaffoldMessenger.of(context).showSnackBar(
+          scaffoldMessenger.showSnackBar(
             const SnackBar(content: Text('Failed to load PDF')),
           );
         }
@@ -287,7 +290,7 @@ class _SourcesScreenState extends State<SourcesScreen> {
     required double padding,
     required VoidCallback onTap,
   }) {
-    return GestureDetector(
+    return InkWell(
       onTap: onTap,
       child: Container(
         padding: EdgeInsets.symmetric(vertical: padding, horizontal: padding),
@@ -441,7 +444,7 @@ class _SourcesScreenState extends State<SourcesScreen> {
     required AppTypography typography,
     required VoidCallback onTap,
   }) {
-    return GestureDetector(
+    return InkWell(
       onTap: onTap,
       child: Container(
         decoration: BoxDecoration(
@@ -546,7 +549,7 @@ class _SourcesScreenState extends State<SourcesScreen> {
     required AppSizing sizing,
     required AppTypography typography,
   }) {
-    return GestureDetector(
+    return InkWell(
       onTap: () async {
         LoggerService().logUserAction('video_source_clicked', params: {
           'title': video.title,
@@ -673,7 +676,7 @@ class _SourcesScreenState extends State<SourcesScreen> {
     required AppSizing sizing,
     required AppTypography typography,
   }) {
-    return GestureDetector(
+    return InkWell(
       onTap: () async {
         LoggerService().logUserAction('pdf_source_clicked', params: {
           'source': source.title,
@@ -681,25 +684,18 @@ class _SourcesScreenState extends State<SourcesScreen> {
           'endPage': source.endPage,
         });
 
-        // Use openPdfFromAsset if custom asset path is provided (for water PDFs, etc.)
+        final navigator = Navigator.of(context);
+        final scaffoldMessenger = ScaffoldMessenger.of(context);
+
+        // Use resolveAssetPdf if custom asset path is provided (for water PDFs, etc.)
         if (source.pdfAssetPath != null && source.pdfAssetPath!.isNotEmpty) {
-          ServiceLocator().pdfService.openPdfFromAsset(
-                context: context,
-                assetPath: source.pdfAssetPath!,
-                title: source.title,
-                description: source.description,
-                startPage: source.startPage,
-                endPage: source.endPage,
-              );
-        } else {
-          // Use resolvePdf for standard language-based reports
-          final pdf = await ServiceLocator().pdfService.resolvePdf(
-                language: ServiceLocator().settingsManager.userLanguage,
+          final pdf = await ServiceLocator().pdfService.resolveAssetPdf(
+                source.pdfAssetPath!,
               );
           if (!context.mounted) return;
 
           if (pdf != null) {
-            Navigator.of(context).push(
+            navigator.push(
               MaterialPageRoute(
                 builder: (_) => PDFViewerScreen(
                   title: source.title,
@@ -711,7 +707,31 @@ class _SourcesScreenState extends State<SourcesScreen> {
               ),
             );
           } else {
-            ScaffoldMessenger.of(context).showSnackBar(
+            scaffoldMessenger.showSnackBar(
+              const SnackBar(content: Text('Failed to load PDF')),
+            );
+          }
+        } else {
+          // Use resolvePdf for standard language-based reports
+          final pdf = await ServiceLocator().pdfService.resolvePdf(
+                language: ServiceLocator().settingsManager.userLanguage,
+              );
+          if (!context.mounted) return;
+
+          if (pdf != null) {
+            navigator.push(
+              MaterialPageRoute(
+                builder: (_) => PDFViewerScreen(
+                  title: source.title,
+                  pdfPath: pdf.path,
+                  startPage: source.startPage,
+                  endPage: source.endPage,
+                  description: source.description,
+                ),
+              ),
+            );
+          } else {
+            scaffoldMessenger.showSnackBar(
               const SnackBar(content: Text('Failed to load PDF')),
             );
           }

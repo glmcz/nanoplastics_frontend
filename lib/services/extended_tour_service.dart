@@ -96,29 +96,44 @@ class ExtendedTourService {
   ExtendedTourStep get currentStep => _currentStep;
   int get stepIndex => _stepIndex;
 
-  /// Set callbacks for navigation between screens
+  /// Set callbacks for navigation between screens and tab switching
   void setNavigationCallbacks({
     required VoidCallback onNavigate,
     required VoidCallback onComplete,
+    VoidCallback? onSwitchToHuman,
   }) {
     _onNavigate = onNavigate;
     _onComplete = onComplete;
+    _onSwitchToHuman = onSwitchToHuman;
   }
+
+  VoidCallback? _onSwitchToHuman;
 
   /// Show extended tour if user hasn't seen it yet
   static Future<void> showIfNeeded(
     BuildContext context,
-    ExtendedTourKeys keys,
-  ) async {
+    ExtendedTourKeys keys, {
+    VoidCallback? onSwitchToHuman,
+  }) async {
     final settings = SettingsManager();
 
     // DEBUG: Skip cache check if debugForceShowTour is true
     if (!debugForceShowTour && settings.hasShownAdvisorTour) return;
 
-    await settings.setAdvisorTourShown(true);
-
     if (!context.mounted) return;
-    ExtendedTourService().startTour(context, keys);
+
+    // Set callback to mark tour as shown when it completes
+    ExtendedTourService service = ExtendedTourService();
+    service.setNavigationCallbacks(
+      onNavigate: () {},
+      onComplete: () {
+        // Mark tour as shown when it completes (fire-and-forget async)
+        settings.setAdvisorTourShown(true);
+      },
+      onSwitchToHuman: onSwitchToHuman,
+    );
+
+    service.startTour(context, keys);
   }
 
   /// Start the extended tour from the beginning
@@ -291,6 +306,12 @@ class ExtendedTourService {
       paddingFocus: 4,
       focusAnimationDuration: const Duration(milliseconds: 300),
       pulseAnimationDuration: const Duration(milliseconds: 800),
+      onClickTarget: (target) {
+        // Auto-switch tabs when viewing category explanations
+        if (target.identify == 'tour_human_planet_row') {
+          _onSwitchToHuman?.call();
+        }
+      },
       onFinish: () {
         _currentStep = ExtendedTourStep.complete;
         _onComplete?.call();

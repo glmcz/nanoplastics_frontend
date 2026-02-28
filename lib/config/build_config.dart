@@ -13,4 +13,12 @@ class BuildConfig {
     'BUNDLE_ALL_LANGS',
     defaultValue: false,
   );
+
+  /// Whether this is a Play Store build (disables self-update).
+  /// When true, the update service is disabled (uses Play Store in-app updates instead).
+  /// Set via: flutter build appbundle --dart-define=IS_PLAY_STORE=true
+  static const isPlayStoreBuild = bool.fromEnvironment(
+    'IS_PLAY_STORE',
+    defaultValue: false,
+  );
 }

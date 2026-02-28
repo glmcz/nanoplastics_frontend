@@ -65,9 +65,11 @@ class LoggerService {
         return true;
       };
 
-      await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
+      // Enable Crashlytics collection based on analytics setting
+      final analyticsEnabled = _isAnalyticsEnabled();
+      await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(analyticsEnabled);
 
-      _logToConsole('LoggerService', 'Firebase & Crashlytics initialized');
+      _logToConsole('LoggerService', 'Firebase & Crashlytics initialized (collection: $analyticsEnabled)');
       _initialized = true;
     } catch (e, stackTrace) {
       _logToConsole(
@@ -292,6 +294,15 @@ class LoggerService {
     if (_initialized) {
       await FirebaseCrashlytics.instance.setUserIdentifier('');
       _logToConsole('Logger', 'User data cleared');
+    }
+  }
+
+  /// Update Crashlytics collection when analytics setting changes
+  Future<void> updateCrashlyticsCollectionEnabled() async {
+    if (_initialized) {
+      final analyticsEnabled = _isAnalyticsEnabled();
+      await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(analyticsEnabled);
+      _logToConsole('Logger', 'Crashlytics collection updated: $analyticsEnabled');
     }
   }
 }

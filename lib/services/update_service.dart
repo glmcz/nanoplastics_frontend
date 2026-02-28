@@ -9,6 +9,7 @@ import 'package:android_package_installer/android_package_installer.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'dart:convert';
 import '../config/backend_config.dart';
+import '../config/build_config.dart';
 import 'logger_service.dart';
 import 'service_locator.dart';
 
@@ -258,8 +259,13 @@ class UpdateService {
   /// Check if update is available based on GitHub release tag
   /// Returns true only if a new release is newer than the installed app version
   /// Notifies listeners of state changes during check
-  /// Returns false if no internet connection (offline mode)
+  /// Returns false if no internet connection (offline mode) or if running on Play Store
   Future<bool> checkForUpdates({bool force = false}) async {
+    // Disable update checks on Play Store builds (use in-app update instead)
+    if (BuildConfig.isPlayStoreBuild) {
+      return false;
+    }
+
     final internetService = ServiceLocator().internetService;
 
     // Check internet first - skip if offline
@@ -723,7 +729,7 @@ class UpdateService {
   /// Check if device has Android 12+ and request installation permission if needed
   /// Returns true if permission is granted or device is below Android 12
   /// Returns false if permission is denied
-  static const platform = MethodChannel('com.example.nanoplastics_app/update');
+  static const platform = MethodChannel('org.nanosolve.hive/update');
 
   Future<bool> _checkAndRequestInstallPermission() async {
     if (!Platform.isAndroid) return true;

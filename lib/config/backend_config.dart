@@ -1,17 +1,22 @@
 /// Backend configuration for API endpoints
 /// Build configuration:
+/// - Production: https://nanosolve.duckdns.org (default)
 /// - Emulator: flutter run --dart-define=BACKEND_URL=http://10.0.2.2:3000
+/// - Local: flutter run --dart-define=BACKEND_URL=http://localhost:3000
 class BackendConfig {
-  /// Backend URL - MUST be provided via environment variable at build time
+  /// Backend URL - can be overridden via environment variable at build time
   ///
-  /// Production builds MUST set BACKEND_URL via GitHub Actions secrets
+  /// Production default: https://nanosolve.duckdns.org (HTTPS required for Play Store)
   /// Local development can override with:
-  ///   flutter run --dart-define=BACKEND_URL=http://10.0.2.2:3000
+  ///   flutter run --dart-define=BACKEND_URL=http://10.0.2.2:3000 (emulator)
+  ///   flutter run --dart-define=BACKEND_URL=http://localhost:3000 (local machine)
   ///
-  /// If not provided, defaults to placeholder (will fail at runtime to catch misconfiguration)
+  /// Network security policy (Android):
+  /// - HTTPS required for all domains except emulator IP 10.0.2.2
+  /// - See: android/app/src/main/res/xml/network_security_config.xml
   static const String defaultBackendUrl = String.fromEnvironment(
     'BACKEND_URL',
-    defaultValue: 'http://10.0.2.2:3000',
+    defaultValue: 'https://nanosolve.duckdns.org',
   );
 
   /// Get the current backend base URL

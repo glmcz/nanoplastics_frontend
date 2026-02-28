@@ -257,6 +257,8 @@
   "settingsLanguage": "Jazyk",
   "settingsPrivacySecurity": "Soukromí & Bezpečnost",
   "settingsAbout": "O aplikaci",
+  "settingsIntroTour": "Úvodní průvodce",
+  "settingsIntroTourSubtitle": "Spustit úvodní prohlídku znovu",
 
   "profileTitle": "Nastavení profilu",
   "profileSubtitle": "Přizpůsobte svůj profil a předvolby",
@@ -295,7 +297,7 @@
   "privacyAnalyticsDesc": "Pomozte nám zlepšit sdílením anonymních dat o použití",
   "privacySecurity": "Bezpečnost",
   "privacyDataEncryption": "Šifrování dat",
-  "privacyDataEncryptionDesc": "Všechna vaše data jsou šifrována při přenosu i uložení",
+  "privacyDataEncryptionDesc": "Vaše data jsou šifrována při přenosu pomocí HTTPS. Místní údaje profilu jsou bezpečně uloženy na vašem zařízení.",
   "privacyLocalStorage": "Lokální úložiště",
   "privacyLocalStorageDesc": "Vaše předvolby jsou bezpečně uloženy na vašem zařízení",
   "privacyNotifications": "Oznámení",

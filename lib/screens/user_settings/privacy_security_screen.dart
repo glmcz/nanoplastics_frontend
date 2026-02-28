@@ -196,19 +196,20 @@ class _PrivacySecurityScreenState extends State<PrivacySecurityScreen> {
           SizedBox(height: cardSpace * 2),
           _buildSectionTitle(AppLocalizations.of(context)!.privacySecurity,
               AppColors.pastelLavender, cardTitleStyle),
-          SizedBox(height: cardSpace),
-          _buildInfoItem(
-            title: AppLocalizations.of(context)!.privacyDataEncryption,
-            subtitle: AppLocalizations.of(context)!.privacyDataEncryptionDesc,
-            icon: Icons.enhanced_encryption_outlined,
-            color: AppColors.pastelLavender,
-            cardPad: cardPad,
-            iconContainer: iconContainer,
-            iconSz: iconSz,
-            cardSpace: cardSpace,
-            cardTitleStyle: cardTitleStyle,
-            subtitleStyle: subtitleStyle,
-          ),
+              /// TODO later not important since no confidential information is stored.
+          // SizedBox(height: cardSpace), 
+          // _buildInfoItem(
+          //   title: AppLocalizations.of(context)!.privacyDataEncryption,
+          //   subtitle: AppLocalizations.of(context)!.privacyDataEncryptionDesc,
+          //   icon: Icons.enhanced_encryption_outlined,
+          //   color: AppColors.pastelLavender,
+          //   cardPad: cardPad,
+          //   iconContainer: iconContainer,
+          //   iconSz: iconSz,
+          //   cardSpace: cardSpace,
+          //   cardTitleStyle: cardTitleStyle,
+          //   subtitleStyle: subtitleStyle,
+          // ),
           SizedBox(height: cardSpace),
           _buildInfoItem(
             title: AppLocalizations.of(context)!.privacyLocalStorage,
@@ -462,7 +463,7 @@ class _PrivacySecurityScreenState extends State<PrivacySecurityScreen> {
     required TextStyle cardTitleStyle,
     required VoidCallback onTap,
   }) {
-    return GestureDetector(
+    return InkWell(
       onTap: onTap,
       child: Container(
         padding: EdgeInsets.all(cardPad),

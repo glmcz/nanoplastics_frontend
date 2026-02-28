@@ -163,6 +163,9 @@ class ServiceLocator {
     _settingsManager = SettingsManager();
     _loggerService = LoggerService();
     _apiService = ApiService();
+    _pdfService = PdfService(_settingsManager);
+    _updateService = UpdateService();
+    _internetService = InternetService._();
   }
 
   /// Get the singleton SettingsManager instance

@@ -332,6 +332,30 @@ final List<PDFSource> waterAbilitiesSources = [
     pdfAssetPath: 'assets/docs/EN_WATER_compressed.pdf',
     language: 'en',
   ),
+  PDFSource(
+    title: 'Capacidades Especiales del Agua',
+    startPage: 1,
+    endPage: 6,
+    description: 'Propiedades del agua y efectos cuánticos',
+    pdfAssetPath: 'assets/docs/ESP-WATER_compressed.pdf',
+    language: 'es',
+  ),
+  PDFSource(
+    title: 'Capacités Spéciales de l\'Eau',
+    startPage: 1,
+    endPage: 6,
+    description: 'Propriétés de l\'eau et effets quantiques',
+    pdfAssetPath: 'assets/docs/FR-WATER_compressed.pdf',
+    language: 'fr',
+  ),
+  PDFSource(
+    title: 'Специальные свойства воды',
+    startPage: 1,
+    endPage: 6,
+    description: 'Квантовые эффекты и структура воды',
+    pdfAssetPath: 'assets/docs/RUS-WATER_compressed.pdf',
+    language: 'ru',
+  ),
 ];
 
 // Video Source Model

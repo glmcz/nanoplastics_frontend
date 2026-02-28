@@ -1,4 +1,4 @@
-package com.example.nanoplastics_app
+package org.nanosolve.hive
 
 import android.app.NotificationChannel
 import android.app.NotificationManager

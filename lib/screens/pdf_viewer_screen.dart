@@ -9,6 +9,7 @@ import '../utils/app_spacing.dart';
 import '../utils/app_sizing.dart';
 import '../utils/app_typography.dart';
 import '../widgets/nanosolve_logo.dart';
+import '../widgets/pdf_page_input.dart';
 import '../l10n/app_localizations.dart';
 import '../services/logger_service.dart';
 import '../utils/app_theme_colors.dart';
@@ -476,10 +477,10 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
   }
 
   Widget _buildHeader({bool isPortrait = true}) {
-    final l10n = AppLocalizations.of(context)!;
     final spacing = AppSpacing.of(context);
     final sizing = AppSizing.of(context);
     final typography = AppTypography.of(context);
+    final l10n = AppLocalizations.of(context)!;
 
     return Container(
       padding: EdgeInsets.all(isPortrait ? AppConstants.space8 : 1.0),
@@ -493,73 +494,69 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
       ),
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: InkWell(
-                    onTap: () => Navigator.of(context).maybePop(),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Icon(Icons.arrow_back_ios,
-                            color: AppThemeColors.of(context).textMain,
-                            size: sizing.backIcon),
-                        const SizedBox(width: AppConstants.space4),
-                        Flexible(
-                          child: Text(
-                            l10n.categoryDetailBackToOverview,
-                            style: typography.back.copyWith(
-                              color: AppThemeColors.of(context).textMain,
-                            ),
-                            maxLines: 2,
-                            overflow: TextOverflow.fade,
-                            softWrap: true,
-                          ),
-                        ),
-                      ],
+            // Back button (left)
+            Flexible(
+              flex: 1,
+              child: InkWell(
+                onTap: () => Navigator.of(context).maybePop(),
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: spacing.md, vertical: spacing.sm),
+                  decoration: BoxDecoration(
+                    color: AppThemeColors.of(context).surfaceMid.withValues(alpha: 0.8),
+                    borderRadius: BorderRadius.circular(sizing.radiusMd),
+                    border: Border.all(
+                      color: AppThemeColors.of(context).textMain.withValues(alpha: 0.2),
                     ),
                   ),
-                ),
-                SizedBox(
-                  width: 50,
-                  child: TextField(
-                    textAlign: TextAlign.right,
-                    keyboardType: TextInputType.number,
-                    inputFormatters: [
-                      FilteringTextInputFormatter.digitsOnly,
-                    ],
-                    onSubmitted: _jumpToPage,
-                    controller: TextEditingController(text: '$_currentPage'),
-                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                          color: AppColors.pastelAqua,
-                        ),
-                    decoration: InputDecoration(
-                      prefix: Text(
-                        'p. ',
-                        style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                              color: AppColors.pastelAqua,
+                  child: isPortrait
+                      ? Row(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Icon(Icons.arrow_back_ios,
+                                color: AppThemeColors.of(context).textMain,
+                                size: sizing.iconSm),
+                            const SizedBox(width: AppConstants.space8),
+                            Text(
+                              l10n.categoryDetailBackToOverview,
+                              style: typography.back.copyWith(
+                                color: AppThemeColors.of(context).textMain,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
-                      ),
-                      border: InputBorder.none,
-                      isDense: true,
-                      contentPadding:
-                          const EdgeInsets.symmetric(horizontal: 10),
-                    ),
-                  ),
+                          ],
+                        )
+                      : Icon(Icons.arrow_back_ios,
+                          color: AppThemeColors.of(context).textMain,
+                          size: sizing.iconXss),
                 ),
-              ],
+              ),
             ),
-            SizedBox(height: spacing.headerSpacing),
-            NanosolveLogo(
-                height: isPortrait ? sizing.logoHeightLg : sizing.logoHeight),
-          ],
+            // Logo (center)
+            Expanded(
+                flex: 2,
+                child: Center(
+                  child: NanosolveLogo(
+                    height: isPortrait ? sizing.logoHeightLg : sizing.logoHeight,
+                  ),
+                ),
+              ),
+              // Page counter (right)
+              Flexible(
+                flex: 1,
+                child: PdfPageInput(
+                  currentPage: _currentPage,
+                  onPageSubmitted: _jumpToPage,
+                ),
+              ),
+            ],
+          ),
         ),
-      ),
-    );
+      );
   }
 
   Widget _buildInfoCard() {
@@ -751,7 +748,7 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          GestureDetector(
+          InkWell(
             onTap: () {
               if (_currentPage > 1) {
                 _pdfController.previousPage(
@@ -788,7 +785,7 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
                 ),
               ),
               const SizedBox(width: 16),
-              GestureDetector(
+              InkWell(
                 onTap: _sharePDF,
                 child: Icon(
                   Icons.share,
@@ -797,7 +794,7 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
                 ),
               ),
               const SizedBox(width: 12),
-              GestureDetector(
+              InkWell(
                 onTap: _downloadAndSharePDF,
                 child: Icon(
                   Icons.download,
@@ -807,7 +804,7 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
               ),
             ],
           ),
-          GestureDetector(
+          InkWell(
             onTap: () {
               if (_currentPage < _actualEndPage) {
                 _pdfController.nextPage(

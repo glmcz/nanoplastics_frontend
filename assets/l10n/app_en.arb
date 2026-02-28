@@ -257,6 +257,8 @@
   "settingsLanguage": "Language",
   "settingsPrivacySecurity": "Privacy & Security",
   "settingsAbout": "About",
+  "settingsIntroTour": "Intro Tour",
+  "settingsIntroTourSubtitle": "Watch the app introduction again",
 
   "profileTitle": "Profile Settings",
   "profileSubtitle": "Customize your profile and preferences",
@@ -295,7 +297,7 @@
   "privacyAnalyticsDesc": "Help us improve by sharing anonymous usage data",
   "privacySecurity": "Security",
   "privacyDataEncryption": "Data Encryption",
-  "privacyDataEncryptionDesc": "All your data is encrypted in transit and at rest",
+  "privacyDataEncryptionDesc": "Your data is encrypted in transit using HTTPS. Local profile data is stored securely on your device.",
   "privacyLocalStorage": "Local Storage",
   "privacyLocalStorageDesc": "Your preferences are stored securely on your device",
   "privacyNotifications": "Notifications",

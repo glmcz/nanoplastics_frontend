@@ -223,6 +223,8 @@
   "settingsLanguage": "Langue",
   "settingsPrivacySecurity": "Confidentialité et sécurité",
   "settingsAbout": "À propos",
+  "settingsIntroTour": "Visite guidée",
+  "settingsIntroTourSubtitle": "Revoir la présentation de l'application",
 
   "profileTitle": "Paramètres du profil",
   "profileSubtitle": "Personnalisez votre profil et vos préférences",
@@ -261,7 +263,7 @@
   "privacyAnalyticsDesc": "Aidez-nous à améliorer en partageant des données d'utilisation anonymes",
   "privacySecurity": "Sécurité",
   "privacyDataEncryption": "Chiffrement des données",
-  "privacyDataEncryptionDesc": "Toutes vos données sont chiffrées en transit et au repos",
+  "privacyDataEncryptionDesc": "Vos données sont chiffrées en transit à l'aide de HTTPS. Les données de profil local sont stockées de manière sécurisée sur votre appareil.",
   "privacyLocalStorage": "Stockage local",
   "privacyLocalStorageDesc": "Vos préférences sont stockées en toute sécurité sur votre appareil",
   "privacyNotifications": "Notifications",
