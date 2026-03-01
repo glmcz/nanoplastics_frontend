@@ -251,8 +251,7 @@ final List<PDFSource> humanHealthSources = [
     url: '$_frBase#page=116',
   ),
   PDFSource(
-    title:
-        'Issues défavorables de la grossesse aux États-Unis (phtalates)',
+    title: 'Issues défavorables de la grossesse aux États-Unis (phtalates)',
     startPage: 120,
     endPage: 131,
     description: 'Reproduction et développement (placenta, fœtus, fertilité)',
@@ -296,8 +295,7 @@ final List<PDFSource> humanHealthSources = [
     title: 'Contamination des produits laitiers',
     startPage: 70,
     endPage: 91,
-    description:
-        "Portes d'entrée (inhalation, ingestion, pénétration cutanée)",
+    description: "Portes d'entrée (inhalation, ingestion, pénétration cutanée)",
     language: 'fr',
     url: '$_frBase#page=70',
   ),
@@ -436,7 +434,8 @@ final List<PDFSource> humanHealthSources = [
     title: 'Квантовые эффекты и перенос протонов в клетках',
     startPage: 93,
     endPage: 119,
-    description: 'Физическое воздействие (квантовые, молекулярные, клеточные повреждения)',
+    description:
+        'Физическое воздействие (квантовые, молекулярные, клеточные повреждения)',
     language: 'ru',
     url: '$_ruBase#page=93',
   ),
@@ -460,7 +459,8 @@ final List<PDFSource> humanHealthSources = [
     title: 'Загрязнение молочных продуктов',
     startPage: 70,
     endPage: 91,
-    description: 'Пути проникновения (вдыхание, проглатывание, проникновение через кожу)',
+    description:
+        'Пути проникновения (вдыхание, проглатывание, проникновение через кожу)',
     language: 'ru',
     url: '$_ruBase#page=70',
   ),
@@ -468,7 +468,8 @@ final List<PDFSource> humanHealthSources = [
     title: 'Воздействие фталатов и рак у детей',
     startPage: 91,
     endPage: 119,
-    description: 'Физическое воздействие (квантовые, молекулярные, клеточные повреждения)',
+    description:
+        'Физическое воздействие (квантовые, молекулярные, клеточные повреждения)',
     language: 'ru',
     url: '$_ruBase#page=91',
   ),

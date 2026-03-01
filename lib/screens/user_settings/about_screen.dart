@@ -680,7 +680,8 @@ class _AboutScreenState extends State<AboutScreen> {
         ),
       );
     } catch (e, stackTrace) {
-      LoggerService().logError('CustomTabs launch failed', '$url: $e', stackTrace);
+      LoggerService()
+          .logError('CustomTabs launch failed', '$url: $e', stackTrace);
 
       // Fallback to url_launcher's externalApplication mode
       try {
@@ -689,10 +690,12 @@ class _AboutScreenState extends State<AboutScreen> {
           mode: url_launcher.LaunchMode.externalApplication,
         );
         if (!launched) {
-          LoggerService().logError('URL launch fallback failed', url, StackTrace.current);
+          LoggerService()
+              .logError('URL launch fallback failed', url, StackTrace.current);
         }
       } catch (fallbackError, fallbackStack) {
-        LoggerService().logError('URL launch fallback error', fallbackError.toString(), fallbackStack);
+        LoggerService().logError('URL launch fallback error',
+            fallbackError.toString(), fallbackStack);
       }
     }
   }

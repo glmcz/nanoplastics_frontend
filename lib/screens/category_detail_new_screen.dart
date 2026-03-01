@@ -62,7 +62,8 @@ class _CategoryDetailNewScreenState extends State<CategoryDetailNewScreen>
     try {
       _customTabsSession = await warmupCustomTabs();
     } catch (e, stackTrace) {
-      LoggerService().logError('CustomTabs warmup failed', e.toString(), stackTrace);
+      LoggerService()
+          .logError('CustomTabs warmup failed', e.toString(), stackTrace);
     }
   }
 
@@ -87,7 +88,8 @@ class _CategoryDetailNewScreenState extends State<CategoryDetailNewScreen>
         );
       }
     } catch (e, stackTrace) {
-      LoggerService().logError('CustomTabs pre-fetch failed', e.toString(), stackTrace);
+      LoggerService()
+          .logError('CustomTabs pre-fetch failed', e.toString(), stackTrace);
     }
   }
 
@@ -599,7 +601,8 @@ class _CategoryDetailNewScreenState extends State<CategoryDetailNewScreen>
         ),
       );
     } catch (e, stackTrace) {
-      LoggerService().logError('CustomTabs launch failed', '$url: $e', stackTrace);
+      LoggerService()
+          .logError('CustomTabs launch failed', '$url: $e', stackTrace);
     }
   }
 
