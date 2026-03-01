@@ -185,16 +185,24 @@ jobs:
 
       # ---------------- NOTIFY BACKEND ----------------
       - name: Notify backend of new release
-        if: ${{ secrets.RELEASE_WEBHOOK_SECRET != '' && secrets.BACKEND_URL_PROD != '' }}
+        if: ${{ secrets.RELEASE_WEBHOOK_SECRET && secrets.BACKEND_URL_PROD }}
+        env:
+          WEBHOOK_SECRET: ${{ secrets.RELEASE_WEBHOOK_SECRET }}
+          GITHUB_REF_TYPE: ${{ github.ref_type }}
+          GITHUB_REF_NAME: ${{ github.ref_name }}
         run: |
-          RELEASE_TAG="${{ github.ref_type == 'tag' && github.ref_name || env.VERSION }}"
+          if [ "$GITHUB_REF_TYPE" = "tag" ]; then
+            RELEASE_TAG="$GITHUB_REF_NAME"
+          else
+            RELEASE_TAG="$VERSION"
+          fi
           # Strip leading 'v' for the version field
           VERSION="${RELEASE_TAG#v}"
           REPO="glmcz/nanoplastics_frontend"
           FULL_URL="https://github.com/$REPO/releases/download/$RELEASE_TAG/nanoplastics_app.apk"
           LITE_URL="https://github.com/$REPO/releases/download/$RELEASE_TAG/nanoplastics_app_lite.apk"
-          curl -sf -X POST "${{ secrets.BACKEND_URL_PROD }}/api/release" \
-            -H "Authorization: Bearer ${{ secrets.RELEASE_WEBHOOK_SECRET }}" \
+          curl -sf -X POST "$BACKEND_URL/api/release" \
+            -H "Authorization: Bearer $WEBHOOK_SECRET" \
             -H "Content-Type: application/json" \
             -d "{\"version\":\"$VERSION\",\"full_apk_url\":\"$FULL_URL\",\"lite_apk_url\":\"$LITE_URL\",\"published_at\":\"$(date -u +%Y-%m-%dT%H:%M:%SZ)\",\"notes\":null}" \
             || echo "Backend webhook failed (non-fatal)"
