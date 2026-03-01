@@ -12,124 +12,128 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
             line-height: 1.6;
             color: #333;
-            background: linear-gradient(135deg, #f5f7ff 0%, #e3f2fd 100%);
+            background: linear-gradient(135deg, #0f172a 0%, #1a1a2e 100%);
+            color: #e0e0e0;
             min-height: 100vh;
-            padding: 20px;
         }
 
         .container {
             max-width: 900px;
             margin: 0 auto;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-        }
-
-        .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
             padding: 40px 20px;
+        }
+
+        header {
             text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 30px;
+            border-bottom: 2px solid rgba(100, 200, 255, 0.3);
         }
 
-        .header h1 {
+        h1 {
             font-size: 2.5em;
+            background: linear-gradient(45deg, #64c8ff, #b5ffb5);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
             margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
         }
 
-        .header p {
-            font-size: 1.1em;
-            opacity: 0.95;
+        .tagline {
+            color: #999;
+            font-size: 0.95em;
         }
 
-        .content {
-            padding: 40px;
+        section {
+            margin-bottom: 30px;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #64c8ff;
         }
 
         h2 {
-            color: #667eea;
-            margin-top: 30px;
-            margin-bottom: 15px;
+            color: #64c8ff;
             font-size: 1.5em;
-            border-left: 4px solid #667eea;
-            padding-left: 15px;
-        }
-
-        h2:first-of-type {
-            margin-top: 0;
-        }
-
-        p, ul {
             margin-bottom: 15px;
-            color: #555;
-            font-size: 1em;
+            display: flex;
+            align-items: center;
+        }
+
+        h2::before {
+            content: "▸ ";
+            margin-right: 10px;
+            color: #b5ffb5;
+        }
+
+        p {
+            margin-bottom: 12px;
+            line-height: 1.8;
+            color: #d0d0d0;
         }
 
         ul {
-            padding-left: 25px;
+            margin: 15px 0 15px 20px;
+            color: #d0d0d0;
         }
 
         li {
             margin-bottom: 8px;
+            line-height: 1.7;
         }
 
         .footer {
-            background: #f8f9fa;
-            padding: 20px 40px;
-            border-top: 1px solid #e0e0e0;
-            font-size: 0.9em;
-            color: #666;
             text-align: center;
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(100, 200, 255, 0.2);
+            color: #888;
+            font-size: 0.9em;
+            font-style: italic;
         }
 
         a {
-            color: #667eea;
+            color: #64c8ff;
             text-decoration: none;
+            transition: color 0.3s;
         }
 
         a:hover {
+            color: #b5ffb5;
             text-decoration: underline;
         }
 
-        @media (max-width: 768px) {
-            .container {
-                border-radius: 0;
-            }
-
-            .header {
-                padding: 30px 15px;
-            }
-
-            .header h1 {
+        @media (max-width: 600px) {
+            h1 {
                 font-size: 1.8em;
             }
 
-            .content {
-                padding: 25px;
+            section {
+                padding: 15px;
             }
 
-            .footer {
-                padding: 15px 25px;
+            .container {
+                padding: 20px 15px;
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="header">
-            <h1>Privacy Policy</h1>
-            <p>NanoSolve Hive</p>
-        </div>
+        <header>
+            <h1>NanoSolve Hive</h1>
+            <p class="tagline">Privacy Policy</p>
+        </header>
 
-        <div class="content">
+        <section>
             <h2>1. Introduction</h2>
             <p>This Privacy Policy explains how NanoSolve Hive ("App", "we", "our", or "us") collects, uses, discloses, and otherwise handles your information when you use our mobile application.</p>
+        </section>
 
+        <section>
             <h2>2. Information We Collect</h2>
             <ul>
                 <li><strong>Device Information:</strong> Device type, operating system, unique identifiers, and mobile network information</li>
@@ -137,7 +141,9 @@
                 <li><strong>Analytics Data:</strong> App performance metrics, crash reports, and error logs</li>
                 <li><strong>Optional Information:</strong> Profile data you voluntarily provide for community features</li>
             </ul>
+        </section>
 
+        <section>
             <h2>3. How We Use Your Information</h2>
             <ul>
                 <li>Improve and maintain the App functionality</li>
@@ -146,7 +152,9 @@
                 <li>Send you important updates or notices</li>
                 <li>Comply with legal obligations</li>
             </ul>
+        </section>
 
+        <section>
             <h2>4. Data Storage and Security</h2>
             <ul>
                 <li>We implement industry-standard security measures</li>
@@ -154,14 +162,18 @@
                 <li>We never share personal data with third parties without consent</li>
                 <li>You can request data deletion at any time</li>
             </ul>
+        </section>
 
+        <section>
             <h2>5. Third-Party Services</h2>
             <ul>
                 <li><strong>Firebase:</strong> Used for crash reporting and analytics</li>
                 <li>These services have their own privacy policies</li>
                 <li>We do not share personal identifiable information</li>
             </ul>
+        </section>
 
+        <section>
             <h2>6. Your Rights</h2>
             <ul>
                 <li><strong>Access:</strong> Request a copy of your data</li>
@@ -169,20 +181,25 @@
                 <li><strong>Deletion:</strong> Request removal of your data</li>
                 <li><strong>Opt-Out:</strong> Disable analytics in app settings</li>
             </ul>
+        </section>
 
+        <section>
             <h2>7. Children's Privacy</h2>
             <p>This App is not intended for users under 13 years old. We do not knowingly collect information from children.</p>
+        </section>
 
+        <section>
             <h2>8. Changes to This Policy</h2>
             <p>We may update this Privacy Policy periodically. Changes will be posted here with an updated date.</p>
+        </section>
 
+        <section>
             <h2>9. Contact Us</h2>
             <p>For privacy concerns or data requests, please contact us through the App settings or visit our website.</p>
-        </div>
+        </section>
 
         <div class="footer">
-            <p><strong>Last Updated:</strong> January 2026</p>
-            <p>&copy; 2026 NanoSolve Hive. All rights reserved.</p>
+            <p>Last Updated: February 2026</p>
         </div>
     </div>
 </body>
