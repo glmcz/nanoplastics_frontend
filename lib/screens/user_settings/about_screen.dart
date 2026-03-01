@@ -12,6 +12,7 @@ import '../../utils/app_typography.dart';
 import '../../widgets/nanosolve_logo.dart';
 import '../../widgets/glowing_header_separator.dart';
 import '../../services/settings_manager.dart';
+import '../../services/logger_service.dart';
 import '../../utils/app_theme_colors.dart';
 
 class AboutScreen extends StatefulWidget {
@@ -241,7 +242,8 @@ class _AboutScreenState extends State<AboutScreen> {
             spacing: spacing,
             sizing: sizing,
             typography: typography,
-            onTap: () => _launchUrl('https://glmcz.github.io/nanoplastics_frontend/privacy_policy.html'),
+            onTap: () => _launchUrl(
+                'https://glmcz.github.io/nanoplastics_frontend/privacy_policy.html'),
           ),
           SizedBox(height: spacing.cardSpacing * 2),
           _buildSectionTitle(
@@ -647,7 +649,6 @@ class _AboutScreenState extends State<AboutScreen> {
   }
 
   Future<void> _launchUrl(String url) async {
-    debugPrint('🔗 [CustomTabs] Launching URL: $url');
     final uri = Uri.parse(url);
 
     try {
@@ -678,26 +679,20 @@ class _AboutScreenState extends State<AboutScreen> {
           dismissButtonStyle: SafariViewControllerDismissButtonStyle.close,
         ),
       );
-      debugPrint('🔗 [CustomTabs] URL launched successfully');
     } catch (e, stackTrace) {
-      debugPrint('❌ [CustomTabs] Error launching $url: $e');
-      debugPrint('❌ [CustomTabs] Stack trace: $stackTrace');
+      LoggerService().logError('CustomTabs launch failed', '$url: $e', stackTrace);
 
       // Fallback to url_launcher's externalApplication mode
       try {
-        debugPrint('🔗 [Fallback] Attempting url_launcher fallback...');
         final bool launched = await url_launcher.launchUrl(
           uri,
           mode: url_launcher.LaunchMode.externalApplication,
         );
-        if (launched) {
-          debugPrint('🔗 [Fallback] URL launched successfully via fallback');
-        } else {
-          debugPrint('❌ [Fallback] Could not launch URL');
+        if (!launched) {
+          LoggerService().logError('URL launch fallback failed', url, StackTrace.current);
         }
       } catch (fallbackError, fallbackStack) {
-        debugPrint('❌ [Fallback] Error during fallback: $fallbackError');
-        debugPrint('❌ [Fallback] Stack trace: $fallbackStack');
+        LoggerService().logError('URL launch fallback error', fallbackError.toString(), fallbackStack);
       }
     }
   }

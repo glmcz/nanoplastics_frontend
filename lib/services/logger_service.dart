@@ -67,9 +67,11 @@ class LoggerService {
 
       // Enable Crashlytics collection based on analytics setting
       final analyticsEnabled = _isAnalyticsEnabled();
-      await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(analyticsEnabled);
+      await FirebaseCrashlytics.instance
+          .setCrashlyticsCollectionEnabled(analyticsEnabled);
 
-      _logToConsole('LoggerService', 'Firebase & Crashlytics initialized (collection: $analyticsEnabled)');
+      _logToConsole('LoggerService',
+          'Firebase & Crashlytics initialized (collection: $analyticsEnabled)');
       _initialized = true;
     } catch (e, stackTrace) {
       _logToConsole(
@@ -301,8 +303,10 @@ class LoggerService {
   Future<void> updateCrashlyticsCollectionEnabled() async {
     if (_initialized) {
       final analyticsEnabled = _isAnalyticsEnabled();
-      await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(analyticsEnabled);
-      _logToConsole('Logger', 'Crashlytics collection updated: $analyticsEnabled');
+      await FirebaseCrashlytics.instance
+          .setCrashlyticsCollectionEnabled(analyticsEnabled);
+      _logToConsole(
+          'Logger', 'Crashlytics collection updated: $analyticsEnabled');
     }
   }
 }

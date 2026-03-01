@@ -61,8 +61,8 @@ class _CategoryDetailNewScreenState extends State<CategoryDetailNewScreen>
   Future<void> _warmupCustomTabs() async {
     try {
       _customTabsSession = await warmupCustomTabs();
-    } catch (e) {
-      debugPrint('Failed to warmup custom tabs: $e');
+    } catch (e, stackTrace) {
+      LoggerService().logError('CustomTabs warmup failed', e.toString(), stackTrace);
     }
   }
 
@@ -86,8 +86,8 @@ class _CategoryDetailNewScreenState extends State<CategoryDetailNewScreen>
           customTabsSession: _customTabsSession,
         );
       }
-    } catch (e) {
-      debugPrint('Failed to pre-fetch URLs: $e');
+    } catch (e, stackTrace) {
+      LoggerService().logError('CustomTabs pre-fetch failed', e.toString(), stackTrace);
     }
   }
 
@@ -598,9 +598,8 @@ class _CategoryDetailNewScreenState extends State<CategoryDetailNewScreen>
           dismissButtonStyle: SafariViewControllerDismissButtonStyle.close,
         ),
       );
-      debugPrint('🔗 [CustomTabs] URL launched successfully in Firefox');
-    } catch (e) {
-      debugPrint('❌ [CustomTabs] Error launching $url: $e');
+    } catch (e, stackTrace) {
+      LoggerService().logError('CustomTabs launch failed', '$url: $e', stackTrace);
     }
   }
 

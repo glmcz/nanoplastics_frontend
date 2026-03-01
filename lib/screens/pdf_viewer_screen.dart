@@ -504,12 +504,17 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
               child: InkWell(
                 onTap: () => Navigator.of(context).maybePop(),
                 child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: spacing.md, vertical: spacing.sm),
+                  padding: EdgeInsets.symmetric(
+                      horizontal: spacing.md, vertical: spacing.sm),
                   decoration: BoxDecoration(
-                    color: AppThemeColors.of(context).surfaceMid.withValues(alpha: 0.8),
+                    color: AppThemeColors.of(context)
+                        .surfaceMid
+                        .withValues(alpha: 0.8),
                     borderRadius: BorderRadius.circular(sizing.radiusMd),
                     border: Border.all(
-                      color: AppThemeColors.of(context).textMain.withValues(alpha: 0.2),
+                      color: AppThemeColors.of(context)
+                          .textMain
+                          .withValues(alpha: 0.2),
                     ),
                   ),
                   child: isPortrait
@@ -538,25 +543,25 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
             ),
             // Logo (center)
             Expanded(
-                flex: 2,
-                child: Center(
-                  child: NanosolveLogo(
-                    height: isPortrait ? sizing.logoHeightLg : sizing.logoHeight,
-                  ),
+              flex: 2,
+              child: Center(
+                child: NanosolveLogo(
+                  height: isPortrait ? sizing.logoHeightLg : sizing.logoHeight,
                 ),
               ),
-              // Page counter (right)
-              Flexible(
-                flex: 1,
-                child: PdfPageInput(
-                  currentPage: _currentPage,
-                  onPageSubmitted: _jumpToPage,
-                ),
+            ),
+            // Page counter (right)
+            Flexible(
+              flex: 1,
+              child: PdfPageInput(
+                currentPage: _currentPage,
+                onPageSubmitted: _jumpToPage,
               ),
-            ],
-          ),
+            ),
+          ],
         ),
-      );
+      ),
+    );
   }
 
   Widget _buildInfoCard() {

@@ -22,7 +22,7 @@ void main() async {
     final info = await PackageInfo.fromPlatform();
     await SettingsManager().setCurrentAppVersion(info.version);
   } catch (e) {
-    debugPrint('Error reading app version: $e');
+    debugPrint('Error reading app version: $e'); // ignore: avoid_print
   }
 
   // Detect and persist build type FIRST (before ServiceLocator init)

@@ -111,6 +111,9 @@ jobs:
         run: flutter pub get
 
       # ---------------- QUALITY GATES ----------------
+      - name: Check dart formatting
+        run: dart format lib/ --set-exit-if-changed
+
       - name: Run Flutter Analyze
         run: flutter analyze
 
