@@ -92,3 +92,9 @@ android {
 flutter {
     source = "../.."
 }
+
+dependencies {
+    // Google Play Core for split installation (dynamic feature delivery)
+    // Includes SplitInstallManager, SplitInstallRequest, etc. for Play Store split APKs
+    implementation("com.google.android.play:core:1.10.3")
+}

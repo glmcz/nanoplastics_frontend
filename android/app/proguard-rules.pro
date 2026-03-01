@@ -19,19 +19,23 @@
 # Keep custom application classes
 -keep class org.nanosolve.hive.** { *; }
 
-# Google Play Core - Keep all classes to prevent R8 stripping
-# Required by Flutter's PlayStoreDeferredComponentManager for dynamic feature delivery
+# Google Play Core - Required by Flutter's PlayStoreDeferredComponentManager
+# These classes are part of Google Play Core for dynamic feature delivery and split installation
 -keep class com.google.android.play.core.** { *; }
 -keep interface com.google.android.play.core.** { *; }
+-dontwarn com.google.android.play.core.**
 
-# Explicit Flutter deferred component classes
+# Flutter Play Store deferred components
 -keep class io.flutter.embedding.android.FlutterPlayStoreSplitApplication { *; }
 -keep class io.flutter.embedding.engine.deferredcomponents.PlayStoreDeferredComponentManager { *; }
 -keep class io.flutter.embedding.engine.deferredcomponents.PlayStoreDeferredComponentManager$* { *; }
+-dontwarn io.flutter.embedding.engine.deferredcomponents.**
 
-# Don't optimize these - they're needed for Play Store dynamic features
--keepclassmembers class com.google.android.play.core.splitinstall.SplitInstallManager { *; }
--keepclassmembers class com.google.android.play.core.splitinstall.SplitInstallException { *; }
--keepclassmembers class com.google.android.play.core.tasks.Task { *; }
--keepclassmembers class com.google.android.play.core.tasks.OnSuccessListener { *; }
--keepclassmembers class com.google.android.play.core.tasks.OnFailureListener { *; }
+# Split installation - needed for dynamic feature delivery
+# These may not always be present, but must be kept if they are
+-keep class com.google.android.play.core.splitcompat.** { *; }
+-keep class com.google.android.play.core.splitinstall.** { *; }
+-keep class com.google.android.play.core.tasks.** { *; }
+-dontwarn com.google.android.play.core.splitcompat.**
+-dontwarn com.google.android.play.core.splitinstall.**
+-dontwarn com.google.android.play.core.tasks.**
