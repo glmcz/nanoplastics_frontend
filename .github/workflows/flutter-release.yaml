@@ -185,7 +185,7 @@ jobs:
 
       # ---------------- NOTIFY BACKEND ----------------
       - name: Notify backend of new release
-        if: secrets.RELEASE_WEBHOOK_SECRET != '' && secrets.BACKEND_URL_PROD != ''
+        if: ${{ secrets.RELEASE_WEBHOOK_SECRET != '' && secrets.BACKEND_URL_PROD != '' }}
         run: |
           RELEASE_TAG="${{ github.ref_type == 'tag' && github.ref_name || env.VERSION }}"
           # Strip leading 'v' for the version field

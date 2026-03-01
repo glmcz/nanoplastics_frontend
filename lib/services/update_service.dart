@@ -611,6 +611,7 @@ class UpdateService {
   /// Cleans up old APKs before starting new download
   /// Verifies downloaded file size matches GitHub release before installing
   Future<bool> _downloadAndInstallApk(String downloadUrl) async {
+    final httpClient = http.Client();
     try {
       _resetDownloadState();
       _notifyStateChange(UpdateState.downloading);
@@ -637,7 +638,7 @@ class UpdateService {
       // Download APK with progress tracking
       final uri = Uri.parse(downloadUrl);
       final request = http.Request('GET', uri);
-      final response = await http.Client().send(request);
+      final response = await httpClient.send(request);
 
       if (response.statusCode != 200) {
         LoggerService().logUserAction(
@@ -723,6 +724,8 @@ class UpdateService {
       );
       _notifyStateChange(UpdateState.failed);
       return false;
+    } finally {
+      httpClient.close();
     }
   }
 

@@ -684,6 +684,31 @@ class _SourcesScreenState extends State<SourcesScreen> {
           'endPage': source.endPage,
         });
 
+        // Open in Custom Tabs browser (web PDF with optional #page anchor)
+        if (source.isWebLink) {
+          try {
+            await launchUrl(
+              Uri.parse(source.url!),
+              customTabsOptions: CustomTabsOptions(
+                colorSchemes: CustomTabsColorSchemes.defaults(
+                  toolbarColor: const Color(0xFF141928),
+                ),
+                shareState: CustomTabsShareState.on,
+                urlBarHidingEnabled: true,
+                showTitle: true,
+              ),
+              safariVCOptions: const SafariViewControllerOptions(
+                preferredBarTintColor: Color(0xFF141928),
+                preferredControlTintColor: AppColors.pastelAqua,
+                barCollapsingEnabled: true,
+              ),
+            );
+          } catch (e, st) {
+            LoggerService().logError('WebPDFOpenFailed', e.toString(), st);
+          }
+          return;
+        }
+
         final navigator = Navigator.of(context);
         final scaffoldMessenger = ScaffoldMessenger.of(context);
 
@@ -807,7 +832,9 @@ class _SourcesScreenState extends State<SourcesScreen> {
                 ),
                 SizedBox(height: spacing.md),
                 Icon(
-                  Icons.picture_as_pdf,
+                  source.isWebLink
+                      ? Icons.open_in_browser
+                      : Icons.picture_as_pdf,
                   size: sizing.iconMd,
                   color: AppColors.pastelAqua.withValues(alpha: 0.8),
                 ),
