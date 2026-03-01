@@ -113,7 +113,9 @@ jobs:
 
       # ---------------- QUALITY GATES ----------------
       - name: Check dart formatting
-        run: dart format lib/ --set-exit-if-changed
+        run: |
+          dart format lib/firebase_options.dart  # normalize restored generated file
+          dart format lib/ --set-exit-if-changed
 
       - name: Run Flutter Analyze
         run: flutter analyze
