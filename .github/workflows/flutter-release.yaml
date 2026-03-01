@@ -121,26 +121,22 @@ jobs:
       - name: Generate l10n files
         run: bash run_generate_langs.sh
 
-      # ---------------- FULL FLAVOR ----------------
-      - name: Build FULL AAB
+      # ---------------- FULL FLAVOR APK (sideload / in-app update) ----------------
+      - name: Build FULL APK
         run: |
-          flutter build appbundle --release --flavor full --dart-define=BUNDLE_ALL_LANGS=true --dart-define=BACKEND_URL=${{ env.BACKEND_URL }}
-          # Rename to match backend default download URL pattern
-          mv build/app/outputs/bundle/fullRelease/app-full-release.aab build/app/outputs/bundle/fullRelease/nanoplastics_app.aab || true
+          flutter build apk --release --flavor full --dart-define=BUNDLE_ALL_LANGS=true --dart-define=BACKEND_URL=${{ env.BACKEND_URL }}
+          mv build/app/outputs/flutter-apk/app-full-release.apk build/app/outputs/flutter-apk/nanoplastics_app.apk
 
-      # ---------- BUILD PLAY FLAVOR AAB ------
+      # ---------- BUILD PLAY FLAVOR AAB (Google Play Store only) ------
       - name: Build PLAY AAB (Google Play)
         run: |
           flutter build appbundle --release --flavor play --dart-define=BUNDLE_ALL_LANGS=true --dart-define=BACKEND_URL=${{ env.BACKEND_URL }} --dart-define=IS_PLAY_STORE=true
-          # Copy to artifacts directory for upload
-          mkdir -p build/app/outputs/bundle/playRelease
           cp build/app/outputs/bundle/playRelease/app-play-release.aab build/app/outputs/bundle/playRelease/nanoplastics_app_play.aab || true
 
       # ---------- GENERATE LITE PUBSPEC ------
       - name: Generate LITE pubspec
         run: |
           cp pubspec.base.yaml pubspec.yaml
-          # Sync version from original pubspec so AAB version matches the git tag
           ORIG_VERSION=$(grep '^version:' pubspec.yaml.bak | sed 's/version: //')
           yq -i ".version = \"$ORIG_VERSION\"" pubspec.yaml
           echo "Generated LITE pubspec.yaml with version $ORIG_VERSION"
@@ -149,38 +145,53 @@ jobs:
       - name: Install dependencies for LITE
         run: flutter pub get
 
-      # ---------------- LITE FLAVOR ----------------
-      - name: Build LITE AAB
+      # ---------------- LITE FLAVOR APK (sideload / in-app update) ----------------
+      - name: Build LITE APK
         run: |
-          flutter build appbundle --release --flavor lite --dart-define=BUNDLE_ALL_LANGS=false --dart-define=BACKEND_URL=${{ env.BACKEND_URL }}
-          # Rename to lite specific name
-          mv build/app/outputs/bundle/liteRelease/app-lite-release.aab build/app/outputs/bundle/liteRelease/nanoplastics_app_lite.aab || true
+          flutter build apk --release --flavor lite --dart-define=BUNDLE_ALL_LANGS=false --dart-define=BACKEND_URL=${{ env.BACKEND_URL }}
+          mv build/app/outputs/flutter-apk/app-lite-release.apk build/app/outputs/flutter-apk/nanoplastics_app_lite.apk
 
-      - name: Upload AABs
+      - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: release-aabs
-          # Upload all AAB files for distribution
+          name: release-artifacts
           path: |
-            build/app/outputs/bundle/*/nanoplastics_app*.aab
-            build/app/outputs/bundle/*/app-*.aab
+            build/app/outputs/flutter-apk/nanoplastics_app*.apk
+            build/app/outputs/bundle/playRelease/nanoplastics_app_play.aab
 
       # ---------------- CREATE RELEASE ----------------
       - name: Publish Release
+        id: publish_release
         uses: softprops/action-gh-release@v2
         with:
-          # Upload AAB files (for sideload, FULL flavor is recommended)
           files: |
-            build/app/outputs/bundle/fullRelease/nanoplastics_app.aab
-            build/app/outputs/bundle/liteRelease/nanoplastics_app_lite.aab
-          # LOGIC: Use the Git Tag if available, otherwise use the version from pubspec
+            build/app/outputs/flutter-apk/nanoplastics_app.apk
+            build/app/outputs/flutter-apk/nanoplastics_app_lite.apk
           tag_name: ${{ github.ref_type == 'tag' && github.ref_name || env.VERSION }}
           name: Release ${{ github.ref_type == 'tag' && github.ref_name || env.VERSION }}
           generate_release_notes: true
           body: |
-            ## Build Artifacts
-            - **nanoplastics_app.aab** - Full flavor (all languages)
-            - **nanoplastics_app_lite.aab** - Lite flavor (English only)
-            - **Play Store build** - Available in Google Play Console (use nanoplastics_app_play.aab)
+            ## Download
 
-            For sideload: Download the FULL flavor AAB and use bundletool to generate APK.
+            | Variant | Size | Languages |
+            |---------|------|-----------|
+            | **nanoplastics_app.apk** | ~85 MB | EN · CS · ES · FR · RU |
+            | **nanoplastics_app_lite.apk** | ~45 MB | EN only |
+
+            Play Store build (AAB): available in Google Play Console.
+
+      # ---------------- NOTIFY BACKEND ----------------
+      - name: Notify backend of new release
+        if: secrets.RELEASE_WEBHOOK_SECRET != '' && secrets.BACKEND_URL_PROD != ''
+        run: |
+          RELEASE_TAG="${{ github.ref_type == 'tag' && github.ref_name || env.VERSION }}"
+          # Strip leading 'v' for the version field
+          VERSION="${RELEASE_TAG#v}"
+          REPO="glmcz/nanoplastics_frontend"
+          FULL_URL="https://github.com/$REPO/releases/download/$RELEASE_TAG/nanoplastics_app.apk"
+          LITE_URL="https://github.com/$REPO/releases/download/$RELEASE_TAG/nanoplastics_app_lite.apk"
+          curl -sf -X POST "${{ secrets.BACKEND_URL_PROD }}/api/release" \
+            -H "Authorization: Bearer ${{ secrets.RELEASE_WEBHOOK_SECRET }}" \
+            -H "Content-Type: application/json" \
+            -d "{\"version\":\"$VERSION\",\"full_apk_url\":\"$FULL_URL\",\"lite_apk_url\":\"$LITE_URL\",\"published_at\":\"$(date -u +%Y-%m-%dT%H:%M:%SZ)\",\"notes\":null}" \
+            || echo "Backend webhook failed (non-fatal)"
