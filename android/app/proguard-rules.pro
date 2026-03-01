@@ -19,23 +19,7 @@
 # Keep custom application classes
 -keep class org.nanosolve.hive.** { *; }
 
-# Google Play Core - Required by Flutter's PlayStoreDeferredComponentManager
-# These classes are part of Google Play Core for dynamic feature delivery and split installation
--keep class com.google.android.play.core.** { *; }
--keep interface com.google.android.play.core.** { *; }
+# Google Play Core — this app does not use Dart deferred components / dynamic feature delivery.
+# Flutter's engine references PlayStoreDeferredComponentManager which pulls in split-install APIs,
+# but those classes are never exercised at runtime. Suppress R8 missing-class errors.
 -dontwarn com.google.android.play.core.**
-
-# Flutter Play Store deferred components
--keep class io.flutter.embedding.android.FlutterPlayStoreSplitApplication { *; }
--keep class io.flutter.embedding.engine.deferredcomponents.PlayStoreDeferredComponentManager { *; }
--keep class io.flutter.embedding.engine.deferredcomponents.PlayStoreDeferredComponentManager$* { *; }
--dontwarn io.flutter.embedding.engine.deferredcomponents.**
-
-# Split installation - needed for dynamic feature delivery
-# These may not always be present, but must be kept if they are
--keep class com.google.android.play.core.splitcompat.** { *; }
--keep class com.google.android.play.core.splitinstall.** { *; }
--keep class com.google.android.play.core.tasks.** { *; }
--dontwarn com.google.android.play.core.splitcompat.**
--dontwarn com.google.android.play.core.splitinstall.**
--dontwarn com.google.android.play.core.tasks.**
