@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy - NanoSolve Hive</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #00d4ff;
+            --secondary: #b5ffb5;
+            --bg-dark: #0f172a;
+            --bg-darker: #1a1a2e;
+            --text-light: #e0e0e0;
+            --text-muted: #999;
+            --border: rgba(100, 200, 255, 0.2);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+            background: linear-gradient(135deg, var(--bg-dark) 0%, var(--bg-darker) 100%);
+            color: var(--text-light);
+            line-height: 1.8;
+            min-height: 100vh;
+        }
+
+        /* Navigation */
+        nav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 0;
+        }
+
+        nav .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        nav .logo {
+            font-size: 1.3em;
+            font-weight: 700;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+        }
+
+        nav .back {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        nav .back:hover {
+            color: var(--secondary);
+        }
+
+        /* Header */
+        header {
+            padding: 3rem 2rem;
+            text-align: center;
+            background: linear-gradient(180deg, rgba(0, 212, 255, 0.1) 0%, transparent 100%);
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        header .updated {
+            color: var(--text-muted);
+            font-size: 0.95em;
+        }
+
+        /* Content */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .content {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 3rem;
+            margin: 3rem auto;
+        }
+
+        section {
+            margin-bottom: 2.5rem;
+        }
+
+        section:last-child {
+            margin-bottom: 0;
+        }
+
+        h2 {
+            color: var(--primary);
+            font-size: 1.6em;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--border);
+        }
+
+        h3 {
+            color: var(--secondary);
+            font-size: 1.1em;
+            margin-top: 1.5rem;
+            margin-bottom: 0.8rem;
+        }
+
+        p {
+            margin-bottom: 1rem;
+            color: var(--text-light);
+            line-height: 1.8;
+        }
+
+        ul, ol {
+            margin: 1rem 0 1rem 2rem;
+            color: var(--text-light);
+        }
+
+        li {
+            margin-bottom: 0.8rem;
+            line-height: 1.7;
+        }
+
+        strong {
+            color: var(--secondary);
+            font-weight: 600;
+        }
+
+        a {
+            color: var(--primary);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        a:hover {
+            color: var(--secondary);
+        }
+
+        .highlight {
+            background: rgba(0, 212, 255, 0.1);
+            border-left: 4px solid var(--primary);
+            padding: 1.5rem;
+            border-radius: 6px;
+            margin: 1.5rem 0;
+        }
+
+        .highlight strong {
+            color: var(--primary);
+        }
+
+        /* Footer */
+        footer {
+            margin-top: 4rem;
+            padding: 3rem 2rem;
+            border-top: 1px solid var(--border);
+            text-align: center;
+            color: var(--text-muted);
+        }
+
+        footer a {
+            color: var(--primary);
+            text-decoration: none;
+            margin: 0 1rem;
+        }
+
+        footer a:hover {
+            color: var(--secondary);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.8em;
+            }
+
+            .content {
+                padding: 1.5rem;
+            }
+
+            h2 {
+                font-size: 1.3em;
+            }
+
+            nav .container {
+                padding: 0 1rem;
+            }
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+            margin: 1.5rem 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+        }
+
+        th {
+            background: rgba(0, 212, 255, 0.1);
+            padding: 1rem;
+            text-align: left;
+            color: var(--primary);
+            font-weight: 600;
+            border-bottom: 2px solid var(--border);
+        }
+
+        td {
+            padding: 0.8rem 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="container">
+            <a href="/" class="logo">🧬 NanoSolve Hive</a>
+            <a href="/" class="back">← Back to Home</a>
+        </div>
+    </nav>
+
+    <!-- Header -->
+    <header>
+        <h1>Privacy Policy</h1>
+        <p class="updated">Last Updated: February 2026</p>
+    </header>
+
+    <!-- Content -->
+    <div class="container">
+        <div class="content">
+            <section>
+                <h2>1. Introduction</h2>
+                <p>NanoSolve Hive ("App", "we", "our", or "us") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and otherwise handle your information when you use our mobile application.</p>
+                <p>By using NanoSolve Hive, you agree to this Privacy Policy. If you do not agree with our privacy practices, please do not use our application.</p>
+            </section>
+
+            <section>
+                <h2>2. Information We Collect</h2>
+
+                <h3>Device Information</h3>
+                <ul>
+                    <li>Device type and operating system</li>
+                    <li>Unique device identifiers</li>
+                    <li>Mobile network information</li>
+                    <li>Device locale and timezone</li>
+                </ul>
+
+                <h3>Usage Information</h3>
+                <ul>
+                    <li>Features you access within the application</li>
+                    <li>Pages or content you interact with</li>
+                    <li>Time spent in the application</li>
+                    <li>Search queries and categories viewed</li>
+                </ul>
+
+                <h3>Analytics and Performance Data</h3>
+                <ul>
+                    <li>App performance metrics and crash reports</li>
+                    <li>Error logs and diagnostics</li>
+                    <li>Firebase Analytics data</li>
+                    <li>Session duration and frequency</li>
+                </ul>
+
+                <h3>Optional User-Provided Information</h3>
+                <ul>
+                    <li>Display name (for leaderboard participation)</li>
+                    <li>Email address (for profile registration)</li>
+                    <li>Solution ideas and attachments you submit</li>
+                    <li>User preferences and settings</li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>3. How We Use Your Information</h2>
+                <ul>
+                    <li><strong>Improve the App:</strong> Maintain and enhance application functionality and features</li>
+                    <li><strong>Analyze Usage:</strong> Understand usage patterns to improve user experience</li>
+                    <li><strong>Diagnose Issues:</strong> Identify and fix technical problems and bugs</li>
+                    <li><strong>Send Updates:</strong> Notify you of important updates or security notices</li>
+                    <li><strong>Comply with Law:</strong> Meet legal obligations and regulatory requirements</li>
+                    <li><strong>Community Features:</strong> Display your profile and solutions on the public leaderboard (with your consent)</li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>4. Data Storage and Security</h2>
+                <ul>
+                    <li>We implement industry-standard security measures including encryption in transit</li>
+                    <li>Data is stored securely on our servers with appropriate access controls</li>
+                    <li>We never share personal data with third parties without your explicit consent</li>
+                    <li>You can request complete data deletion at any time through app settings</li>
+                </ul>
+
+                <div class="highlight">
+                    <strong>Data Minimization:</strong> We only collect information necessary to operate the application and provide the requested services. We do not collect information beyond what is needed.
+                </div>
+            </section>
+
+            <section>
+                <h2>5. Third-Party Services</h2>
+                <p>Our application uses the following third-party services, each with their own privacy policies:</p>
+
+                <h3>Firebase (Google)</h3>
+                <ul>
+                    <li><strong>Purpose:</strong> Crash reporting, analytics, and performance monitoring</li>
+                    <li><strong>Data Collected:</strong> App crashes, performance metrics, session information</li>
+                    <li><strong>Privacy Policy:</strong> <a href="https://firebase.google.com/support/privacy" target="_blank">Firebase Privacy & Security</a></li>
+                    <li><strong>Control:</strong> You can disable analytics in app Settings → Privacy & Security</li>
+                </ul>
+
+                <h3>Google Play Services</h3>
+                <ul>
+                    <li><strong>Purpose:</strong> App distribution and in-app update functionality</li>
+                    <li><strong>Privacy Policy:</strong> <a href="https://policies.google.com/privacy" target="_blank">Google Privacy Policy</a></li>
+                </ul>
+
+                <p style="margin-top: 1rem; color: var(--text-muted); font-size: 0.95em;">We do not share personal identifiable information (such as your name or email) with these services unless you explicitly authorize it.</p>
+            </section>
+
+            <section>
+                <h2>6. Your Rights and Choices</h2>
+
+                <h3>Access Your Data</h3>
+                <p>You have the right to request a copy of all personal data we hold about you.</p>
+
+                <h3>Correct Your Information</h3>
+                <p>You can update your profile information through the app's Settings → User Profile section at any time.</p>
+
+                <h3>Delete Your Data</h3>
+                <p>You can request complete deletion of your account and associated data through Settings → Privacy & Security.</p>
+
+                <h3>Opt-Out of Analytics</h3>
+                <p>You can disable analytics collection and crash reporting through Settings → Privacy & Security. This does not affect core app functionality.</p>
+
+                <h3>Manage Communications</h3>
+                <p>You can manage your notification preferences and communication settings within the application.</p>
+            </section>
+
+            <section>
+                <h2>7. Children's Privacy</h2>
+                <p>NanoSolve Hive is not intended for users under 13 years old. We do not knowingly collect personal information from children under 13. If we become aware that a child under 13 has provided us with personal information, we will delete such information and terminate the child's account.</p>
+                <p>For users 13-18, parental consent may be required depending on local regulations.</p>
+            </section>
+
+            <section>
+                <h2>8. Data Retention</h2>
+                <ul>
+                    <li><strong>Submitted Ideas:</strong> Retained indefinitely unless deleted by you</li>
+                    <li><strong>User Profile:</strong> Retained while account is active; deleted upon account deletion</li>
+                    <li><strong>Analytics Data:</strong> Retained for 14 months by Firebase, then automatically deleted</li>
+                    <li><strong>Crash Logs:</strong> Retained for 90 days by Firebase, then automatically deleted</li>
+                    <li><strong>App Settings:</strong> Stored locally on your device; deleted when you uninstall the app</li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>9. International Data Transfers</h2>
+                <p>Your data may be transferred, stored, and processed in countries other than your country of residence. These countries may have different data protection laws. By using NanoSolve Hive, you consent to such transfers and processing.</p>
+            </section>
+
+            <section>
+                <h2>10. Changes to This Privacy Policy</h2>
+                <p>We may update this Privacy Policy periodically to reflect changes in our practices, technology, legal requirements, or other factors. We will notify you of material changes by:</p>
+                <ul>
+                    <li>Posting the updated policy within the application</li>
+                    <li>Updating the "Last Updated" date at the top of this page</li>
+                    <li>Requesting your consent if required by applicable law</li>
+                </ul>
+                <p>Your continued use of the application following the posting of revised Privacy Policy means that you accept and agree to the changes.</p>
+            </section>
+
+            <section>
+                <h2>11. California Privacy Rights (CCPA)</h2>
+                <p>If you are a California resident, you have additional rights under the California Consumer Privacy Act (CCPA), including the right to know, delete, and opt-out of sales of your personal information. To exercise these rights, please contact us using the information below.</p>
+            </section>
+
+            <section>
+                <h2>12. European Privacy Rights (GDPR)</h2>
+                <p>If you are in the European Union, you have rights under the General Data Protection Regulation (GDPR), including the right to access, rectification, erasure, and data portability. You also have the right to object to processing and the right to lodge a complaint with your local data protection authority.</p>
+            </section>
+
+            <section>
+                <h2>13. Contact Us</h2>
+                <p>If you have privacy concerns, questions about this policy, or wish to exercise any of your rights, please contact us:</p>
+
+                <div class="highlight">
+                    <p><strong>NanoSolve Hive Privacy Team</strong></p>
+                    <p>Email: privacy@nanosolve.com</p>
+                    <p>Or use the "Contact Us" option in the app Settings → About section</p>
+                </div>
+
+                <p>We will respond to your request within 30 days.</p>
+            </section>
+
+            <section>
+                <h2>14. Additional Resources</h2>
+                <ul>
+                    <li><a href="https://github.com/glmcz/nanoplastics_frontend" target="_blank">GitHub Repository</a> - Source code and project information</li>
+                    <li><a href="https://firebase.google.com/support/privacy" target="_blank">Firebase Privacy Policy</a></li>
+                    <li><a href="https://policies.google.com/privacy" target="_blank">Google Privacy Policy</a></li>
+                </ul>
+            </section>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2024-2026 Martin Durak. All rights reserved.</p>
+        <p style="margin-top: 1rem; font-size: 0.9em;">
+            <a href="/">Home</a>
+            <a href="https://github.com/glmcz/nanoplastics_frontend" target="_blank">GitHub</a>
+            <a href="https://github.com/glmcz/nanoplastics_frontend/releases" target="_blank">Releases</a>
+        </p>
+    </footer>
+</body>
+</html>

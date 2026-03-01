@@ -3,152 +3,456 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NanoSolve Hive - Privacy Policy</title>
+    <title>NanoSolve Hive - Mobile App</title>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dompurify/dist/purify.min.js"></script>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            line-height: 1.6;
-            background: linear-gradient(135deg, #0f172a 0%, #1a1a2e 100%);
-            color: #e0e0e0;
-            min-height: 100vh;
-            padding: 40px 20px;
+
+        :root {
+            --primary: #00d4ff;
+            --secondary: #b5ffb5;
+            --bg-dark: #0f172a;
+            --bg-darker: #1a1a2e;
+            --text-light: #e0e0e0;
+            --text-muted: #999;
+            --border: rgba(100, 200, 255, 0.2);
         }
-        .container {
-            max-width: 900px;
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+            background: linear-gradient(135deg, var(--bg-dark) 0%, var(--bg-darker) 100%);
+            color: var(--text-light);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* Navigation */
+        nav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 0;
+        }
+
+        nav .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+            max-width: 1200px;
             margin: 0 auto;
         }
-        header {
-            text-align: center;
-            margin-bottom: 40px;
-            padding-bottom: 30px;
-            border-bottom: 2px solid rgba(100, 200, 255, 0.3);
-        }
-        h1 {
-            font-size: 2.5em;
-            background: linear-gradient(45deg, #64c8ff, #b5ffb5);
+
+        nav .logo {
+            font-size: 1.3em;
+            font-weight: 700;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            margin-bottom: 10px;
         }
-        .tagline {
-            color: #999;
-            font-size: 0.95em;
-        }
-        #content {
-            background: rgba(255, 255, 255, 0.05);
-            padding: 30px;
-            border-radius: 8px;
-            border: 1px solid rgba(100, 200, 255, 0.2);
-        }
-        #content h2 {
-            color: #64c8ff;
-            font-size: 1.5em;
-            margin-top: 30px;
-            margin-bottom: 15px;
+
+        nav .links {
             display: flex;
-            align-items: center;
+            gap: 2rem;
         }
-        #content h2:first-child {
-            margin-top: 0;
-        }
-        #content h2::before {
-            content: "▸ ";
-            margin-right: 10px;
-            color: #b5ffb5;
-        }
-        #content p {
-            margin-bottom: 12px;
-            color: #d0d0d0;
-        }
-        #content ul {
-            margin: 15px 0 15px 20px;
-            color: #d0d0d0;
-        }
-        #content li {
-            margin-bottom: 8px;
-            line-height: 1.7;
-        }
-        #content strong {
-            color: #b5ffb5;
-        }
-        #content a {
-            color: #64c8ff;
+
+        nav a {
+            color: var(--text-light);
             text-decoration: none;
             transition: color 0.3s;
-        }
-        #content a:hover {
-            color: #b5ffb5;
-            text-decoration: underline;
-        }
-        .footer {
-            text-align: center;
-            margin-top: 50px;
-            padding-top: 20px;
-            border-top: 1px solid rgba(100, 200, 255, 0.2);
-            color: #888;
             font-size: 0.9em;
         }
+
+        nav a:hover {
+            color: var(--primary);
+        }
+
+        nav .privacy-link {
+            padding: 0.5rem 1rem;
+            background: linear-gradient(135deg, var(--primary) 0%, #0099cc 100%);
+            color: #000;
+            border-radius: 6px;
+            font-weight: 600;
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 4rem 2rem;
+            text-align: center;
+            background: linear-gradient(180deg, rgba(0, 212, 255, 0.1) 0%, transparent 100%);
+        }
+
+        .hero .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: 3em;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .hero .tagline {
+            font-size: 1.3em;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: inline-block;
+            border: none;
+            cursor: pointer;
+            font-size: 1em;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, #0099cc 100%);
+            color: #000;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 212, 255, 0.3);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--primary);
+            border: 1px solid var(--primary);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(0, 212, 255, 0.1);
+        }
+
+        /* Content */
+        .content {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        #markdown-content {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 3rem;
+            margin: 3rem 0;
+        }
+
+        #markdown-content h1 {
+            display: none;
+        }
+
+        #markdown-content h2 {
+            color: var(--primary);
+            font-size: 2em;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--border);
+        }
+
+        #markdown-content h2:first-child {
+            margin-top: 0;
+        }
+
+        #markdown-content h3 {
+            color: var(--secondary);
+            font-size: 1.3em;
+            margin-top: 1.5rem;
+            margin-bottom: 0.8rem;
+        }
+
+        #markdown-content p {
+            margin-bottom: 1rem;
+            color: var(--text-light);
+            line-height: 1.8;
+        }
+
+        #markdown-content ul,
+        #markdown-content ol {
+            margin: 1.5rem 0 1.5rem 2rem;
+            color: var(--text-light);
+        }
+
+        #markdown-content li {
+            margin-bottom: 0.8rem;
+            line-height: 1.7;
+        }
+
+        #markdown-content strong {
+            color: var(--secondary);
+            font-weight: 600;
+        }
+
+        #markdown-content a {
+            color: var(--primary);
+            text-decoration: none;
+            transition: color 0.3s;
+            border-bottom: 1px dotted var(--primary);
+        }
+
+        #markdown-content a:hover {
+            color: var(--secondary);
+        }
+
+        #markdown-content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        #markdown-content th {
+            background: rgba(0, 212, 255, 0.1);
+            padding: 1rem;
+            text-align: left;
+            color: var(--primary);
+            font-weight: 600;
+            border-bottom: 2px solid var(--border);
+        }
+
+        #markdown-content td {
+            padding: 0.8rem 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        #markdown-content tr:last-child td {
+            border-bottom: none;
+        }
+
+        #markdown-content blockquote {
+            border-left: 4px solid var(--primary);
+            padding-left: 1.5rem;
+            margin: 1.5rem 0;
+            color: var(--text-muted);
+            font-style: italic;
+        }
+
+        #markdown-content code {
+            background: rgba(0, 212, 255, 0.1);
+            color: var(--primary);
+            padding: 0.2rem 0.6rem;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+
+        #markdown-content pre {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 1.5rem;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+        }
+
+        #markdown-content pre code {
+            background: none;
+            color: var(--secondary);
+            padding: 0;
+        }
+
+        /* Footer */
+        footer {
+            margin-top: 4rem;
+            padding: 3rem 2rem;
+            border-top: 1px solid var(--border);
+            text-align: center;
+            color: var(--text-muted);
+        }
+
+        footer .links {
+            margin-bottom: 1.5rem;
+        }
+
+        footer a {
+            color: var(--primary);
+            text-decoration: none;
+            margin: 0 1rem;
+        }
+
+        footer a:hover {
+            color: var(--secondary);
+        }
+
+        /* Loading state */
         .loading {
             text-align: center;
-            color: #64c8ff;
-            padding: 40px;
+            padding: 4rem 2rem;
+            font-size: 1.1em;
+            color: var(--primary);
         }
-        @media (max-width: 600px) {
-            h1 {
-                font-size: 1.8em;
+
+        .loading::after {
+            content: '';
+            animation: dots 1.5s steps(4, end) infinite;
+        }
+
+        @keyframes dots {
+            0%, 20% {
+                content: '';
             }
-            #content {
-                padding: 20px;
+            40% {
+                content: '.';
             }
-            .container {
-                padding: 0;
+            60% {
+                content: '..';
+            }
+            80%, 100% {
+                content: '...';
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2em;
+            }
+
+            #markdown-content {
+                padding: 1.5rem;
+            }
+
+            nav .links {
+                gap: 1rem;
+                font-size: 0.85em;
+            }
+
+            #markdown-content h2 {
+                font-size: 1.5em;
+            }
+
+            #markdown-content table {
+                font-size: 0.9em;
             }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>NanoSolve Hive</h1>
-            <p class="tagline">Privacy Policy</p>
-        </header>
-
-        <div id="content" class="loading">Loading privacy policy...</div>
-
-        <div class="footer">
-            <p>Last Updated: February 2026</p>
+    <!-- Navigation -->
+    <nav>
+        <div class="container">
+            <div class="logo">🧬 NanoSolve Hive</div>
+            <div class="links">
+                <a href="#download">Download</a>
+                <a href="#features">Features</a>
+                <a href="/privacy/" class="privacy-link">Privacy Policy</a>
+            </div>
         </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1>NanoSolve Hive</h1>
+            <p class="tagline">Science-backed intelligence on nanoplastic pollution — and a community platform to fight it.</p>
+            <div class="cta-buttons">
+                <a href="https://github.com/glmcz/nanoplastics_frontend/releases/latest/download/nanoplastics_app.apk" class="btn btn-primary">📱 Download Full (85 MB)</a>
+                <a href="https://github.com/glmcz/nanoplastics_frontend/releases/latest/download/nanoplastics_app_lite.apk" class="btn btn-secondary">📱 Download Lite (45 MB)</a>
+            </div>
+            <p style="color: var(--text-muted); font-size: 0.9em;">Available on Android · Built with Flutter · Supports 5 languages</p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <div class="content">
+        <div id="markdown-content" class="loading">Loading documentation...</div>
     </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="links">
+            <a href="https://github.com/glmcz/nanoplastics_frontend">GitHub</a>
+            <a href="https://github.com/glmcz/nanoplastics_frontend/releases">Releases</a>
+            <a href="/privacy/">Privacy Policy</a>
+        </div>
+        <p>&copy; 2024-2026 Martin Durak. All rights reserved.</p>
+    </footer>
 
     <script>
         // Fetch and render README.md
-        fetch('README.md')
-            .then(response => response.text())
-            .then(markdown => {
-                // Remove the first heading (NanoSolve Hive) since we have it in the header
-                const lines = markdown.split('\n');
-                const filtered = lines.slice(4).join('\n');
+        async function loadMarkdown() {
+            try {
+                const response = await fetch('README.md');
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
 
-                // Render markdown to HTML
-                const html = marked.parse(filtered);
+                const markdown = await response.text();
+
+                // Configure marked options
+                marked.setOptions({
+                    breaks: true,
+                    gfm: true,
+                    pedantic: false,
+                });
+
+                // Render markdown
+                let html = marked.parse(markdown);
+
+                // Sanitize HTML
+                html = DOMPurify.sanitize(html);
 
                 // Insert into content div
-                document.getElementById('content').innerHTML = html;
-            })
-            .catch(error => {
-                console.error('Error loading README:', error);
-                document.getElementById('content').innerHTML = `
-                    <p style="color: #ff6b6b;">Unable to load privacy policy.</p>
-                    <p>Please visit <a href="privacy_policy.html">privacy_policy.html</a></p>
+                document.getElementById('markdown-content').innerHTML = html;
+
+                // Add target="_blank" to external links
+                document.querySelectorAll('#markdown-content a').forEach(link => {
+                    const href = link.getAttribute('href');
+                    if (href && !href.startsWith('#')) {
+                        link.setAttribute('target', '_blank');
+                        link.setAttribute('rel', 'noopener noreferrer');
+                    }
+                });
+            } catch (error) {
+                console.error('Error loading markdown:', error);
+                document.getElementById('markdown-content').innerHTML = `
+                    <h2>Documentation</h2>
+                    <p style="color: #ff6b6b;">Unable to load documentation at this time.</p>
+                    <p>Please visit the <a href="https://github.com/glmcz/nanoplastics_frontend" target="_blank">GitHub repository</a> for more information.</p>
                 `;
-            });
+            }
+        }
+
+        // Load markdown when page loads
+        document.addEventListener('DOMContentLoaded', loadMarkdown);
     </script>
 </body>
 </html>
