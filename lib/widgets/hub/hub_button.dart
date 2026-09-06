@@ -40,19 +40,31 @@ class HubButton extends StatelessWidget {
     switch (position) {
       case HubButtonPosition.topLeft:
         return const BorderRadius.only(
-          topLeft: sharp, topRight: sharp, bottomLeft: sharp, bottomRight: inner,
+          topLeft: sharp,
+          topRight: sharp,
+          bottomLeft: sharp,
+          bottomRight: inner,
         );
       case HubButtonPosition.topRight:
         return const BorderRadius.only(
-          topLeft: sharp, topRight: sharp, bottomLeft: inner, bottomRight: sharp,
+          topLeft: sharp,
+          topRight: sharp,
+          bottomLeft: inner,
+          bottomRight: sharp,
         );
       case HubButtonPosition.bottomLeft:
         return const BorderRadius.only(
-          topLeft: sharp, topRight: inner, bottomLeft: sharp, bottomRight: sharp,
+          topLeft: sharp,
+          topRight: inner,
+          bottomLeft: sharp,
+          bottomRight: sharp,
         );
       case HubButtonPosition.bottomRight:
         return const BorderRadius.only(
-          topLeft: inner, topRight: sharp, bottomLeft: sharp, bottomRight: sharp,
+          topLeft: inner,
+          topRight: sharp,
+          bottomLeft: sharp,
+          bottomRight: sharp,
         );
     }
   }
@@ -110,7 +122,8 @@ class HubButton extends StatelessWidget {
                   Text(
                     label.toUpperCase(),
                     style: textStyle.copyWith(
-                      color: isActive ? Colors.white : AppColors.hubTextInactive,
+                      color:
+                          isActive ? Colors.white : AppColors.hubTextInactive,
                     ),
                     textAlign: TextAlign.center,
                     maxLines: 1,

@@ -106,18 +106,16 @@ class SolverIdeaDetailScreen extends StatelessWidget {
                         color: rankColor().withValues(alpha: 0.15),
                         borderRadius:
                             BorderRadius.circular(AppConstants.radiusSmall),
-                        border:
-                            Border.all(color: rankColor().withValues(alpha: 0.5)),
+                        border: Border.all(
+                            color: rankColor().withValues(alpha: 0.5)),
                       ),
                       child: Text(
                         '#$rank',
-                        style: Theme.of(context)
-                            .textTheme
-                            .labelMedium!
-                            .copyWith(
-                              color: rankColor(),
-                              fontWeight: FontWeight.w900,
-                            ),
+                        style:
+                            Theme.of(context).textTheme.labelMedium!.copyWith(
+                                  color: rankColor(),
+                                  fontWeight: FontWeight.w900,
+                                ),
                       ),
                     ),
                   ],

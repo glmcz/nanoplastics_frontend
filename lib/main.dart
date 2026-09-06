@@ -78,7 +78,8 @@ void main() async {
     debugPrint('[NAV] onPaperOpen fired: $paperId');
     final paper = await DigestService().fetchPaperById(paperId);
     debugPrint('[NAV] paper fetched: ${paper?.title ?? "null"}');
-    debugPrint('[NAV] navigatorKey.currentState: ${appNavigatorKey.currentState}');
+    debugPrint(
+        '[NAV] navigatorKey.currentState: ${appNavigatorKey.currentState}');
     if (paper == null) return;
     // Wait for navigator to be ready if app is resuming from background
     await Future.delayed(const Duration(milliseconds: 300));
@@ -222,8 +223,7 @@ class _NanoSolveHiveAppState extends State<NanoSolveHiveApp>
       builder: kIsWeb
           ? null
           : (context, child) {
-              final isRTL =
-                  Directionality.of(context) == TextDirection.rtl;
+              final isRTL = Directionality.of(context) == TextDirection.rtl;
               if (!isRTL) return child!;
               return Stack(
                 children: [

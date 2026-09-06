@@ -143,15 +143,17 @@ class _SourcesScreenState extends State<SourcesScreen> {
         section: WebLinkSection.earthPollution,
         title: l10n.sourcesSectionEarthPollution,
         icon: Icons.public,
-        sources: sortSources(
-            earthPollutionSources.where((s) => s.language == reportLang).toList()),
+        sources: sortSources(earthPollutionSources
+            .where((s) => s.language == reportLang)
+            .toList()),
       ),
       (
         section: WebLinkSection.waterAbilities,
         title: l10n.sourcesSectionWaterAbilities,
         icon: Icons.water_drop_outlined,
-        sources: sortSources(
-            waterAbilitiesSources.where((s) => s.language == reportLang).toList()),
+        sources: sortSources(waterAbilitiesSources
+            .where((s) => s.language == reportLang)
+            .toList()),
       ),
     ];
 
@@ -161,7 +163,8 @@ class _SourcesScreenState extends State<SourcesScreen> {
     return Column(
       children: [
         Padding(
-          padding: EdgeInsets.fromLTRB(spacing.contentPaddingH, spacing.md, spacing.contentPaddingH, 0),
+          padding: EdgeInsets.fromLTRB(
+              spacing.contentPaddingH, spacing.md, spacing.contentPaddingH, 0),
           child: Column(
             children: [
               for (final s in sections) ...[
@@ -454,7 +457,6 @@ class _SourcesScreenState extends State<SourcesScreen> {
     return groups;
   }
 
-
   Future<void> _openPdfSource(PDFSource source) async {
     LoggerService().logUserAction('pdf_source_clicked', params: {
       'source': source.title,
@@ -502,7 +504,8 @@ class _SourcesScreenState extends State<SourcesScreen> {
     }
 
     final lang = ServiceLocator().settingsManager.userLanguage;
-    final cached = await ServiceLocator().settingsManager.getPdfForLanguage(lang);
+    final cached =
+        await ServiceLocator().settingsManager.getPdfForLanguage(lang);
     final needsDownload = cached == null || !await cached.exists();
 
     if (needsDownload && context.mounted) {
@@ -547,7 +550,8 @@ class _SourcesScreenState extends State<SourcesScreen> {
         await launchUrl(
           Uri.parse(source.url!),
           customTabsOptions: CustomTabsOptions(
-            colorSchemes: CustomTabsColorSchemes.defaults(toolbarColor: toolbarColor),
+            colorSchemes:
+                CustomTabsColorSchemes.defaults(toolbarColor: toolbarColor),
             shareState: CustomTabsShareState.on,
             urlBarHidingEnabled: true,
             showTitle: true,
@@ -726,7 +730,8 @@ class _SourcesScreenState extends State<SourcesScreen> {
       children: [
         // ── Navigation: 2 slim section headers ──
         Padding(
-          padding: EdgeInsets.fromLTRB(spacing.contentPaddingH, spacing.md, spacing.contentPaddingH, 0),
+          padding: EdgeInsets.fromLTRB(
+              spacing.contentPaddingH, spacing.md, spacing.contentPaddingH, 0),
           child: Column(
             children: [
               for (final s in sections) ...[
@@ -764,9 +769,6 @@ class _SourcesScreenState extends State<SourcesScreen> {
       ],
     );
   }
-
-
-
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -843,8 +845,8 @@ class _SourcesScreenTabs extends StatelessWidget {
       bool concaveRight = false,
       bool concaveLeft = false,
     }) {
-      final effectivePadding =
-          customPadding ?? EdgeInsets.symmetric(vertical: vPad, horizontal: hPad);
+      final effectivePadding = customPadding ??
+          EdgeInsets.symmetric(vertical: vPad, horizontal: hPad);
       final borderColor = isActive ? activeColor.withValues(alpha: 0.4) : dim;
 
       if (concaveRight || concaveLeft) {
@@ -920,68 +922,68 @@ class _SourcesScreenTabs extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-          // Web — left rounded, concave right border
-          segment(
-            label: AppLocalizations.of(context)!.sourcesTabWeb,
-            isActive: webActive,
-            activeColor: AppColors.pastelAqua,
-            border: Border(
-              top: side(webActive, AppColors.pastelAqua),
-              left: side(webActive, AppColors.pastelAqua),
-              bottom: side(webActive, AppColors.pastelAqua),
-            ),
-            borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(r),
-              bottomLeft: Radius.circular(r),
-            ),
-            concaveRight: true,
-            onTap: () {
-              onTabChanged(SourceType.webLinks);
-              LoggerService().logUserAction('sources_tab_switched',
-                  params: {'tab': 'web'});
-            },
+        // Web — left rounded, concave right border
+        segment(
+          label: AppLocalizations.of(context)!.sourcesTabWeb,
+          isActive: webActive,
+          activeColor: AppColors.pastelAqua,
+          border: Border(
+            top: side(webActive, AppColors.pastelAqua),
+            left: side(webActive, AppColors.pastelAqua),
+            bottom: side(webActive, AppColors.pastelAqua),
           ),
-          // R — circle joystick
-          segment(
-            label: AppLocalizations.of(context)!.sourcesTabReport,
-            isActive: reportActive,
-            activeColor: AppColors.pastelLavender,
-            border: Border.all(
-              color: reportActive
-                  ? AppColors.pastelLavender.withValues(alpha: 0.4)
-                  : dim,
-            ),
-            borderRadius: BorderRadius.circular(999),
-            letterSpacing: 1.0,
-            customPadding: EdgeInsets.all(vPad),
-            onTap: () {
-              onTabChanged(SourceType.reportLinks);
-              LoggerService().logUserAction('sources_tab_switched',
-                  params: {'tab': 'report'});
-            },
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(r),
+            bottomLeft: Radius.circular(r),
           ),
-          // Video — right rounded, concave left border
-          segment(
-            label: AppLocalizations.of(context)!.sourcesTabVideo,
-            isActive: videoActive,
-            activeColor: AppColors.pastelAqua,
-            border: Border(
-              top: side(videoActive, AppColors.pastelAqua),
-              right: side(videoActive, AppColors.pastelAqua),
-              bottom: side(videoActive, AppColors.pastelAqua),
-            ),
-            borderRadius: const BorderRadius.only(
-              topRight: Radius.circular(r),
-              bottomRight: Radius.circular(r),
-            ),
-            concaveLeft: true,
-            concaveRight: false,
-            onTap: () {
-              onTabChanged(SourceType.videoLinks);
-              LoggerService().logUserAction('sources_tab_switched',
-                  params: {'tab': 'video'});
-            },
+          concaveRight: true,
+          onTap: () {
+            onTabChanged(SourceType.webLinks);
+            LoggerService()
+                .logUserAction('sources_tab_switched', params: {'tab': 'web'});
+          },
+        ),
+        // R — circle joystick
+        segment(
+          label: AppLocalizations.of(context)!.sourcesTabReport,
+          isActive: reportActive,
+          activeColor: AppColors.pastelLavender,
+          border: Border.all(
+            color: reportActive
+                ? AppColors.pastelLavender.withValues(alpha: 0.4)
+                : dim,
           ),
+          borderRadius: BorderRadius.circular(999),
+          letterSpacing: 1.0,
+          customPadding: EdgeInsets.all(vPad),
+          onTap: () {
+            onTabChanged(SourceType.reportLinks);
+            LoggerService().logUserAction('sources_tab_switched',
+                params: {'tab': 'report'});
+          },
+        ),
+        // Video — right rounded, concave left border
+        segment(
+          label: AppLocalizations.of(context)!.sourcesTabVideo,
+          isActive: videoActive,
+          activeColor: AppColors.pastelAqua,
+          border: Border(
+            top: side(videoActive, AppColors.pastelAqua),
+            right: side(videoActive, AppColors.pastelAqua),
+            bottom: side(videoActive, AppColors.pastelAqua),
+          ),
+          borderRadius: const BorderRadius.only(
+            topRight: Radius.circular(r),
+            bottomRight: Radius.circular(r),
+          ),
+          concaveLeft: true,
+          concaveRight: false,
+          onTap: () {
+            onTabChanged(SourceType.videoLinks);
+            LoggerService().logUserAction('sources_tab_switched',
+                params: {'tab': 'video'});
+          },
+        ),
       ],
     );
   }

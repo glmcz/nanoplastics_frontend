@@ -45,7 +45,8 @@ class _DigestSettingsScreenState extends State<DigestSettingsScreen> {
   void _requestMoreKeywords() {
     final email = ServiceLocator().settingsManager.email;
     final supportEmail = AppLocalizations.of(context)!.leaderboardContactEmail;
-    final subject = Uri.encodeComponent('Nanoplastics Digest - Keyword Request');
+    final subject =
+        Uri.encodeComponent('Nanoplastics Digest - Keyword Request');
     final body = Uri.encodeComponent(
         'User email: $email\nCurrent keywords: ${_keywords.join(', ')}\n\nRequested new keyword(s): ');
     PlatformAdaptive.launchExternalUri(
@@ -54,7 +55,8 @@ class _DigestSettingsScreenState extends State<DigestSettingsScreen> {
 
   Future<void> _save() async {
     if (ServiceLocator().settingsManager.email.isEmpty) {
-      setState(() => _error = AppLocalizations.of(context)!.profileEmailRequired);
+      setState(
+          () => _error = AppLocalizations.of(context)!.profileEmailRequired);
       return;
     }
 
@@ -70,7 +72,8 @@ class _DigestSettingsScreenState extends State<DigestSettingsScreen> {
         PushNotificationService().init();
         if (mounted) Navigator.maybePop(context);
       } else {
-        setState(() => _error = AppLocalizations.of(context)!.digestSettingsError);
+        setState(
+            () => _error = AppLocalizations.of(context)!.digestSettingsError);
       }
     }
   }
@@ -95,10 +98,14 @@ class _DigestSettingsScreenState extends State<DigestSettingsScreen> {
                     // Toggle
                     _GlassCard(
                       child: SwitchListTile(
-                        title: Text(AppLocalizations.of(context)!.digestSettingsDailyDigest,
+                        title: Text(
+                            AppLocalizations.of(context)!
+                                .digestSettingsDailyDigest,
                             style: const TextStyle(
                                 color: AppColors.textMain, fontSize: 14)),
-                        subtitle: Text(AppLocalizations.of(context)!.digestSettingsDailyDigestHint,
+                        subtitle: Text(
+                            AppLocalizations.of(context)!
+                                .digestSettingsDailyDigestHint,
                             style: const TextStyle(
                                 color: AppColors.textMuted, fontSize: 12)),
                         value: _digestEnabled,
@@ -115,7 +122,8 @@ class _DigestSettingsScreenState extends State<DigestSettingsScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            AppLocalizations.of(context)!.digestSettingsNotificationTime,
+                            AppLocalizations.of(context)!
+                                .digestSettingsNotificationTime,
                             style: const TextStyle(
                               color: AppColors.textMain,
                               fontSize: 14,
@@ -180,7 +188,8 @@ class _DigestSettingsScreenState extends State<DigestSettingsScreen> {
                           // Request more keywords via email
                           Semantics(
                             button: true,
-                            label: AppLocalizations.of(context)!.digestSettingsKeywordRequestMore,
+                            label: AppLocalizations.of(context)!
+                                .digestSettingsKeywordRequestMore,
                             child: InkWell(
                               onTap: _requestMoreKeywords,
                               borderRadius: BorderRadius.circular(6),
@@ -191,7 +200,8 @@ class _DigestSettingsScreenState extends State<DigestSettingsScreen> {
                                       color: AppColors.neonCyan, size: 16),
                                   SizedBox(width: spacing.xs),
                                   Text(
-                                    AppLocalizations.of(context)!.digestSettingsKeywordRequestMore,
+                                    AppLocalizations.of(context)!
+                                        .digestSettingsKeywordRequestMore,
                                     style: const TextStyle(
                                       color: AppColors.neonCyan,
                                       fontSize: 13,
@@ -207,7 +217,8 @@ class _DigestSettingsScreenState extends State<DigestSettingsScreen> {
                             SizedBox(height: spacing.xs),
                             Text(_error!,
                                 style: const TextStyle(
-                                    color: AppColors.neonCrimson, fontSize: 11)),
+                                    color: AppColors.neonCrimson,
+                                    fontSize: 11)),
                           ],
                         ],
                       ),
@@ -228,12 +239,12 @@ class _DigestSettingsScreenState extends State<DigestSettingsScreen> {
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(12),
                             border: Border.all(
-                                color: AppColors.neonCyan
-                                    .withValues(alpha: 0.6)),
+                                color:
+                                    AppColors.neonCyan.withValues(alpha: 0.6)),
                             boxShadow: [
                               BoxShadow(
-                                color: AppColors.neonCyan
-                                    .withValues(alpha: 0.1),
+                                color:
+                                    AppColors.neonCyan.withValues(alpha: 0.1),
                                 blurRadius: 12,
                                 spreadRadius: 2,
                               ),
@@ -250,7 +261,8 @@ class _DigestSettingsScreenState extends State<DigestSettingsScreen> {
                                     ),
                                   )
                                 : Text(
-                                    AppLocalizations.of(context)!.categoryDetailBrainstormSave,
+                                    AppLocalizations.of(context)!
+                                        .categoryDetailBrainstormSave,
                                     style: const TextStyle(
                                       color: AppColors.neonCyan,
                                       fontSize: 15,
@@ -282,8 +294,8 @@ class _DigestSettingsScreenState extends State<DigestSettingsScreen> {
           decoration: BoxDecoration(
             color: AppColors.cardBackground.withValues(alpha: 0.9),
             border: Border(
-              bottom: BorderSide(
-                  color: AppColors.neonCyan.withValues(alpha: 0.15)),
+              bottom:
+                  BorderSide(color: AppColors.neonCyan.withValues(alpha: 0.15)),
             ),
           ),
           child: Row(

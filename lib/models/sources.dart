@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/category_detail_data.dart';
 
-
 class MobileEvidenceGroup {
   final String categoryKey;
   final String categoryTitle;

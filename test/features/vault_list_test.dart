@@ -41,7 +41,8 @@ void main() {
 
       // First and last paper titles should be visible
       expect(find.text('Paper Title 0'), findsOneWidget);
-      expect(find.text('Paper Title 24'), findsNothing); // Not visible until scrolled
+      expect(find.text('Paper Title 24'),
+          findsNothing); // Not visible until scrolled
 
       // Scroll to end — last paper should appear
       await tester.drag(find.byType(VaultScreen), const Offset(0, -5000));

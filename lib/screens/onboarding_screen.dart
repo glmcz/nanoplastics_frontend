@@ -422,50 +422,51 @@ class _OnboardingScreenState extends State<OnboardingScreen>
     return Directionality(
       textDirection: TextDirection.ltr,
       child: Padding(
-      padding: EdgeInsets.symmetric(
-        horizontal: horizontalPadding,
-        vertical: verticalPadding,
-      ),
-      child: Row(
-        children: LanguageSelectionMixin.supportedLanguages.map((lang) {
-          final isSelected = selectedLanguage == lang['code'];
-          return Expanded(
-            child: Semantics(
-              button: true,
-              label: lang['name'],
-              selected: isSelected,
-              child: InkWell(
-                onTap: () => selectLanguage(lang['code']!),
-                borderRadius: BorderRadius.circular(AppConstants.radiusMedium),
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 200),
-                  height: selectorHeight,
-                  decoration: BoxDecoration(
-                    color: isSelected
-                        ? AppColors.pastelAqua.withValues(alpha: 0.2)
-                        : Colors.transparent,
-                    border: Border.all(
+        padding: EdgeInsets.symmetric(
+          horizontal: horizontalPadding,
+          vertical: verticalPadding,
+        ),
+        child: Row(
+          children: LanguageSelectionMixin.supportedLanguages.map((lang) {
+            final isSelected = selectedLanguage == lang['code'];
+            return Expanded(
+              child: Semantics(
+                button: true,
+                label: lang['name'],
+                selected: isSelected,
+                child: InkWell(
+                  onTap: () => selectLanguage(lang['code']!),
+                  borderRadius:
+                      BorderRadius.circular(AppConstants.radiusMedium),
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 200),
+                    height: selectorHeight,
+                    decoration: BoxDecoration(
                       color: isSelected
-                          ? AppColors.pastelAqua
-                          : tc.textMuted.withValues(alpha: 0.3),
-                      width: isSelected ? 2 : 1,
+                          ? AppColors.pastelAqua.withValues(alpha: 0.2)
+                          : Colors.transparent,
+                      border: Border.all(
+                        color: isSelected
+                            ? AppColors.pastelAqua
+                            : tc.textMuted.withValues(alpha: 0.3),
+                        width: isSelected ? 2 : 1,
+                      ),
+                      borderRadius:
+                          BorderRadius.circular(AppConstants.radiusMedium),
                     ),
-                    borderRadius:
-                        BorderRadius.circular(AppConstants.radiusMedium),
-                  ),
-                  child: Center(
-                    child: Text(
-                      lang['flag']!,
-                      style: TextStyle(fontSize: sizing.iconSm + 4),
+                    child: Center(
+                      child: Text(
+                        lang['flag']!,
+                        style: TextStyle(fontSize: sizing.iconSm + 4),
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-          );
-        }).toList(),
+            );
+          }).toList(),
+        ),
       ),
-    ),
     );
   }
 

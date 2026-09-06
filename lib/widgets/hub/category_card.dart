@@ -59,7 +59,8 @@ class CategoryCard extends StatelessWidget {
                       // Tight-height mode: landscape or very compressed cards.
                       final tightHeight = cardHeight > 0 && cardHeight < 90;
                       final dense = cardWidth < 180;
-                      final iconScale = tightHeight ? 0.75 : (dense ? 0.9 : 1.0);
+                      final iconScale =
+                          tightHeight ? 0.75 : (dense ? 0.9 : 1.0);
                       final effectiveIconContainer = tightHeight
                           ? math.min(
                               iconContainerSize * iconScale,

@@ -307,8 +307,7 @@ class CategoryDetailDataFactory {
             authorsShort: 'Dohlman et al.',
             journal: 'Cell',
             year: 2022,
-            url:
-                'https://www.cell.com/cell/fulltext/S0092-8674(22)01173-4',
+            url: 'https://www.cell.com/cell/fulltext/S0092-8674(22)01173-4',
             doiOrPubMed: 'doi:10.1016/j.cell.2022.09.015',
             studyType: 'Pan-cancer analysis',
             summary:
@@ -328,7 +327,8 @@ class CategoryDetailDataFactory {
             tags: ['autism', 'prevalence', 'systematic review'],
           ),
           _study(
-            title: 'Microplastics and Nanoplastics in Atheromas and Cardiovascular Events',
+            title:
+                'Microplastics and Nanoplastics in Atheromas and Cardiovascular Events',
             authorsShort: 'Marfella et al.',
             journal: 'The New England Journal of Medicine',
             year: 2024,
@@ -340,18 +340,21 @@ class CategoryDetailDataFactory {
             tags: ['human study', 'cardiovascular', 'bloodstream'],
           ),
           _study(
-            title: 'Autism in boys linked to common plastic exposure in the womb',
+            title:
+                'Autism in boys linked to common plastic exposure in the womb',
             authorsShort: 'New Atlas',
             journal: 'New Atlas',
             year: 2024,
-            url: 'https://newatlas.com/health-wellbeing/prenatal-bisphenol-a-bpa-autism-boys',
+            url:
+                'https://newatlas.com/health-wellbeing/prenatal-bisphenol-a-bpa-autism-boys',
             studyType: 'Science news',
             summary:
                 'Reports research showing prenatal BPA (plastic additive) exposure is linked to autism diagnosis in boys.',
             tags: ['autism', 'BPA', 'prenatal'],
           ),
           _study(
-            title: 'Autism Prevalence Higher, Signals Possible Shift in Who Is Being Identified',
+            title:
+                'Autism Prevalence Higher, Signals Possible Shift in Who Is Being Identified',
             authorsShort: 'CDC',
             journal: 'Centers for Disease Control and Prevention',
             year: 2023,
@@ -588,7 +591,8 @@ class CategoryDetailDataFactory {
           _study(
             title: 'Overweight and obesity statistics',
             authorsShort: 'NIDDK',
-            journal: 'National Institute of Diabetes and Digestive and Kidney Diseases',
+            journal:
+                'National Institute of Diabetes and Digestive and Kidney Diseases',
             year: 2021,
             url:
                 'https://www.niddk.nih.gov/health-information/health-statistics/overweight-obesity',
@@ -603,8 +607,7 @@ class CategoryDetailDataFactory {
             authorsShort: 'Ribe et al.',
             journal: 'European Journal of Public Health',
             year: 2024,
-            url:
-                'https://academic.oup.com/eurpub/article/34/4/696/7644332',
+            url: 'https://academic.oup.com/eurpub/article/34/4/696/7644332',
             studyType: 'Cohort study',
             summary:
                 'Documents accelerating disease accumulation in younger cohorts, consistent with chronic toxic exposure.',
@@ -937,8 +940,7 @@ class CategoryDetailDataFactory {
             authorsShort: 'Li et al.',
             journal: 'BMC Pregnancy and Childbirth',
             year: 2025,
-            url:
-                'https://link.springer.com/article/10.1186/s12884-025-07562-8',
+            url: 'https://link.springer.com/article/10.1186/s12884-025-07562-8',
             studyType: 'Mendelian randomization',
             summary:
                 'Links mitochondrial protein dysfunction to elevated congenital birth defect risk.',
@@ -962,7 +964,8 @@ class CategoryDetailDataFactory {
             authorsShort: 'Wei et al.',
             journal: 'China CDC Weekly',
             year: 2023,
-            url: 'https://weekly.chinacdc.cn/en/article/doi/10.46234/ccdcw2023.184',
+            url:
+                'https://weekly.chinacdc.cn/en/article/doi/10.46234/ccdcw2023.184',
             studyType: 'Trend analysis',
             summary:
                 'Analyzes increasing birth defect trends over two decades, highlighting environmental factors.',
@@ -1127,8 +1130,7 @@ class CategoryDetailDataFactory {
             authorsShort: 'Khan and Jia',
             journal: 'iScience',
             year: 2023,
-            url:
-                'https://www.cell.com/iscience/fulltext/S2589-0042(23)00138-4',
+            url: 'https://www.cell.com/iscience/fulltext/S2589-0042(23)00138-4',
             doiOrPubMed: 'PMID:36818296',
             studyType: 'Review',
             summary:
@@ -1208,7 +1210,8 @@ class CategoryDetailDataFactory {
             tags: ['drinking water', 'food', 'exposure'],
           ),
           _study(
-            title: 'Uptake and Accumulation of Nano/Microplastics in Plants: A Critical Review',
+            title:
+                'Uptake and Accumulation of Nano/Microplastics in Plants: A Critical Review',
             authorsShort: 'Azeem et al.',
             journal: 'Nanomaterials',
             year: 2021,
@@ -1458,7 +1461,8 @@ class CategoryDetailDataFactory {
             tags: ['PFAS', 'protein folding', 'structural'],
           ),
           _study(
-            title: 'Nano/micro-plastic, an invisible threat getting into the brain',
+            title:
+                'Nano/micro-plastic, an invisible threat getting into the brain',
             authorsShort: 'Kaushik et al.',
             journal: 'Chemosphere',
             year: 2024,
@@ -1470,7 +1474,8 @@ class CategoryDetailDataFactory {
             tags: ['review', 'brain', 'mechanism'],
           ),
           _study(
-            title: 'Mitochondria as a target of micro- and nanoplastic toxicity',
+            title:
+                'Mitochondria as a target of micro- and nanoplastic toxicity',
             authorsShort: 'Yontem and Ahbab',
             journal: 'Cambridge Prisms: Plastics',
             year: 2024,
@@ -1677,8 +1682,7 @@ class CategoryDetailDataFactory {
             authorsShort: 'Tikhonova et al.',
             journal: 'Water Resources',
             year: 2024,
-            url:
-                'https://link.springer.com/article/10.1134/S009780782370063X',
+            url: 'https://link.springer.com/article/10.1134/S009780782370063X',
             studyType: 'Field study',
             summary:
                 'Investigates plastic stratification and thermocline trapping by density gradient in the water column.',
@@ -1881,7 +1885,8 @@ class CategoryDetailDataFactory {
             tags: ['hailstorms', 'extreme weather', 'observation'],
           ),
           _study(
-            title: '2024: An active year of U.S. billion-dollar weather and climate disasters',
+            title:
+                '2024: An active year of U.S. billion-dollar weather and climate disasters',
             authorsShort: 'Smith',
             journal: 'NOAA Climate.gov',
             year: 2024,
@@ -1893,7 +1898,8 @@ class CategoryDetailDataFactory {
             tags: ['extreme weather', 'climate disasters', 'data'],
           ),
           _study(
-            title: 'Microplastics impact cloud formation, likely affecting weather and climate',
+            title:
+                'Microplastics impact cloud formation, likely affecting weather and climate',
             authorsShort: 'Penn State University',
             journal: 'Penn State News',
             year: 2024,
@@ -1989,7 +1995,8 @@ class CategoryDetailDataFactory {
             tags: ['pollinators', 'transfer', 'food web'],
           ),
           _study(
-            title: 'Uptake and Accumulation of Nano/Microplastics in Plants: A Critical Review',
+            title:
+                'Uptake and Accumulation of Nano/Microplastics in Plants: A Critical Review',
             authorsShort: 'Azeem et al.',
             journal: 'Nanomaterials',
             year: 2021,
@@ -2090,7 +2097,8 @@ class CategoryDetailDataFactory {
             tags: ['fertility', 'follicular fluid', 'livestock'],
           ),
           _study(
-            title: 'Plastic ingestion by marine fish is widespread and increasing',
+            title:
+                'Plastic ingestion by marine fish is widespread and increasing',
             authorsShort: 'Savoca et al.',
             journal: 'Global Change Biology',
             year: 2021,
@@ -2317,8 +2325,7 @@ class CategoryDetailDataFactory {
             tags: ['geomagnetism', 'biosphere', 'history'],
           ),
           _study(
-            title:
-                'Mantle plumes control magnetic reversal frequency',
+            title: 'Mantle plumes control magnetic reversal frequency',
             authorsShort: 'Larson and Olson',
             journal: 'Earth and Planetary Science Letters',
             year: 1991,
@@ -2330,7 +2337,8 @@ class CategoryDetailDataFactory {
             tags: ['mantle plume', 'magnetic reversal', 'geodynamics'],
           ),
           _study(
-            title: 'The 15 m.y. geomagnetic reversal periodicity: a quantitative test',
+            title:
+                'The 15 m.y. geomagnetic reversal periodicity: a quantitative test',
             authorsShort: 'Mazaud and Laj',
             journal: 'Earth and Planetary Science Letters',
             year: 1991,
@@ -2345,10 +2353,10 @@ class CategoryDetailDataFactory {
             title:
                 '1995: An Important Inflection Point in Recent Geophysical History',
             authorsShort: 'Viterito',
-            journal: 'International Journal of Environmental Sciences and Natural Resources',
+            journal:
+                'International Journal of Environmental Sciences and Natural Resources',
             year: 2022,
-            url:
-                'https://juniperpublishers.com/ijesnr/IJESNR.MS.ID.556271.php',
+            url: 'https://juniperpublishers.com/ijesnr/IJESNR.MS.ID.556271.php',
             studyType: 'Statistical study',
             summary:
                 'Proves a massive increase in mid-ocean ridge earthquakes after 1995, linked to internal Earth heat release.',
@@ -2767,7 +2775,8 @@ class CategoryDetailDataFactory {
             tags: ['water', 'hydration shell', 'hydrogen bonds'],
           ),
           _study(
-            title: 'Effective Thermal Conductivity of Nanofluids: Measurement and Prediction',
+            title:
+                'Effective Thermal Conductivity of Nanofluids: Measurement and Prediction',
             authorsShort: 'Berger Bioucas et al.',
             journal: 'International Journal of Thermophysics',
             year: 2020,

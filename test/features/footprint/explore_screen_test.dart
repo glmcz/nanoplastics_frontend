@@ -25,8 +25,8 @@ void main() {
   });
 
   testWidgets('first run offers a way out', (t) async {
-    await t.pumpWidget(
-        buildTestableWidget(const ExploreScreen(firstRun: true)));
+    await t
+        .pumpWidget(buildTestableWidget(const ExploreScreen(firstRun: true)));
     await t.pumpAndSettle();
     expect(find.byKey(const Key('explore-skip')), findsOneWidget);
   });

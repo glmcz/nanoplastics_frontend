@@ -11,9 +11,7 @@ class DeviceProfile {
   final double height;
   final String category;
   const DeviceProfile(this.name,
-      {required this.width,
-      required this.height,
-      this.category = 'portrait'});
+      {required this.width, required this.height, this.category = 'portrait'});
 
   @override
   String toString() => '$name (${width.toInt()}x${height.toInt()})';
@@ -41,24 +39,55 @@ const kMotoG32 = DeviceProfile(
 
 const kTinyPhone = DeviceProfile('iPhone 5', width: 320, height: 568);
 const kSmallBoundary = DeviceProfile('360x640', width: 360, height: 640);
-const kCompactBigOverlap = DeviceProfile('350x950 edge', width: 350, height: 950, category: 'edge_case');
+const kCompactBigOverlap = DeviceProfile('350x950 edge',
+    width: 350, height: 950, category: 'edge_case');
 const kBaseline = DeviceProfile('baseline 375x812', width: 375, height: 812);
 const kiPhone14 = DeviceProfile('iPhone 14', width: 390, height: 844);
 const kPixel4 = DeviceProfile('Pixel 4', width: 412, height: 732);
 const kiPhone14Plus = DeviceProfile('iPhone 14 Plus', width: 428, height: 926);
 const kLogoJump860 = DeviceProfile('logo 860', width: 390, height: 860);
 const kLogoJump861 = DeviceProfile('logo 861', width: 390, height: 861);
-const kVeryTallSlim = DeviceProfile('360x1000', width: 360, height: 1000, category: 'edge_case');
+const kVeryTallSlim =
+    DeviceProfile('360x1000', width: 360, height: 1000, category: 'edge_case');
 const kXLarge = DeviceProfile('xlarge', width: 500, height: 960);
-const kFoldOuter = DeviceProfile('Fold outer', width: 584, height: 680, category: 'edge_case');
-const kiPhone14Landscape = DeviceProfile('iPhone 14 landscape', width: 844, height: 390, category: 'landscape');
+const kFoldOuter =
+    DeviceProfile('Fold outer', width: 584, height: 680, category: 'edge_case');
+const kiPhone14Landscape = DeviceProfile('iPhone 14 landscape',
+    width: 844, height: 390, category: 'landscape');
 
-const kAllDevices = [kTinyPhone, kSmallBoundary, kCompactBigOverlap, kBaseline, kiPhone14, kMotoG32, kPixel4, kiPhone14Plus, kLogoJump860, kLogoJump861, kUserDevice46, kUserDevice46_1x, kVeryTallSlim, kXLarge, kFoldOuter, kiPhone14Landscape];
+const kAllDevices = [
+  kTinyPhone,
+  kSmallBoundary,
+  kCompactBigOverlap,
+  kBaseline,
+  kiPhone14,
+  kMotoG32,
+  kPixel4,
+  kiPhone14Plus,
+  kLogoJump860,
+  kLogoJump861,
+  kUserDevice46,
+  kUserDevice46_1x,
+  kVeryTallSlim,
+  kXLarge,
+  kFoldOuter,
+  kiPhone14Landscape
+];
 
 // kCompactBigOverlap (350x950) excluded: edge_case category with unusual
 // narrow+tall geometry that causes typography floor interactions not
 // representative of real UX bugs on production devices.
-const kPortraitDevices = [kTinyPhone, kSmallBoundary, kBaseline, kiPhone14, kMotoG32, kPixel4, kiPhone14Plus, kVeryTallSlim, kXLarge];
+const kPortraitDevices = [
+  kTinyPhone,
+  kSmallBoundary,
+  kBaseline,
+  kiPhone14,
+  kMotoG32,
+  kPixel4,
+  kiPhone14Plus,
+  kVeryTallSlim,
+  kXLarge
+];
 
 void setScreenSize(WidgetTester tester, DeviceProfile d) {
   tester.view.physicalSize = Size(d.width, d.height);
@@ -70,7 +99,8 @@ void setScreenSize(WidgetTester tester, DeviceProfile d) {
 }
 
 ResponsiveConfig configFor(DeviceProfile d) {
-  final orientation = d.category == 'landscape' ? Orientation.landscape : Orientation.portrait;
+  final orientation =
+      d.category == 'landscape' ? Orientation.landscape : Orientation.portrait;
   return ResponsiveConfig.fromConstraints(
     BoxConstraints(maxWidth: d.width, maxHeight: d.height),
     orientation,
@@ -88,7 +118,8 @@ double sizingCompactScale(ResponsiveConfig r) => r.isCompact ? 0.85 : 1.0;
 AppTypography typographyFor(DeviceProfile d) {
   final r = configFor(d);
   final titleScale = (r.isSmallPhone ? 0.78 : 1.0) * (r.isCompact ? 0.9 : 1.0);
-  return AppTypography(r.fontScale, titleScale: titleScale, isLandscape: r.isLandscape);
+  return AppTypography(r.fontScale,
+      titleScale: titleScale, isLandscape: r.isLandscape);
 }
 
 AppSizing sizingFor(DeviceProfile d) {

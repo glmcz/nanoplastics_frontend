@@ -58,8 +58,7 @@ void main() {
 
   group('humanHealthSources', () {
     test('contains sources for both en and cs languages', () {
-      final languages =
-          humanHealthSources.map((s) => s.language).toSet();
+      final languages = humanHealthSources.map((s) => s.language).toSet();
       expect(languages, containsAll(['en', 'cs']));
     });
 
@@ -76,8 +75,7 @@ void main() {
 
     test('all sources have non-empty title and description', () {
       for (final source in humanHealthSources) {
-        expect(source.title.isNotEmpty, isTrue,
-            reason: 'Found empty title');
+        expect(source.title.isNotEmpty, isTrue, reason: 'Found empty title');
         expect(source.description.isNotEmpty, isTrue,
             reason: 'Found empty description for ${source.title}');
       }
@@ -95,16 +93,18 @@ void main() {
 
   group('earthPollutionSources', () {
     test('contains sources for en, cs, es, ru, fr', () {
-      final languages =
-          earthPollutionSources.map((s) => s.language).toSet();
+      final languages = earthPollutionSources.map((s) => s.language).toSet();
       expect(languages, containsAll(['en', 'cs', 'es', 'ru', 'fr']));
     });
 
     test('main report sources have endPage sentinel for "all pages"', () {
       final mainReports = earthPollutionSources.where(
-        (s) => s.title.contains('Report') || s.title.contains('Zpráva') ||
-               s.title.contains('Informe') || s.title.contains('Отчёт') ||
-               s.title.contains('Rapport'),
+        (s) =>
+            s.title.contains('Report') ||
+            s.title.contains('Zpráva') ||
+            s.title.contains('Informe') ||
+            s.title.contains('Отчёт') ||
+            s.title.contains('Rapport'),
       );
       expect(mainReports.isNotEmpty, isTrue);
       for (final report in mainReports) {
@@ -156,8 +156,7 @@ void main() {
   group('waterAbilitiesSources', () {
     test('contains sources for all 5 languages', () {
       expect(waterAbilitiesSources.length, equals(5));
-      final languages =
-          waterAbilitiesSources.map((s) => s.language).toSet();
+      final languages = waterAbilitiesSources.map((s) => s.language).toSet();
       expect(languages, equals({'en', 'cs', 'es', 'fr', 'ru'}));
     });
 

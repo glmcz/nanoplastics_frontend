@@ -198,7 +198,9 @@ class _PaperDetailScreenState extends State<PaperDetailScreen> {
               // Tresor heart toggle
               Semantics(
                 button: true,
-                label: _inTresor ? AppLocalizations.of(context)!.vaultRemoveButton : AppLocalizations.of(context)!.vaultSaveButton,
+                label: _inTresor
+                    ? AppLocalizations.of(context)!.vaultRemoveButton
+                    : AppLocalizations.of(context)!.vaultSaveButton,
                 child: _tresorLoading
                     ? SizedBox(
                         width: sizing.iconSm,
@@ -355,8 +357,8 @@ class _DoiRow extends StatelessWidget {
           decoration: BoxDecoration(
             color: AppColors.panelBackground,
             borderRadius: BorderRadius.circular(6),
-            border: Border.all(
-                color: AppColors.neonCyan.withValues(alpha: 0.15)),
+            border:
+                Border.all(color: AppColors.neonCyan.withValues(alpha: 0.15)),
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
@@ -405,7 +407,8 @@ class _OpenSourceButton extends StatelessWidget {
           padding: const EdgeInsets.symmetric(vertical: 14),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
-            border: Border.all(color: AppColors.neonCyan.withValues(alpha: 0.5)),
+            border:
+                Border.all(color: AppColors.neonCyan.withValues(alpha: 0.5)),
             boxShadow: [
               BoxShadow(
                 color: AppColors.neonCyan.withValues(alpha: 0.08),

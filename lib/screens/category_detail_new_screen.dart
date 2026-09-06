@@ -123,8 +123,7 @@ class _CategoryDetailNewScreenState extends State<CategoryDetailNewScreen>
                     EdgeInsets.fromLTRB(spacing.md, 0, spacing.md, spacing.md),
                 title: Text(
                   l10n.downloadingPdf,
-                  style: typography.title
-                      .copyWith(color: AppColors.pastelAqua),
+                  style: typography.title.copyWith(color: AppColors.pastelAqua),
                 ),
                 content: Column(
                   mainAxisSize: MainAxisSize.min,
@@ -662,7 +661,8 @@ class _CategoryDetailNewScreenState extends State<CategoryDetailNewScreen>
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.waves_outlined, color: themeColor, size: sizing.iconSm),
+              Icon(Icons.waves_outlined,
+                  color: themeColor, size: sizing.iconSm),
               const SizedBox(width: AppConstants.space8),
               Flexible(
                 child: Text(

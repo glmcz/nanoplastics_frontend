@@ -58,8 +58,8 @@ class AppTheme {
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide:
-              BorderSide(color: const Color(0xFF1A2E28).withValues(alpha: 0.15)),
+          borderSide: BorderSide(
+              color: const Color(0xFF1A2E28).withValues(alpha: 0.15)),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),

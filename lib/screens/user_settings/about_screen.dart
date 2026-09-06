@@ -532,20 +532,16 @@ class _AboutScreenState extends State<AboutScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  _buildPlatformButton(
-                      'public',
-                      l10n.aboutPlatformAndroidFull,
-                      spacing,
-                      sizing,
-                      typography),
+                  _buildPlatformButton('public', l10n.aboutPlatformAndroidFull,
+                      spacing, sizing, typography),
                   SizedBox(width: spacing.cardSpacing),
                   _buildPlatformButton('play_store',
                       l10n.aboutPlatformPlayStore, spacing, sizing, typography),
                 ],
               ),
               SizedBox(height: spacing.cardSpacing),
-              _buildPlatformButton(
-                  'app_store', l10n.aboutPlatformIOS, spacing, sizing, typography),
+              _buildPlatformButton('app_store', l10n.aboutPlatformIOS, spacing,
+                  sizing, typography),
             ],
           ),
           const SizedBox(height: AppConstants.space16),

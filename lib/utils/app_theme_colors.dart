@@ -23,8 +23,7 @@ class AppThemeColors {
 
   /// Card / container fill
   /// Dark: dark navy  |  Light: pure white
-  Color get cardBackground =>
-      isDark ? const Color(0xFF141928) : Colors.white;
+  Color get cardBackground => isDark ? const Color(0xFF141928) : Colors.white;
 
   /// Alert dialog / bottom-sheet background
   /// Dark: dark indigo  |  Light: subtle mint (#F0F7F5)
@@ -38,18 +37,15 @@ class AppThemeColors {
 
   /// Primary text — headings, card titles
   /// Dark: white  |  Light: deep forest (#1A2E28)
-  Color get textMain =>
-      isDark ? Colors.white : const Color(0xFF1A2E28);
+  Color get textMain => isDark ? Colors.white : const Color(0xFF1A2E28);
 
   /// Secondary text — subtitles, descriptions
   /// Dark: light gray  |  Light: muted forest green (#4A7165)
-  Color get textMuted =>
-      isDark ? AppColors.textMuted : const Color(0xFF4A7165);
+  Color get textMuted => isDark ? AppColors.textMuted : const Color(0xFF4A7165);
 
   /// Tertiary text — hints, disabled labels
   /// Dark: medium gray  |  Light: sage green (#7AA096)
-  Color get textDark =>
-      isDark ? AppColors.textDark : const Color(0xFF7AA096);
+  Color get textDark => isDark ? AppColors.textDark : const Color(0xFF7AA096);
 
   /// Switch inactive track (visible on both card backgrounds)
   Color get switchInactiveTrack =>

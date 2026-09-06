@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import '../models/solver.dart';
@@ -42,17 +43,24 @@ class ApiService {
   }
 
   /// Submit an idea to the backend
+  /// Swapped in tests so the multipart body can be inspected. The call-site
+  /// fake in ServiceLocator covers behaviour; this covers the wire format.
+  @visibleForTesting
+  http.Client client = http.Client();
+
   Future<Map<String, dynamic>> submitIdea({
     required String description,
     String? category,
     List<IdeaAttachment>? attachments,
     String? email,
     String? turnstileToken,
+    Map<String, dynamic>? context,
+    bool anonymous = false,
   }) async {
     try {
       final settings = SettingsManager();
-      final userEmail = email ?? settings.email;
-      final userNickName = settings.displayName;
+      final userEmail = anonymous ? '' : (email ?? settings.email);
+      final userNickName = anonymous ? '' : settings.displayName;
 
       // Create multipart request
       final uri = Uri.parse('$baseUrl/api/ideas');
@@ -61,6 +69,12 @@ class ApiService {
 
       if (category != null && category.isNotEmpty) {
         request.fields['category'] = category;
+      }
+
+      // Why the idea exists, not only what it says. Private on the server:
+      // never returned by any public ideas endpoint.
+      if (context != null) {
+        request.fields['context'] = jsonEncode(context);
       }
 
       if (userNickName.isNotEmpty) {
@@ -125,7 +139,7 @@ class ApiService {
       }
 
       // Extended timeout to allow large file uploads (videos, audio)
-      final streamedResponse = await request.send().timeout(
+      final streamedResponse = await client.send(request).timeout(
         const Duration(seconds: 45),
         onTimeout: () {
           throw TimeoutException('Request timeout after 45 seconds');

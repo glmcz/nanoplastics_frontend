@@ -47,8 +47,7 @@ class _VaultScreenState extends State<VaultScreen> {
             ? box.localToGlobal(Offset.zero) & box.size
             : const Rect.fromLTWH(0, 0, 1, 1);
         await Share.share(text,
-            subject: 'NanoSolve Research Papers',
-            sharePositionOrigin: origin);
+            subject: 'NanoSolve Research Papers', sharePositionOrigin: origin);
       }
     } finally {
       if (mounted) setState(() => _exporting = false);
@@ -72,7 +71,8 @@ class _VaultScreenState extends State<VaultScreen> {
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Center(
-                      child: CircularProgressIndicator(color: AppColors.neonCyan),
+                      child:
+                          CircularProgressIndicator(color: AppColors.neonCyan),
                     );
                   }
                   final papers = snapshot.data ?? [];
@@ -135,7 +135,8 @@ class _VaultScreenState extends State<VaultScreen> {
                 ),
               ),
               SizedBox(width: spacing.sm),
-              const Icon(Icons.lock_outline, color: AppColors.neonCyan, size: 18),
+              const Icon(Icons.lock_outline,
+                  color: AppColors.neonCyan, size: 18),
               SizedBox(width: spacing.xs),
               Expanded(
                 child: Text(

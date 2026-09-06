@@ -103,8 +103,7 @@ void main() {
 
         final errors = _drainExceptions(tester)
             .where((message) =>
-                message.contains('overflowed') ||
-                message.contains('unbounded'))
+                message.contains('overflowed') || message.contains('unbounded'))
             .toList();
 
         expect(
@@ -129,8 +128,7 @@ void main() {
       expect(rects.length, greaterThanOrEqualTo(6));
 
       final expectedBottomGap = spacingFor(kMotoG32Viewport).md * 0.7;
-      final actualBottomGap =
-          _gapBetweenLastRowAndHub(kMotoG32Viewport, rects);
+      final actualBottomGap = _gapBetweenLastRowAndHub(kMotoG32Viewport, rects);
 
       expect(
         actualBottomGap,
@@ -182,8 +180,7 @@ void main() {
 
       final errors = _drainExceptions(tester)
           .where((message) =>
-              message.contains('overflowed') ||
-              message.contains('unbounded'))
+              message.contains('overflowed') || message.contains('unbounded'))
           .toList();
 
       expect(
@@ -214,8 +211,7 @@ void main() {
 
         final errors = _drainExceptions(tester)
             .where((message) =>
-                message.contains('overflowed') ||
-                message.contains('unbounded'))
+                message.contains('overflowed') || message.contains('unbounded'))
             .toList();
 
         expect(
@@ -245,7 +241,8 @@ void main() {
       expect(
         maxH - minH,
         lessThanOrEqualTo(2.0),
-        reason: 'Big-screen cards no longer share the same row height: $heights',
+        reason:
+            'Big-screen cards no longer share the same row height: $heights',
       );
       expect(
         minH,
@@ -288,8 +285,7 @@ void main() {
 
       final errors = _drainExceptions(tester)
           .where((message) =>
-              message.contains('overflowed') ||
-              message.contains('unbounded'))
+              message.contains('overflowed') || message.contains('unbounded'))
           .toList();
 
       expect(

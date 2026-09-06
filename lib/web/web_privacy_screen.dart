@@ -214,7 +214,8 @@ class WebPrivacyScreen extends StatelessWidget {
                               spans: [
                                 TextSpan(
                                   text: l10n.privacyS15HighlightTeam,
-                                  style: const TextStyle(fontWeight: FontWeight.bold),
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.bold),
                                 )
                               ],
                             ),
@@ -308,7 +309,8 @@ class WebPrivacyScreen extends StatelessWidget {
             ),
             const Text(' · ', style: TextStyle(color: WebTheme.textMuted)),
             GestureDetector(
-              onTap: () => openExternalUrl('https://github.com/glmcz/nanoplastics_frontend'),
+              onTap: () => openExternalUrl(
+                  'https://github.com/glmcz/nanoplastics_frontend'),
               child: Text(
                 l10n.privacyFooterGithub,
                 style: const TextStyle(color: AppColors.neonCyan),

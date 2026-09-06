@@ -86,8 +86,7 @@ class _SolverIdeasScreenState extends State<SolverIdeasScreen> {
           horizontal: spacing.headerPadding * 15,
           vertical: spacing.headerPadding * 8),
       decoration: BoxDecoration(
-        color:
-            AppThemeColors.of(context).cardBackground.withValues(alpha: 0.9),
+        color: AppThemeColors.of(context).cardBackground.withValues(alpha: 0.9),
         border: Border(
           bottom: BorderSide(color: Colors.white.withValues(alpha: 0.1)),
         ),
@@ -132,13 +131,11 @@ class _SolverIdeasScreenState extends State<SolverIdeasScreen> {
                       ),
                       child: Text(
                         '#${widget.rank}',
-                        style: Theme.of(context)
-                            .textTheme
-                            .labelMedium!
-                            .copyWith(
-                              color: rankColor(),
-                              fontWeight: FontWeight.w900,
-                            ),
+                        style:
+                            Theme.of(context).textTheme.labelMedium!.copyWith(
+                                  color: rankColor(),
+                                  fontWeight: FontWeight.w900,
+                                ),
                       ),
                     ),
                   ],
@@ -167,8 +164,7 @@ class _SolverIdeasScreenState extends State<SolverIdeasScreen> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(
               child: CircularProgressIndicator(
-                valueColor:
-                    AlwaysStoppedAnimation<Color>(AppColors.pastelMint),
+                valueColor: AlwaysStoppedAnimation<Color>(AppColors.pastelMint),
               ),
             );
           }
@@ -186,8 +182,8 @@ class _SolverIdeasScreenState extends State<SolverIdeasScreen> {
                     const SizedBox(height: AppConstants.space16),
                     Text(
                       '${snapshot.error}',
-                      style: TextStyle(
-                          color: AppThemeColors.of(context).textMain),
+                      style:
+                          TextStyle(color: AppThemeColors.of(context).textMain),
                       textAlign: TextAlign.center,
                       maxLines: 3,
                       overflow: TextOverflow.ellipsis,
@@ -214,8 +210,7 @@ class _SolverIdeasScreenState extends State<SolverIdeasScreen> {
             return Center(
               child: Text(
                 'No ideas found.',
-                style: TextStyle(
-                    color: AppThemeColors.of(context).textMuted),
+                style: TextStyle(color: AppThemeColors.of(context).textMuted),
               ),
             );
           }
@@ -225,9 +220,8 @@ class _SolverIdeasScreenState extends State<SolverIdeasScreen> {
             padding: const EdgeInsets.all(AppConstants.space24),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: ideas
-                  .map((idea) => _buildIdeaCard(context, idea))
-                  .toList(),
+              children:
+                  ideas.map((idea) => _buildIdeaCard(context, idea)).toList(),
             ),
           );
         },

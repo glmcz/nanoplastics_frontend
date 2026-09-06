@@ -122,7 +122,8 @@ void main() {
 
   testWidgets('an empty list renders without dots and without throwing',
       (t) async {
-    await t.pumpWidget(buildTestableWidget(cloud(paused: true, items: const [])));
+    await t
+        .pumpWidget(buildTestableWidget(cloud(paused: true, items: const [])));
     await t.pump();
     final state = t.state<ParticleCloudState>(find.byType(ParticleCloud));
     expect(state.debugDotCount, 0);

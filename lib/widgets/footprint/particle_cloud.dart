@@ -26,12 +26,17 @@ class ParticleCloud extends StatefulWidget {
   final bool paused;
   final VoidCallback onTogglePause;
 
+  /// Explicit height. A fixed aspect ratio eats a short landscape screen, so
+  /// callers size the cloud from the space they actually have.
+  final double height;
+
   const ParticleCloud({
     super.key,
     required this.habits,
     required this.semanticLabel,
     required this.paused,
     required this.onTogglePause,
+    this.height = 120,
   });
 
   @override
@@ -146,8 +151,9 @@ class ParticleCloudState extends State<ParticleCloud>
           liveRegion: true,
           image: true,
           child: RepaintBoundary(
-            child: AspectRatio(
-              aspectRatio: 2,
+            child: SizedBox(
+              height: widget.height,
+              width: double.infinity,
               child: AnimatedBuilder(
                 animation: _controller,
                 builder: (context, _) => CustomPaint(

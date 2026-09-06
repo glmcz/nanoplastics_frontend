@@ -26,7 +26,8 @@ class VideoSourceCard extends StatelessWidget {
     final typography = AppTypography.of(context);
     final themeColors = AppThemeColors.of(context);
 
-    final chipColor = video.isReport ? AppColors.pastelAqua : AppColors.pastelMint;
+    final chipColor =
+        video.isReport ? AppColors.pastelAqua : AppColors.pastelMint;
     final chipLabel = video.isReport ? 'PDF Report' : 'Documentary';
 
     return InkWell(
@@ -72,11 +73,13 @@ class VideoSourceCard extends StatelessWidget {
                   ),
                   SizedBox(height: spacing.xs / 2),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                     decoration: BoxDecoration(
                       color: chipColor.withValues(alpha: 0.12),
                       borderRadius: BorderRadius.circular(4),
-                      border: Border.all(color: chipColor.withValues(alpha: 0.25)),
+                      border:
+                          Border.all(color: chipColor.withValues(alpha: 0.25)),
                     ),
                     child: Text(
                       chipLabel,

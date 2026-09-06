@@ -32,14 +32,15 @@ Widget buildTestableWidget(
     theme: AppTheme.darkTheme,
     navigatorObservers:
         navigatorObserver != null ? [navigatorObserver] : const [],
-    home: Builder(
-      builder: (context) => MediaQuery(
-        data: MediaQuery.of(context).copyWith(
-          textScaler: TextScaler.linear(textScaleFactor),
-          disableAnimations: disableAnimations,
-        ),
-        child: Scaffold(body: child),
+    // Applied at the app builder, not around `home`: a pushed route sits
+    // above `home` in the tree and would otherwise miss these overrides.
+    builder: (context, routeChild) => MediaQuery(
+      data: MediaQuery.of(context).copyWith(
+        textScaler: TextScaler.linear(textScaleFactor),
+        disableAnimations: disableAnimations,
       ),
+      child: routeChild ?? const SizedBox.shrink(),
     ),
+    home: Scaffold(body: child),
   );
 }

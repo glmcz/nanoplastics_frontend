@@ -418,7 +418,11 @@ class _HeroSection extends StatelessWidget {
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.all(phone ? 16 : compact ? 24 : 40),
+                      padding: EdgeInsets.all(phone
+                          ? 16
+                          : compact
+                              ? 24
+                              : 40),
                       child: compact
                           ? Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -438,8 +442,8 @@ class _HeroSection extends StatelessWidget {
                               children: [
                                 Expanded(
                                     flex: 13,
-                                    child:
-                                        _heroText(compact: false, phone: false)),
+                                    child: _heroText(
+                                        compact: false, phone: false)),
                                 const SizedBox(width: 32),
                                 Expanded(
                                   flex: 10,
@@ -512,7 +516,11 @@ class _HeroSection extends StatelessWidget {
           l10n.landingHeroTitle,
           style: TextStyle(
             color: _textMain,
-            fontSize: phone ? 24 : compact ? 32 : 42,
+            fontSize: phone
+                ? 24
+                : compact
+                    ? 32
+                    : 42,
             fontWeight: FontWeight.w800,
             height: 1.08,
             letterSpacing: phone ? -0.5 : -1.0,
@@ -1918,8 +1926,16 @@ class _CategoryGrid extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         final w = constraints.maxWidth;
-        final cols = w >= 980 ? 3 : w >= 600 ? 2 : 1;
-        final ratio = cols == 1 ? 2.2 : cols == 2 ? 1.6 : 1.8;
+        final cols = w >= 980
+            ? 3
+            : w >= 600
+                ? 2
+                : 1;
+        final ratio = cols == 1
+            ? 2.2
+            : cols == 2
+                ? 1.6
+                : 1.8;
         final gap = cols == 1 ? 12.0 : 20.0;
         return GridView.count(
           crossAxisCount: cols,
@@ -2230,7 +2246,8 @@ class _Footer extends StatelessWidget {
                           ),
                           _footerLink(
                             l10n.landingFooterPrivacy,
-                            onTap: () => Navigator.pushNamed(context, '/privacy'),
+                            onTap: () =>
+                                Navigator.pushNamed(context, '/privacy'),
                           ),
                         ],
                       );
@@ -2244,7 +2261,11 @@ class _Footer extends StatelessWidget {
                       if (phone) {
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [links, const SizedBox(height: 12), copyright],
+                          children: [
+                            links,
+                            const SizedBox(height: 12),
+                            copyright
+                          ],
                         );
                       }
                       return Row(

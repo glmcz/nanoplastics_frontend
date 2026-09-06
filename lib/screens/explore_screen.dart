@@ -8,6 +8,7 @@ import '../utils/app_spacing.dart';
 import '../utils/app_theme_colors.dart';
 import '../utils/app_typography.dart';
 import '../widgets/shared/screen_header.dart';
+import 'footprint/footprint_story_screen.dart';
 
 /// Lists the tools that show the problem in a student's own day.
 ///
@@ -64,7 +65,11 @@ class _ExploreScreenState extends State<ExploreScreen> {
                       title: l10n.exploreFootprintTitle,
                       hook: l10n.exploreFootprintHook,
                       icon: Icons.water_drop_outlined,
-                      onTap: () {},
+                      onTap: () => Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) => const FootprintStoryScreen(),
+                        ),
+                      ),
                     ),
                     if (widget.firstRun) ...[
                       SizedBox(height: spacing.lg),

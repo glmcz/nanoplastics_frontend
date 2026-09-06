@@ -27,7 +27,8 @@ class ScreenHeader extends StatelessWidget {
     final typography = AppTypography.of(context);
     final themeColors = AppThemeColors.of(context);
 
-    final label = backLabel ?? AppLocalizations.of(context)!.categoryDetailBackToOverview;
+    final label =
+        backLabel ?? AppLocalizations.of(context)!.categoryDetailBackToOverview;
 
     return Padding(
       padding: EdgeInsets.symmetric(
@@ -52,7 +53,8 @@ class ScreenHeader extends StatelessWidget {
                     Flexible(
                       child: Text(
                         label,
-                        style: typography.back.copyWith(color: themeColors.textMain),
+                        style: typography.back
+                            .copyWith(color: themeColors.textMain),
                         maxLines: 2,
                         overflow: TextOverflow.fade,
                         softWrap: true,

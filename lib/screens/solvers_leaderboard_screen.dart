@@ -440,8 +440,7 @@ class _SolversLeaderboardScreenState extends State<SolversLeaderboardScreen>
       decoration: BoxDecoration(
         color: AppColors.pastelMint.withValues(alpha: 0.07),
         borderRadius: BorderRadius.circular(AppConstants.radiusMedium),
-        border:
-            Border.all(color: AppColors.pastelMint.withValues(alpha: 0.2)),
+        border: Border.all(color: AppColors.pastelMint.withValues(alpha: 0.2)),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -713,11 +712,10 @@ class _SolversLeaderboardScreenState extends State<SolversLeaderboardScreen>
                       const SizedBox(width: AppConstants.space2),
                       Text(
                         '${solver.totalScore}',
-                        style:
-                            Theme.of(context).textTheme.labelSmall!.copyWith(
-                                  color: getRankColor().withValues(alpha: 0.8),
-                                  fontWeight: FontWeight.w700,
-                                ),
+                        style: Theme.of(context).textTheme.labelSmall!.copyWith(
+                              color: getRankColor().withValues(alpha: 0.8),
+                              fontWeight: FontWeight.w700,
+                            ),
                       ),
                     ],
                   ),

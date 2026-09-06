@@ -233,7 +233,8 @@ final List<PDFSource> humanHealthSources = [
     endPage: 100,
     description: 'Bioaccumulation in CNS & Neurodegeneration Risks',
     language: 'en',
-    pdfAssetPath: 'assets/docs/EN_report_nanoplastics_a_systematic_risk_analysis_for_human_health_ecosystems_and_the_environment_compressed.pdf',
+    pdfAssetPath:
+        'assets/docs/EN_report_nanoplastics_a_systematic_risk_analysis_for_human_health_ecosystems_and_the_environment_compressed.pdf',
     isNew: true,
   ),
   // ── French ────────────────────────────────────────────────────────────────
@@ -484,9 +485,7 @@ final List<PDFSource> humanHealthSources = [
     language: 'ru',
     url: '$_ruBase#page=91',
   ),
-
 ];
-
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Earth Pollution Category
@@ -629,7 +628,8 @@ final List<PDFSource> earthPollutionSources = [
     endPage: 226,
     description: 'Atmosphere & Ocean Acidification | Climate System Impact',
     language: 'en',
-    pdfAssetPath: 'assets/docs/EN_report_nanoplastics_a_systematic_risk_analysis_for_human_health_ecosystems_and_the_environment_compressed.pdf',
+    pdfAssetPath:
+        'assets/docs/EN_report_nanoplastics_a_systematic_risk_analysis_for_human_health_ecosystems_and_the_environment_compressed.pdf',
     isNew: true,
   ),
   PDFSource(
@@ -907,7 +907,6 @@ final List<PDFSource> earthPollutionSources = [
     language: 'ru',
     url: _ruBase,
   ),
-
 ];
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -987,7 +986,8 @@ final List<VideoSource> videoSourcesEn = [
     language: 'en',
   ),
   VideoSource(
-    title: 'Conference in EU parliament: "Nanoplastics: Hidden Connections and Emerging Risks"',
+    title:
+        'Conference in EU parliament: "Nanoplastics: Hidden Connections and Emerging Risks"',
     url: 'https://youtu.be/EZony1cFgjk?si=RVhtwSKnkmP9JmN_',
     language: 'en',
   ),
@@ -1023,7 +1023,8 @@ final List<VideoSource> videoSourcesEn = [
     language: 'en',
   ),
   VideoSource(
-    title: 'Nanoplastics and Society: An Interview with Professor Antonio Ragusa',
+    title:
+        'Nanoplastics and Society: An Interview with Professor Antonio Ragusa',
     url: 'https://youtu.be/eH_Q9DXO5Zk?si=qhCrouWaoLkZoi1R',
     language: 'en',
   ),
@@ -1045,9 +1046,10 @@ final List<VideoSource> videoSourcesEs = [
     title: 'Factor Antropogénico en la Muerte del Océano | Documental',
     url: 'https://youtu.be/V2vb6bbOzqg',
     language: 'es',
-  ), 
+  ),
   VideoSource(
-    title: 'Por qué se está calentando el océano tan rápido? | Dr. Egon Cholakian',
+    title:
+        'Por qué se está calentando el océano tan rápido? | Dr. Egon Cholakian',
     url: 'https://youtu.be/uxMwnRAgle4?si=p6ZEImTPNMMUturR',
     language: 'es',
   ),
@@ -1067,7 +1069,8 @@ final List<VideoSource> videoSourcesRu = [
     language: 'ru',
   ),
   VideoSource(
-    title: 'Нанопластик: скрытые связи и возникающие риски | Европейский парламент, Брюссель',
+    title:
+        'Нанопластик: скрытые связи и возникающие риски | Европейский парламент, Брюссель',
     url: 'https://youtu.be/ha6T0t0q7JA?si=h4Y85L9BjX4s9hby',
     language: 'ru',
   ),
@@ -1102,7 +1105,8 @@ final List<VideoSource> videoSourcesRu = [
 // Video Sources - French
 final List<VideoSource> videoSourcesFr = [
   VideoSource(
-    title: 'Nanoplastiques : la menace invisible et un risque mondial | Présentation à ChangeNOW 2026',
+    title:
+        'Nanoplastiques : la menace invisible et un risque mondial | Présentation à ChangeNOW 2026',
     url: 'https://youtu.be/4OqOeNPM0SA?si=CM43jWsmjruyyBsw',
     language: 'fr',
   ),
@@ -1112,12 +1116,14 @@ final List<VideoSource> videoSourcesFr = [
     language: 'fr',
   ),
   VideoSource(
-    title: 'Nanoplastiques : liens cachés et risques émergents | Conférence au Parlement européen',
+    title:
+        'Nanoplastiques : liens cachés et risques émergents | Conférence au Parlement européen',
     url: 'https://youtu.be/VxEhJuBTLWM?si=hwp9bbV4V499IAXb',
     language: 'fr',
   ),
   VideoSource(
-    title: "Pourquoi l'océan se réchauffe-t-il si rapidement ? | Dr Egon Cholakian",
+    title:
+        "Pourquoi l'océan se réchauffe-t-il si rapidement ? | Dr Egon Cholakian",
     url: 'https://youtu.be/H5J6l_CxnuI?si=qNK0BMeCtBQG1uPz',
     language: 'fr',
   ),
@@ -1137,7 +1143,8 @@ final List<VideoSource> videoSourcesFr = [
 // Video Sources - Czech
 final List<VideoSource> videoSourcesCs = [
   VideoSource(
-    title: 'Nanoplasty: Skryté souvislosti a vznikající rizika | konference v Evropském parlamentu',
+    title:
+        'Nanoplasty: Skryté souvislosti a vznikající rizika | konference v Evropském parlamentu',
     url: 'https://youtu.be/wzvzKiuBNaM?si=87_4toxs_96NpnSI',
     language: 'cs',
   ),

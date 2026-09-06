@@ -87,7 +87,8 @@ class _Header extends StatelessWidget {
     final typography = AppTypography.of(context);
 
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: spacing.md, vertical: spacing.sm),
+      padding:
+          EdgeInsets.symmetric(horizontal: spacing.md, vertical: spacing.sm),
       child: Row(
         children: [
           Semantics(
@@ -136,7 +137,8 @@ class _TabBar extends StatelessWidget {
     final colors = AppThemeColors.of(context);
 
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: spacing.md, vertical: spacing.sm),
+      padding:
+          EdgeInsets.symmetric(horizontal: spacing.md, vertical: spacing.sm),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -231,17 +233,20 @@ class _WebLinksContent extends StatelessWidget {
       (
         title: l10n.sourcesSectionHumanHealth,
         icon: Icons.favorite_outline,
-        sources: humanHealthSources.where((s) => s.language == userLang).toList(),
+        sources:
+            humanHealthSources.where((s) => s.language == userLang).toList(),
       ),
       (
         title: l10n.sourcesSectionEarthPollution,
         icon: Icons.terrain_outlined,
-        sources: earthPollutionSources.where((s) => s.language == userLang).toList(),
+        sources:
+            earthPollutionSources.where((s) => s.language == userLang).toList(),
       ),
       (
         title: l10n.sourcesSectionWaterAbilities,
         icon: Icons.water_drop_outlined,
-        sources: waterAbilitiesSources.where((s) => s.language == userLang).toList(),
+        sources:
+            waterAbilitiesSources.where((s) => s.language == userLang).toList(),
       ),
     ];
 
@@ -259,15 +264,15 @@ class _WebLinksContent extends StatelessWidget {
               ),
             ),
             ...section.sources.where((s) => s.url != null).map(
-              (source) => _WebLinkCard(
-                source: source,
-                onTap: () => openLink(source.url!),
-                spacing: spacing,
-                sizing: sizing,
-                typography: typography,
-                colors: colors,
-              ),
-            ),
+                  (source) => _WebLinkCard(
+                    source: source,
+                    onTap: () => openLink(source.url!),
+                    spacing: spacing,
+                    sizing: sizing,
+                    typography: typography,
+                    colors: colors,
+                  ),
+                ),
             SizedBox(height: spacing.md),
           ],
         ],

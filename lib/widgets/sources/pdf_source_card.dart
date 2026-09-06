@@ -22,44 +22,65 @@ class PdfSourceCard extends StatelessWidget {
 
   /// Maps source description keywords to a category accent color.
   static Color accentColor(String description) {
-    if (description.contains('Brain') || description.contains('Central') ||
-        description.contains('мозг') || description.contains('mozek') ||
-        description.contains('Centraux') || description.contains('Centrales')) {
+    if (description.contains('Brain') ||
+        description.contains('Central') ||
+        description.contains('мозг') ||
+        description.contains('mozek') ||
+        description.contains('Centraux') ||
+        description.contains('Centrales')) {
       return AppColors.neonCyan;
     }
-    if (description.contains('Heart') || description.contains('Vital') ||
-        description.contains('srdce') || description.contains('Vitalit')) {
+    if (description.contains('Heart') ||
+        description.contains('Vital') ||
+        description.contains('srdce') ||
+        description.contains('Vitalit')) {
       return AppColors.neonCrimson;
     }
-    if (description.contains('Reproduc') || description.contains('Fertil') ||
-        description.contains('placenta') || description.contains('Репродук')) {
+    if (description.contains('Reproduc') ||
+        description.contains('Fertil') ||
+        description.contains('placenta') ||
+        description.contains('Репродук')) {
       return AppColors.neonViolet;
     }
-    if (description.contains('Entry') || description.contains('Inhal') ||
-        description.contains('vstupní') || description.contains('Entrées') ||
-        description.contains('Vías') || description.contains('Пути')) {
+    if (description.contains('Entry') ||
+        description.contains('Inhal') ||
+        description.contains('vstupní') ||
+        description.contains('Entrées') ||
+        description.contains('Vías') ||
+        description.contains('Пути')) {
       return AppColors.neonOrange;
     }
-    if (description.contains('Filtrat') || description.contains('Detox') ||
-        description.contains('Filtrace') || description.contains('Filtr') ||
+    if (description.contains('Filtrat') ||
+        description.contains('Detox') ||
+        description.contains('Filtrace') ||
+        description.contains('Filtr') ||
         description.contains('Фильтр')) {
       return AppColors.neonLime;
     }
-    if (description.contains('Ocean') || description.contains('Marine') ||
-        description.contains('oceán') || description.contains('Océan') ||
-        description.contains('océano') || description.contains('мор')) {
+    if (description.contains('Ocean') ||
+        description.contains('Marine') ||
+        description.contains('oceán') ||
+        description.contains('Océan') ||
+        description.contains('océano') ||
+        description.contains('мор')) {
       return AppColors.neonOcean;
     }
-    if (description.contains('Atmos') || description.contains('atmos') ||
-        description.contains('Atmosphère') || description.contains('Атмос')) {
+    if (description.contains('Atmos') ||
+        description.contains('atmos') ||
+        description.contains('Atmosphère') ||
+        description.contains('Атмос')) {
       return AppColors.neonAtmos;
     }
-    if (description.contains('Flora') || description.contains('Fauna') ||
-        description.contains('Biosphere') || description.contains('Biosphère')) {
+    if (description.contains('Flora') ||
+        description.contains('Fauna') ||
+        description.contains('Biosphere') ||
+        description.contains('Biosphère')) {
       return AppColors.neonBio;
     }
-    if (description.contains('Magnetic') || description.contains('Core') ||
-        description.contains('Magnét') || description.contains('ядро') ||
+    if (description.contains('Magnetic') ||
+        description.contains('Core') ||
+        description.contains('Magnét') ||
+        description.contains('ядро') ||
         description.contains('Магнит')) {
       return AppColors.neonMagma;
     }
@@ -118,11 +139,13 @@ class PdfSourceCard extends StatelessWidget {
                   ),
                   SizedBox(height: spacing.xs / 2),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                     decoration: BoxDecoration(
                       color: chipColor.withValues(alpha: 0.12),
                       borderRadius: BorderRadius.circular(4),
-                      border: Border.all(color: chipColor.withValues(alpha: 0.25)),
+                      border:
+                          Border.all(color: chipColor.withValues(alpha: 0.25)),
                     ),
                     child: Text(
                       source.description,
@@ -161,7 +184,8 @@ class PdfSourceCard extends StatelessWidget {
                               child: Icon(
                                 Icons.cloud_done,
                                 size: sizing.iconXs,
-                                color: AppColors.pastelMint.withValues(alpha: 0.7),
+                                color:
+                                    AppColors.pastelMint.withValues(alpha: 0.7),
                               ),
                             ),
                           );
@@ -169,7 +193,9 @@ class PdfSourceCard extends StatelessWidget {
                       ),
                     if (isWebOnlyLink) SizedBox(width: spacing.xs / 2),
                     Icon(
-                      isWebOnlyLink ? Icons.open_in_browser : Icons.picture_as_pdf,
+                      isWebOnlyLink
+                          ? Icons.open_in_browser
+                          : Icons.picture_as_pdf,
                       size: sizing.iconSm,
                       color: AppColors.pastelAqua.withValues(alpha: 0.6),
                     ),

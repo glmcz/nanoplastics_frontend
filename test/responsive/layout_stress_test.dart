@@ -34,7 +34,8 @@ void main() {
       await tester.pumpAndSettle();
     });
 
-    testWidgets('no overflow on 350x950 (isCompact+isBig overlap)', (tester) async {
+    testWidgets('no overflow on 350x950 (isCompact+isBig overlap)',
+        (tester) async {
       setScreenSize(tester, kCompactBigOverlap);
       await tester.pumpWidget(buildTestableWidget(const MainScreen()));
       await tester.pumpAndSettle();
@@ -66,7 +67,8 @@ void main() {
         final area = size.width * size.height;
 
         if (area < 44 * 44) {
-          failedTargets.add('${size.width.toStringAsFixed(0)}×${size.height.toStringAsFixed(0)}dp');
+          failedTargets.add(
+              '${size.width.toStringAsFixed(0)}×${size.height.toStringAsFixed(0)}dp');
         }
       }
 
@@ -87,7 +89,8 @@ void main() {
       await setupServiceLocator();
     });
 
-    testWidgets('background covers viewport on 640x360 landscape', (tester) async {
+    testWidgets('background covers viewport on 640x360 landscape',
+        (tester) async {
       setScreenSize(tester, kUserDevice46);
       await tester.pumpWidget(buildTestableWidget(const MainScreen()));
       await tester.pumpAndSettle();

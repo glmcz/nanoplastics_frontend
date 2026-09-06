@@ -26,7 +26,8 @@ class PDFViewerScreen extends StatefulWidget {
   final int endPage;
   final String description;
   final String? pdfPath; // File system path (extracted/downloaded PDF)
-  final String? pdfAssetPath; // Flutter asset path (bundled PDF, opened directly)
+  final String?
+      pdfAssetPath; // Flutter asset path (bundled PDF, opened directly)
 
   const PDFViewerScreen({
     super.key,
@@ -315,7 +316,8 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
         throw Exception('Failed to create PDF file');
       }
 
-      final box = _shareButtonKey.currentContext?.findRenderObject() as RenderBox?;
+      final box =
+          _shareButtonKey.currentContext?.findRenderObject() as RenderBox?;
       final origin = box != null
           ? box.localToGlobal(Offset.zero) & box.size
           : const Rect.fromLTWH(0, 0, 1, 1);
@@ -518,45 +520,44 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
               child: InkWell(
                 onTap: () => Navigator.of(context).maybePop(),
                 child: ConstrainedBox(
-                  constraints:
-                      BoxConstraints(minHeight: sizing.minTouchTarget),
+                  constraints: BoxConstraints(minHeight: sizing.minTouchTarget),
                   child: Padding(
-                  padding: isPortrait
-                      ? EdgeInsets.symmetric(
-                          horizontal: spacing.xs, vertical: spacing.xs)
-                      : EdgeInsets.symmetric(
-                          horizontal: spacing.xs, vertical: 2),
-                  child: isPortrait
-                      ? Row(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.arrow_back_ios,
-                              color: AppThemeColors.of(context).textMain,
-                              size: sizing.iconXs,
-                            ),
-                            const SizedBox(width: AppConstants.space4),
-                            Flexible(
-                              child: Text(
-                                l10n.categoryDetailBackToOverview,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: typography.back.copyWith(
-                                  color: AppThemeColors.of(context).textMain,
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: backFontSize,
-                                  letterSpacing: 0.4,
+                    padding: isPortrait
+                        ? EdgeInsets.symmetric(
+                            horizontal: spacing.xs, vertical: spacing.xs)
+                        : EdgeInsets.symmetric(
+                            horizontal: spacing.xs, vertical: 2),
+                    child: isPortrait
+                        ? Row(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.arrow_back_ios,
+                                color: AppThemeColors.of(context).textMain,
+                                size: sizing.iconXs,
+                              ),
+                              const SizedBox(width: AppConstants.space4),
+                              Flexible(
+                                child: Text(
+                                  l10n.categoryDetailBackToOverview,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: typography.back.copyWith(
+                                    color: AppThemeColors.of(context).textMain,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: backFontSize,
+                                    letterSpacing: 0.4,
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
-                        )
-                      : Icon(
-                          Icons.arrow_back_ios,
-                          color: AppThemeColors.of(context).textMain,
-                          size: sizing.iconXss,
-                        ),
+                            ],
+                          )
+                        : Icon(
+                            Icons.arrow_back_ios,
+                            color: AppThemeColors.of(context).textMain,
+                            size: sizing.iconXss,
+                          ),
                   ),
                 ),
               ),

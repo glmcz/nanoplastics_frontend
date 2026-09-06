@@ -1,7 +1,6 @@
 @Deprecated('Use web_app_shell.dart directly for new code.')
 export 'web_app_shell.dart' show NanoSolveWebApp;
 
-
 // ignore: unused_element
 const _legacyWebAppSource = r'''
 

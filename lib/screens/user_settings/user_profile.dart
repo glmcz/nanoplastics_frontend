@@ -722,10 +722,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       }
 
       final appDocDir = await getApplicationDocumentsDirectory();
-      final fileName =
-          'avatar_${DateTime.now().millisecondsSinceEpoch}.jpg';
-      final savedFile =
-          File('${appDocDir.path}/$fileName');
+      final fileName = 'avatar_${DateTime.now().millisecondsSinceEpoch}.jpg';
+      final savedFile = File('${appDocDir.path}/$fileName');
 
       await File(croppedFile.path).copy(savedFile.path);
       await _settingsManager.setAvatarPath(savedFile.path);

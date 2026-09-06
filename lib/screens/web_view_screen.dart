@@ -59,7 +59,8 @@ class _WebViewScreenState extends State<WebViewScreen> {
               }
             },
             onPageFinished: (url) {
-              LoggerService().logDebug('WebViewPageFinished', 'Page finished: $url');
+              LoggerService()
+                  .logDebug('WebViewPageFinished', 'Page finished: $url');
               if (mounted) {
                 setState(() => _loadingProgress = 100);
               }
@@ -71,8 +72,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
               // Only log them, don't fail the entire page
               if (!error.description.contains('channel-error') &&
                   !error.description.contains('unregistered type')) {
-                LoggerService().logDebug(
-                    'WebViewResourceError',
+                LoggerService().logDebug('WebViewResourceError',
                     'Resource failed: ${error.url} - ${error.description}');
               }
               // Don't set _hasError here - resources can fail while page still loads
@@ -84,8 +84,10 @@ class _WebViewScreenState extends State<WebViewScreen> {
       // If page doesn't start loading within 15 seconds, show error
       Future.delayed(const Duration(seconds: 15), () {
         if (mounted && !_pageStarted) {
-          LoggerService().logError('WebViewLoadTimeout',
-              'Page did not start loading after 15 seconds', StackTrace.current);
+          LoggerService().logError(
+              'WebViewLoadTimeout',
+              'Page did not start loading after 15 seconds',
+              StackTrace.current);
           setState(() => _hasError = true);
         }
       });
@@ -157,8 +159,8 @@ class _WebViewScreenState extends State<WebViewScreen> {
               },
               child: const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16),
-                child: Icon(Icons.refresh,
-                    color: AppColors.pastelAqua, size: 20),
+                child:
+                    Icon(Icons.refresh, color: AppColors.pastelAqua, size: 20),
               ),
             ),
           ),
@@ -169,7 +171,8 @@ class _WebViewScreenState extends State<WebViewScreen> {
                 child: LinearProgressIndicator(
                   value: _loadingProgress / 100,
                   backgroundColor: Colors.transparent,
-                  valueColor: const AlwaysStoppedAnimation(AppColors.pastelAqua),
+                  valueColor:
+                      const AlwaysStoppedAnimation(AppColors.pastelAqua),
                 ),
               )
             : null,
@@ -187,13 +190,14 @@ class _WebViewScreenState extends State<WebViewScreen> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(Icons.wifi_off,
-                size: 48, color: AppColors.pastelAqua),
+            const Icon(Icons.wifi_off, size: 48, color: AppColors.pastelAqua),
             const SizedBox(height: 16),
             const Text(
               'No connection',
               style: TextStyle(
-                  color: Colors.white, fontSize: 18, fontWeight: FontWeight.w600),
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 8),
             const Text(
@@ -211,7 +215,8 @@ class _WebViewScreenState extends State<WebViewScreen> {
                 _controller.reload();
               },
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                 decoration: BoxDecoration(
                   border: Border.all(
                       color: AppColors.pastelAqua.withValues(alpha: 0.4)),
