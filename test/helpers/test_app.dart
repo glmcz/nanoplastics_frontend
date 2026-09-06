@@ -7,10 +7,15 @@ import 'package:nanoplastics_app/config/app_theme.dart';
 ///
 /// Provides localization delegates, dark theme, and a Scaffold ancestor
 /// so that ScaffoldMessenger.of(context) works for SnackBars.
+/// [textScaleFactor] and [disableAnimations] exist so accessibility rules can
+/// be tested rather than assumed: 200% text scaling and the OS reduce-motion
+/// setting are both acceptance criteria.
 Widget buildTestableWidget(
   Widget child, {
   Locale locale = const Locale('en'),
   NavigatorObserver? navigatorObserver,
+  double textScaleFactor = 1.0,
+  bool disableAnimations = false,
 }) {
   return MaterialApp(
     locale: locale,
@@ -20,16 +25,21 @@ Widget buildTestableWidget(
       GlobalWidgetsLocalizations.delegate,
       GlobalCupertinoLocalizations.delegate,
     ],
-    supportedLocales: const [
-      Locale('en'),
-      Locale('cs'),
-      Locale('es'),
-      Locale('fr'),
-      Locale('ru'),
-    ],
+    // Taken from the generated list, exactly as main.dart does. Hardcoding it
+    // here once omitted Arabic, so every Arabic test silently fell back to
+    // English and passed without testing anything.
+    supportedLocales: AppLocalizations.supportedLocales,
     theme: AppTheme.darkTheme,
     navigatorObservers:
         navigatorObserver != null ? [navigatorObserver] : const [],
-    home: Scaffold(body: child),
+    home: Builder(
+      builder: (context) => MediaQuery(
+        data: MediaQuery.of(context).copyWith(
+          textScaler: TextScaler.linear(textScaleFactor),
+          disableAnimations: disableAnimations,
+        ),
+        child: Scaffold(body: child),
+      ),
+    ),
   );
 }
