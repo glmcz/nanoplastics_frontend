@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// Manages app-level preferences
@@ -25,6 +26,47 @@ class AppPreferencesManager {
   }
 
   // Advisor Tour
+  /// The Explore screen is shown once after onboarding, so a new install
+  /// finds the tools instead of having to go looking for them.
+  static const String _exploreSeenKey = 'explore_seen';
+
+  bool get hasSeenExplore => _prefs.getBool(_exploreSeenKey) ?? false;
+
+  Future<void> setExploreSeen(bool seen) async {
+    await _prefs.setBool(_exploreSeenKey, seen);
+  }
+
+  /// Usage statistics. Defaults to on, and the privacy policy says so.
+  /// Off means nothing is collected, not merely nothing sent.
+  static const String _usageStatisticsKey = 'usage_statistics_enabled';
+
+  bool get usageStatisticsEnabled =>
+      _prefs.getBool(_usageStatisticsKey) ?? true;
+
+  Future<void> setUsageStatisticsEnabled(bool value) async {
+    await _prefs.setBool(_usageStatisticsKey, value);
+  }
+
+  /// The footprint tool's whole saved state: last answers, the commitment
+  /// and its date, and the student's own explanation. One key, one blob.
+  static const String _footprintStateKey = 'footprint_state';
+
+  Map<String, dynamic> get footprintState {
+    final raw = _prefs.getString(_footprintStateKey);
+    if (raw == null || raw.isEmpty) return const {};
+    try {
+      final decoded = jsonDecode(raw);
+      return decoded is Map<String, dynamic> ? decoded : const {};
+    } catch (_) {
+      // A blob written by an older build must not crash the screen.
+      return const {};
+    }
+  }
+
+  Future<void> setFootprintState(Map<String, dynamic> value) async {
+    await _prefs.setString(_footprintStateKey, jsonEncode(value));
+  }
+
   bool get hasShownAdvisorTour => _prefs.getBool(_advisorTourShownKey) ?? false;
 
   Future<void> setAdvisorTourShown(bool shown) async {

@@ -1,16 +1,12 @@
 {
   "@@locale": "en",
-
   "appTitle": "NANOSOLVE",
   "appSubtitle": "SCIENCE, SOCIETY, FUTURE",
-
   "tabHuman": "HUMANS",
   "tabPlanet": "PLANET",
-
   "navExplore": "Explore",
   "navSources": "Sources",
   "navResults": "Results",
-
   "humanCategoryCentralSystems": "Central Nervous Systems",
   "humanCategoryCentralSystemsDesc": "Nervous, circulatory",
   "humanCategoryFiltrationDetox": "Filtration & Detoxification",
@@ -23,7 +19,6 @@
   "humanCategoryEntryGatesDesc": "Skin, breathing, diet",
   "humanCategoryWaysOfDesctruction": "Ways of Destruction",
   "humanCategoryWaysOfDesctructionDesc": "Known forms of destruction",
-
   "planetCategoryWorldOcean": "World Hydrosphere & Seas",
   "planetCategoryWorldOceanDesc": "Marine life, water",
   "planetCategoryAtmosphere": "Atmosphere & Climate",
@@ -36,25 +31,20 @@
   "planetCategoryEntryGatesDesc": "Industry, waste",
   "planetCategoryPhysicalProperties": "Physical Properties & Effects",
   "planetCategoryPhysicalPropertiesDesc": "Soil, water, air",
-
   "onboardingTitle1": "This is reality. We want to change it, but we need your idea!",
   "onboardingHighlight1": "",
   "onboardingDescription1": "To make this change, we need your idea.",
-
   "onboardingTitle2": "Choose your area and find solutions.",
   "onboardingHighlight2": "Join in and find a solution.",
   "onboardingDescription2": "",
-
   "onboardingTitle3": "Be one of us",
   "onboardingHighlight3": "and inspire others.",
   "onboardingDescription3": "",
-
   "onboardingNext": "Next",
   "onboardingPrevious": "Back",
   "onboardingStart": "Start",
   "onboardingSkip": "Skip",
   "onboardingBack": "Back",
-
   "categoryDetailBack": "Back",
   "categoryDetailBackToOverview": "BACK",
   "categoryDetailBrainstorm": "Brainstorm",
@@ -81,13 +71,10 @@
   "brainstormLicenseNotice": "By submitting you license this idea under CC BY 4.0 — free for research & public benefit.",
   "categoryDetailSourcesTitle": "Related Sources",
   "categoryDetailSourcesCount": "sources",
-
   "sourcesTitle": "Sources",
   "sourcesSubtitle": "Library and educational materials",
-
-  "resultsTitle": "Results",
-  "resultsSubtitle": "Evaluation and solutions",
-
+  "resultsTitle": "ANALYSIS RESULTS",
+  "resultsSubtitle": "Mathematical evaluation of ideas and solutions",
   "sourcesMainReportLabel": "⭐ MAIN REPORT (2025)",
   "sourcesMainReportTitle": "NANOPLASTICS IN THE BIOSPHERE, FROM MOLECULAR IMPACT TO PLANETARY CRISIS",
   "sourcesMainReportUrl": "https://allatra.org/storage/app/media/reports/en/Nanoplastics_in_the_Biosphere_Report.pdf",
@@ -95,37 +82,30 @@
   "sourcesTabWeb": "WEB LINKS",
   "sourcesTabVideo": "VIDEO LINKS",
   "sourcesTabReport": "R",
-  "sourcesWebTabSearchbar" : "Search links by title, author, year, journal…",
+  "sourcesWebTabSearchbar": "Search links by title, author, year, journal…",
   "sourcesSectionHumanHealth": "I: Nanoplastics & Human Health",
   "sourcesSectionEarthPollution": "II: Earth & Plastic Pollution",
   "sourcesSectionWaterAbilities": "III: Specific Water Abilities",
   "sourcesSectionVideoContent": "B. Documentary & Expert Content",
   "sourcesVideoSectionDocumentaries": "Documentary Films",
-
   "videoLink1Title": "Nanoplastics. Threat to Life | ALLATRA Documentary",
   "videoLink1Source": "ALLATRA Documentary",
   "videoLink1Url": "https://youtu.be/BVap0MdbCZg?list=PL4b5lQBqqnUGsIhduDunOHm0gcSnrr8AT",
-
   "videoLink2Title": "Trap for Humanity | Popular Science Film",
   "videoLink2Source": "Popular Science Film",
   "videoLink2Url": "https://youtu.be/NBbbqRzzQGY?list=PL4b5lQBqqnUGsIhduDunOHm0gcSnrr8AT",
-
   "videoLink3Title": "Anthropogenic Factor in the Ocean's Demise | Popular Science Film",
   "videoLink3Source": "Popular Science Film",
   "videoLink3Url": "https://youtu.be/CDWrsgX4syc?list=PL4b5lQBqqnUGsIhduDunOHm0gcSnrr8AT",
-
   "videoLink4Title": "What Destroys You on a Quantum Level?",
   "videoLink4Source": "Documentary",
   "videoLink4Url": "https://youtu.be/0CBfe7w8oUU",
-
   "videoLink5Title": "Nanoplastics. The Last Generation Has Already Been Born",
   "videoLink5Source": "Documentary",
   "videoLink5Url": "https://youtu.be/qsarcxl1jls",
-
   "videoLink6Title": "ALLATRA at UN Summit COP16 | Climate Crisis and Ocean Pollution Documentary",
   "videoLink6Source": "Climate Crisis Documentary",
   "videoLink6Url": "https://youtu.be/0DNempKykno?list=PL4b5lQBqqnUGsIhduDunOHm0gcSnrr8AT",
-
   "detailCentralSystemsTitle": "Central Systems (Blood, Brain)",
   "detailCentralSystemsSubtitle": "Trojan horse in the body: barrier penetration, inflammation",
   "detailCentralSystemsChargeHint": "Nanoplastics carry a static electric charge — the key that lets them cross the blood-brain barrier.",
@@ -136,7 +116,6 @@
   "detailCentralSystemsEntry1Bullet3": "Disruption of neuron function and nerve signals",
   "detailCentralSystemsEntry2Highlight": "Brain penetration",
   "detailCentralSystemsEntry2Desc": "Research shows they cross the blood-brain barrier, penetrate the brain and disrupt neuron function.",
-
   "detailFiltrationDetoxTitle": "Filtration & Detox (Liver, Kidneys)",
   "detailFiltrationDetoxSubtitle": "Filter overload & metabolic collapse",
   "detailFiltrationDetoxEntry1Highlight": "Aggressiveness: immediately after ingestion",
@@ -146,7 +125,6 @@
   "detailFiltrationDetoxEntry1Bullet3": "Systemic inflammation",
   "detailFiltrationDetoxEntry2Highlight": "Organ accumulation",
   "detailFiltrationDetoxEntry2Desc": "Particles accumulate in the liver and kidneys, where they disrupt metabolic processes and detoxification functions.",
-
   "detailVitalityTissuesTitle": "Vitality & Tissues (Heart, Muscles)",
   "detailVitalityTissuesSubtitle": "Electric noise and cellular aging",
   "detailVitalityTissuesEntry1Highlight": "Mitochondrial dysfunction",
@@ -155,7 +133,6 @@
   "detailVitalityTissuesEntry1Bullet2": "Mitochondrial damage",
   "detailVitalityTissuesEntry1Bullet3": "Decreased ATP (cellular energy) production",
   "detailVitalityTissuesEntry1Bullet4": "Premature aging and tissue death",
-
   "detailReproductionTitle": "Origin & Protection (Reproduction)",
   "detailReproductionSubtitle": "Genetic damage to future generations",
   "detailReproductionEntry1Highlight": "Reproductive & genetic damage",
@@ -164,7 +141,6 @@
   "detailReproductionEntry1Bullet2": "Increased developmental defects",
   "detailReproductionEntry1Bullet3": "Thymus disruption in newborns",
   "detailReproductionEntry1Bullet4": "Transmission between generations during cell division",
-
   "detailEntryGatesTitle": "Entry Gates (Inhalation, Ingestion)",
   "detailEntryGatesSubtitle": "Contamination pathways: air, water, food",
   "detailEntryGatesEntry1Highlight": "Inhalation (breathing)",
@@ -173,7 +149,6 @@
   "detailEntryGatesEntry2Desc": "Entry through contaminated water, food and beverages.",
   "detailEntryGatesEntry3Highlight": "Absorption (skin)",
   "detailEntryGatesEntry3Desc": "Penetration through skin pores upon contact with water or air.",
-
   "detailPhysicalAttackTitle": "Known Ways of Destruction",
   "detailPhysicalAttackSubtitle": "Comprehensive overview of negative effects on the organism",
   "detailPhysicalAttackEntry1Highlight": "Electrostatic charge",
@@ -182,7 +157,6 @@
   "detailPhysicalAttackEntry2Desc": "The charge can disrupt bioelectric signals and nerve impulses.",
   "detailPhysicalAttackEntry3Highlight": "Structural deformation",
   "detailPhysicalAttackEntry3Desc": "Interaction with proteins can disrupt their spatial structure and hydrogen bonds.",
-
   "detailWorldOceanTitle": "World Ocean and Hydrosphere",
   "detailWorldOceanSubtitle": "Physicochemical sabotage & heat accumulation",
   "detailWorldOceanChargeHint": "The static charge on nanoplastics disrupts water's hydrogen bond network, reducing the ocean's ability to absorb heat.",
@@ -190,13 +164,11 @@
   "detailWorldOceanEntry1Desc": "Nanoplastics bind to water molecules & create hydration shells that 'immobilize' large volumes of water.",
   "detailWorldOceanEntry1Bullet1": "Sharp decline in oceans' ability to dissipate heat",
   "detailWorldOceanEntry1Bullet2": "Changes in physical properties of seawater",
-
   "detailAtmosphereTitle": "Atmosphere & Global Water Cycle",
   "detailAtmosphereSubtitle": "Atmospheric & hydrological disruption",
   "detailAtmosphereChargeHint": "Charged nanoplastics act as condensation nuclei, hijacking cloud formation and destabilizing the global water cycle.",
   "detailAtmosphereEntry1Highlight": "Low & 'heavy' clouds",
   "detailAtmosphereEntry1Desc": "Nanoplastics act as aggressive condensation nuclei → formation of low, dense clouds that trap heat and destabilize climate.",
-
   "detailFloraFaunaTitle": "Flora, Fauna & Soil Biota",
   "detailFloraFaunaSubtitle": "Biological & food chain ecosystem collapse",
   "detailFloraFaunaEntry1Highlight": "Disruption of bioelectric signals",
@@ -205,17 +177,14 @@
   "detailFloraFaunaEntry1Bullet2": "Disruption of food chains",
   "detailFloraFaunaEntry2Highlight": "Photosynthesis damage",
   "detailFloraFaunaEntry2Desc": "Nanoplastics physically damage chloroplasts → decreased energy and oxygen production, weakening of primary producers.",
-
   "detailMagneticFieldTitle": "Magnetic Field & Earth's Core",
   "detailMagneticFieldSubtitle": "Geodynamic & magnetic destabilization",
   "detailMagneticFieldEntry1Highlight": "Magnetic field destabilization",
   "detailMagneticFieldEntry1Desc": "Penetration of nanoplastics into geological structures may affect geodynamic processes and Earth's magnetic field.",
-
   "detailPlanetEntryGatesTitle": "Crisis Entry Gates",
   "detailPlanetEntryGatesSubtitle": "Plastic system failure, landfills, water",
   "detailPlanetEntryGatesEntry1Highlight": "Plastic system failure",
   "detailPlanetEntryGatesEntry1Desc": "Landfills, oceans and waterways as main sources of nanoplastic contamination.",
-
   "detailPhysicalPropertiesTitle": "Physical Properties",
   "detailPhysicalPropertiesSubtitle": "Key collapse mechanisms (bonds, signals)",
   "detailPhysicalPropertiesEntry1Highlight": "Disruption of water hydrogen bonds",
@@ -226,7 +195,6 @@
   "detailPhysicalPropertiesEntry3Desc": "Electrostatically charged nanoplastics create 'noise' that disrupts plant communication (root networks) and insects → loss of ecosystem adaptation.",
   "detailPhysicalPropertiesEntry4Highlight": "Photosynthesis damage",
   "detailPhysicalPropertiesEntry4Desc": "Nanoplastics physically damage chloroplasts → decreased energy and oxygen production, weakening of primary producers.",
-
   "sourceBioaccumulationBrain": "Bioaccumulation in the human brain",
   "sourceAutismSpectrumBPA": "Autism Spectrum Disorders and BPA",
   "sourceCrossingBloodBrainBarrier": "Crossing the blood-brain barrier",
@@ -247,17 +215,13 @@
   "sourceGlobalPhotosynthesisLosses": "Global photosynthesis losses",
   "sourceFragmentGrowthPacificGarbagePatch": "Fragment growth in the Pacific garbage patch",
   "sourceGeophysicalBreak1995": "Geophysical break in 1995",
-
   "resultsBackButton": "← BACK",
-  "resultsTitle": "ANALYSIS RESULTS",
-  "resultsSubtitle": "Mathematical evaluation of ideas and solutions",
   "resultsStatsTotalIdeas": "Total number of ideas",
   "resultsStatsAnalyzedCategories": "Analyzed categories",
   "resultsStatsActiveSolvers": "Active solvers",
   "resultsEvaluationSystemTitle": "ABOUT THE EVALUATION SYSTEM",
   "resultsEvaluationSystemDesc1": "Your ideas are collected and mathematically analyzed using advanced algorithms. The system evaluates feasibility, impact, and innovation of each solution.",
   "resultsEvaluationSystemDesc2": "The most promising solutions will be presented to scientists and policymakers for practical implementation.",
-
   "leaderboardEvalTitle": "How ideas are scored",
   "leaderboardEvalIntro": "Each idea is evaluated by an AI agent specialized for its category. The agent scores 0–1000 across four dimensions, then assigns a tier.",
   "leaderboardEvalDim1": "Scientific plausibility (0–300)",
@@ -270,7 +234,6 @@
   "leaderboardEvalTierC": "C · 150–399 — General mitigation",
   "leaderboardEvalTierP": "Participant · 1–149 — Relevant but vague",
   "leaderboardEvalKeyInsight": "The highest-scoring ideas address static charge — the root mechanism that lets nanoplastics cross biological barriers.",
-
   "leaderboardTitle": "TOP 10 SOLVERS",
   "leaderboardSubtitle": "Leading contributors to nanoplastic solutions",
   "leaderboardAccessRestricted": "Leaderboard Access Restricted",
@@ -279,7 +242,6 @@
   "leaderboardContactTitle": "Want to Collaborate?",
   "leaderboardContactDescription": "Reach out to us if you'd like to partner, contribute data, or join the NanoSolve initiative.",
   "leaderboardContactEmail": "support@nanosolve.org",
-
   "settingsBack": "Back",
   "settingsTitle": "Settings",
   "settingsSubtitle": "Manage your preferences",
@@ -291,13 +253,11 @@
   "settingsIntroTourSubtitle": "Watch the app introduction again",
   "settingsTresor": "My Tresor",
   "settingsKeywords": "Research Keywords",
-
   "digestFeedTitle": "Research Digest",
   "digestFeedSubtitle": "Latest nanoplastic research papers",
   "digestFeedEmpty": "No new papers yet",
   "digestFeedLastChecked": "Last checked {date}",
   "digestFeedPaperCount": "{count} new paper{plural}",
-
   "paperDetailTitle": "Paper Details",
   "paperDetailOpenSource": "Open Paper",
   "paperDetailCopyDoi": "Copy DOI",
@@ -307,14 +267,12 @@
   "paperDetailLabels": "Keywords",
   "paperDetailJournal": "Journal",
   "paperDetailPublished": "Published",
-
   "tresorTitle": "My Tresor",
   "tresorSubtitle": "Saved research papers",
   "tresorEmpty": "No papers saved yet",
   "tresorExport": "Export Collection",
   "tresorExportSubject": "NanoSolve Research Papers",
   "tresorExportEmpty": "Nothing to export",
-
   "digestSettingsTitle": "Research Preferences",
   "digestSettingsSubtitle": "Customize your research digest",
   "digestSettingsDailyDigest": "Daily Digest",
@@ -349,12 +307,10 @@
   "profileDeleteAccount": "Delete Account",
   "profileDeleteAccountDesc": "Permanently remove your account and data",
   "profileChangeAvatar": "Change Avatar",
-
   "languageTitle": "Language",
   "languageSubtitle": "Choose your preferred language",
   "languageChanged": "Language changed to",
   "languageInfoMessage": "The app will update to your selected language. Some content may require an app restart.",
-
   "privacyTitle": "Privacy & Security",
   "privacySubtitle": "Manage your privacy preferences",
   "privacyDataAnalytics": "Data & Analytics",
@@ -371,7 +327,6 @@
   "privacyLegal": "Legal",
   "privacyPolicy": "Privacy Policy",
   "privacyTermsOfService": "Terms of Service",
-
   "aboutTitle": "About",
   "aboutAppName": "NanoSolve Hive",
   "aboutVersion": "Version",
@@ -395,7 +350,6 @@
   "aboutShareAppLink": "App Download Link",
   "aboutFooterMessage": "Made with care for Humanity",
   "aboutCopyright": "2026 NanoSolve. All rights reserved.",
-
   "updateDownloadPaused": "Download paused",
   "updateDownloadResumed": "Download resumed",
   "updateDownloadCancelled": "Download cancelled",
@@ -462,7 +416,6 @@
   "aboutPlatformAndroidFull": "GitHub",
   "aboutPlatformPlayStore": "Google Play",
   "aboutPlatformIOS": "iOS",
-
   "tourCategoryGridBody": "Tap any card to explore research areas and post ideas.",
   "tourHumanPlanetBody": "Switch between human health and planet ecosystem. Post ideas to contribute solutions.",
   "tourSourcesButtonBody": "Access peer-reviewed research, case studies, and downloadable reports by impact category.",
@@ -472,7 +425,6 @@
   "tourBtnNext": "Next",
   "tourBtnDone": "Done",
   "tourBtnSkipTour": "Skip tour",
-
   "downloadingLanguage": "Downloading {languageName}",
   "@downloadingLanguage": {
     "description": "Title shown when downloading language files",
@@ -495,12 +447,10 @@
   "useEnglish": "Use English",
   "retry": "Retry",
   "cancel": "Cancel",
-
   "failedToLoadPdf": "Failed to load PDF",
   "downloadingPdf": "Downloading PDF…",
   "pdfLoadingLabel": "Loading PDF...",
   "pdfSavedSuccess": "✓ PDF saved successfully",
-
   "profileNameRequired": "Please enter your full name",
   "profileEmailRequired": "Please enter your email address",
   "profileEmailInvalid": "Please enter a valid email address",
@@ -520,7 +470,6 @@
       }
     }
   },
-
   "sidebarLang": "Language",
   "sidebarAiChat": "AI Assistant",
   "exploreResearchDomains": "RESEARCH DOMAINS",
@@ -747,11 +696,23 @@
       }
     }
   },
-
   "vaultTitle": "Vault",
   "myVault": "My Vault",
   "vaultSaveButton": "Save to Vault",
   "vaultRemoveButton": "Remove from Vault",
   "vaultExportLabel": "Export vault as text file",
-  "vaultEmptyMessage": "Vault is empty"
+  "vaultEmptyMessage": "Vault is empty",
+  "exploreTitle": "Explore",
+  "exploreSubtitle": "Tools that show the problem in your own day",
+  "exploreFootprintTitle": "Your plastic year",
+  "exploreFootprintHook": "How much plastic is in your year?",
+  "exploreSkip": "Not now",
+  "exploreLastCounted": "Last counted {date}",
+  "@exploreLastCounted": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  }
 }

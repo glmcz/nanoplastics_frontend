@@ -24,7 +24,8 @@ class PushNotificationService {
   void registerHandlers() {
     if (kIsWeb || _handlersRegistered) return;
     try {
-      FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+      FirebaseMessaging.onBackgroundMessage(
+          _firebaseMessagingBackgroundHandler);
       FirebaseMessaging.onMessageOpenedApp.listen((msg) {
         debugPrint('[FCM] onMessageOpenedApp: ${msg.data}');
         _handleMessage(msg);

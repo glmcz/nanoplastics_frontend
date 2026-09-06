@@ -11,6 +11,7 @@ import '../models/category_data.dart';
 import '../models/category_detail_data.dart';
 import 'category_detail_new_screen.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'explore_screen.dart';
 import 'sources_screen.dart';
 import 'web/web_sources_screen.dart';
 import 'solvers_leaderboard_screen.dart';
@@ -183,7 +184,8 @@ class _MainScreenState extends State<MainScreen> {
                   )
                 : Container(
                     color: AppThemeColors.of(context).pageBackground.withValues(
-                        alpha: AppThemeColors.of(context).backgroundOverlayAlpha),
+                        alpha:
+                            AppThemeColors.of(context).backgroundOverlayAlpha),
                   ),
           ),
           // Main content
@@ -521,7 +523,20 @@ class _MainScreenState extends State<MainScreen> {
           vertical: spacing.contentPaddingV),
       child: Column(
         children: [
-          NanosolveLogo(key: _tourLogoKey, height: sizing.logoHeightLg),
+          Stack(
+            alignment: Alignment.center,
+            children: [
+              NanosolveLogo(key: _tourLogoKey, height: sizing.logoHeightLg),
+              // Explore rides in the header rather than near the hub. The
+              // hub's centre is the settings knob, and anything added above
+              // the hub steals height the category grid needs on a 320-wide
+              // phone, which the responsive suite catches.
+              Positioned(
+                right: 0,
+                child: _buildExplorePill(),
+              ),
+            ],
+          ),
           const SizedBox(height: AppConstants.space4),
           Text(
             _selectedTab == ImpactType.human ? l10n.tabHuman : l10n.tabPlanet,
@@ -942,6 +957,73 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 
+  Widget _buildExplorePill() {
+    final l10n = AppLocalizations.of(context)!;
+    final spacing = AppSpacing.of(context);
+    final sizing = AppSizing.of(context);
+
+    return Semantics(
+      button: true,
+      label: l10n.navExplore,
+      child: Material(
+        color: AppColors.cardBackground.withValues(alpha: 0.85),
+        borderRadius: BorderRadius.circular(sizing.radiusXl),
+        child: InkWell(
+          key: const ValueKey('hub-button-explore'),
+          borderRadius: BorderRadius.circular(sizing.radiusXl),
+          onTap: () async {
+            LoggerService().logUserAction('explore_tapped');
+            final firstVisit = !SettingsManager().hasSeenExplore;
+            if (firstVisit) {
+              await SettingsManager().setExploreSeen(true);
+              if (mounted) setState(() {});
+            }
+            if (!mounted) return;
+            await Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (_) => ExploreScreen(firstRun: firstVisit),
+              ),
+            );
+          },
+          // The icon alone is under the 44dp minimum on a 320-wide phone,
+          // which the accessibility suite enforces.
+          child: SizedBox(
+            width: sizing.minTouchTarget,
+            height: sizing.minTouchTarget,
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                Icon(
+                  Icons.explore_outlined,
+                  size: sizing.iconMd,
+                  color: AppColors.pastelAqua,
+                ),
+                // Marks the tool as new until it is opened once. A dot rather
+                // than an automatic push: routing a student somewhere they did
+                // not ask to go, over the screen they launched into, is the
+                // kind of thing people close the app over.
+                if (!SettingsManager().hasSeenExplore)
+                  Positioned(
+                    top: spacing.sm,
+                    right: spacing.sm,
+                    child: Container(
+                      key: const ValueKey('hub-explore-new-dot'),
+                      width: sizing.iconXss,
+                      height: sizing.iconXss,
+                      decoration: const BoxDecoration(
+                        color: AppColors.neonSource,
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget _buildCenterKnob() {
     final sizing = AppSizing.of(context);
 
@@ -1076,7 +1158,8 @@ class _MainScreenState extends State<MainScreen> {
   void _navigateToResources(CategoryData? category) {
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (_) => kIsWeb ? const WebSourcesScreen() : const SourcesScreen(),
+        builder: (_) =>
+            kIsWeb ? const WebSourcesScreen() : const SourcesScreen(),
       ),
     );
   }

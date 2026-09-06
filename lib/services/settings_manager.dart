@@ -167,6 +167,36 @@ class SettingsManager {
     await _preferencesManager.setOnboardingShown(shown);
   }
 
+  bool get hasSeenExplore {
+    _checkInitialized();
+    return _preferencesManager.hasSeenExplore;
+  }
+
+  Future<void> setExploreSeen(bool seen) async {
+    _checkInitialized();
+    await _preferencesManager.setExploreSeen(seen);
+  }
+
+  bool get usageStatisticsEnabled {
+    _checkInitialized();
+    return _preferencesManager.usageStatisticsEnabled;
+  }
+
+  Future<void> setUsageStatisticsEnabled(bool value) async {
+    _checkInitialized();
+    await _preferencesManager.setUsageStatisticsEnabled(value);
+  }
+
+  Map<String, dynamic> get footprintState {
+    _checkInitialized();
+    return _preferencesManager.footprintState;
+  }
+
+  Future<void> setFootprintState(Map<String, dynamic> value) async {
+    _checkInitialized();
+    await _preferencesManager.setFootprintState(value);
+  }
+
   bool get hasShownAdvisorTour {
     _checkInitialized();
     return _preferencesManager.hasShownAdvisorTour;
@@ -414,7 +444,11 @@ class SettingsManager {
     _checkInitialized();
     final raw = _prefs.getString(_digestKeywordsKey) ?? '';
     if (raw.isEmpty) return ['charge', 'nanoplastics'];
-    return raw.split(',').map((k) => k.trim()).where((k) => k.isNotEmpty).toList();
+    return raw
+        .split(',')
+        .map((k) => k.trim())
+        .where((k) => k.isNotEmpty)
+        .toList();
   }
 
   Future<void> setDigestKeywords(List<String> keywords) async {

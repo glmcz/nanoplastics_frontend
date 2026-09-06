@@ -5,6 +5,7 @@ import '../config/build_config.dart';
 import 'settings_manager.dart';
 import 'pdf_service.dart';
 import 'logger_service.dart';
+import 'event_service.dart';
 import 'update_service.dart';
 import 'update/update_service_api.dart';
 import 'update/noop_update_service.dart';
@@ -127,6 +128,7 @@ class ServiceLocator {
   late InternetService _internetService;
   late ApiService _apiService;
   late DigestService _digestService;
+  late EventService _eventService;
 
   factory ServiceLocator() => _instance;
 
@@ -162,6 +164,13 @@ class ServiceLocator {
 
     // Digest service — syncs user + tresor on startup, fire-and-forget.
     _digestService = DigestService();
+
+    // Usage funnel. Reads the switch the privacy policy promises, so "off"
+    // is honoured from the first event rather than after the first flush.
+    _eventService = EventService();
+    await _eventService.init(
+      enabled: _settingsManager.usageStatisticsEnabled,
+    );
     unawaited(_digestService.syncUser());
 
     // Update service — only Android GitHub builds self-update. Everything
@@ -174,6 +183,10 @@ class ServiceLocator {
   @visibleForTesting
   Future<void> initializeForTesting() async {
     _settingsManager = SettingsManager();
+    _eventService = EventService();
+    await _eventService.init(
+      enabled: _settingsManager.usageStatisticsEnabled,
+    );
     _loggerService = LoggerService();
     _apiService = ApiService();
     _digestService = DigestService();
@@ -209,6 +222,9 @@ class ServiceLocator {
 
   /// Get the singleton DigestService instance
   DigestService get digestService => _digestService;
+
+  /// Get the singleton EventService instance
+  EventService get eventService => _eventService;
 
   /// Override the ApiService for testing — call before rendering widgets.
   @visibleForTesting

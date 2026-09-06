@@ -33,19 +33,22 @@ class DigestService {
 
     try {
       // Try to get existing user
-      final meUri = Uri.parse('${_api.baseUrl}/api/users/me?email=${Uri.encodeComponent(email)}');
+      final meUri = Uri.parse(
+          '${_api.baseUrl}/api/users/me?email=${Uri.encodeComponent(email)}');
       final meResp = await http.get(meUri).timeout(const Duration(seconds: 8));
 
       if (meResp.statusCode == 404) {
         // Register new user
-        final regResp = await http.post(
-          Uri.parse('${_api.baseUrl}/api/users/register'),
-          headers: {'Content-Type': 'application/json'},
-          body: jsonEncode({
-            'email': email,
-            'display_name': _settings.displayName,
-          }),
-        ).timeout(const Duration(seconds: 8));
+        final regResp = await http
+            .post(
+              Uri.parse('${_api.baseUrl}/api/users/register'),
+              headers: {'Content-Type': 'application/json'},
+              body: jsonEncode({
+                'email': email,
+                'display_name': _settings.displayName,
+              }),
+            )
+            .timeout(const Duration(seconds: 8));
 
         if (regResp.statusCode == 201) {
           _syncKeywordsFromJson(regResp.body);
@@ -56,7 +59,8 @@ class DigestService {
 
       await _loadTresorIds(email);
     } catch (e) {
-      LoggerService().logUserAction('digest_sync_failed', params: {'error': e.toString()});
+      LoggerService()
+          .logUserAction('digest_sync_failed', params: {'error': e.toString()});
     }
   }
 
@@ -92,7 +96,8 @@ class DigestService {
       url += '&keywords=${Uri.encodeComponent(keywords.join(','))}';
     }
 
-    final resp = await http.get(Uri.parse(url)).timeout(const Duration(seconds: 15));
+    final resp =
+        await http.get(Uri.parse(url)).timeout(const Duration(seconds: 15));
     if (resp.statusCode != 200) return [];
 
     final json = jsonDecode(resp.body) as Map<String, dynamic>;
@@ -109,7 +114,8 @@ class DigestService {
           .get(Uri.parse('${_api.baseUrl}/api/digest/paper/$paperId'))
           .timeout(const Duration(seconds: 10));
       if (resp.statusCode != 200) return null;
-      return DigestPaper.fromJson(jsonDecode(resp.body) as Map<String, dynamic>);
+      return DigestPaper.fromJson(
+          jsonDecode(resp.body) as Map<String, dynamic>);
     } catch (_) {
       return null;
     }
@@ -124,7 +130,8 @@ class DigestService {
   }) async {
     final email = _settings.email;
     if (email.isEmpty) {
-      LoggerService().logError('updatePreferences', 'email empty, skipping PUT');
+      LoggerService()
+          .logError('updatePreferences', 'email empty, skipping PUT');
       return false;
     }
 
@@ -137,15 +144,19 @@ class DigestService {
       if (keywords != null) body['search_keywords'] = keywords;
 
       final url = '${_api.baseUrl}/api/users/preferences';
-      final resp = await http.put(
-        Uri.parse(url),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode(body),
-      ).timeout(const Duration(seconds: 10));
+      final resp = await http
+          .put(
+            Uri.parse(url),
+            headers: {'Content-Type': 'application/json'},
+            body: jsonEncode(body),
+          )
+          .timeout(const Duration(seconds: 10));
 
-      LoggerService().logNetworkCall(url, method: 'PUT', statusCode: resp.statusCode);
+      LoggerService()
+          .logNetworkCall(url, method: 'PUT', statusCode: resp.statusCode);
       if (resp.statusCode != 200) {
-        LoggerService().logError('updatePreferences', 'status ${resp.statusCode}: ${resp.body}');
+        LoggerService().logError(
+            'updatePreferences', 'status ${resp.statusCode}: ${resp.body}');
       }
 
       if (resp.statusCode == 200 && keywords != null) {
@@ -171,7 +182,8 @@ class DigestService {
 
     try {
       final resp = await http
-          .get(Uri.parse('${_api.baseUrl}/api/users/me?email=${Uri.encodeComponent(email)}'))
+          .get(Uri.parse(
+              '${_api.baseUrl}/api/users/me?email=${Uri.encodeComponent(email)}'))
           .timeout(const Duration(seconds: 8));
       if (resp.statusCode != 200) return null;
 
@@ -192,9 +204,12 @@ class DigestService {
     if (resolvedEmail.isEmpty) return [];
 
     try {
-      final resp = await http.get(
-        Uri.parse('${_api.baseUrl}/api/users/tresor?email=${Uri.encodeComponent(resolvedEmail)}'),
-      ).timeout(const Duration(seconds: 10));
+      final resp = await http
+          .get(
+            Uri.parse(
+                '${_api.baseUrl}/api/users/tresor?email=${Uri.encodeComponent(resolvedEmail)}'),
+          )
+          .timeout(const Duration(seconds: 10));
 
       if (resp.statusCode != 200) return [];
       final json = jsonDecode(resp.body) as Map<String, dynamic>;
@@ -209,11 +224,13 @@ class DigestService {
     if (email.isEmpty) return false;
 
     try {
-      final resp = await http.post(
-        Uri.parse('${_api.baseUrl}/api/users/tresor'),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({'email': email, 'paper_id': paperId}),
-      ).timeout(const Duration(seconds: 8));
+      final resp = await http
+          .post(
+            Uri.parse('${_api.baseUrl}/api/users/tresor'),
+            headers: {'Content-Type': 'application/json'},
+            body: jsonEncode({'email': email, 'paper_id': paperId}),
+          )
+          .timeout(const Duration(seconds: 8));
 
       if (resp.statusCode == 201) {
         _tresorIds.add(paperId);
@@ -230,10 +247,12 @@ class DigestService {
     if (email.isEmpty) return false;
 
     try {
-      final resp = await http.delete(
-        Uri.parse(
-            '${_api.baseUrl}/api/users/tresor/$paperId?email=${Uri.encodeComponent(email)}'),
-      ).timeout(const Duration(seconds: 8));
+      final resp = await http
+          .delete(
+            Uri.parse(
+                '${_api.baseUrl}/api/users/tresor/$paperId?email=${Uri.encodeComponent(email)}'),
+          )
+          .timeout(const Duration(seconds: 8));
 
       if (resp.statusCode == 204) {
         _tresorIds.remove(paperId);
@@ -250,11 +269,13 @@ class DigestService {
     if (email.isEmpty) return;
 
     try {
-      await http.put(
-        Uri.parse('${_api.baseUrl}/api/users/fcm-token'),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({'email': email, 'token': token}),
-      ).timeout(const Duration(seconds: 8));
+      await http
+          .put(
+            Uri.parse('${_api.baseUrl}/api/users/fcm-token'),
+            headers: {'Content-Type': 'application/json'},
+            body: jsonEncode({'email': email, 'token': token}),
+          )
+          .timeout(const Duration(seconds: 8));
     } catch (_) {}
   }
 
@@ -263,9 +284,12 @@ class DigestService {
     if (email.isEmpty) return [];
 
     try {
-      final resp = await http.get(
-        Uri.parse('${_api.baseUrl}/api/users/tresor/papers?email=${Uri.encodeComponent(email)}'),
-      ).timeout(const Duration(seconds: 15));
+      final resp = await http
+          .get(
+            Uri.parse(
+                '${_api.baseUrl}/api/users/tresor/papers?email=${Uri.encodeComponent(email)}'),
+          )
+          .timeout(const Duration(seconds: 15));
 
       if (resp.statusCode != 200) return [];
       final json = jsonDecode(resp.body) as Map<String, dynamic>;
@@ -284,10 +308,12 @@ class DigestService {
     if (email.isEmpty) return null;
 
     try {
-      final resp = await http.get(
-        Uri.parse(
-            '${_api.baseUrl}/api/users/tresor/export?email=${Uri.encodeComponent(email)}'),
-      ).timeout(const Duration(seconds: 15));
+      final resp = await http
+          .get(
+            Uri.parse(
+                '${_api.baseUrl}/api/users/tresor/export?email=${Uri.encodeComponent(email)}'),
+          )
+          .timeout(const Duration(seconds: 15));
 
       return resp.statusCode == 200 ? resp.body : null;
     } catch (_) {

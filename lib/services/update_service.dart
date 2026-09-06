@@ -15,7 +15,6 @@ import 'service_locator.dart';
 import 'settings_manager.dart';
 import 'update/update_service_api.dart';
 
-
 /// Enum representing the different states of the app update process
 enum UpdateState {
   idle,

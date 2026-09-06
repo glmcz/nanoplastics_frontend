@@ -154,7 +154,8 @@ class ApiService {
           return {
             'success': false,
             'type': 'connection',
-            'message': 'Server is temporarily unavailable. Please try again later.',
+            'message':
+                'Server is temporarily unavailable. Please try again later.',
             'error': 'Invalid response body',
           };
         }
@@ -242,8 +243,7 @@ class ApiService {
                   rank: solverData['rank'] as int,
                   name: solverData['name'] as String,
                   solutionsCount: solverData['contributions'] as int,
-                  totalScore:
-                      (solverData['total_score'] as num?)?.toInt() ?? 0,
+                  totalScore: (solverData['total_score'] as num?)?.toInt() ?? 0,
                   rating: (solverData['rating'] as num).toDouble(),
                   specialty: solverData['specialty'] as String? ?? 'General',
                   category: solverData['specialty'] as String?,
