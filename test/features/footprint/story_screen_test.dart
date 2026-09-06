@@ -21,7 +21,8 @@ Future<void> tapKey(WidgetTester t, String key) async {
 }
 
 Future<void> _start(WidgetTester t) async {
-  await t.pumpWidget(buildTestableWidget(const FootprintStoryScreen(), disableAnimations: true));
+  await t.pumpWidget(buildTestableWidget(const FootprintStoryScreen(),
+      disableAnimations: true));
   await t.pumpAndSettle();
   await tapKey(t, 'story-start');
 }
@@ -30,14 +31,16 @@ void main() {
   setUp(() async => await setupServiceLocator());
 
   testWidgets('opens on an intro with a start and a skip', (t) async {
-    await t.pumpWidget(buildTestableWidget(const FootprintStoryScreen(), disableAnimations: true));
+    await t.pumpWidget(buildTestableWidget(const FootprintStoryScreen(),
+        disableAnimations: true));
     await t.pumpAndSettle();
     expect(find.byKey(const Key('story-start')), findsOneWidget);
     expect(find.byKey(const Key('story-skip')), findsOneWidget);
   });
 
   testWidgets('skip goes straight to the result', (t) async {
-    await t.pumpWidget(buildTestableWidget(const FootprintStoryScreen(), disableAnimations: true));
+    await t.pumpWidget(buildTestableWidget(const FootprintStoryScreen(),
+        disableAnimations: true));
     await t.pumpAndSettle();
     await tapKey(t, 'story-skip');
     expect(find.byType(FootprintResultScreen), findsOneWidget);
@@ -79,17 +82,19 @@ void main() {
   testWidgets('the why line appears only after the chapter is answered',
       (t) async {
     await _start(t);
-    expect(find.text('Heat and shaking break the bottle wall into fragments. '
-        'A bottle left in a hot car sheds about nine times more of the '
-        'smallest pieces than a cool one.'), findsNothing);
+    expect(
+        find.text('Heat and shaking break the bottle wall into fragments. '
+            'A bottle left in a hot car sheds about nine times more of the '
+            'smallest pieces than a cool one.'),
+        findsNothing);
     await tapKey(t, 'confirm-default-water');
     expect(find.textContaining('hot car'), findsOneWidget);
   });
 
   testWidgets('sliders announce their unit, not a percentage', (t) async {
     await _start(t);
-    final slider = t.widget<Slider>(
-        find.byKey(const Key('slider-waterBottlesPerDay')));
+    final slider =
+        t.widget<Slider>(find.byKey(const Key('slider-waterBottlesPerDay')));
     expect(slider.semanticFormatterCallback, isNotNull);
     expect(slider.semanticFormatterCallback!(3), contains('bottles'));
   });

@@ -48,8 +48,7 @@ void main() {
     expect(find.byKey(const Key('study-open-questions')), findsOneWidget);
   });
 
-  testWidgets('every open question carries a size and a first step',
-      (t) async {
+  testWidgets('every open question carries a size and a first step', (t) async {
     await show(t);
     await t.tap(find.byKey(const Key('door-study')));
     await t.pumpAndSettle();
@@ -59,8 +58,7 @@ void main() {
     }
   });
 
-  testWidgets('the help door shows consent before any network call',
-      (t) async {
+  testWidgets('the help door shows consent before any network call', (t) async {
     var posted = false;
     ApiService().client = MockClient((req) async {
       posted = true;
@@ -150,9 +148,17 @@ void main() {
 
   test('the category sent is one the database accepts', () {
     const allowed = {
-      'human_central', 'human_detox', 'human_vitality', 'human_reproduction',
-      'human_entry', 'human_ways_of_destruction', 'planet_ocean',
-      'planet_atmosphere', 'planet_bio', 'planet_magnetic', 'planet_entry',
+      'human_central',
+      'human_detox',
+      'human_vitality',
+      'human_reproduction',
+      'human_entry',
+      'human_ways_of_destruction',
+      'planet_ocean',
+      'planet_atmosphere',
+      'planet_bio',
+      'planet_magnetic',
+      'planet_entry',
       'planet_physical',
     };
     for (final h in Habit.values) {

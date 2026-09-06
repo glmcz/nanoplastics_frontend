@@ -11,14 +11,16 @@ import '../../helpers/responsive_test_helper.dart';
 import '../../helpers/settings_test_helper.dart';
 import '../../helpers/test_app.dart';
 
-FootprintInput answered() => FootprintInput.gulfDefault()
-    .copyWith(touched: ChapterKey.values.toSet(), prediction: Habit.bottledWater);
+FootprintInput answered() => FootprintInput.gulfDefault().copyWith(
+    touched: ChapterKey.values.toSet(), prediction: Habit.bottledWater);
 
 Widget screen({FootprintInput? input, bool returning = false}) =>
     FootprintResultScreen(input: input ?? answered(), returning: returning);
 
 Future<void> show(WidgetTester t,
-    {Widget? child, Locale locale = const Locale('en'), double scale = 1.0}) async {
+    {Widget? child,
+    Locale locale = const Locale('en'),
+    double scale = 1.0}) async {
   await t.pumpWidget(buildTestableWidget(child ?? screen(),
       locale: locale, textScaleFactor: scale, disableAnimations: true));
   await t.pumpAndSettle();
@@ -68,8 +70,10 @@ void main() {
 
   testWidgets('no grand total and no percentage anywhere', (t) async {
     await show(t);
-    final texts =
-        t.widgetList<Text>(find.byType(Text)).map((w) => w.data ?? '').join(' ');
+    final texts = t
+        .widgetList<Text>(find.byType(Text))
+        .map((w) => w.data ?? '')
+        .join(' ');
     expect(texts, isNot(contains('%')),
         reason: 'summing across size floors would rank habits by microscope');
   });
@@ -79,8 +83,7 @@ void main() {
         child: screen(
             input: FootprintInput.gulfDefault()
                 .copyWith(touched: {ChapterKey.water})));
-    final label =
-        t.widget<Text>(find.byKey(const Key('result-touched-count')));
+    final label = t.widget<Text>(find.byKey(const Key('result-touched-count')));
     expect(label.data, contains('1'));
   });
 
@@ -126,7 +129,8 @@ void main() {
     expect(find.byKey(const Key('swaps-household')), findsOneWidget);
     final texts = t
         .widgetList<Text>(find.descendant(
-            of: find.byKey(const Key('panel-swap')), matching: find.byType(Text)))
+            of: find.byKey(const Key('panel-swap')),
+            matching: find.byType(Text)))
         .map((w) => (w.data ?? '').toLowerCase())
         .join(' ');
     expect(texts, contains('could'), reason: 'autonomy-supportive wording');
@@ -141,8 +145,8 @@ void main() {
     await scrollToKey(t, 'commitment-save');
     await t.tap(find.byKey(const Key('commitment-save')));
     await t.pumpAndSettle();
-    expect(SettingsManager().footprintState['commitment'],
-        contains('glass dish'));
+    expect(
+        SettingsManager().footprintState['commitment'], contains('glass dish'));
   });
 
   testWidgets('the charge panel has three stages and a manual control',
@@ -175,8 +179,10 @@ void main() {
     expect(SettingsManager().footprintState['explanation'], contains('stick'));
     await scrollToKey(t, 'explain-model-answer');
     expect(find.byKey(const Key('explain-model-answer')), findsOneWidget);
-    final texts =
-        t.widgetList<Text>(find.byType(Text)).map((w) => w.data ?? '').join(' ');
+    final texts = t
+        .widgetList<Text>(find.byType(Text))
+        .map((w) => w.data ?? '')
+        .join(' ');
     expect(texts.toLowerCase(), isNot(contains('correct')));
   });
 

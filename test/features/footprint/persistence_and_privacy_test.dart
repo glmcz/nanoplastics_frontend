@@ -30,8 +30,7 @@ void main() {
       expect(back.cuttingBoard, input.cuttingBoard);
     });
 
-    test('an enum removed in a later build falls back instead of throwing',
-        () {
+    test('an enum removed in a later build falls back instead of throwing', () {
       final json = FootprintInput.gulfDefault().toJson()
         ..['waterSource'] = 'somethingRemoved';
       expect(() => FootprintInput.fromJson(json), returnsNormally);
@@ -77,9 +76,8 @@ void main() {
       await SettingsManager().setFootprintState({
         'input': answered().toJson(),
         'commitment': 'When I take lunch out, I will use a glass dish',
-        'commitment_at': DateTime.now()
-            .subtract(const Duration(days: 15))
-            .toIso8601String(),
+        'commitment_at':
+            DateTime.now().subtract(const Duration(days: 15)).toIso8601String(),
       });
       await t.pumpWidget(buildTestableWidget(
           FootprintResultScreen(input: answered(), returning: true),
@@ -140,7 +138,8 @@ void main() {
           reason: 'Arabic is a first-class locale for this audience: $missing');
     });
 
-    test('the other four locales are left to fall back, not filled with English',
+    test(
+        'the other four locales are left to fall back, not filled with English',
         () {
       final en = jsonDecode(File('assets/l10n/app_en.arb').readAsStringSync())
           as Map<String, dynamic>;
