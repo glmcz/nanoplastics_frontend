@@ -2,12 +2,15 @@ import 'package:flutter/material.dart';
 
 import '../config/app_colors.dart';
 import '../l10n/app_localizations.dart';
+import '../features/footprint/footprint_model.dart';
 import '../services/service_locator.dart';
+import '../services/settings_manager.dart';
 import '../utils/app_sizing.dart';
 import '../utils/app_spacing.dart';
 import '../utils/app_theme_colors.dart';
 import '../utils/app_typography.dart';
 import '../widgets/shared/screen_header.dart';
+import 'footprint/footprint_result_screen.dart';
 import 'footprint/footprint_story_screen.dart';
 
 /// Lists the tools that show the problem in a student's own day.
@@ -32,6 +35,20 @@ class _ExploreScreenState extends State<ExploreScreen> {
     ServiceLocator()
         .eventService
         .log('explore_opened', props: {'first_run': widget.firstRun});
+  }
+
+  FootprintInput? _savedInput() {
+    final raw = SettingsManager().footprintState['input'];
+    if (raw is! Map<String, dynamic>) return null;
+    return FootprintInput.fromJson(raw);
+  }
+
+  String _savedDateLabel() {
+    final raw = SettingsManager().footprintState['saved_at'] as String?;
+    final at = raw == null ? null : DateTime.tryParse(raw);
+    if (at == null) return '';
+    return '${at.year}-${at.month.toString().padLeft(2, '0')}-'
+        '${at.day.toString().padLeft(2, '0')}';
   }
 
   @override
@@ -63,13 +80,24 @@ class _ExploreScreenState extends State<ExploreScreen> {
                     _ToolCard(
                       cardKey: const Key('explore-card-footprint'),
                       title: l10n.exploreFootprintTitle,
-                      hook: l10n.exploreFootprintHook,
+                      // A returning student sees their own last count, which
+                      // is the only thing that reliably brings anyone back to
+                      // a one-shot calculator.
+                      hook: _savedInput() == null
+                          ? l10n.exploreFootprintHook
+                          : l10n.exploreLastCounted(_savedDateLabel()),
                       icon: Icons.water_drop_outlined,
-                      onTap: () => Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (_) => const FootprintStoryScreen(),
-                        ),
-                      ),
+                      onTap: () {
+                        final saved = _savedInput();
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (_) => saved == null
+                                ? const FootprintStoryScreen()
+                                : FootprintResultScreen(
+                                    input: saved, returning: true),
+                          ),
+                        );
+                      },
                     ),
                     if (widget.firstRun) ...[
                       SizedBox(height: spacing.lg),

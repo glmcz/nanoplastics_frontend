@@ -40,6 +40,9 @@ class _PrivacySecurityScreenState extends State<PrivacySecurityScreen> {
   Future<void> _updateAnalytics(bool value) async {
     setState(() => _analyticsEnabled = value);
     await _settingsManager.setAnalyticsEnabled(value);
+    // The policy has always promised this switch stops analytics. Until the
+    // usage funnel honoured it, that promise was only true of Firebase.
+    ServiceLocator().eventService.setEnabled(value);
   }
 
   Future<void> _setUpdateNotifications(bool value) async {

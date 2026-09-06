@@ -177,16 +177,6 @@ class SettingsManager {
     await _preferencesManager.setExploreSeen(seen);
   }
 
-  bool get usageStatisticsEnabled {
-    _checkInitialized();
-    return _preferencesManager.usageStatisticsEnabled;
-  }
-
-  Future<void> setUsageStatisticsEnabled(bool value) async {
-    _checkInitialized();
-    await _preferencesManager.setUsageStatisticsEnabled(value);
-  }
-
   Map<String, dynamic> get footprintState {
     _checkInitialized();
     return _preferencesManager.footprintState;

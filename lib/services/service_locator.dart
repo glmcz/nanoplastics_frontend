@@ -169,7 +169,7 @@ class ServiceLocator {
     // is honoured from the first event rather than after the first flush.
     _eventService = EventService();
     await _eventService.init(
-      enabled: _settingsManager.usageStatisticsEnabled,
+      enabled: _settingsManager.analyticsEnabled,
     );
     unawaited(_digestService.syncUser());
 
@@ -185,7 +185,7 @@ class ServiceLocator {
     _settingsManager = SettingsManager();
     _eventService = EventService();
     await _eventService.init(
-      enabled: _settingsManager.usageStatisticsEnabled,
+      enabled: _settingsManager.analyticsEnabled,
     );
     _loggerService = LoggerService();
     _apiService = ApiService();

@@ -66,6 +66,7 @@ class FootprintResultScreenState extends State<FootprintResultScreen> {
   Future<void> _persist() async {
     final saved = Map<String, dynamic>.from(SettingsManager().footprintState);
     saved['input'] = widget.input.toJson();
+    saved['saved_at'] = DateTime.now().toIso8601String();
     await SettingsManager().setFootprintState(saved);
   }
 
@@ -145,13 +146,35 @@ class FootprintResultScreenState extends State<FootprintResultScreen> {
 
   Widget _buildRecount(AppLocalizations l10n) {
     final spacing = AppSpacing.of(context);
-    return Padding(
-      padding: EdgeInsets.only(bottom: spacing.md),
-      child: OutlinedButton(
-        key: const Key('result-recount'),
-        onPressed: () => Navigator.maybePop(context),
-        child: Text(l10n.footprintRecount),
-      ),
+    final typography = AppTypography.of(context);
+    final raw = SettingsManager().footprintState['commitment_at'] as String?;
+    final made = raw == null ? null : DateTime.tryParse(raw);
+    // Two weeks, not immediately: asking how it went the same evening is
+    // nagging, and a commitment needs time to have been kept or not.
+    final due = made != null &&
+        DateTime.now().difference(made) >= const Duration(days: 14);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (due)
+          Padding(
+            padding: EdgeInsets.only(bottom: spacing.sm),
+            child: Text(
+              l10n.footprintCommitmentCheckIn,
+              key: const Key('commitment-checkin'),
+              style: typography.bodySm,
+            ),
+          ),
+        Padding(
+          padding: EdgeInsets.only(bottom: spacing.md),
+          child: OutlinedButton(
+            key: const Key('result-recount'),
+            onPressed: () => Navigator.maybePop(context),
+            child: Text(l10n.footprintRecount),
+          ),
+        ),
+      ],
     );
   }
 

@@ -130,24 +130,37 @@ class PrivacyPolicyScreen extends StatelessWidget {
             '• We never share personal data with third parties without consent',
             '• You can request data deletion at any time',
           ]),
-          _buildSection(context, '5. Third-Party Services', [
+          _buildSection(context, '5. Usage statistics', [
+            '• We record which screens you open and which buttons you press, so we can see where the App confuses people',
+            '• Each record carries a random installation number created on your device. It is not linked to you, your account, your email or your phone, and it disappears when you clear the App\'s data',
+            '• We keep these records for 180 days and then delete them',
+            '• You can turn this off in Settings. When it is off, nothing is collected at all',
+          ]),
+          _buildSection(context, '6. Ideas you send', [
+            '• An idea you submit is stored by NanoSolve and read by people working on the project',
+            '• It is also sent to an AI service outside your country to be scored, and the score comes back into the App',
+            '• If you agree, the answers you gave in the footprint tool are attached so the idea can be understood in context. You can send the idea without them',
+            '• Your nickname and email are attached only if you choose',
+            '• To delete a submission, contact us with the code shown when you send it',
+          ]),
+          _buildSection(context, '7. Third-Party Services', [
             '• Firebase: Used for crash reporting and analytics',
             '• These services have their own privacy policies',
             '• We do not share personal identifiable information',
           ]),
-          _buildSection(context, '6. Your Rights', [
+          _buildSection(context, '8. Your Rights', [
             '• Access: Request a copy of your data',
             '• Correction: Update inaccurate information',
             '• Deletion: Request removal of your data',
             '• Opt-Out: Disable analytics in app settings',
           ]),
-          _buildSection(context, '7. Children\'s Privacy', [
+          _buildSection(context, '9. Children\'s Privacy', [
             'This App is not intended for users under 13 years old. We do not knowingly collect information from children.',
           ]),
-          _buildSection(context, '8. Changes to This Policy', [
+          _buildSection(context, '10. Changes to This Policy', [
             'We may update this Privacy Policy periodically. Changes will be posted here with an updated date.',
           ]),
-          _buildSection(context, '9. Contact Us', [
+          _buildSection(context, '11. Contact Us', [
             'For privacy concerns or data requests, please contact us through the App settings or visit our website.',
           ]),
           const SizedBox(height: AppConstants.space20),
