@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
+import '../../features/footprint/footprint_coefficients.dart';
 import '../../features/footprint/footprint_format.dart';
 import '../../features/footprint/footprint_model.dart';
 import '../../features/footprint/footprint_strings_l10n.dart';
@@ -185,16 +186,27 @@ class HabitBarChartState extends State<HabitBarChart> {
     final floor = h.sizeFloorNm >= 1000
         ? '${(h.sizeFloorNm / 1000).round()} µm'
         : '${h.sizeFloorNm.round()} nm';
-    final tags = h.tags.map((t) => _tagLabel(l10n, t)).join(', ');
+    final tags = h.tags.map((t) => _tagLabel(l10n, t, h.habit)).join(', ');
     return '$floor · $tags';
   }
 
-  String _tagLabel(AppLocalizations l10n, Tag t) => switch (t) {
+  String _tagLabel(AppLocalizations l10n, Tag t, Habit habit) => switch (t) {
         Tag.measured => l10n.footprintTagMeasured,
         Tag.countedNotIdentified => l10n.footprintTagCountedNotIdentified,
         Tag.extrapolated => l10n.footprintTagExtrapolated,
-        Tag.disputed => l10n.footprintTagDisputed,
+        Tag.disputed => l10n.footprintTagChallenged(_challenger(l10n, habit)),
         Tag.unknown => l10n.footprintTagUnknown,
+      };
+
+  /// Names the specific published challenge. A collective phrasing would
+  /// suggest several independent groups measured this and got different
+  /// answers; in practice one paper was challenged once.
+  String _challenger(AppLocalizations l10n, Habit habit) =>
+      switch (coefficientFor(habit).challengedByKey) {
+        'footprintChallengerPnasLetter' => l10n.footprintChallengerPnasLetter,
+        'footprintChallengerEstComment' => l10n.footprintChallengerEstComment,
+        'footprintChallengerBfr' => l10n.footprintChallengerBfr,
+        _ => '',
       };
 
   IconData _iconFor(Habit h) => switch (h) {

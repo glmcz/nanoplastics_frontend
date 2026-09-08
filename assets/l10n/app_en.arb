@@ -811,7 +811,14 @@
   "footprintTagMeasured": "measured",
   "footprintTagCountedNotIdentified": "counted, could be more than plastic",
   "footprintTagExtrapolated": "scaled by an assumption",
-  "footprintTagDisputed": "scientists disagree",
+  "footprintTagChallenged": "challenged by {who}",
+  "@footprintTagChallenged": {
+    "description": "Shown on a bar whose number has a published challenge. Names the specific challenger rather than saying researchers disagree, which would imply independent replication that has not happened.",
+    "placeholders": { "who": { "type": "String" } }
+  },
+  "footprintChallengerPnasLetter": "a 2024 letter in PNAS",
+  "footprintChallengerEstComment": "a 2024 comment in Environmental Science & Technology",
+  "footprintChallengerBfr": "the German food-safety authority, 2020",
   "footprintTagUnknown": "nobody has measured this",
   "footprintSwapTitle": "One swap",
   "footprintSwapYours": "Yours to change",

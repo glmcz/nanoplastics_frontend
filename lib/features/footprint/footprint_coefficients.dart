@@ -31,6 +31,15 @@ class Coefficient {
   /// or the spec states the sphere assumption. Null means count only.
   final double? massMgPerParticle;
 
+  /// Localisation key naming who published the challenge, for rows tagged
+  /// [Tag.disputed]. Required for those rows and asserted by a test.
+  ///
+  /// A collective label like "researchers disagree" implies independent
+  /// replication that usually has not happened: one paper gets challenged
+  /// once, and every later mention repeats the original. Naming the single
+  /// specific challenge is both true and checkable by a student.
+  final String? challengedByKey;
+
   final List<Swap> swaps;
 
   const Coefficient({
@@ -45,6 +54,7 @@ class Coefficient {
     this.lowFactor = 0.5,
     this.highFactor = 2.0,
     this.massMgPerParticle,
+    this.challengedByKey,
     this.swaps = const [],
   });
 }
@@ -73,6 +83,7 @@ const List<Coefficient> kCoefficients = [
     lowFactor: 1.1e5 / 2.4e5,
     highFactor: 4.0e5 / 2.4e5,
     massMgPerParticle: 7.2e-11, // sphere at 500 nm, the reported median band
+    challengedByKey: 'footprintChallengerPnasLetter',
     swaps: [Swap('footprintSwapSteelBottle', 0.0)],
   ),
   Coefficient(
@@ -103,6 +114,7 @@ const List<Coefficient> kCoefficients = [
     lowFactor: 0.5, // 50 cm2
     highFactor: 2.0, // 200 cm2
     massMgPerParticle: 1.58e-14, // back-solved from Hussain's 20.3 ng/kg/day
+    challengedByKey: 'footprintChallengerEstComment',
     swaps: [Swap('footprintSwapGlassDish', 0.0)],
   ),
   Coefficient(
@@ -134,6 +146,7 @@ const List<Coefficient> kCoefficients = [
     lowFactor: 5800 / 13100,
     highFactor: 20400 / 13100,
     massMgPerParticle: 5.8e-7,
+    challengedByKey: 'footprintChallengerBfr',
     swaps: [Swap('footprintSwapPaperTeaBag', 0.0)],
   ),
   Coefficient(
