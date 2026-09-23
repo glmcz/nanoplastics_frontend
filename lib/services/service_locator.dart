@@ -10,6 +10,7 @@ import 'update_service.dart';
 import 'update/update_service_api.dart';
 import 'update/noop_update_service.dart';
 import 'api_service.dart';
+import 'http/app_http_client.dart';
 import 'digest_service.dart';
 
 /// Enum representing internet connectivity states
@@ -142,9 +143,10 @@ class ServiceLocator {
   /// 4. PdfService - extracts bundled PDFs
   /// 5. UpdateService - checks for updates (requires internet service)
   Future<void> initialize() async {
-    // Internet connectivity — fast, needed by others.
+    // Internet connectivity. Not awaited: state starts `unknown` and the only
+    // reader is UpdateService, which runs five seconds after launch.
     _internetService = InternetService._();
-    await _internetService.initialize();
+    unawaited(_internetService.initialize());
 
     // Get already-initialized SettingsManager singleton.
     _settingsManager = SettingsManager();
@@ -155,9 +157,16 @@ class ServiceLocator {
     _loggerService = LoggerService();
     _loggerService.initialize(); // intentionally not awaited
 
-    // PDF extraction — needed before the first screen renders.
+    // PDF extraction — started here, awaited only by whoever opens a PDF.
+    // The only reader is SourcesScreen via resolvePdf(), which gates on
+    // PdfService.ready, so the first frame no longer waits on this file I/O.
     _pdfService = PdfService(_settingsManager);
-    await _pdfService.initialize();
+    unawaited(_pdfService.initialize());
+
+    // Trust store for HTTPS. Never awaited: reading the bundled root is real
+    // file I/O, and initializeForTesting() runs inside widget-test bodies where
+    // a FakeAsync zone would deadlock on it. The first request waits instead.
+    unawaited(AppHttpClient.instance.warmUp());
 
     // API service — singleton for backend communication.
     _apiService = ApiService();

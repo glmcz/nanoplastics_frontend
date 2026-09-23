@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:ui' as ui;
 
 import 'package:flutter/foundation.dart';
@@ -8,14 +9,14 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'config/app_theme.dart';
 import 'screens/onboarding_screen.dart';
 import 'screens/main_screen.dart';
-import 'screens/paper_detail_screen.dart';
 import 'screens/web/web_landing_screen.dart';
 import 'l10n/app_localizations.dart';
 import 'l10n_web/web_localizations.dart';
-import 'services/digest_service.dart';
 import 'services/settings_manager.dart';
 import 'services/service_locator.dart';
 import 'services/update_service.dart';
+import 'services/paper_open_router.dart';
+import 'services/pending_paper_open.dart';
 import 'services/push_notification_service.dart';
 import 'utils/route_observer.dart';
 import 'web/web_privacy_screen.dart';
@@ -29,13 +30,16 @@ void main() async {
   // Initialize Settings Manager
   await SettingsManager.init();
 
-  // Persist current app version from PackageInfo
-  try {
-    final info = await PackageInfo.fromPlatform();
-    await SettingsManager().setCurrentAppVersion(info.version);
-  } catch (e) {
-    debugPrint('Error reading app version: $e'); // ignore: avoid_print
-  }
+  // Persist current app version from PackageInfo. Not awaited: the only readers
+  // are the about screen (which falls back) and UpdateService, five seconds out.
+  unawaited(() async {
+    try {
+      final info = await PackageInfo.fromPlatform();
+      await SettingsManager().setCurrentAppVersion(info.version);
+    } catch (e) {
+      debugPrint('Error reading app version: $e'); // ignore: avoid_print
+    }
+  }());
 
   // Initialize Service Locator (all singleton services)
   // Build type is determined at compile time via BuildConfig.bundleAllLangs.
@@ -73,23 +77,21 @@ void main() async {
   // Firebase is guaranteed ready by the `await logger.initialize()` above.
   PushNotificationService().registerHandlers();
 
-  // Notification tap → fetch paper → open PaperDetailScreen
-  PushNotificationService.onPaperOpen = (paperId) async {
-    debugPrint('[NAV] onPaperOpen fired: $paperId');
-    final paper = await DigestService().fetchPaperById(paperId);
-    debugPrint('[NAV] paper fetched: ${paper?.title ?? "null"}');
-    debugPrint(
-        '[NAV] navigatorKey.currentState: ${appNavigatorKey.currentState}');
-    if (paper == null) return;
-    // Wait for navigator to be ready if app is resuming from background
-    await Future.delayed(const Duration(milliseconds: 300));
-    appNavigatorKey.currentState?.push(
-      MaterialPageRoute(builder: (_) => PaperDetailScreen(paper: paper)),
-    );
+  // Notification tap → open the screen at once, fetch inside it. Fetching first
+  // left the user on the launch screen for the whole round trip. A cold tap is
+  // routed before the navigator exists, so it is held for the first frame.
+  PushNotificationService.onPaperOpen = (paper) {
+    debugPrint('[NAV] onPaperOpen fired: ${paper.id}');
+    routePaperOpen(paper, appNavigatorKey.currentState);
   };
+
+  // Read the launching tap now. Everything below this line can block for
+  // seconds, and until this runs the app does not know which paper to open.
+  unawaited(PushNotificationService().consumeLaunchMessage());
 
   // Delay permission prompt / token registration so it doesn't compete with
   // first-frame render and PDF extraction for CPU on a cold, throttled launch.
+  // The launching tap is no longer behind this delay.
   Future.delayed(const Duration(seconds: 3), () {
     PushNotificationService().init();
   });
@@ -168,6 +170,13 @@ class _NanoSolveHiveAppState extends State<NanoSolveHiveApp>
 
     // Attach global update listener for automatic notifications
     _attachUpdateListener();
+
+    // A cold tap is read before runApp, so it has been waiting for a navigator.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final pending = PendingPaperOpen.instance.take();
+      if (pending == null) return;
+      routePaperOpen(pending, appNavigatorKey.currentState);
+    });
   }
 
   Future<void> setLocale(Locale locale) async {

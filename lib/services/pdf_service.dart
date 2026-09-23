@@ -1,13 +1,12 @@
 import 'package:flutter/foundation.dart';
 import '../config/backend_config.dart';
-import '../config/build_config.dart';
 import 'settings_manager.dart';
 import 'logger_service.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:path_provider/path_provider.dart';
 import '../utils/pdf_utils.dart';
 import 'dart:io';
-import 'package:http/http.dart' as http;
+import 'http/app_http_client.dart';
 
 /// Centralized PDF management service
 /// Handles caching and downloading for all PDF access across app
@@ -15,16 +14,30 @@ import 'package:http/http.dart' as http;
 class PdfService {
   final SettingsManager settingsManager;
 
+  /// Swapped in tests so extraction can be held open and observed.
+  final Future<void> Function()? _extractor;
+
   /// Create PdfService with injected SettingsManager dependency
   /// This ensures a single SettingsManager instance is used throughout the app
   ///
   /// Example:
   ///   final pdfService = PdfService(settingsManager);
-  PdfService(this.settingsManager);
+  PdfService(this.settingsManager, {Future<void> Function()? extractor})
+      : _extractor = extractor;
 
-  /// Initialize PDF service by extracting bundled PDFs to app documents directory
-  /// Should be called once during app startup
-  Future<void> initialize() async {
+  Future<void>? _extraction;
+
+  /// Completes when bundled PDFs are on disk. Anything that reads a bundled
+  /// file awaits this rather than assuming startup already finished.
+  Future<void> get ready => _extraction ?? initialize();
+
+  /// Extract bundled PDFs to the app documents directory. Started during app
+  /// startup but deliberately not awaited there: on the full flavour this
+  /// copies seven PDFs, and nothing on the first frame reads them. Memoised,
+  /// so repeated calls join the run already in flight.
+  Future<void> initialize() => _extraction ??= _initialize();
+
+  Future<void> _initialize() async {
     try {
       if (kIsWeb) {
         LoggerService().logDebug(
@@ -36,7 +49,7 @@ class PdfService {
 
       // Always run extraction — _extractPdfAsset() skips files that already
       // exist, so this is fast on subsequent launches and always correct.
-      await _extractBundledPdfs();
+      await (_extractor ?? _extractBundledPdfs)();
       LoggerService().logDebug(
         'pdf_service_init',
         'Bundled PDF extraction complete',
@@ -55,6 +68,9 @@ class PdfService {
   Future<File?> resolvePdf({
     required String language,
   }) async {
+    // Startup no longer waits for extraction, so the first read might arrive
+    // while it is still running. One gate, here, rather than every caller.
+    await ready;
     try {
       if (kIsWeb) {
         LoggerService().logDebug(
@@ -104,13 +120,14 @@ class PdfService {
 
   /// Extract all bundled PDFs to app documents directory (called once on init)
   Future<void> _extractBundledPdfs() async {
-    const bundleAll = BuildConfig.bundleAllLangs;
-    final reportLanguages = bundleAll ? ['en', 'cs', 'es', 'fr', 'ru'] : ['en'];
-    final waterLanguages = bundleAll ? ['en', 'cs'] : ['en'];
+    // Every build bundles all of these: there is one pubspec.yaml now, so a
+    // local build and a release ship the same assets.
+    const reportLanguages = ['en', 'cs', 'es', 'fr', 'ru'];
+    const waterLanguages = ['en', 'cs'];
 
     LoggerService().logDebug(
       'pdf_extraction_start',
-      'Starting PDF extraction for bundleAll=$bundleAll, languages: $reportLanguages',
+      'Starting PDF extraction for languages: $reportLanguages',
     );
 
     // Extract main Nanoplastics reports
@@ -159,13 +176,9 @@ class PdfService {
   }) async {
     try {
       if (!await assetExists(assetPath)) {
-        if (!BuildConfig.bundleAllLangs && language != 'en') {
-          LoggerService().logDebug(
-            '${type}_pdf_asset_missing',
-            'Skipping missing $type asset for $language in lite build.',
-          );
-          return;
-        }
+        // Every language is declared in pubspec.yaml, so a missing asset is a
+        // packaging fault rather than an expected gap. resolvePdf still falls
+        // back to a download, which is why this logs instead of throwing.
         LoggerService().logError(
           '${type}_pdf_asset_missing',
           'Missing bundled $type asset: $assetPath',
@@ -298,7 +311,7 @@ class PdfService {
       // Download the PDF directly from the /reports/ static endpoint
       final filename =
           'Nanoplastics_Report_${language.toUpperCase()}_compressed.pdf';
-      final pdfResponse = await http
+      final pdfResponse = await AppHttpClient.instance
           .get(Uri.parse('$backendBaseUrl/reports/$filename'))
           .timeout(
             const Duration(seconds: 120),
