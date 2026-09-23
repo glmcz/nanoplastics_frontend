@@ -1,3 +1,9 @@
+// The launch-message path is mobile-only: consumeLaunchMessage() returns
+// early on kIsWeb because a browser never carries an FCM launch payload,
+// so these assertions are meaningless on the Chrome platform.
+@TestOn('vm')
+library;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nanoplastics_app/models/launch_paper.dart';

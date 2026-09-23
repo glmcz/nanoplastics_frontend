@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 
 import '../config/backend_config.dart';
+import 'http/app_http_client.dart';
 
 /// Usage funnel.
 ///
@@ -21,7 +22,7 @@ class EventService {
   static const int maxBatch = 50;
 
   @visibleForTesting
-  http.Client client = http.Client();
+  http.Client client = AppHttpClient.instance;
 
   bool _enabled = false;
   String _installId = '';

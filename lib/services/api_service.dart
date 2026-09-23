@@ -8,6 +8,7 @@ import '../models/solver.dart';
 import '../models/solver_idea.dart';
 import '../models/idea_attachment.dart';
 import '../config/backend_config.dart';
+import 'http/app_http_client.dart';
 import 'logger_service.dart';
 import 'settings_manager.dart';
 
@@ -27,7 +28,7 @@ class ApiService {
   /// Health check to verify backend connectivity
   Future<bool> healthCheck() async {
     try {
-      final response = await http.get(
+      final response = await AppHttpClient.instance.get(
         Uri.parse('$baseUrl/health'),
         headers: {'Content-Type': 'application/json'},
       ).timeout(const Duration(seconds: 5));
@@ -46,7 +47,7 @@ class ApiService {
   /// Swapped in tests so the multipart body can be inspected. The call-site
   /// fake in ServiceLocator covers behaviour; this covers the wire format.
   @visibleForTesting
-  http.Client client = http.Client();
+  http.Client client = AppHttpClient.instance;
 
   Future<Map<String, dynamic>> submitIdea({
     required String description,
@@ -243,7 +244,7 @@ class ApiService {
   /// Fetch top solvers from backend API
   Future<List<Solver>> getTopSolvers() async {
     try {
-      final response = await http.get(
+      final response = await AppHttpClient.instance.get(
         Uri.parse('$baseUrl/api/solvers'),
         headers: {'Content-Type': 'application/json'},
       ).timeout(const Duration(seconds: 10));
@@ -290,7 +291,7 @@ class ApiService {
   Future<List<SolverIdea>> getSolverIdeas(String solverName) async {
     try {
       final encodedName = Uri.encodeComponent(solverName);
-      final response = await http.get(
+      final response = await AppHttpClient.instance.get(
         Uri.parse('$baseUrl/api/solvers/$encodedName/ideas'),
         headers: {'Content-Type': 'application/json'},
       ).timeout(const Duration(seconds: 10));

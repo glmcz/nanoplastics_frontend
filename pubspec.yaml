@@ -68,7 +68,7 @@ flutter:
   assets:
     # ISRG Root X1. Android added it to the system store in 7.1.1 (API 25) and
     # minSdk is 24, so 7.0-7.1.0 needs it from the app or every HTTPS call fails.
-    - assets/certs/isrgrootx1.pem
+    - assets/certs/isrg_roots.pem
     - assets/images/
     - assets/l10n/app_cs.arb
     - assets/l10n/app_en.arb

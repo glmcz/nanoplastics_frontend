@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
-import 'package:http/http.dart' as http;
 import '../models/digest_paper.dart';
 import 'api_service.dart';
+import 'http/app_http_client.dart';
 import 'logger_service.dart';
 import 'settings_manager.dart';
 
@@ -35,11 +35,13 @@ class DigestService {
       // Try to get existing user
       final meUri = Uri.parse(
           '${_api.baseUrl}/api/users/me?email=${Uri.encodeComponent(email)}');
-      final meResp = await http.get(meUri).timeout(const Duration(seconds: 8));
+      final meResp = await AppHttpClient.instance
+          .get(meUri)
+          .timeout(const Duration(seconds: 8));
 
       if (meResp.statusCode == 404) {
         // Register new user
-        final regResp = await http
+        final regResp = await AppHttpClient.instance
             .post(
               Uri.parse('${_api.baseUrl}/api/users/register'),
               headers: {'Content-Type': 'application/json'},
@@ -96,8 +98,9 @@ class DigestService {
       url += '&keywords=${Uri.encodeComponent(keywords.join(','))}';
     }
 
-    final resp =
-        await http.get(Uri.parse(url)).timeout(const Duration(seconds: 15));
+    final resp = await AppHttpClient.instance
+        .get(Uri.parse(url))
+        .timeout(const Duration(seconds: 15));
     if (resp.statusCode != 200) return [];
 
     final json = jsonDecode(resp.body) as Map<String, dynamic>;
@@ -110,13 +113,18 @@ class DigestService {
 
   Future<DigestPaper?> fetchPaperById(String paperId) async {
     try {
-      final resp = await http
+      final resp = await AppHttpClient.instance
           .get(Uri.parse('${_api.baseUrl}/api/digest/paper/$paperId'))
           .timeout(const Duration(seconds: 10));
-      if (resp.statusCode != 200) return null;
+      if (resp.statusCode != 200) {
+        LoggerService()
+            .logError('fetchPaperById', 'HTTP ${resp.statusCode}', null);
+        return null;
+      }
       return DigestPaper.fromJson(
           jsonDecode(resp.body) as Map<String, dynamic>);
-    } catch (_) {
+    } catch (e, st) {
+      LoggerService().logError('fetchPaperById', e, st);
       return null;
     }
   }
@@ -144,7 +152,7 @@ class DigestService {
       if (keywords != null) body['search_keywords'] = keywords;
 
       final url = '${_api.baseUrl}/api/users/preferences';
-      final resp = await http
+      final resp = await AppHttpClient.instance
           .put(
             Uri.parse(url),
             headers: {'Content-Type': 'application/json'},
@@ -181,7 +189,7 @@ class DigestService {
     if (email.isEmpty) return null;
 
     try {
-      final resp = await http
+      final resp = await AppHttpClient.instance
           .get(Uri.parse(
               '${_api.baseUrl}/api/users/me?email=${Uri.encodeComponent(email)}'))
           .timeout(const Duration(seconds: 8));
@@ -204,7 +212,7 @@ class DigestService {
     if (resolvedEmail.isEmpty) return [];
 
     try {
-      final resp = await http
+      final resp = await AppHttpClient.instance
           .get(
             Uri.parse(
                 '${_api.baseUrl}/api/users/tresor?email=${Uri.encodeComponent(resolvedEmail)}'),
@@ -224,7 +232,7 @@ class DigestService {
     if (email.isEmpty) return false;
 
     try {
-      final resp = await http
+      final resp = await AppHttpClient.instance
           .post(
             Uri.parse('${_api.baseUrl}/api/users/tresor'),
             headers: {'Content-Type': 'application/json'},
@@ -247,7 +255,7 @@ class DigestService {
     if (email.isEmpty) return false;
 
     try {
-      final resp = await http
+      final resp = await AppHttpClient.instance
           .delete(
             Uri.parse(
                 '${_api.baseUrl}/api/users/tresor/$paperId?email=${Uri.encodeComponent(email)}'),
@@ -266,17 +274,29 @@ class DigestService {
 
   Future<void> updateFcmToken(String token) async {
     final email = _settings.email;
-    if (email.isEmpty) return;
+    if (email.isEmpty) {
+      LoggerService().logError(
+          'updateFcmToken', 'no email set — push token not registered', null);
+      return;
+    }
 
     try {
-      await http
+      final resp = await AppHttpClient.instance
           .put(
             Uri.parse('${_api.baseUrl}/api/users/fcm-token'),
             headers: {'Content-Type': 'application/json'},
             body: jsonEncode({'email': email, 'token': token}),
           )
           .timeout(const Duration(seconds: 8));
-    } catch (_) {}
+      if (resp.statusCode < 200 || resp.statusCode >= 300) {
+        LoggerService().logError(
+            'updateFcmToken', 'HTTP ${resp.statusCode}: ${resp.body}', null);
+      }
+    } catch (e, st) {
+      // Silence here meant a device that could never be pushed to, with nothing
+      // anywhere to say so.
+      LoggerService().logError('updateFcmToken', e, st);
+    }
   }
 
   Future<List<DigestPaper>> fetchSavedPapers() async {
@@ -284,7 +304,7 @@ class DigestService {
     if (email.isEmpty) return [];
 
     try {
-      final resp = await http
+      final resp = await AppHttpClient.instance
           .get(
             Uri.parse(
                 '${_api.baseUrl}/api/users/tresor/papers?email=${Uri.encodeComponent(email)}'),
@@ -308,7 +328,7 @@ class DigestService {
     if (email.isEmpty) return null;
 
     try {
-      final resp = await http
+      final resp = await AppHttpClient.instance
           .get(
             Uri.parse(
                 '${_api.baseUrl}/api/users/tresor/export?email=${Uri.encodeComponent(email)}'),

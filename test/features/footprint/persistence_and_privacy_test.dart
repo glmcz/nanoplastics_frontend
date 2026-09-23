@@ -1,3 +1,8 @@
+// Reads .arb and .dart source files off disk with dart:io, which the Chrome
+// platform (flutter test --platform chrome) does not provide.
+@TestOn('vm')
+library;
+
 import 'dart:convert';
 import 'dart:io';
 

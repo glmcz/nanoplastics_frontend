@@ -1,3 +1,9 @@
+// Layout of a mobile screen at real device sizes. The Chrome platform
+// (flutter test --platform chrome) renders text with different metrics and
+// has no dart:io, so overflow assertions made for phones do not hold there.
+@TestOn('vm')
+library;
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nanoplastics_app/screens/paper_loader_screen.dart';
 import '../helpers/responsive_test_helper.dart';

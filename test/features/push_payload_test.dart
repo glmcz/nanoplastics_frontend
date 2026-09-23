@@ -1,3 +1,8 @@
+// Renders a mobile screen from a push payload; push does not exist on web
+// and the Chrome platform has no dart:io for the fetch the screen starts.
+@TestOn('vm')
+library;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nanoplastics_app/models/launch_paper.dart';

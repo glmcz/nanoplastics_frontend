@@ -1,3 +1,8 @@
+// Exercises dart:io / path_provider extraction behaviour, which does not
+// exist on the Chrome platform (flutter test --platform chrome).
+@TestOn('vm')
+library;
+
 import 'dart:async';
 
 import 'package:flutter_test/flutter_test.dart';
