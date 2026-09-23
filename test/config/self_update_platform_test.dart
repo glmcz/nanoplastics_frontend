@@ -5,38 +5,65 @@ import 'package:nanoplastics_app/config/build_config.dart';
 void main() {
   tearDown(() => debugDefaultTargetPlatformOverride = null);
 
-  group('selfUpdateSupported', () {
-    test('is false on iOS, whatever the distribution flag says', () {
-      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+  // Every input is stated, so the outcome cannot change with how the suite
+  // was invoked. isGithubBuild reads a --dart-define, and a run that passes
+  // DISTRIBUTION used to fail these for reasons unrelated to the rule.
+  group('the rule', () {
+    bool rule(bool isGithub, bool isWeb, TargetPlatform p) =>
+        BuildConfig.selfUpdateSupportedFor(
+            isGithub: isGithub, isWeb: isWeb, platform: p);
+
+    test('Android with a github distribution may self-update', () {
+      expect(rule(true, false, TargetPlatform.android), isTrue);
+    });
+
+    test('iOS may never self-update, whatever the distribution flag says', () {
       expect(
-        BuildConfig.selfUpdateSupported,
+        rule(true, false, TargetPlatform.iOS),
         isFalse,
         reason: 'the self-updater downloads and installs an APK, which iOS '
             'cannot do. Leaving it enabled paints a red update badge on a '
-            'fresh install and sends the user to a page of Android builds.',
+            'fresh install and offers a page of Android builds.',
       );
+      expect(rule(false, false, TargetPlatform.iOS), isFalse);
     });
 
-    test('is false on macOS, which also cannot install an APK', () {
-      debugDefaultTargetPlatformOverride = TargetPlatform.macOS;
-      expect(BuildConfig.selfUpdateSupported, isFalse);
+    test('no other platform may self-update', () {
+      for (final p in [
+        TargetPlatform.macOS,
+        TargetPlatform.windows,
+        TargetPlatform.linux,
+        TargetPlatform.fuchsia,
+      ]) {
+        expect(rule(true, false, p), isFalse, reason: '$p');
+      }
     });
 
-    test('is true on Android for a github-distribution build', () {
-      debugDefaultTargetPlatformOverride = TargetPlatform.android;
-      // The default distribution is github, so this is the shipped case.
-      expect(BuildConfig.isGithubBuild, isTrue);
-      expect(BuildConfig.selfUpdateSupported, isTrue);
+    test('a store distribution may not self-update even on Android', () {
+      expect(rule(false, false, TargetPlatform.android), isFalse);
     });
 
-    test('does not depend on remembering a build flag', () {
-      // The bug this guards: DISTRIBUTION defaults to github, so any iOS
-      // build that omits --dart-define=DISTRIBUTION=appStore used to inject
-      // the real updater. The platform check must hold even then.
+    test('web may not self-update', () {
+      expect(rule(true, true, TargetPlatform.android), isFalse);
+    });
+  });
+
+  group('the shipped getter', () {
+    test('is false on iOS regardless of how this suite was invoked', () {
       debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
-      expect(BuildConfig.isGithubBuild, isTrue,
-          reason: 'this test is only meaningful while github is the default');
       expect(BuildConfig.selfUpdateSupported, isFalse);
+    });
+
+    test('agrees with the rule for the current build flags', () {
+      debugDefaultTargetPlatformOverride = TargetPlatform.android;
+      expect(
+        BuildConfig.selfUpdateSupported,
+        BuildConfig.selfUpdateSupportedFor(
+          isGithub: BuildConfig.isGithubBuild,
+          isWeb: kIsWeb,
+          platform: TargetPlatform.android,
+        ),
+      );
     });
   });
 }
