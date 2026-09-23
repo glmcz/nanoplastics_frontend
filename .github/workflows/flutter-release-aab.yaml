@@ -60,20 +60,6 @@ jobs:
           echo "BACKEND_URL=${{ secrets.BACKEND_URL_PROD }}" >> $GITHUB_ENV
 
       # --- GENERATE FULL PUBSPEC (includes non-EN PDFs) ---
-      - name: Install yq
-        run: |
-          sudo wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
-          sudo chmod +x /usr/local/bin/yq
-
-      - name: Generate FULL pubspec
-        run: |
-          cp pubspec.yaml pubspec.yaml.bak
-          cp pubspec.base.yaml pubspec.yaml
-          yq -i '.flutter.assets += load("pubspec.full.yaml").flutter.assets' pubspec.yaml
-          ORIG_VERSION=$(grep '^version:' pubspec.yaml.bak | sed 's/version: //')
-          yq -i ".version = \"$ORIG_VERSION\"" pubspec.yaml
-          echo "Generated FULL pubspec.yaml with version $ORIG_VERSION"
-
       # --- INSTALL DEPENDENCIES ---
       - name: Install dependencies
         run: flutter pub get
@@ -91,7 +77,7 @@ jobs:
       # --- BUILD PLAY AAB ---
       - name: Build PLAY AAB (Google Play)
         run: |
-          flutter build appbundle --release --flavor play --dart-define=BUNDLE_ALL_LANGS=true --dart-define=BACKEND_URL=${{ env.BACKEND_URL }} --dart-define=IS_PLAY_STORE=true --dart-define=DISTRIBUTION=playStore
+          flutter build appbundle --release --flavor play --dart-define=BACKEND_URL=${{ env.BACKEND_URL }} --dart-define=IS_PLAY_STORE=true --dart-define=DISTRIBUTION=playStore
           cp build/app/outputs/bundle/playRelease/app-play-release.aab build/app/outputs/bundle/playRelease/nanoplastics_app_play.aab || true
 
       # --- UPLOAD TO RELEASE ---

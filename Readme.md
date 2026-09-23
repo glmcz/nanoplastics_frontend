@@ -12,8 +12,7 @@ Available on **Android** (APK) · Built with **Flutter** · Supports **5 languag
 
 | Variant | Size | Languages | Link |
 |---------|------|-----------|------|
-| Full | ~85 MB | EN · CS · ES · FR · RU | [nanoplastics_app.apk](https://github.com/glmcz/nanoplastics_frontend/releases/latest/download/nanoplastics_app.apk) |
-| Lite | ~45 MB | EN only | [nanoplastics_app_lite.apk](https://github.com/glmcz/nanoplastics_frontend/releases/latest/download/nanoplastics_app_lite.apk) |
+| Full | ~122 MB | EN · CS · ES · FR · RU | [nanoplastics_app.apk](https://github.com/glmcz/nanoplastics_frontend/releases/latest/download/nanoplastics_app.apk) |
 
 All releases (including older versions): **[GitHub Releases](https://github.com/glmcz/nanoplastics_frontend/releases)**
 Download page with version history: **[GitHub Pages](https://glmcz.github.io/nanoplastics_frontend/)**
@@ -167,7 +166,7 @@ Accessible via the gear icon in the hub center.
 | User Profile | Edit your display name, email, and specialty bio |
 | Language | Switch between EN / CS / ES / FR / RU — app restarts to apply |
 | Privacy & Security | View Privacy Policy and Terms of Service, manage data consent |
-| About | App version, build variant (Lite / Full), and update checker |
+| About | App version and update checker |
 
 **Updates (About screen)**
 
@@ -185,7 +184,7 @@ The app checks for updates automatically 5 seconds after launch. You can also ch
 | FR | French | Yes |
 | RU | Russian | Yes |
 
-In the **Lite** build only English PDFs are bundled. PDFs for other languages are downloaded on demand from the server when you switch language and open a report.
+Every language's PDFs ship with the app. If one is missing it is downloaded on demand from the server when you switch language and open a report.
 
 Switching language triggers a full app restart so all text updates correctly.
 
@@ -224,7 +223,6 @@ flutterfire configure
 flutter pub get
 flutter run                          # debug on connected device
 flutter build apk --flavor full      # release full build
-flutter build apk --flavor lite      # release lite build
 ```
 
 ### UX Design System

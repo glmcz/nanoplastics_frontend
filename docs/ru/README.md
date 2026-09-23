@@ -13,7 +13,6 @@
 | Вариант | Размер | Языки | Ссылка |
 |---------|--------|-------|--------|
 | Полная версия | ~85 MB | EN · CS · ES · FR · RU | [nanoplastics_app.apk](https://github.com/glmcz/nanoplastics_frontend/releases/latest/download/nanoplastics_app.apk) |
-| Lite | ~45 MB | только EN | [nanoplastics_app_lite.apk](https://github.com/glmcz/nanoplastics_frontend/releases/latest/download/nanoplastics_app_lite.apk) |
 
 Все релизы, включая старые версии: **[GitHub Releases](https://github.com/glmcz/nanoplastics_frontend/releases)**
 Страница загрузок с историей версий: **[GitHub Pages](https://glmcz.github.io/nanoplastics_frontend/)**
@@ -167,7 +166,7 @@ NanoSolve Hive организовано вокруг двух ключевых �
 | User Profile | Редактирование имени, email и описания специализации |
 | Language | Переключение между EN / CS / ES / FR / RU |
 | Privacy & Security | Политика конфиденциальности, условия использования, согласие на обработку данных |
-| About | Версия приложения, вариант сборки (Lite / Full), проверка обновлений |
+| About | Версия приложения и проверка обновлений |
 
 **Обновления (экран About)**
 
@@ -185,7 +184,7 @@ NanoSolve Hive организовано вокруг двух ключевых �
 | FR | Французский | Да |
 | RU | Русский | Да |
 
-В **Lite**-сборке включены только английские PDF. Для остальных языков PDF загружаются по запросу с сервера.
+PDF на всех языках входят в приложение. Если какого-то нет, он загружается по запросу с сервера при переключении языка.
 
 Переключение языка вызывает полный перезапуск приложения, чтобы весь интерфейс корректно обновился.
 
@@ -224,7 +223,6 @@ flutterfire configure
 flutter pub get
 flutter run
 flutter build apk --flavor full
-flutter build apk --flavor lite
 ```
 
 ### UX Design System

@@ -52,13 +52,11 @@ void main() {
       }
     });
 
-    test('resolveMainReport returns null for non-cached non-EN in lite build',
+    test('resolveMainReport returns null for a non-EN report with no cache',
         () async {
-      // In test environment BuildConfig.bundleAllLangs defaults to false (no
-      // --dart-define) and assets aren't loaded in unit tests. So CS without
-      // a local cache returns null.
+      // Only EN is bundled, and assets are not loaded in unit tests, so CS
+      // without a local cache has nowhere to come from but a download.
       final resolved = await resolveMainReport('cs');
-      // Either null (needs download) or an asset path (full build) — both valid.
       if (resolved != null) {
         expect(resolved.path, contains('CS'));
       }

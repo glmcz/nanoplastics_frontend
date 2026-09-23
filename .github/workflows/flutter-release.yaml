@@ -73,25 +73,6 @@ jobs:
           echo "WEBHOOK_SECRET=${{ secrets.RELEASE_WEBHOOK_SECRET }}" >> $GITHUB_ENV
 
       # ---------- INSTALL YQ ----------
-      - name: Install yq
-        run: |
-          sudo wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
-          sudo chmod +x /usr/local/bin/yq
-
-      # ---------- BACKUP ORIGINAL PUBSPEC ------
-      - name: Backup original pubspec
-        run: cp pubspec.yaml pubspec.yaml.bak
-
-      # ---------- GENERATE FULL PUBSPEC ------
-      - name: Generate FULL pubspec
-        run: |
-          cp pubspec.base.yaml pubspec.yaml
-          yq -i '.flutter.assets += load("pubspec.full.yaml").flutter.assets' pubspec.yaml
-          # Sync version from original pubspec so APK version matches the git tag
-          ORIG_VERSION=$(grep '^version:' pubspec.yaml.bak | sed 's/version: //')
-          yq -i ".version = \"$ORIG_VERSION\"" pubspec.yaml
-          echo "Generated FULL pubspec.yaml with version $ORIG_VERSION"
-
       # ---------- VALIDATE PUBSPEC ------
       - name: Validate pubspec.yaml
         run: |
@@ -139,26 +120,8 @@ jobs:
       # ---------------- FULL FLAVOR APK (sideload / in-app update) ----------------
       - name: Build FULL APK
         run: |
-          flutter build apk --release --flavor full --dart-define=BUNDLE_ALL_LANGS=true --dart-define=DISTRIBUTION=github --dart-define=BACKEND_URL=${{ env.BACKEND_URL }}
+          flutter build apk --release --flavor full --dart-define=DISTRIBUTION=github --dart-define=BACKEND_URL=${{ env.BACKEND_URL }}
           mv build/app/outputs/flutter-apk/app-full-release.apk build/app/outputs/flutter-apk/nanoplastics_app.apk
-
-      # ---------- GENERATE LITE PUBSPEC ------
-      - name: Generate LITE pubspec
-        run: |
-          cp pubspec.base.yaml pubspec.yaml
-          ORIG_VERSION=$(grep '^version:' pubspec.yaml.bak | sed 's/version: //')
-          yq -i ".version = \"$ORIG_VERSION\"" pubspec.yaml
-          echo "Generated LITE pubspec.yaml with version $ORIG_VERSION"
-
-      # ---------------- DEPENDENCIES FOR LITE ----------------
-      - name: Install dependencies for LITE
-        run: flutter pub get
-
-      # ---------------- LITE FLAVOR APK (sideload / in-app update) ----------------
-      - name: Build LITE APK
-        run: |
-          flutter build apk --release --flavor lite --dart-define=BUNDLE_ALL_LANGS=false --dart-define=DISTRIBUTION=github --dart-define=BACKEND_URL=${{ env.BACKEND_URL }}
-          mv build/app/outputs/flutter-apk/app-lite-release.apk build/app/outputs/flutter-apk/nanoplastics_app_lite.apk
 
       - name: Compute release metadata
         run: |
@@ -176,21 +139,15 @@ jobs:
           }
 
           FULL_APK_PATH="build/app/outputs/flutter-apk/nanoplastics_app.apk"
-          LITE_APK_PATH="build/app/outputs/flutter-apk/nanoplastics_app_lite.apk"
           REPO="glmcz/nanoplastics_frontend"
 
           FULL_APK_SIZE_BYTES=$(stat -c%s "$FULL_APK_PATH")
-          LITE_APK_SIZE_BYTES=$(stat -c%s "$LITE_APK_PATH")
           FULL_APK_SIZE=$(format_mb "$FULL_APK_SIZE_BYTES")
-          LITE_APK_SIZE=$(format_mb "$LITE_APK_SIZE_BYTES")
           FULL_APK_URL="https://github.com/$REPO/releases/download/$RELEASE_TAG/nanoplastics_app.apk"
-          LITE_APK_URL="https://github.com/$REPO/releases/download/$RELEASE_TAG/nanoplastics_app_lite.apk"
 
           echo "RELEASE_TAG=$RELEASE_TAG" >> $GITHUB_ENV
           echo "FULL_APK_SIZE=$FULL_APK_SIZE" >> $GITHUB_ENV
-          echo "LITE_APK_SIZE=$LITE_APK_SIZE" >> $GITHUB_ENV
           echo "FULL_APK_URL=$FULL_APK_URL" >> $GITHUB_ENV
-          echo "LITE_APK_URL=$LITE_APK_URL" >> $GITHUB_ENV
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
@@ -205,7 +162,6 @@ jobs:
         with:
           files: |
             build/app/outputs/flutter-apk/nanoplastics_app.apk
-            build/app/outputs/flutter-apk/nanoplastics_app_lite.apk
           tag_name: ${{ env.RELEASE_TAG }}
           name: Release ${{ env.RELEASE_TAG }}
           generate_release_notes: true
@@ -215,15 +171,13 @@ jobs:
             | Variant | Size | Languages |
             |---------|------|-----------|
             | **nanoplastics_app.apk** | ${{ env.FULL_APK_SIZE }} | EN · CS · ES · FR · RU |
-            | **nanoplastics_app_lite.apk** | ${{ env.LITE_APK_SIZE }} | EN only |
 
             Play Store build (AAB): available in Google Play Console.
 
       - name: Render docs download page
         run: |
-          export FULL_APK_URL FULL_APK_SIZE LITE_APK_URL LITE_APK_SIZE
+          export FULL_APK_URL FULL_APK_SIZE
           perl -0pi -e 's|<a id="full-apk-download" href="[^"]*" class="btn btn-primary">.*?</a>|<a id="full-apk-download" href="$ENV{FULL_APK_URL}" class="btn btn-primary">📱 Download Full ($ENV{FULL_APK_SIZE})</a>|g' docs/index.html
-          perl -0pi -e 's|<a id="lite-apk-download" href="[^"]*" class="btn btn-secondary">.*?</a>|<a id="lite-apk-download" href="$ENV{LITE_APK_URL}" class="btn btn-secondary">📱 Download Lite ($ENV{LITE_APK_SIZE})</a>|g' docs/index.html
           cp docs/index.html /tmp/nanoplastics-docs-index.html
 
       - name: Persist generated docs to main
@@ -258,9 +212,8 @@ jobs:
           VERSION="${RELEASE_TAG#v}"
           REPO="glmcz/nanoplastics_frontend"
           FULL_URL="https://github.com/$REPO/releases/download/$RELEASE_TAG/nanoplastics_app.apk"
-          LITE_URL="https://github.com/$REPO/releases/download/$RELEASE_TAG/nanoplastics_app_lite.apk"
           curl -sf -X POST "$BACKEND_URL/api/release" \
             -H "Authorization: Bearer $WEBHOOK_SECRET" \
             -H "Content-Type: application/json" \
-            -d "{\"version\":\"$VERSION\",\"full_apk_url\":\"$FULL_URL\",\"lite_apk_url\":\"$LITE_URL\",\"published_at\":\"$(date -u +%Y-%m-%dT%H:%M:%SZ)\",\"notes\":null}" \
+            -d "{\"version\":\"$VERSION\",\"full_apk_url\":\"$FULL_URL\",\"published_at\":\"$(date -u +%Y-%m-%dT%H:%M:%SZ)\",\"notes\":null}" \
             || echo "Backend webhook failed (non-fatal)"

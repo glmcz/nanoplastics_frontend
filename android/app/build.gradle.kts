@@ -65,13 +65,9 @@ android {
 
     flavorDimensions += "bundle"
     productFlavors {
-        create("lite") {
-            dimension = "bundle"
-            // EN-only build — non-EN PDFs stripped in CI via post-build script
-        }
         create("full") {
             dimension = "bundle"
-            // All language PDFs bundled
+            // Sideload / in-app update build. All language PDFs bundled.
         }
         create("play") {
             dimension = "bundle"

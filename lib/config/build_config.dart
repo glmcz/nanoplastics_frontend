@@ -3,18 +3,10 @@ import 'package:flutter/foundation.dart';
 /// Build-time configuration flags passed via --dart-define.
 ///
 /// Usage:
-///   Lite (EN only):  flutter build apk --flavor lite --dart-define=BUNDLE_ALL_LANGS=false
-///   Full/Play (all langs): flutter build apk --flavor full  (no flag needed — default is true)
+///   flutter build apk --flavor full
+///   flutter build appbundle --flavor play --dart-define=IS_PLAY_STORE=true
 class BuildConfig {
   BuildConfig._();
-
-  /// Whether all language PDFs are bundled as assets.
-  /// Defaults to true — all languages included unless explicitly disabled.
-  /// Lite builds pass --dart-define=BUNDLE_ALL_LANGS=false to strip non-EN PDFs.
-  static const bundleAllLangs = bool.fromEnvironment(
-    'BUNDLE_ALL_LANGS',
-    defaultValue: true,
-  );
 
   /// Whether this is a Play Store build (disables self-update).
   /// When true, the update service is disabled (uses Play Store in-app updates instead).
@@ -55,8 +47,23 @@ class BuildConfig {
   ///
   /// Deliberately a runtime check rather than a compile-time constant: being
   /// unable to forget it is worth more than tree-shaking a few kilobytes.
-  static bool get selfUpdateSupported =>
-      isGithubBuild &&
-      !kIsWeb &&
-      defaultTargetPlatform == TargetPlatform.android;
+  static bool get selfUpdateSupported => selfUpdateSupportedFor(
+        isGithub: isGithubBuild,
+        isWeb: kIsWeb,
+        platform: defaultTargetPlatform,
+      );
+
+  /// The rule itself, with every input passed in.
+  ///
+  /// Split out so tests can state a case fully instead of depending on how
+  /// the suite happened to be invoked: `isGithubBuild` reads a --dart-define,
+  /// so a run that passes DISTRIBUTION would silently change the answer and
+  /// fail a test that had nothing to do with the flag.
+  @visibleForTesting
+  static bool selfUpdateSupportedFor({
+    required bool isGithub,
+    required bool isWeb,
+    required TargetPlatform platform,
+  }) =>
+      isGithub && !isWeb && platform == TargetPlatform.android;
 }

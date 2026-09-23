@@ -10,6 +10,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'dart:convert';
 import '../config/backend_config.dart';
 import '../config/build_config.dart';
+import 'http/app_http_client.dart';
 import 'logger_service.dart';
 import 'service_locator.dart';
 import 'settings_manager.dart';
@@ -34,9 +35,7 @@ class GitHubRelease {
   final bool isPrerelease;
   final DateTime publishedAt;
   final String? fullBuildUrl;
-  final String? liteBuildUrl;
   final int fullBuildSize; // Size in bytes from GitHub API
-  final int liteBuildSize; // Size in bytes from GitHub API
 
   GitHubRelease({
     required this.tagName,
@@ -44,26 +43,19 @@ class GitHubRelease {
     required this.isPrerelease,
     required this.publishedAt,
     this.fullBuildUrl,
-    this.liteBuildUrl,
     this.fullBuildSize = 0,
-    this.liteBuildSize = 0,
   });
 
   factory GitHubRelease.fromJson(Map<String, dynamic> json) {
     final assets = (json['assets'] as List<dynamic>?) ?? [];
     String? fullUrl;
-    String? liteUrl;
     int fullSize = 0;
-    int liteSize = 0;
 
     for (final asset in assets) {
       final assetName = asset['name'] ?? '';
       if (assetName == 'nanoplastics_app.apk') {
         fullUrl = asset['browser_download_url'];
         fullSize = asset['size'] ?? 0; // Get file size from GitHub API
-      } else if (assetName == 'nanoplastics_app_lite.apk') {
-        liteUrl = asset['browser_download_url'];
-        liteSize = asset['size'] ?? 0; // Get file size from GitHub API
       }
     }
 
@@ -74,9 +66,7 @@ class GitHubRelease {
       publishedAt:
           DateTime.tryParse(json['published_at'] ?? '') ?? DateTime.now(),
       fullBuildUrl: fullUrl,
-      liteBuildUrl: liteUrl,
       fullBuildSize: fullSize,
-      liteBuildSize: liteSize,
     );
   }
 }
@@ -418,23 +408,18 @@ class UpdateService implements UpdateServiceApi {
         return false;
       }
 
-      // If tag is different (new release), update is available
-      // Build type is determined at compile time via BuildConfig.bundleAllLangs.
-      final String? downloadUrl = BuildConfig.bundleAllLangs
-          ? release.fullBuildUrl
-          : release.liteBuildUrl;
+      // If tag is different (new release), update is available. There is one
+      // APK now — the EN-only lite build is gone.
+      final String? downloadUrl = release.fullBuildUrl;
 
       if (downloadUrl == null) {
-        LoggerService().logUserAction('APK URL not found in GitHub release',
-            params: {'bundle_all_langs': BuildConfig.bundleAllLangs});
+        LoggerService().logUserAction('APK URL not found in GitHub release');
         return false;
       }
 
       // Check if this exact version's APK is already downloaded and valid
       // If so, skip marking as available again (it's already ready to install)
-      final int expectedSize = BuildConfig.bundleAllLangs
-          ? release.fullBuildSize
-          : release.liteBuildSize;
+      final int expectedSize = release.fullBuildSize;
 
       if (expectedSize > 0 &&
           await _isValidDownloadedApkAvailable(expectedSize)) {
@@ -549,7 +534,7 @@ class UpdateService implements UpdateServiceApi {
     // 1. Try our own backend: no rate limits, updated immediately by CI.
     try {
       final backendUrl = BackendConfig.getBaseUrl();
-      final response = await http
+      final response = await AppHttpClient.instance
           .get(Uri.parse('$backendUrl/api/release'))
           .timeout(const Duration(seconds: 5));
 
@@ -563,8 +548,8 @@ class UpdateService implements UpdateServiceApi {
           publishedAt:
               DateTime.tryParse(data['published_at'] as String? ?? '') ??
                   DateTime.now(),
+          // The backend still returns lite_apk_url; it is ignored now.
           fullBuildUrl: data['full_apk_url'] as String?,
-          liteBuildUrl: data['lite_apk_url'] as String?,
         );
       }
     } catch (_) {
@@ -573,7 +558,7 @@ class UpdateService implements UpdateServiceApi {
 
     // 2. Fallback: GitHub releases API (60 req/hr unauthenticated).
     try {
-      final response = await http.get(
+      final response = await AppHttpClient.instance.get(
         Uri.parse(_githubApiUrl),
         headers: {'Accept': 'application/vnd.github.v3+json'},
       ).timeout(
@@ -680,7 +665,8 @@ class UpdateService implements UpdateServiceApi {
   /// Cleans up old APKs before starting new download
   /// Verifies downloaded file size matches GitHub release before installing
   Future<bool> _downloadAndInstallApk(String downloadUrl) async {
-    final httpClient = http.Client();
+    // Shared, app-lifetime client: deliberately not closed here.
+    final httpClient = AppHttpClient.instance;
     try {
       _resetDownloadState();
       _notifyStateChange(UpdateState.downloading);
@@ -793,8 +779,6 @@ class UpdateService implements UpdateServiceApi {
       );
       _notifyStateChange(UpdateState.failed);
       return false;
-    } finally {
-      httpClient.close();
     }
   }
 

@@ -4,8 +4,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart' show AssetManifest, rootBundle;
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
-import '../config/build_config.dart';
 import '../config/backend_config.dart';
+import '../services/http/app_http_client.dart';
 import '../services/settings_manager.dart';
 
 Future<Set<String>>? _assetManifestCache;
@@ -67,22 +67,19 @@ const _supportedReportLangs = {'en', 'cs', 'es', 'fr', 'ru'};
 
 /// Resolves the main report PDF for the current (or given) language.
 ///
-/// - EN is always loaded from bundled assets.
-/// - When [BuildConfig.bundleAllLangs] is true (full flavor), all languages
-///   are loaded from bundled assets.
-/// - Otherwise: check local download cache first, return null if missing
-///   (caller must trigger a download).
+/// - Only EN ships as a bundled asset; every other language is downloaded.
+/// - Checks the bundle first, then the local download cache, and returns null
+///   if neither has it (caller must trigger a download).
 /// - Languages with no report (e.g. Arabic) fall back to EN.
 Future<ResolvedPdf?> resolveMainReport([String? langCode]) async {
   final raw = (langCode ?? SettingsManager().userLanguage).toLowerCase();
   final code = _supportedReportLangs.contains(raw) ? raw : 'en';
 
-  // EN is always bundled; in full build all langs are bundled
-  if (code == 'en' || BuildConfig.bundleAllLangs) {
-    final assetPath = _reportAssetPath(code);
-    if (await assetExists(assetPath)) {
-      return ResolvedPdf(isAsset: true, path: assetPath);
-    }
+  // Probing the bundle is the gate: in practice only EN is in pubspec.yaml,
+  // so every other language falls through to the cache and then a download.
+  final assetPath = _reportAssetPath(code);
+  if (await assetExists(assetPath)) {
+    return ResolvedPdf(isAsset: true, path: assetPath);
   }
 
   if (kIsWeb) {
@@ -117,11 +114,11 @@ Future<String> downloadReport(
   }
 
   final request = http.Request('GET', Uri.parse(url));
-  final client = http.Client();
+  // Shared, app-lifetime client: deliberately not closed here.
+  final client = AppHttpClient.instance;
   final response = await client.send(request);
 
   if (response.statusCode != 200) {
-    client.close();
     throw HttpException('Failed to download report: ${response.statusCode}');
   }
 
@@ -158,7 +155,6 @@ Future<String> downloadReport(
   } catch (e) {
     // Always clean up partial file on any failure so next attempt starts fresh
     await sink.close();
-    client.close();
     try {
       await file.delete();
     } catch (_) {}
@@ -166,7 +162,6 @@ Future<String> downloadReport(
   }
 
   await sink.close();
-  client.close();
   return localPath;
 }
 

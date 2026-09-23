@@ -1,7 +1,7 @@
 name: nanoplastics_app
 description: NanoSolve Hive - Crowdsourcing R&D solutions for nanoplastic pollution
 publish_to: 'none'
-version: 1.0.57+50
+version: 1.0.58+51
 
 environment:
   sdk: '>=3.0.0 <4.0.0'
@@ -66,6 +66,9 @@ flutter:
   generate: true
   uses-material-design: true
   assets:
+    # ISRG Root X1. Android added it to the system store in 7.1.1 (API 25) and
+    # minSdk is 24, so 7.0-7.1.0 needs it from the app or every HTTPS call fails.
+    - assets/certs/isrgrootx1.pem
     - assets/images/
     - assets/l10n/app_cs.arb
     - assets/l10n/app_en.arb
@@ -73,14 +76,14 @@ flutter:
     - assets/onboarding/slide2_missions.jpg
     - assets/onboarding/slide3_collaboration.jpg
     - assets/docs/Nanoplastics_Report_EN_compressed.pdf
-    - assets/docs/EN_WATER_compressed.pdf
     - assets/docs/EN_report_nanoplastics_a_systematic_risk_analysis_for_human_health_ecosystems_and_the_environment_compressed.pdf
-    # - assets/docs/CS_Nove_metody_detekce_a_reseni_nanoplastu.pdf
-    # - assets/docs/CS_WATER_compressed.pdf
-    # - assets/docs/ESP-WATER_compressed.pdf
-    # - assets/docs/FR-WATER_compressed.pdf
-    # - assets/docs/RUS-WATER_compressed.pdf
-    # - assets/docs/Nanoplastics_Report_CS_compressed.pdf
-    # - assets/docs/Nanoplastics_Report_ES_compressed.pdf
-    # - assets/docs/Nanoplastics_Report_FR_compressed.pdf
-    # - assets/docs/Nanoplastics_Report_RU_compressed.pdf
+    - assets/docs/EN_WATER_compressed.pdf
+    - assets/docs/CS_WATER_compressed.pdf
+    - assets/docs/ESP-WATER_compressed.pdf
+    - assets/docs/FR-WATER_compressed.pdf
+    - assets/docs/RUS-WATER_compressed.pdf
+    - assets/docs/CS_Nove_metody_detekce_a_reseni_nanoplastu.pdf
+    - assets/docs/Nanoplastics_Report_CS_compressed.pdf
+    - assets/docs/Nanoplastics_Report_ES_compressed.pdf
+    - assets/docs/Nanoplastics_Report_FR_compressed.pdf
+    - assets/docs/Nanoplastics_Report_RU_compressed.pdf
