@@ -523,18 +523,30 @@ class _MainScreenState extends State<MainScreen> {
           vertical: spacing.contentPaddingV),
       child: Column(
         children: [
-          Stack(
-            alignment: Alignment.center,
+          // Explore rides in the header rather than near the hub. The hub's
+          // centre is the settings knob, and anything added above the hub
+          // steals height the category grid needs on a 320-wide phone, which
+          // the responsive suite catches.
+          //
+          // A Row, not a Stack. A Stack shrink-wraps to the logo, so
+          // `right: 0` meant the right edge of the wordmark rather than of
+          // the screen and the pill sat on the lettering. The leading spacer
+          // mirrors the pill so the wordmark stays centred on the screen, and
+          // the FittedBox lets it shrink instead of overflowing once both
+          // side slots are reserved.
+          Row(
             children: [
-              NanosolveLogo(key: _tourLogoKey, height: sizing.logoHeightLg),
-              // Explore rides in the header rather than near the hub. The
-              // hub's centre is the settings knob, and anything added above
-              // the hub steals height the category grid needs on a 320-wide
-              // phone, which the responsive suite catches.
-              Positioned(
-                right: 0,
-                child: _buildExplorePill(),
+              SizedBox(width: sizing.minTouchTarget),
+              Expanded(
+                child: Center(
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: NanosolveLogo(
+                        key: _tourLogoKey, height: sizing.logoHeightLg),
+                  ),
+                ),
               ),
+              _buildExplorePill(),
             ],
           ),
           const SizedBox(height: AppConstants.space4),
