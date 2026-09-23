@@ -4,6 +4,7 @@ import 'package:integration_test/integration_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:nanoplastics_app/screens/onboarding_screen.dart';
 import 'package:nanoplastics_app/screens/main_screen.dart';
+import 'package:nanoplastics_app/services/service_locator.dart';
 import 'package:nanoplastics_app/services/settings_manager.dart';
 import 'package:nanoplastics_app/config/app_theme.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -16,6 +17,10 @@ void main() {
     SharedPreferences.setMockInitialValues({});
     SettingsManager.resetForTesting();
     await SettingsManager.init();
+    // OnboardingScreen's LanguageSelectionMixin reads ServiceLocator's `late`
+    // settingsManager in initState. Without this the screen throws a
+    // LateInitializationError before the first frame.
+    await ServiceLocator().initializeForTesting();
   });
 
   Widget buildApp() {

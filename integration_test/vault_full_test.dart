@@ -21,6 +21,9 @@ void main() {
       await SettingsManager.init();
       await ServiceLocator().initialize();
       await SettingsManager().setEmail(_testEmail);
+      // Real SharedPreferences, so a freshly installed build opens on
+      // onboarding and the settings icon this test taps does not exist yet.
+      await SettingsManager().setOnboardingShown(true);
       await DigestService().syncUser();
 
       debugPrint('[TEST] Backend: ${BackendConfig.getBaseUrl()}');
@@ -35,11 +38,14 @@ void main() {
       }
 
       try {
-        final url = '${BackendConfig.getBaseUrl()}/api/digest/latest?since=2020-01-01';
-        final resp = await http.get(Uri.parse(url)).timeout(const Duration(seconds: 15));
+        final url =
+            '${BackendConfig.getBaseUrl()}/api/digest/latest?since=2020-01-01';
+        final resp =
+            await http.get(Uri.parse(url)).timeout(const Duration(seconds: 15));
         debugPrint('[TEST] digest/latest status: ${resp.statusCode}');
         final body = resp.body;
-        debugPrint('[TEST] digest/latest body: ${body.substring(0, body.length.clamp(0, 400))}');
+        debugPrint(
+            '[TEST] digest/latest body: ${body.substring(0, body.length.clamp(0, 400))}');
       } catch (e) {
         debugPrint('[TEST] digest/latest FAILED: $e');
       }
@@ -57,6 +63,9 @@ void main() {
       debugPrint('[TEST] Papers fetched: ${papers.length}');
 
       for (final paper in papers.take(5)) {
+        // Idempotent: a previous run may have left this paper in the tresor,
+        // where addToTresor returns false and the row is already there.
+        await DigestService().removeFromTresor(paper.id);
         final ok = await DigestService().addToTresor(paper.id);
         debugPrint('[TEST] addToTresor(${paper.id}) => $ok');
         if (ok) addedPaperIds.add(paper.id);

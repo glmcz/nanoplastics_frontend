@@ -65,7 +65,8 @@ void main() {
 
       // Simulate 6 incoming notifications
       final paperIdsToSimulate = papers.take(6).map((p) => p.id).toList();
-      debugPrint('[TEST] Simulating ${paperIdsToSimulate.length} notifications');
+      debugPrint(
+          '[TEST] Simulating ${paperIdsToSimulate.length} notifications');
 
       for (final id in paperIdsToSimulate) {
         PushNotificationService.simulateIncoming(id);
@@ -102,7 +103,8 @@ void main() {
       if (addedPaperIds.isNotEmpty) {
         expect(find.byType(ListView), findsOneWidget);
         // Verify at least first paper is visible
-        final firstPaper = papers.firstWhere((p) => addedPaperIds.contains(p.id));
+        final firstPaper =
+            papers.firstWhere((p) => addedPaperIds.contains(p.id));
         expect(find.text(firstPaper.title), findsWidgets);
       }
 

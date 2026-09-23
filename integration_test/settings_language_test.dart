@@ -47,8 +47,9 @@ void main() {
     await tester.pumpWidget(buildApp());
     await tester.pumpAndSettle();
 
-    // Verify all languages are displayed
-    expect(find.text('English'), findsOneWidget);
+    // Verify all languages are displayed. English is the one row whose name
+    // and nativeName are the same string, so it renders twice by design.
+    expect(find.text('English'), findsWidgets);
     expect(find.text('Czech'), findsOneWidget);
     expect(find.text('Spanish'), findsOneWidget);
     expect(find.text('French'), findsOneWidget);
@@ -57,9 +58,12 @@ void main() {
     // English should be selected by default
     expect(SettingsManager().userLanguage, equals('en'));
 
-    // Select Czech
-    await tester.tap(find.text('Czech'));
+    // Select Czech. On the live binding a tap must land on a widget that is
+    // actually on screen, and selectLanguage waits 250ms before it settles.
+    await tester.ensureVisible(find.text('Czech'));
     await tester.pumpAndSettle();
+    await tester.tap(find.text('Czech'));
+    await tester.pumpAndSettle(const Duration(seconds: 2));
 
     // Verify language was persisted
     expect(SettingsManager().userLanguage, equals('cs'));

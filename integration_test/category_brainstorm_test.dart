@@ -44,47 +44,34 @@ void main() {
     );
   }
 
-  testWidgets('navigate to category detail and interact with brainstorm box',
+  // Navigation only. Two things make the rest of this flow untestable on a
+  // device: text input cannot be simulated under the live binding, so
+  // enterText leaves the field empty and the submit button looks dead; and
+  // CategoryDetailNewScreen runs a repeating AnimationController, so
+  // pumpAndSettle never returns and the run burns ten minutes before failing.
+  // Typing, validation and submission are covered in
+  // test/features/idea_submission_test.dart, where enterText works.
+  testWidgets('tapping a category opens its detail screen with the idea box',
       (tester) async {
     await tester.pumpWidget(buildApp());
-    await tester.pumpAndSettle();
+    await tester.pump(const Duration(seconds: 2));
 
-    // Verify we're on MainScreen
     expect(find.byType(MainScreen), findsOneWidget);
 
-    // Tap first category card (Central Systems — psychology icon)
     await tester.tap(find.byIcon(Icons.psychology_outlined));
-    await tester.pumpAndSettle();
+    await tester.pump(const Duration(seconds: 2));
 
-    // Verify we navigated to CategoryDetailNewScreen
     expect(find.byType(CategoryDetailNewScreen), findsOneWidget);
 
-    // Scroll down to find the BrainstormBox
+    // Slivers build lazily, so scroll until the finder resolves and only then
+    // assert it — the natural assertion order is backwards here.
     await tester.dragUntilVisible(
       find.byType(BrainstormBox),
       find.byType(SingleChildScrollView).first,
       const Offset(0, -200),
     );
-    await tester.pumpAndSettle();
+    await tester.pump(const Duration(seconds: 1));
 
     expect(find.byType(BrainstormBox), findsOneWidget);
-
-    // Try submitting with short text — should show validation error
-    final textField = find.descendant(
-      of: find.byType(BrainstormBox),
-      matching: find.byType(TextField),
-    );
-    await tester.enterText(textField, 'Short');
-    await tester.pumpAndSettle();
-
-    final submitButton = find.descendant(
-      of: find.byType(BrainstormBox),
-      matching: find.byType(ElevatedButton),
-    );
-    await tester.tap(submitButton);
-    await tester.pumpAndSettle();
-
-    // Validation snackbar should appear
-    expect(find.byType(SnackBar), findsOneWidget);
   });
 }
