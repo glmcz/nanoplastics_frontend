@@ -70,8 +70,8 @@
   "categoryDetailSourcesCount": "источников",
   "sourcesTitle": "Источники",
   "sourcesSubtitle": "Библиотечные и образовательные материалы",
-  "resultsTitle": "Результаты",
-  "resultsSubtitle": "Оценка и решения",
+  "resultsTitle": "РЕЗУЛЬТАТЫ АНАЛИЗА",
+  "resultsSubtitle": "Математическая оценка идей и решений",
   "sourcesMainReportLabel": "⭐ ОСНОВНОЙ ОТЧЕТ (2025)",
   "sourcesMainReportTitle": "НАНОЧАСТИЦЫ ПЛАСТИКА В БИОСФЕРЕ, ОТ МОЛЕКУЛЯРНОГО ВОЗДЕЙСТВИЯ К ПЛАНЕТАРНОМУ КРИЗИСУ",
   "sourcesMainReportUrl": "https://allatra.org/storage/app/media/reports/ru/Nanoplastics_in_the_Biosphere_Report.pdf",
@@ -213,8 +213,6 @@
   "sourceFragmentGrowthPacificGarbagePatch": "Рост фрагментов в Тихоокеанском мусорном пятне",
   "sourceGeophysicalBreak1995": "Геофизический разлом в 1995 году",
   "resultsBackButton": "← НАЗАД",
-  "resultsTitle": "РЕЗУЛЬТАТЫ АНАЛИЗА",
-  "resultsSubtitle": "Математическая оценка идей и решений",
   "resultsStatsTotalIdeas": "Всего идей",
   "resultsStatsAnalyzedCategories": "Проанализированные категории",
   "resultsStatsActiveSolvers": "Активные решатели",
@@ -233,7 +231,6 @@
   "leaderboardEvalTierC": "C · 150–399 — Общее смягчение",
   "leaderboardEvalTierP": "Participant · 1–149 — Актуально, но расплывчато",
   "leaderboardEvalKeyInsight": "Самые высокооцениваемые идеи решают проблему статического заряда — ключевого механизма, позволяющего нанопластикам преодолевать биологические барьеры.",
-
   "leaderboardTitle": "ТОП 10 РЕШАТЕЛЕЙ",
   "leaderboardSubtitle": "Основные участники в решениях проблемы наночастиц пластика",
   "leaderboardAccessRestricted": "Доступ к рейтингу ограничен",
@@ -242,7 +239,6 @@
   "leaderboardContactTitle": "Хотите сотрудничать?",
   "leaderboardContactDescription": "Свяжитесь с нами, если хотите стать партнёром, внести данные или присоединиться к инициативе NanoSolve.",
   "leaderboardContactEmail": "support@nanosolve.org",
-
   "settingsBack": "Назад",
   "settingsTitle": "Настройки",
   "settingsSubtitle": "Управляйте своими предпочтениями",
@@ -252,7 +248,38 @@
   "settingsAbout": "О приложении",
   "settingsIntroTour": "Вводный тур",
   "settingsIntroTourSubtitle": "Посмотреть введение в приложение снова",
-
+  "settingsTresor": "Мой Сокровищница",
+  "settingsKeywords": "Ключевые слова исследования",
+  "digestFeedTitle": "Обзор исследований",
+  "digestFeedSubtitle": "Последние статьи о нанопластиках",
+  "digestFeedEmpty": "Нет новых статей",
+  "digestFeedLastChecked": "Последняя проверка {date}",
+  "digestFeedPaperCount": "{count} новая{plural} статья",
+  "paperDetailTitle": "Детали статьи",
+  "paperDetailOpenSource": "Открыть статью",
+  "paperDetailCopyDoi": "Копировать DOI",
+  "paperDetailCopied": "Скопировано!",
+  "paperDetailCategory": "Категория",
+  "paperDetailSubcategory": "Подкатегория",
+  "paperDetailLabels": "Ключевые слова",
+  "paperDetailJournal": "Журнал",
+  "paperDetailPublished": "Опубликовано",
+  "tresorTitle": "Мой Сокровищница",
+  "tresorSubtitle": "Сохраненные статьи исследований",
+  "tresorEmpty": "Нет сохраненных статей",
+  "tresorExport": "Экспортировать коллекцию",
+  "tresorExportSubject": "Статьи исследований NanoSolve",
+  "tresorExportEmpty": "Нечего экспортировать",
+  "digestSettingsTitle": "Предпочтения исследований",
+  "digestSettingsSubtitle": "Настройте свой обзор исследований",
+  "digestSettingsDailyDigest": "Ежедневный обзор",
+  "digestSettingsDailyDigestHint": "Получайте ежедневные статьи по вашим интересам",
+  "digestSettingsKeywords": "Ключевые слова поиска",
+  "digestSettingsKeywordRequestMore": "Запросить больше ключевых слов",
+  "digestSettingsSave": "Сохранить предпочтения",
+  "digestSettingsSaved": "Предпочтения сохранены",
+  "digestSettingsError": "Ошибка сохранения предпочтений",
+  "digestSettingsNotificationTime": "Время уведомления",
   "profileTitle": "Настройки профиля",
   "profileSubtitle": "Настройте свой профиль и предпочтения",
   "profilePersonalInfo": "Личная информация",
@@ -277,49 +304,10 @@
   "profileDeleteAccount": "Удалить аккаунт",
   "profileDeleteAccountDesc": "Безвозвратно удалить ваш аккаунт и данные",
   "profileChangeAvatar": "Изменить аватар",
-
   "languageTitle": "Язык",
   "languageSubtitle": "Выберите предпочитаемый язык",
   "languageChanged": "Язык изменен на",
   "languageInfoMessage": "Приложение обновится на выбранный вами язык. Некоторый контент может потребовать перезапуска приложения.",
-
-  "settingsTresor": "Мой Сокровищница",
-  "settingsKeywords": "Ключевые слова исследования",
-
-  "digestFeedTitle": "Обзор исследований",
-  "digestFeedSubtitle": "Последние статьи о нанопластиках",
-  "digestFeedEmpty": "Нет новых статей",
-  "digestFeedLastChecked": "Последняя проверка {date}",
-  "digestFeedPaperCount": "{count} новая{plural} статья",
-
-  "paperDetailTitle": "Детали статьи",
-  "paperDetailOpenSource": "Открыть статью",
-  "paperDetailCopyDoi": "Копировать DOI",
-  "paperDetailCopied": "Скопировано!",
-  "paperDetailCategory": "Категория",
-  "paperDetailSubcategory": "Подкатегория",
-  "paperDetailLabels": "Ключевые слова",
-  "paperDetailJournal": "Журнал",
-  "paperDetailPublished": "Опубликовано",
-
-  "tresorTitle": "Мой Сокровищница",
-  "tresorSubtitle": "Сохраненные статьи исследований",
-  "tresorEmpty": "Нет сохраненных статей",
-  "tresorExport": "Экспортировать коллекцию",
-  "tresorExportSubject": "Статьи исследований NanoSolve",
-  "tresorExportEmpty": "Нечего экспортировать",
-
-  "digestSettingsTitle": "Предпочтения исследований",
-  "digestSettingsSubtitle": "Настройте свой обзор исследований",
-  "digestSettingsDailyDigest": "Ежедневный обзор",
-  "digestSettingsDailyDigestHint": "Получайте ежедневные статьи по вашим интересам",
-  "digestSettingsKeywords": "Ключевые слова поиска",
-  "digestSettingsKeywordRequestMore": "Запросить больше ключевых слов",
-  "digestSettingsSave": "Сохранить предпочтения",
-  "digestSettingsSaved": "Предпочтения сохранены",
-  "digestSettingsError": "Ошибка сохранения предпочтений",
-  "digestSettingsNotificationTime": "Время уведомления",
-
   "privacyTitle": "Конфиденциальность и безопасность",
   "privacySubtitle": "Управляйте настройками конфиденциальности",
   "privacyDataAnalytics": "Данные и аналитика",
@@ -336,7 +324,6 @@
   "privacyLegal": "Правовая информация",
   "privacyPolicy": "Политика конфиденциальности",
   "privacyTermsOfService": "Условия использования",
-
   "aboutTitle": "О приложении",
   "aboutAppName": "NanoSolve Hive",
   "aboutVersion": "Версия",
@@ -360,7 +347,6 @@
   "aboutShareAppLink": "Ссылка для загрузки приложения",
   "aboutFooterMessage": "Создано с заботой о более чистой планете",
   "aboutCopyright": "2026 NanoSolve. Все права защищены.",
-
   "updateDownloadPaused": "Загрузка приостановлена",
   "updateDownloadResumed": "Загрузка возобновлена",
   "updateDownloadCancelled": "Загрузка отменена",
@@ -427,7 +413,6 @@
   "aboutPlatformAndroidFull": "GitHub",
   "aboutPlatformPlayStore": "Google Play",
   "aboutPlatformIOS": "iOS",
-
   "tourCategoryGridBody": "Коснитесь любой карточки, чтобы изучить области исследования и поделиться своими идеями.",
   "tourHumanPlanetBody": "Переключайтесь между здоровьем человека и экосистемой планеты. Публикуйте свои идеи для решения проблем.",
   "tourSourcesButtonBody": "Доступ к рецензируемым исследованиям, тематическим исследованиям и загружаемым отчетам по категориям воздействия.",
@@ -437,19 +422,16 @@
   "tourBtnNext": "Далее",
   "tourBtnDone": "Готово",
   "tourBtnSkipTour": "Пропустить тур",
-
   "downloadingLanguage": "Загрузка {languageName}",
   "downloadFailed": "Загрузка не удалась",
   "downloadFailedMessage": "Не удалось загрузить файлы языка {languageName}. Вы хотите повторить попытку или использовать английский?",
   "useEnglish": "Использовать английский",
   "retry": "Повторить",
   "cancel": "Отмена",
-
   "failedToLoadPdf": "Не удалось загрузить PDF",
   "downloadingPdf": "Загрузка PDF…",
   "pdfLoadingLabel": "Загрузка PDF...",
   "pdfSavedSuccess": "✓ PDF успешно сохранен",
-
   "profileNameRequired": "Пожалуйста, введите свое имя",
   "profileEmailRequired": "Пожалуйста, введите адрес электронной почты",
   "profileEmailInvalid": "Пожалуйста, введите действительный адрес электронной почты",
@@ -462,7 +444,6 @@
   "profileRegSkip": "Пропустить",
   "profileRegSubmit": "Зарегистрироваться",
   "profileRegSaveError": "Ошибка при сохранении профиля: {error}",
-
   "sidebarLang": "Язык",
   "sidebarAiChat": "AI Assistant",
   "exploreResearchDomains": "RESEARCH DOMAINS",
@@ -474,15 +455,46 @@
   "exploreAllDomains": "All domains",
   "sourcesLibraryTitle": "EVIDENCE LIBRARY",
   "sourcesLibrarySubtitle": "Sources · {domain}",
+  "@sourcesLibrarySubtitle": {
+    "placeholders": {
+      "domain": {}
+    }
+  },
   "sourcesDescription": "Search across {count}+ curated research entries",
+  "@sourcesDescription": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "sourcesSearchPlaceholder": "Search sources...",
   "sourcesNoResults": "No sources match \"{query}\"",
+  "@sourcesNoResults": {
+    "placeholders": {
+      "query": {}
+    }
+  },
   "sourcesClearSearch": "Clear search",
   "sourcesCountBadge": "{count} sources",
+  "@sourcesCountBadge": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "sourcesHeadlineLabel": "HEADLINE",
   "sourcesStudiesLabel": "STUDIES",
   "sourcesAllatraLabel": "ALLATRA REPORTS",
   "sourcesOpenPdf": "Open PDF p.{page}",
+  "@sourcesOpenPdf": {
+    "placeholders": {
+      "page": {
+        "type": "int"
+      }
+    }
+  },
   "sourcesOpenInNewTab": "Open in new tab",
   "ideasTitle": "SUBMIT YOUR IDEA",
   "ideasSubtitle": "Propose a solution. Our AI will evaluate its impact.",
@@ -490,7 +502,21 @@
   "ideasIdeaLabel": "Your idea",
   "ideasMinChars": "minimum 10 characters",
   "ideasCharCount": "{count} characters",
+  "@ideasCharCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "ideasAttachmentsLabel": "Attachments ({count} / 10)",
+  "@ideasAttachmentsLabel": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "ideasAddFiles": "Add files",
   "ideasAttachHint": "PDF, images, video — max 95 MB each",
   "ideasNoAttachments": "No attachments yet",
@@ -560,19 +586,64 @@
   "webSidebarExpand": "Развернуть боковую панель",
   "webCategoryShowcaseTitle": "Категории исследований",
   "webStudyCount": "{count} исследований",
+  "@webStudyCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "webSettingsPreferences": "НАСТРОЙКИ",
   "webSettingsLanguageBlock": "ЯЗЫК",
   "webSettingsConnectBlock": "СВЯЗЬ",
   "webSettingsDownloadBlock": "ЗАГРУЗКА",
   "webSettingsAboutBlock": "О ПРИЛОЖЕНИИ",
   "webIdeasTemplateFinding": "На основе находки: \"{finding}\"",
+  "@webIdeasTemplateFinding": {
+    "placeholders": {
+      "finding": {}
+    }
+  },
   "webIdeasTemplateCategory": "Категория: {category}",
+  "@webIdeasTemplateCategory": {
+    "placeholders": {
+      "category": {}
+    }
+  },
   "webIdeasTemplateProblem": "Проблема:",
   "webIdeasTemplateSolution": "Предлагаемое решение:",
   "webIdeasBasedOn": "На основе: {value}",
+  "@webIdeasBasedOn": {
+    "placeholders": {
+      "value": {}
+    }
+  },
   "webIdeasCharacterStatus": "{count} символов / {minimum}",
+  "@webIdeasCharacterStatus": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "minimum": {}
+    }
+  },
   "webIdeasMaxAttachments": "Разрешено максимум {count} вложений.",
+  "@webIdeasMaxAttachments": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "webIdeasFileTooLarge": "{fileName} слишком большой файл (макс. {maxMb} МБ).",
+  "@webIdeasFileTooLarge": {
+    "placeholders": {
+      "fileName": {},
+      "maxMb": {
+        "type": "int"
+      }
+    }
+  },
   "webDiscoveriesTitle": "ПОСЛЕДНИЕ ОТКРЫТИЯ",
   "webEvidenceByTopicTitle": "ДОКАЗАТЕЛЬСТВА ПО ТЕМАМ",
   "webStudyLabel": "Исследование",
@@ -582,100 +653,6 @@
   "webPostIdeaDesc": "Добавьте решение или гипотезу. Ваша идея станет частью графа знаний категории.",
   "webViewSourcesTitle": "Показать все источники",
   "webViewSourcesDesc": "{count} рецензируемых статей. Фильтруйте по теме, году или журналу.",
-  "webSparkIdeaTooltip": "Создать идею из этой находки",
-  "webShowLess": "Показать меньше",
-  "webShowMore": "Показать ещё {count}",
-
-  "@sourcesLibrarySubtitle": {
-    "placeholders": {
-      "domain": {}
-    }
-  },
-  "@sourcesDescription": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "@sourcesNoResults": {
-    "placeholders": {
-      "query": {}
-    }
-  },
-  "@sourcesCountBadge": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "@sourcesOpenPdf": {
-    "placeholders": {
-      "page": {
-        "type": "int"
-      }
-    }
-  },
-  "@ideasCharCount": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "@ideasAttachmentsLabel": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "@webStudyCount": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "@webIdeasTemplateFinding": {
-    "placeholders": {
-      "finding": {}
-    }
-  },
-  "@webIdeasTemplateCategory": {
-    "placeholders": {
-      "category": {}
-    }
-  },
-  "@webIdeasBasedOn": {
-    "placeholders": {
-      "value": {}
-    }
-  },
-  "@webIdeasCharacterStatus": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      },
-      "minimum": {}
-    }
-  },
-  "@webIdeasMaxAttachments": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "@webIdeasFileTooLarge": {
-    "placeholders": {
-      "fileName": {},
-      "maxMb": {
-        "type": "int"
-      }
-    }
-  },
   "@webViewSourcesDesc": {
     "placeholders": {
       "count": {
@@ -683,6 +660,9 @@
       }
     }
   },
+  "webSparkIdeaTooltip": "Создать идею из этой находки",
+  "webShowLess": "Показать меньше",
+  "webShowMore": "Показать ещё {count}",
   "@webShowMore": {
     "placeholders": {
       "count": {
@@ -690,11 +670,177 @@
       }
     }
   },
-
   "vaultTitle": "Хранилище",
   "myVault": "Мое хранилище",
   "vaultSaveButton": "Сохранить в хранилище",
   "vaultRemoveButton": "Удалить из хранилища",
   "vaultExportLabel": "Экспортировать хранилище в текстовый файл",
-  "vaultEmptyMessage": "Хранилище пусто"
+  "vaultEmptyMessage": "Хранилище пусто",
+  "exploreTitle": "Исследовать",
+  "exploreSubtitle": "Инструменты, которые показывают проблему в вашем собственном дне",
+  "exploreFootprintTitle": "Ваш пластиковый год",
+  "exploreFootprintHook": "Сколько пластика в вашем годе?",
+  "exploreSkip": "Не сейчас",
+  "exploreLastCounted": "Последний подсчёт: {date}",
+  "footprintIntroTitle": "Ваш пластиковый год",
+  "footprintIntroBody": "Нанопластик — это кусочки пластика меньше бактерии. Вы их не видите. Давайте пройдём один ваш день и посчитаем их.",
+  "footprintIntroReassurance": "Это не ваша вина. Пластик выбрали за вас.",
+  "footprintStart": "Начать мой день",
+  "footprintSkipStory": "Пропустить историю, показать цифры",
+  "footprintNext": "Далее",
+  "footprintBack": "Назад",
+  "footprintSeeMyYear": "Посмотреть мой год",
+  "footprintConfirmDefault": "Да, это про меня",
+  "footprintPredictQuestion": "Прежде чем начать: как вы думаете, что даёт вам больше всего пластика?",
+  "footprintSceneWater": "Утро. Вы тянетесь за водой.",
+  "footprintSceneLunch": "Полдень. Обед приходит в пластиковом контейнере.",
+  "footprintSceneTea": "День. Кто-то ставит чайник.",
+  "footprintSceneCups": "Между парами. Кофе с собой.",
+  "footprintSceneHome": "Вечер. Дом, ковры, гудящий кондиционер.",
+  "footprintSceneDinner": "Ужин. Что-то из моря, нарезанное на доске.",
+  "footprintSceneOutside": "На улице. Поднимается ветер, и воздух становится бежевым.",
+  "footprintWhyWater": "Тепло и встряхивание разрушают стенку бутылки на фрагменты. Бутылка, оставленная в горячей машине, отдаёт примерно в девять раз больше мельчайших частиц, чем прохладная.",
+  "footprintWhyLunch": "Горячая еда в мягком пластике — самое жёсткое, что происходит за ваш день. Тепло размягчает поверхность, а еда уносит её с собой.",
+  "footprintWhyTea": "Шелковистый пирамидальный пакетик — это пластиковая сетка. Кипяток — ровно то, чего на него лить не стоит.",
+  "footprintWhyCups": "Бумажный стакан изнутри покрыт пластиком, иначе он размок бы. Именно это покрытие встречается с вашим напитком.",
+  "footprintWhyHome": "Синтетические волокна трутся друг о друга и набирают статический заряд. Именно заряд заставляет их липнуть к вам и висеть в воздухе вместо того, чтобы осесть, а кондиционер гоняет их по комнате.",
+  "footprintWhyDinner": "Пластиковая доска по массе отдаёт гораздо больше, чем всё остальное здесь, потому что нож режет её каждый день.",
+  "footprintWhyOutside": "В пыльный день воздух несёт в несколько раз больше пластика, чем обычно.",
+  "footprintQWaterSource": "Откуда обычно берётся ваша питьевая вода?",
+  "footprintQWaterAmount": "Сколько вы пьёте в день?",
+  "footprintQBottleStorage": "Где обычно стоит ваша бутылка?",
+  "footprintQContainerMeals": "Приёмов пищи в неделю, которые приходят или хранятся в пластиковом контейнере",
+  "footprintQMicrowaveMeals": "Сколько из них вы разогреваете прямо в контейнере?",
+  "footprintQTeaBagType": "Какой чайный пакетик?",
+  "footprintQTeaCups": "Чашек в день",
+  "footprintQTakeawayCups": "Горячих напитков в одноразовых стаканах в неделю",
+  "footprintQSynthetic": "Ковры, текстиль и одежда вокруг вас: насколько всё это синтетика?",
+  "footprintQIndoorHours": "Часов в день в помещении с включённым кондиционером",
+  "footprintQSeafood": "Блюд из морепродуктов в неделю",
+  "footprintQSeafoodForm": "В основном филе или мелкая рыба и креветки, которые едят целиком?",
+  "footprintQCuttingBoard": "Разделочная доска дома пластиковая или деревянная?",
+  "footprintQDustyHours": "Часов в неделю на улице в пыльные или ветреные дни",
+  "footprintOptSmallBottles": "Маленькие бутылки",
+  "footprintOptCoolerJug": "Бутыль 20 л",
+  "footprintOptTapOrFilter": "Кран или фильтр",
+  "footprintOptFridge": "Холодильник",
+  "footprintOptRoom": "Комнатная температура",
+  "footprintOptCarOrSun": "Машина или солнце",
+  "footprintOptPaperBag": "Бумажный пакетик",
+  "footprintOptPyramidBag": "Шелковистый пирамидальный пакетик",
+  "footprintOptLooseLeaf": "Листовой чай",
+  "footprintOptLittle": "Мало",
+  "footprintOptSome": "Часть",
+  "footprintOptMost": "Большая часть",
+  "footprintOptAll": "Всё",
+  "footprintOptFillet": "Филе",
+  "footprintOptWhole": "Целиком",
+  "footprintOptBoardPlastic": "Пластик",
+  "footprintOptBoardWood": "Дерево",
+  "footprintOptBoardUnknown": "Не знаю",
+  "footprintUnitBottles": "бутылок в день",
+  "footprintUnitMealsWeek": "приёмов пищи в неделю",
+  "footprintUnitCupsDay": "чашек в день",
+  "footprintUnitCupsWeek": "стаканов в неделю",
+  "footprintUnitHoursDay": "часов в день",
+  "footprintUnitHoursWeek": "часов в неделю",
+  "footprintAbout": "около",
+  "footprintMillion": "миллиона",
+  "footprintBillion": "миллиарда",
+  "footprintTrillion": "триллиона",
+  "footprintPerSecond": "в секунду, весь год",
+  "footprintMilligram": "мг",
+  "footprintGram": "г",
+  "footprintHabitBottledWater": "Бутилированная вода",
+  "footprintHabitBottleStorage": "Где стоит бутылка",
+  "footprintHabitMicrowaveMeals": "Еда, разогретая в пластике",
+  "footprintHabitTakeawayCupsSubMicron": "Одноразовые стаканы, мельчайшие частицы",
+  "footprintHabitTeaBags": "Пластиковые чайные пакетики",
+  "footprintHabitTakeawayCupsMicron": "Одноразовые стаканы",
+  "footprintHabitSeafood": "Морепродукты",
+  "footprintHabitCuttingBoard": "Пластиковая разделочная доска",
+  "footprintHabitSyntheticIndoor": "Синтетический текстиль в помещении",
+  "footprintHabitDustDays": "Пыльные дни",
+  "footprintResultTitle": "Ваш год",
+  "footprintTouchedCount": "Вы ответили на {answered} из {total} глав",
+  "footprintEstimate": "оценка",
+  "footprintHeadline": "Ваш главный источник — {habit}, это {count} частиц в год. По массе — {massHabit}.",
+  "footprintPredictionRight": "Вы угадали.",
+  "footprintPredictionWrong": "Вы предположили {guess}. На самом деле — {actual}.",
+  "footprintFloorSubMicron": "подсчёт до 100 нанометров",
+  "footprintFloorMicron": "подсчёт до 1 микрометра",
+  "footprintFloorBreathed": "подсчёт до 11 микрометров",
+  "footprintOpenQuestionAir": "Мельчайшие частицы в воздухе, которым вы дышите, никто не считал. Это открытый научный вопрос.",
+  "footprintMethodCaption": "Более высокий столбец может означать лучший микроскоп, а не больше пластика. Переключитесь на массу, чтобы сравнивать честно.",
+  "footprintByCount": "По количеству",
+  "footprintByWeight": "По массе",
+  "footprintDotScale": "Каждая точка — примерно {count} частиц",
+  "footprintTagMeasured": "измерено",
+  "footprintTagCountedNotIdentified": "посчитано, может быть не только пластик",
+  "footprintTagExtrapolated": "пересчитано по допущению",
+  "footprintTagChallenged": "оспорено: {who}",
+  "footprintChallengerPnasLetter": "письмо в PNAS, 2024",
+  "footprintChallengerEstComment": "комментарий в Environmental Science & Technology, 2024",
+  "footprintChallengerBfr": "немецкое ведомство по безопасности пищевых продуктов, 2020",
+  "footprintTagUnknown": "это никто не измерял",
+  "footprintSwapTitle": "Одна замена",
+  "footprintSwapYours": "Зависит от вас",
+  "footprintSwapHousehold": "Зависит от вашей семьи",
+  "footprintSwapSteelBottle": "Вы могли бы носить стальную бутылку",
+  "footprintSwapKeepBottleCool": "Вы могли бы не оставлять бутылку в машине",
+  "footprintSwapGlassDish": "Вы могли бы перекладывать обед в стеклянную посуду перед разогревом",
+  "footprintSwapOwnCup": "Вы могли бы носить свою чашку",
+  "footprintSwapPaperTeaBag": "Вы могли бы перейти на бумажные пакетики или листовой чай",
+  "footprintSwapWoodenBoard": "Деревянная доска вместо пластиковой",
+  "footprintCommitmentPrompt": "Выберите одно и скажите, когда это сделаете",
+  "footprintCommitmentHint": "Когда я достаю обед из холодильника, я перекладываю его в стеклянную посуду",
+  "footprintCommitmentSave": "Сохранить",
+  "footprintCommitmentCheckIn": "Вы выбрали это две недели назад. Как получилось?",
+  "footprintChargeTitle": "Куда они попадают и почему",
+  "footprintChargeStage1": "Трение заряжает пластик. Волокна трутся друг о друга, бутылка трясётся в горячей машине, одна частица трётся о другую: каждый контакт обновляет заряд. Это трибоэлектрический эффект.",
+  "footprintChargeStage2": "Заряженная частица ведёт себя иначе, чем нейтральная. Она липнет, а не оседает, связывается с белками и жирами и движется в воде и воздухе так, как незаряженная пылинка никогда не станет.",
+  "footprintChargeStage3": "Именно заряд позволяет этим частицам проникать в кровь, в ткань, в клетку. Заряд — первопричина. Число частиц — лишь симптом.",
+  "footprintChargeKnown": "Измерено: поверхностный заряд меняет то, как клетки поглощают частицы и остаётся ли гематоэнцефалический барьер целым. Частицы пластика найдены в человеческой крови, мозге и плаценте.",
+  "footprintChargeNotKnown": "Открыто: какая доза вредна. Ни одно исследование пока не связало число вроде вашего с болезнью. Подтвердить, какая часть вреда идёт через заряд, ещё предстоит — и вот здесь нужны вы.",
+  "footprintChargeNext": "Далее",
+  "footprintExplainPrompt": "Одним предложением: почему заряд важен?",
+  "footprintExplainSave": "Сохранить",
+  "footprintExplainModelAnswer": "Можно сказать так: заряд — это то, что заставляет эти частицы прилипать и проникать туда, куда нейтральная пылинка никогда бы не попала.",
+  "footprintDoorsTitle": "Что теперь?",
+  "footprintDoorChange": "Изменить привычку",
+  "footprintDoorChangeBody": "Посмотрите, что одна замена сделает с вашим годом.",
+  "footprintDoorStudy": "Изучить это",
+  "footprintDoorStudyBody": "Исследования за вашими цифрами и то, что пока никто не измерил.",
+  "footprintDoorHelp": "Помочь решить",
+  "footprintDoorHelpBody": "Отправьте идею тем, кто над этим работает.",
+  "footprintStudyStartHere": "Начните отсюда",
+  "footprintStudyRegional": "Измерено рядом с вами",
+  "footprintStudyOpenQuestions": "Это пока никто не измерил",
+  "footprintQuestionSize": "Размер: {size}",
+  "footprintQuestionNext": "Первый шаг: {step}",
+  "footprintHelpHook": "Ваш главный источник — {habit}. Ни у кого нет дешёвого способа считать нанопластик вне лаборатории или не пускать его в горячую еду. Есть идея?",
+  "footprintHelpField": "Ваша идея",
+  "footprintHelpSend": "Отправить",
+  "footprintHelpSeed1": "Бутылка какой марки размягчается в вашей машине?",
+  "footprintHelpSeed2": "Где оседает пыль в вашей комнате после пыльного дня?",
+  "footprintHelpSeed3": "Что заставило бы пластиковый контейнер перестать выделять частицы в горячем виде?",
+  "footprintHelpSentTitle": "Отправлено",
+  "footprintHelpSentBody": "Ваша идея оценивается. Загляните позже, чтобы увидеть результат.",
+  "footprintHelpOffline": "Нет соединения. Ваша идея сохранена и будет предложена к отправке в следующий раз.",
+  "footprintConsentTitle": "Перед отправкой",
+  "footprintConsentStorage": "Мою идею хранит NanoSolve, и её читают люди, работающие над проектом.",
+  "footprintConsentScoring": "Моя идея отправляется на оценку в сервис ИИ за пределами моей страны.",
+  "footprintConsentContext": "Приложить мои ответы из этого инструмента, чтобы идею можно было понять в контексте. Необязательно.",
+  "footprintConsentAge": "Мне 18 лет или больше, либо согласен мой законный представитель.",
+  "footprintConsentAnonymous": "Отправить без моего псевдонима и электронной почты",
+  "footprintConsentPolicy": "Прочитать политику конфиденциальности",
+  "footprintConsentRetention": "Вы можете попросить нас удалить отправленное, используя код, который появится после отправки.",
+  "footprintConsentConfirm": "Согласен, отправить",
+  "footprintRecount": "Пересчитать мой день",
+  "footprintShare": "Поделиться",
+  "footprintShareText": "{headline} Посчитано в NanoSolve. Это оценка.",
+  "privacyUsageTitle": "Статистика использования",
+  "privacyUsageBody": "Мы записываем, какие экраны вы открываете и какие кнопки нажимаете, чтобы видеть, где приложение сбивает людей с толку. Каждая запись несёт случайный номер установки, созданный на вашем устройстве. Он не связан ни с вами, ни с вашей учётной записью, ни с почтой, ни с телефоном, и исчезает, когда вы очищаете данные приложения. Мы храним эти записи 180 дней, а затем удаляем. Здесь это можно отключить, и когда отключено, не собирается вообще ничего.",
+  "privacyIdeasTitle": "Идеи, которые вы отправляете",
+  "privacyIdeasBody": "Отправленную вами идею хранит NanoSolve, и её читают люди, работающие над проектом. Она также отправляется на оценку в сервис ИИ за пределами вашей страны, и оценка возвращается в приложение. Если вы согласитесь, к ней прилагаются ответы, данные в инструменте следа, чтобы идею можно было понять в контексте; идею можно отправить и без них. Ваш псевдоним и почта прилагаются, только если вы этого захотите. Чтобы удалить отправленное, напишите нам, указав код, показанный при отправке."
 }

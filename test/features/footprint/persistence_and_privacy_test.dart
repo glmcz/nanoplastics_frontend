@@ -138,17 +138,31 @@ void main() {
           reason: 'Arabic is a first-class locale for this audience: $missing');
     });
 
-    test(
-        'the other four locales are left to fall back, not filled with English',
-        () {
+    // The translation queue is now empty, so this guard flipped: it used to
+    // assert the four locales were still falling back. It keeps the half that
+    // still earns its place — English pasted in as a stand-in is indistinguishable
+    // from a real translation at a glance, and this is what catches it.
+    test('the other four locales are translated, not filled with English', () {
+      // Unit symbols. 'mg' and 'g' are the same string in every Latin-script
+      // locale here; Russian does translate them, to 'мг' and 'г'.
+      const identicalByNature = {'footprintMilligram', 'footprintGram'};
+
       final en = jsonDecode(File('assets/l10n/app_en.arb').readAsStringSync())
           as Map<String, dynamic>;
+      final footprintKeys =
+          en.keys.where((k) => k.startsWith('footprint')).toList();
+
       for (final code in ['cs', 'es', 'fr', 'ru']) {
         final other =
             jsonDecode(File('assets/l10n/app_$code.arb').readAsStringSync())
                 as Map<String, dynamic>;
-        final englishCopies = en.keys
-            .where((k) => k.startsWith('footprint'))
+
+        final missing =
+            footprintKeys.where((k) => !other.containsKey(k)).toList();
+        expect(missing, isEmpty, reason: '$code is missing keys: $missing');
+
+        final englishCopies = footprintKeys
+            .where((k) => !identicalByNature.contains(k))
             .where((k) => other[k] == en[k])
             .toList();
         expect(englishCopies, isEmpty,

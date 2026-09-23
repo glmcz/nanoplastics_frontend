@@ -109,7 +109,17 @@ void main() {
 
   // Every chapter, every device, both languages.
   for (final device in kAllDevices) {
-    for (final locale in const [Locale('en'), Locale('ar')]) {
+    // Every shipped locale, not just the template and Arabic: cs, fr and ru
+    // all run longer than English, which is how translated text breaks a
+    // layout that fitted fine in en.
+    for (final locale in const [
+      Locale('en'),
+      Locale('ar'),
+      Locale('cs'),
+      Locale('es'),
+      Locale('fr'),
+      Locale('ru'),
+    ]) {
       testWidgets('every chapter fits $device in ${locale.languageCode}',
           (t) async {
         setScreenSize(t, device);

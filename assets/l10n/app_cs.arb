@@ -1,16 +1,12 @@
 {
   "@@locale": "cs",
-
   "appTitle": "NANOSOLVE",
   "appSubtitle": "ANALÝZA ZDRAVOTNÍCH RIZIK NANOPLASTŮ",
-
   "tabHuman": "ČLOVĚK",
   "tabPlanet": "ZEMĚ",
-
   "navExplore": "Prozkoumat",
   "navSources": "Zdroje",
   "navResults": "Výsledky",
-
   "humanCategoryCentralSystems": "Centrální nervové systémy",
   "humanCategoryCentralSystemsDesc": "Nervový, oběhový",
   "humanCategoryFiltrationDetox": "Filtrace a Detoxifikace",
@@ -23,7 +19,6 @@
   "humanCategoryEntryGatesDesc": "Kůže, dýchání, strava",
   "humanCategoryWaysOfDesctruction": "Destruktivní vlastnosti",
   "humanCategoryWaysOfDesctructionDesc": "Známé formy destrukce",
-
   "planetCategoryWorldOcean": "Světová hydrosféra a moře",
   "planetCategoryWorldOceanDesc": "Mořský život, voda",
   "planetCategoryAtmosphere": "Atmosféra a klima",
@@ -36,25 +31,20 @@
   "planetCategoryEntryGatesDesc": "Průmysl, odpady",
   "planetCategoryPhysicalProperties": "Fyzikální vlastnosti a účinky",
   "planetCategoryPhysicalPropertiesDesc": "Půda, voda, vzduch",
-
   "onboardingTitle1": "Tohle je realita. My to chceme změnit, ale potřebujeme Tvůj nápad!",
   "onboardingHighlight1": "",
   "onboardingDescription1": "Ke změně potřebujeme však tvůj nápad.",
-
   "onboardingTitle2": "Zvol si oblast a najdi řešení",
   "onboardingHighlight2": "",
   "onboardingDescription2": "",
-
   "onboardingTitle3": "Buď jedním z nás",
   "onboardingHighlight3": "a inspiruj ostatní.",
   "onboardingDescription3": "",
-
   "onboardingNext": "Další",
   "onboardingPrevious": "Zpět",
   "onboardingStart": "Začít",
   "onboardingSkip": "Přeskočit",
   "onboardingBack": "Zpět",
-
   "categoryDetailBack": "Zpět",
   "categoryDetailBackToOverview": "ZPĚT",
   "categoryDetailBrainstorm": "Brainstorm",
@@ -78,13 +68,10 @@
   "brainstormLicenseNotice": "Odesláním licencujete tento nápad pod CC BY 4.0 — volně pro výzkum a veřejný prospěch.",
   "categoryDetailSourcesTitle": "Zdroje k tématu",
   "categoryDetailSourcesCount": "zdrojů",
-
   "sourcesTitle": "Zdroje",
   "sourcesSubtitle": "Knihovna a vzdělávací materiály",
-
-  "resultsTitle": "Výsledky",
-  "resultsSubtitle": "Hodnocení a řešení",
-
+  "resultsTitle": "VÝSLEDKY ANALÝZY",
+  "resultsSubtitle": "Matematické vyhodnocení nápadů a řešení",
   "sourcesMainReportLabel": "⭐ HLAVNÍ REPORT (2025)",
   "sourcesMainReportTitle": "NANOPLASTY V BIOSFÉŘE, OD MOLEKULÁRNÍHO DOPADU PO PLANETÁRNÍ KRIZI",
   "sourcesMainReportUrl": "https://allatra.org/storage/app/media/reports/en/Nanoplastics_in_the_Biosphere_Report.pdf",
@@ -92,38 +79,30 @@
   "sourcesTabWeb": "WEBOVÉ ODKAZY",
   "sourcesTabVideo": "VIDEO-ODKAZY",
   "sourcesTabReport": "R",
-  "sourcesWebTabSearchbar" : "Hledej podle autora, názvu, vydáné, svazku...",
+  "sourcesWebTabSearchbar": "Hledej podle autora, názvu, vydáné, svazku...",
   "sourcesSectionHumanHealth": "Sekce I: Nanoplasty a lidské zdraví",
   "sourcesSectionEarthPollution": "Sekce II: Země a plastové zamoření",
   "sourcesSectionWaterAbilities": "Sekce III: Specifické vlastnosti vody",
   "sourcesSectionVideoContent": "B. Dokumentární a expertní obsah",
   "sourcesVideoSectionDocumentaries": "Dokumentární filmy",
-
-
   "videoLink1Title": "Nanoplasty. Hrozba pro život | ALLATRA Dokument",
   "videoLink1Source": "ALLATRA Dokument",
   "videoLink1Url": "https://youtu.be/BVap0MdbCZg?list=PL4b5lQBqqnUGsIhduDunOHm0gcSnrr8AT",
-
   "videoLink2Title": "Past pro lidstvo | Populárně-vědecký film",
   "videoLink2Source": "Populárně-vědecký film",
   "videoLink2Url": "https://youtu.be/NBbbqRzzQGY?list=PL4b5lQBqqnUGsIhduDunOHm0gcSnrr8AT",
-
   "videoLink3Title": "Antropogenní faktor v zániku oceánu | Populárně-vědecký film",
   "videoLink3Source": "Populárně-vědecký film",
   "videoLink3Url": "https://youtu.be/CDWrsgX4syc?list=PL4b5lQBqqnUGsIhduDunOHm0gcSnrr8AT",
-
   "videoLink4Title": "Co vás ničí na kvantové úrovni?",
   "videoLink4Source": "Dokumentární film",
   "videoLink4Url": "https://youtu.be/0CBfe7w8oUU",
-
   "videoLink5Title": "Nanoplasty. Poslední generace se již narodila",
   "videoLink5Source": "Dokumentární film",
   "videoLink5Url": "https://youtu.be/qsarcxl1jls",
-
   "videoLink6Title": "ALLATRA na summitu OSN COP16 | Dokument o klimatické krizi a znečištění oceánů",
   "videoLink6Source": "Dokument o klimatické krizi",
   "videoLink6Url": "https://youtu.be/0DNempKykno?list=PL4b5lQBqqnUGsIhduDunOHm0gcSnrr8AT",
-
   "detailCentralSystemsTitle": "Centrální systémy (Krev, Mozek)",
   "detailCentralSystemsSubtitle": "Trojský kůň v těle: průnik bariérami, záněty",
   "detailCentralSystemsChargeHint": "Nanoplasty nesou statický elektrický náboj — to je klíč, který jim umožňuje překonat hematoencefalickou bariéru.",
@@ -134,7 +113,6 @@
   "detailCentralSystemsEntry1Bullet3": "Narušení funkce neuronů a nervových signálů",
   "detailCentralSystemsEntry2Highlight": "Průnik do mozku",
   "detailCentralSystemsEntry2Desc": "Podle výzkumů překonávají hematoencefalickou bariéru, pronikají do mozku a narušují funkci neuronů.",
-
   "detailFiltrationDetoxTitle": "Filtrace & Detox (Játra, Ledviny)",
   "detailFiltrationDetoxSubtitle": "Přetížení filtrů a metabolický kolaps",
   "detailFiltrationDetoxEntry1Highlight": "Agresivita: okamžitě po požití",
@@ -144,7 +122,6 @@
   "detailFiltrationDetoxEntry1Bullet3": "Systémové záněty",
   "detailFiltrationDetoxEntry2Highlight": "Akumulace v orgánech",
   "detailFiltrationDetoxEntry2Desc": "Částice se akumulují v játrech a ledvinách, kde narušují metabolické procesy a detoxikační funkce.",
-
   "detailVitalityTissuesTitle": "Vitalita & Tkáně (Srdce, Svaly)",
   "detailVitalityTissuesSubtitle": "Elektrický šum a buněčné stárnutí",
   "detailVitalityTissuesEntry1Highlight": "Mitochondriální dysfunkce",
@@ -153,7 +130,6 @@
   "detailVitalityTissuesEntry1Bullet2": "Poškození mitochondrií",
   "detailVitalityTissuesEntry1Bullet3": "Pokles tvorby ATP (buněčné energie)",
   "detailVitalityTissuesEntry1Bullet4": "Předčasné stárnutí a odumírání tkání",
-
   "detailReproductionTitle": "Původ & Ochrana (Reprodukce)",
   "detailReproductionSubtitle": "Genetické poškození budoucích generací",
   "detailReproductionEntry1Highlight": "Reprodukční a genetické poškození",
@@ -162,7 +138,6 @@
   "detailReproductionEntry1Bullet2": "Nárůst vývojových vad",
   "detailReproductionEntry1Bullet3": "Narušení brzlíku (thymus) u novorozenců",
   "detailReproductionEntry1Bullet4": "Přenos mezi generacemi při buněčném dělení",
-
   "detailEntryGatesTitle": "Vstupní brány (Inhalace, Ingesce)",
   "detailEntryGatesSubtitle": "Cesty kontaminace: vzduch, voda, jídlo",
   "detailEntryGatesEntry1Highlight": "Inhalace (vdechování)",
@@ -171,7 +146,6 @@
   "detailEntryGatesEntry2Desc": "Vstup skrze kontaminovanou vodu, potraviny a nápoje.",
   "detailEntryGatesEntry3Highlight": "Absorpce (kůže)",
   "detailEntryGatesEntry3Desc": "Průnik přes kožní póry při kontaktu s vodou nebo vzduchem.",
-
   "detailPhysicalAttackTitle": "Již známé způsoby destrukce",
   "detailPhysicalAttackSubtitle": "Komplexní přehled negativní činnosti na organismus",
   "detailPhysicalAttackEntry1Highlight": "Elektrostatický náboj",
@@ -180,7 +154,6 @@
   "detailPhysicalAttackEntry2Desc": "Náboj může narušovat bioelektrické signály a nervové impulsy.",
   "detailPhysicalAttackEntry3Highlight": "Strukturální deformace",
   "detailPhysicalAttackEntry3Desc": "Interakce s bílkovinami může narušovat jejich prostorovou strukturu a vodíkové vazby.",
-
   "detailWorldOceanTitle": "Světový oceán a hydrosféra",
   "detailWorldOceanSubtitle": "Fyzikálně-chemická sabotáž a akumulace tepla",
   "detailWorldOceanChargeHint": "Statický náboj nanoplastů narušuje vodíkové vazby vody a snižuje schopnost oceánů pohlcovat teplo.",
@@ -188,13 +161,11 @@
   "detailWorldOceanEntry1Desc": "Nanoplasty se vážou na molekuly vody a vytvářejí hydratační obaly, které 'znehybňují' velké objemy vody.",
   "detailWorldOceanEntry1Bullet1": "Prudký pokles schopnosti oceánů odvádět teplo",
   "detailWorldOceanEntry1Bullet2": "Změna fyzikálních vlastností mořské vody",
-
   "detailAtmosphereTitle": "Atmosféra a globální vodní cyklus",
   "detailAtmosphereSubtitle": "Atmosférický a hydrologický rozvrat",
   "detailAtmosphereChargeHint": "Nabité nanoplasty fungují jako kondenzační jádra a přebírají kontrolu nad vznikem mraků a globálním vodním cyklem.",
   "detailAtmosphereEntry1Highlight": "Nízké a 'těžké' mraky",
   "detailAtmosphereEntry1Desc": "Nanoplasty fungují jako agresivní kondenzační jádra → vznik nízkých, hustých mraků, které zadržují teplo a destabilizují klima.",
-
   "detailFloraFaunaTitle": "Flora, fauna a půdní biota",
   "detailFloraFaunaSubtitle": "Biologický a potravní kolaps ekosystémů",
   "detailFloraFaunaEntry1Highlight": "Rušení bioelektrických signálů",
@@ -203,17 +174,14 @@
   "detailFloraFaunaEntry1Bullet2": "Narušení potravních řetězců",
   "detailFloraFaunaEntry2Highlight": "Poškození fotosyntézy",
   "detailFloraFaunaEntry2Desc": "Nanoplasty fyzicky poškozují chloroplasty → pokles produkce energie a kyslíku, oslabení primárních producentů.",
-
   "detailMagneticFieldTitle": "Magnetické pole a zemské jádro",
   "detailMagneticFieldSubtitle": "Geodynamická a magnetická destabilizace",
   "detailMagneticFieldEntry1Highlight": "Destabilizace magnetického pole",
   "detailMagneticFieldEntry1Desc": "Průnik nanoplastů do geologických struktur může ovlivňovat geodynamické procesy a magnetické pole Země.",
-
   "detailPlanetEntryGatesTitle": "Vstupní brány krize",
   "detailPlanetEntryGatesSubtitle": "Selhání plastového systému, skládky, vody",
   "detailPlanetEntryGatesEntry1Highlight": "Selhání plastového systému",
   "detailPlanetEntryGatesEntry1Desc": "Skládky, oceány a vodní toky jako hlavní zdroje kontaminace nanoplasty.",
-
   "detailPhysicalPropertiesTitle": "Fyzikální vlastnosti",
   "detailPhysicalPropertiesSubtitle": "Klíčové mechanismy kolapsu (vazby, signály)",
   "detailPhysicalPropertiesEntry1Highlight": "Narušení vodíkových vazeb vody",
@@ -224,7 +192,6 @@
   "detailPhysicalPropertiesEntry3Desc": "Elektrostaticky nabité nanoplasty vytvářejí 'šum', který narušuje komunikaci rostlin (kořenové sítě) i hmyzu → ztráta adaptace ekosystémů.",
   "detailPhysicalPropertiesEntry4Highlight": "Poškození fotosyntézy",
   "detailPhysicalPropertiesEntry4Desc": "Nanoplasty fyzicky poškozují chloroplasty → pokles produkce energie a kyslíku, oslabení primárních producentů.",
-
   "sourceBioaccumulationBrain": "Bioakumulace v lidském mozku",
   "sourceAutismSpectrumBPA": "Poruchy autistického spektra a BPA",
   "sourceCrossingBloodBrainBarrier": "Překonávání hematoencefalické bariéry",
@@ -245,17 +212,13 @@
   "sourceGlobalPhotosynthesisLosses": "Globální ztráty fotosyntézy",
   "sourceFragmentGrowthPacificGarbagePatch": "Růst fragmentů v tichomořské skvrně",
   "sourceGeophysicalBreak1995": "Geofyzikální zlom v roce 1995",
-
   "resultsBackButton": "← ZPĚT",
-  "resultsTitle": "VÝSLEDKY ANALÝZY",
-  "resultsSubtitle": "Matematické vyhodnocení nápadů a řešení",
   "resultsStatsTotalIdeas": "Celkový počet nápadů",
   "resultsStatsAnalyzedCategories": "Analyzované kategorie",
   "resultsStatsActiveSolvers": "Aktivní řešitelé",
   "resultsEvaluationSystemTitle": "O SYSTÉMU VYHODNOCOVÁNÍ",
   "resultsEvaluationSystemDesc1": "Vaše nápady jsou sbírány a matematicky analyzovány pomocí pokročilých algoritmů. Systém vyhodnocuje feasibilitu, dopad a inovativnost každého řešení.",
   "resultsEvaluationSystemDesc2": "Nejperspektivnější řešení budou prezentována vědcům a tvůrcům politik pro praktickou implementaci.",
-
   "leaderboardEvalTitle": "Jak se hodnotí nápady",
   "leaderboardEvalIntro": "Každý nápad hodnotí AI agent specializovaný pro danou kategorii. Skóruje 0–1000 ve čtyřech dimenzích a přiřadí tier.",
   "leaderboardEvalDim1": "Vědecká věrohodnost (0–300)",
@@ -268,7 +231,6 @@
   "leaderboardEvalTierC": "C · 150–399 — Obecná zmírnění",
   "leaderboardEvalTierP": "Participant · 1–149 — Relevantní, ale vágní",
   "leaderboardEvalKeyInsight": "Nejlépe hodnocené nápady řeší statický náboj — základní mechanismus, který nanoplastům umožňuje překonávat biologické bariéry.",
-
   "leaderboardTitle": "TOP 10 ŘEŠITELŮ",
   "leaderboardSubtitle": "Vedoucí přispěvatelé řešením nanoplastů",
   "leaderboardAccessRestricted": "Přístup k žebříčku omezen",
@@ -277,7 +239,6 @@
   "leaderboardContactTitle": "Chcete spolupracovat?",
   "leaderboardContactDescription": "Kontaktujte nás, pokud chcete navázat partnerství, přispět daty nebo se zapojit do iniciativy NanoSolve.",
   "leaderboardContactEmail": "support@nanosolve.org",
-
   "settingsBack": "Zpět",
   "settingsTitle": "Nastavení",
   "settingsSubtitle": "Spravujte své předvolby",
@@ -289,13 +250,11 @@
   "settingsIntroTourSubtitle": "Spustit úvodní prohlídku znovu",
   "settingsTresor": "Moje Tresor",
   "settingsKeywords": "Klíčová slova výzkumu",
-
   "digestFeedTitle": "Výzkumný přehled",
   "digestFeedSubtitle": "Nejnovější články o nanoplastů",
   "digestFeedEmpty": "Zatím žádné nové články",
   "digestFeedLastChecked": "Poslední kontrola {date}",
   "digestFeedPaperCount": "{count} nový{plural} článek",
-
   "paperDetailTitle": "Podrobnosti články",
   "paperDetailOpenSource": "Otevřít článek",
   "paperDetailCopyDoi": "Kopírovat DOI",
@@ -305,14 +264,12 @@
   "paperDetailLabels": "Klíčová slova",
   "paperDetailJournal": "Časopis",
   "paperDetailPublished": "Zveřejněno",
-
   "tresorTitle": "Moje Tresor",
   "tresorSubtitle": "Uložené výzkumné články",
   "tresorEmpty": "Zatím žádné články neuloženy",
   "tresorExport": "Exportovat sbírku",
   "tresorExportSubject": "Výzkumné články NanoSolve",
   "tresorExportEmpty": "Nic k exportu",
-
   "digestSettingsTitle": "Předvolby výzkumu",
   "digestSettingsSubtitle": "Přizpůsobte si přehled výzkumu",
   "digestSettingsDailyDigest": "Denní přehled",
@@ -323,7 +280,6 @@
   "digestSettingsSaved": "Předvolby uloženy",
   "digestSettingsError": "Nepodařilo se uložit předvolby",
   "digestSettingsNotificationTime": "Čas oznámení",
-
   "profileTitle": "Nastavení profilu",
   "profileSubtitle": "Přizpůsobte svůj profil a předvolby",
   "profilePersonalInfo": "Osobní údaje",
@@ -348,12 +304,10 @@
   "profileDeleteAccount": "Smazat účet",
   "profileDeleteAccountDesc": "Trvale odstranit váš účet a data",
   "profileChangeAvatar": "Změnit avatar",
-
   "languageTitle": "Jazyk",
   "languageSubtitle": "Vyberte preferovaný jazyk",
   "languageChanged": "Jazyk změněn na",
   "languageInfoMessage": "Aplikace se aktualizuje na váš vybraný jazyk. Některý obsah může vyžadovat restart aplikace.",
-
   "privacyTitle": "Soukromí & Bezpečnost",
   "privacySubtitle": "Spravujte své předvolby soukromí",
   "privacyDataAnalytics": "Data & Analytika",
@@ -370,7 +324,6 @@
   "privacyLegal": "Právní záležitosti",
   "privacyPolicy": "Zásady ochrany osobních údajů",
   "privacyTermsOfService": "Podmínky služby",
-
   "aboutTitle": "O aplikaci",
   "aboutAppName": "NanoSolve Hive",
   "aboutVersion": "Verze",
@@ -394,7 +347,6 @@
   "aboutShareAppLink": "Odkaz ke stažení aplikace",
   "aboutFooterMessage": "Vytvořeno s péčí pro čistší planetu",
   "aboutCopyright": "2026 NanoSolve. Všechna práva vyhrazena.",
-
   "updateDownloadPaused": "Stahování pozastaveno",
   "updateDownloadResumed": "Stahování obnoveno",
   "updateDownloadCancelled": "Stahování zrušeno",
@@ -461,7 +413,6 @@
   "aboutPlatformAndroidFull": "GitHub",
   "aboutPlatformPlayStore": "Google Play",
   "aboutPlatformIOS": "iOS",
-
   "tourCategoryGridBody": "Klepnutím na libovolnou kartu prozkoumáte oblasť výzkumu a zveřejníte své nápady.",
   "tourHumanPlanetBody": "Přepínejte mezi zdravím člověka a ekosystémem planety. Zveřejněte své nápady na řešení.",
   "tourSourcesButtonBody": "Přístup k recenzovanému výzkumu, případným studiím a stažitelným zprávám podle kategorie dopadu.",
@@ -471,19 +422,16 @@
   "tourBtnNext": "Další",
   "tourBtnDone": "Hotovo",
   "tourBtnSkipTour": "Přeskočit průvodce",
-
   "downloadingLanguage": "Stahování {languageName}",
   "downloadFailed": "Stahování selhalo",
   "downloadFailedMessage": "Nepodařilo se stáhnout soubory jazyka {languageName}. Chcete zkusit znovu nebo použít angličtinu?",
   "useEnglish": "Použít angličtinu",
   "retry": "Zkusit znovu",
   "cancel": "Zrušit",
-
   "failedToLoadPdf": "Nepodařilo se načíst PDF",
   "downloadingPdf": "Stahování PDF…",
   "pdfLoadingLabel": "Načítání PDF...",
   "pdfSavedSuccess": "✓ PDF úspěšně uloženo",
-
   "profileNameRequired": "Prosím, zadejte své jméno",
   "profileEmailRequired": "Prosím, zadejte svou e-mailovou adresu",
   "profileEmailInvalid": "Prosím, zadejte platnou e-mailovou adresu",
@@ -496,7 +444,6 @@
   "profileRegSkip": "Přeskočit",
   "profileRegSubmit": "Zaregistrovat",
   "profileRegSaveError": "Chyba při ukládání profilu: {error}",
-
   "sidebarLang": "Jazyk",
   "sidebarAiChat": "AI Assistant",
   "exploreResearchDomains": "RESEARCH DOMAINS",
@@ -508,15 +455,46 @@
   "exploreAllDomains": "All domains",
   "sourcesLibraryTitle": "EVIDENCE LIBRARY",
   "sourcesLibrarySubtitle": "Sources · {domain}",
+  "@sourcesLibrarySubtitle": {
+    "placeholders": {
+      "domain": {}
+    }
+  },
   "sourcesDescription": "Search across {count}+ curated research entries",
+  "@sourcesDescription": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "sourcesSearchPlaceholder": "Search sources...",
   "sourcesNoResults": "No sources match \"{query}\"",
+  "@sourcesNoResults": {
+    "placeholders": {
+      "query": {}
+    }
+  },
   "sourcesClearSearch": "Clear search",
   "sourcesCountBadge": "{count} sources",
+  "@sourcesCountBadge": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "sourcesHeadlineLabel": "HEADLINE",
   "sourcesStudiesLabel": "STUDIES",
   "sourcesAllatraLabel": "ALLATRA REPORTS",
   "sourcesOpenPdf": "Open PDF p.{page}",
+  "@sourcesOpenPdf": {
+    "placeholders": {
+      "page": {
+        "type": "int"
+      }
+    }
+  },
   "sourcesOpenInNewTab": "Open in new tab",
   "ideasTitle": "SUBMIT YOUR IDEA",
   "ideasSubtitle": "Propose a solution. Our AI will evaluate its impact.",
@@ -524,7 +502,21 @@
   "ideasIdeaLabel": "Your idea",
   "ideasMinChars": "minimum 10 characters",
   "ideasCharCount": "{count} characters",
+  "@ideasCharCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "ideasAttachmentsLabel": "Attachments ({count} / 10)",
+  "@ideasAttachmentsLabel": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "ideasAddFiles": "Add files",
   "ideasAttachHint": "PDF, images, video — max 95 MB each",
   "ideasNoAttachments": "No attachments yet",
@@ -594,19 +586,64 @@
   "webSidebarExpand": "Rozbalit postranní panel",
   "webCategoryShowcaseTitle": "Výzkumné kategorie",
   "webStudyCount": "{count} studií",
+  "@webStudyCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "webSettingsPreferences": "PŘEDVOLBY",
   "webSettingsLanguageBlock": "JAZYK",
   "webSettingsConnectBlock": "KONTAKT",
   "webSettingsDownloadBlock": "STAŽENÍ",
   "webSettingsAboutBlock": "O APLIKACI",
   "webIdeasTemplateFinding": "Na základě zjištění: \"{finding}\"",
+  "@webIdeasTemplateFinding": {
+    "placeholders": {
+      "finding": {}
+    }
+  },
   "webIdeasTemplateCategory": "Kategorie: {category}",
+  "@webIdeasTemplateCategory": {
+    "placeholders": {
+      "category": {}
+    }
+  },
   "webIdeasTemplateProblem": "Problém:",
   "webIdeasTemplateSolution": "Navrhované řešení:",
   "webIdeasBasedOn": "Na základě: {value}",
+  "@webIdeasBasedOn": {
+    "placeholders": {
+      "value": {}
+    }
+  },
   "webIdeasCharacterStatus": "{count} znaků / {minimum}",
+  "@webIdeasCharacterStatus": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "minimum": {}
+    }
+  },
   "webIdeasMaxAttachments": "Maximálně {count} příloh.",
+  "@webIdeasMaxAttachments": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "webIdeasFileTooLarge": "{fileName} je příliš velký soubor (max {maxMb} MB).",
+  "@webIdeasFileTooLarge": {
+    "placeholders": {
+      "fileName": {},
+      "maxMb": {
+        "type": "int"
+      }
+    }
+  },
   "webDiscoveriesTitle": "NEJNOVĚJŠÍ ZJIŠTĚNÍ",
   "webEvidenceByTopicTitle": "DŮKAZY PODLE TÉMAT",
   "webStudyLabel": "Studie",
@@ -616,100 +653,6 @@
   "webPostIdeaDesc": "Přidejte řešení nebo hypotézu. Váš nápad se stane součástí znalostního grafu kategorie.",
   "webViewSourcesTitle": "Zobrazit všechny zdroje",
   "webViewSourcesDesc": "{count} recenzovaných studií. Filtrujte podle tématu, roku nebo časopisu.",
-  "webSparkIdeaTooltip": "Vytvořit nápad z tohoto zjištění",
-  "webShowLess": "Zobrazit méně",
-  "webShowMore": "Zobrazit o {count} více",
-
-  "@sourcesLibrarySubtitle": {
-    "placeholders": {
-      "domain": {}
-    }
-  },
-  "@sourcesDescription": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "@sourcesNoResults": {
-    "placeholders": {
-      "query": {}
-    }
-  },
-  "@sourcesCountBadge": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "@sourcesOpenPdf": {
-    "placeholders": {
-      "page": {
-        "type": "int"
-      }
-    }
-  },
-  "@ideasCharCount": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "@ideasAttachmentsLabel": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "@webStudyCount": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "@webIdeasTemplateFinding": {
-    "placeholders": {
-      "finding": {}
-    }
-  },
-  "@webIdeasTemplateCategory": {
-    "placeholders": {
-      "category": {}
-    }
-  },
-  "@webIdeasBasedOn": {
-    "placeholders": {
-      "value": {}
-    }
-  },
-  "@webIdeasCharacterStatus": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      },
-      "minimum": {}
-    }
-  },
-  "@webIdeasMaxAttachments": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "@webIdeasFileTooLarge": {
-    "placeholders": {
-      "fileName": {},
-      "maxMb": {
-        "type": "int"
-      }
-    }
-  },
   "@webViewSourcesDesc": {
     "placeholders": {
       "count": {
@@ -717,6 +660,9 @@
       }
     }
   },
+  "webSparkIdeaTooltip": "Vytvořit nápad z tohoto zjištění",
+  "webShowLess": "Zobrazit méně",
+  "webShowMore": "Zobrazit o {count} více",
   "@webShowMore": {
     "placeholders": {
       "count": {
@@ -724,11 +670,177 @@
       }
     }
   },
-
   "vaultTitle": "Trezor",
   "myVault": "Můj trezor",
   "vaultSaveButton": "Uložit do trezoru",
   "vaultRemoveButton": "Odebrat z trezoru",
   "vaultExportLabel": "Exportovat trezor jako textový soubor",
-  "vaultEmptyMessage": "Trezor je prázdný"
+  "vaultEmptyMessage": "Trezor je prázdný",
+  "exploreTitle": "Prozkoumat",
+  "exploreSubtitle": "Nástroje, které ukážou problém ve vašem vlastním dni",
+  "exploreFootprintTitle": "Váš plastový rok",
+  "exploreFootprintHook": "Kolik plastu je ve vašem roce?",
+  "exploreSkip": "Teď ne",
+  "exploreLastCounted": "Naposledy spočítáno {date}",
+  "footprintIntroTitle": "Váš plastový rok",
+  "footprintIntroBody": "Nanoplasty jsou kousky plastu menší než bakterie. Nevidíte je. Projděme spolu jeden váš den a spočítejme je.",
+  "footprintIntroReassurance": "Nic z toho není vaše vina. Plast za vás vybral někdo jiný.",
+  "footprintStart": "Začít můj den",
+  "footprintSkipStory": "Přeskočit příběh, ukázat čísla",
+  "footprintNext": "Dál",
+  "footprintBack": "Zpět",
+  "footprintSeeMyYear": "Zobrazit můj rok",
+  "footprintConfirmDefault": "Ano, to jsem já",
+  "footprintPredictQuestion": "Než začneme: co podle vás do vás dostane nejvíc plastu?",
+  "footprintSceneWater": "Ráno. Saháte po vodě.",
+  "footprintSceneLunch": "Poledne. Oběd přichází v plastové krabičce.",
+  "footprintSceneTea": "Odpoledne. Někdo postavil na čaj.",
+  "footprintSceneCups": "Mezi přednáškami. Káva s sebou.",
+  "footprintSceneHome": "Večer. Domov, koberce, bzučící klimatizace.",
+  "footprintSceneDinner": "Večeře. Něco z moře, nakrájené na prkénku.",
+  "footprintSceneOutside": "Venku. Zvedá se vítr a vzduch zešedne do béžova.",
+  "footprintWhyWater": "Teplo a třepání rozrušují stěnu lahve na úlomky. Lahev ponechaná v rozpáleném autě uvolní asi devětkrát více těch nejmenších částic než lahev v chladu.",
+  "footprintWhyLunch": "Horké jídlo v měkkém plastu je to nejdrsnější, co se ve vašem dni děje. Teplo naruší povrch a jídlo si ho odnese.",
+  "footprintWhyTea": "Hedvábný pyramidový sáček je plastová síťka. Vařící voda je přesně to, co se na něj lít nemá.",
+  "footprintWhyCups": "Papírový kelímek má plastovou výstelku, jinak by rozmokl. A právě ta výstelka se potkává s vaším nápojem.",
+  "footprintWhyHome": "Syntetická vlákna se o sebe třou a nabíjejí se statickou elektřinou. Náboj je důvod, proč ulpívají na vás a vznášejí se ve vzduchu místo toho, aby sedly, a klimatizace je udržuje v oběhu po místnosti.",
+  "footprintWhyDinner": "Plastové prkénko uvolní hmotnostně mnohem víc než cokoli jiného zde, protože do něj každý den řeže nůž.",
+  "footprintWhyOutside": "V prašném dni nese vzduch několikanásobně více plastu než obvykle.",
+  "footprintQWaterSource": "Odkud obvykle pochází vaše pitná voda?",
+  "footprintQWaterAmount": "Kolik denně vypijete?",
+  "footprintQBottleStorage": "Kde vaše lahev obvykle stojí?",
+  "footprintQContainerMeals": "Jídel týdně, která přijdou nebo se skladují v plastové krabičce",
+  "footprintQMicrowaveMeals": "Kolik z nich v té krabičce ohříváte?",
+  "footprintQTeaBagType": "Jaký druh čajového sáčku?",
+  "footprintQTeaCups": "Šálků denně",
+  "footprintQTakeawayCups": "Horkých nápojů v jednorázových kelímcích týdně",
+  "footprintQSynthetic": "Koberce, textil a oblečení kolem vás: kolik je syntetiky?",
+  "footprintQIndoorHours": "Hodin denně uvnitř se zapnutou klimatizací",
+  "footprintQSeafood": "Jídel z mořských plodů týdně",
+  "footprintQSeafoodForm": "Převážně filé, nebo malé ryby a krevety jedené celé?",
+  "footprintQCuttingBoard": "Je prkénko doma plastové, nebo dřevěné?",
+  "footprintQDustyHours": "Hodin týdně venku v prašných nebo větrných dnech",
+  "footprintOptSmallBottles": "Malé lahve",
+  "footprintOptCoolerJug": "20l barel",
+  "footprintOptTapOrFilter": "Kohoutek nebo filtr",
+  "footprintOptFridge": "Lednice",
+  "footprintOptRoom": "Pokojová teplota",
+  "footprintOptCarOrSun": "Auto nebo slunce",
+  "footprintOptPaperBag": "Papírový sáček",
+  "footprintOptPyramidBag": "Hedvábný pyramidový sáček",
+  "footprintOptLooseLeaf": "Sypaný čaj",
+  "footprintOptLittle": "Málo",
+  "footprintOptSome": "Něco",
+  "footprintOptMost": "Většina",
+  "footprintOptAll": "Všechno",
+  "footprintOptFillet": "Filé",
+  "footprintOptWhole": "Jedené celé",
+  "footprintOptBoardPlastic": "Plastové",
+  "footprintOptBoardWood": "Dřevěné",
+  "footprintOptBoardUnknown": "Nevím",
+  "footprintUnitBottles": "lahví denně",
+  "footprintUnitMealsWeek": "jídel týdně",
+  "footprintUnitCupsDay": "šálků denně",
+  "footprintUnitCupsWeek": "kelímků týdně",
+  "footprintUnitHoursDay": "hodin denně",
+  "footprintUnitHoursWeek": "hodin týdně",
+  "footprintAbout": "přibližně",
+  "footprintMillion": "milionu",
+  "footprintBillion": "miliardy",
+  "footprintTrillion": "bilionu",
+  "footprintPerSecond": "za sekundu, celý rok",
+  "footprintMilligram": "mg",
+  "footprintGram": "g",
+  "footprintHabitBottledWater": "Balená voda",
+  "footprintHabitBottleStorage": "Kde stojí lahev",
+  "footprintHabitMicrowaveMeals": "Jídlo ohřívané v plastu",
+  "footprintHabitTakeawayCupsSubMicron": "Jednorázové kelímky, nejmenší částice",
+  "footprintHabitTeaBags": "Plastové čajové sáčky",
+  "footprintHabitTakeawayCupsMicron": "Jednorázové kelímky",
+  "footprintHabitSeafood": "Mořské plody",
+  "footprintHabitCuttingBoard": "Plastové prkénko",
+  "footprintHabitSyntheticIndoor": "Syntetický textil v interiéru",
+  "footprintHabitDustDays": "Prašné dny",
+  "footprintResultTitle": "Váš rok",
+  "footprintTouchedCount": "Odpověděli jste na {answered} z {total} kapitol",
+  "footprintEstimate": "odhad",
+  "footprintHeadline": "Vaším největším jednotlivým zdrojem je {habit}, s {count} částicemi za rok. Hmotnostně je to {massHabit}.",
+  "footprintPredictionRight": "Uhodli jste.",
+  "footprintPredictionWrong": "Tipovali jste {guess}. Ve skutečnosti je to {actual}.",
+  "footprintFloorSubMicron": "počítáno dolů do 100 nanometrů",
+  "footprintFloorMicron": "počítáno dolů do 1 mikrometru",
+  "footprintFloorBreathed": "počítáno dolů do 11 mikrometrů",
+  "footprintOpenQuestionAir": "Nejmenší částice ve vzduchu, který dýcháte, nikdo nespočítal. To je otevřená výzkumná otázka.",
+  "footprintMethodCaption": "Vyšší sloupec může znamenat lepší mikroskop, ne víc plastu. Pro férové srovnání přepněte na hmotnost.",
+  "footprintByCount": "Podle počtu",
+  "footprintByWeight": "Podle hmotnosti",
+  "footprintDotScale": "Každá tečka je přibližně {count} částic",
+  "footprintTagMeasured": "změřeno",
+  "footprintTagCountedNotIdentified": "spočítáno, nemusí jít jen o plast",
+  "footprintTagExtrapolated": "škálováno podle předpokladu",
+  "footprintTagChallenged": "zpochybněno: {who}",
+  "footprintChallengerPnasLetter": "dopis v PNAS z roku 2024",
+  "footprintChallengerEstComment": "komentář v Environmental Science & Technology z roku 2024",
+  "footprintChallengerBfr": "německý úřad pro bezpečnost potravin, 2020",
+  "footprintTagUnknown": "tohle nikdo nezměřil",
+  "footprintSwapTitle": "Jedna změna",
+  "footprintSwapYours": "Na vás",
+  "footprintSwapHousehold": "Na vaší domácnosti",
+  "footprintSwapSteelBottle": "Mohli byste nosit nerezovou lahev",
+  "footprintSwapKeepBottleCool": "Mohli byste nechávat lahev mimo auto",
+  "footprintSwapGlassDish": "Mohli byste oběd před ohřátím přendat do skleněné misky",
+  "footprintSwapOwnCup": "Mohli byste si nosit vlastní kelímek",
+  "footprintSwapPaperTeaBag": "Mohli byste přejít na papírové sáčky nebo sypaný čaj",
+  "footprintSwapWoodenBoard": "Dřevěné prkénko místo plastového",
+  "footprintCommitmentPrompt": "Vyberte jednu a řekněte, kdy to uděláte",
+  "footprintCommitmentHint": "Až vytáhnu oběd z lednice, přendám ho do skleněné misky",
+  "footprintCommitmentSave": "Uložit",
+  "footprintCommitmentCheckIn": "Tohle jste si zvolili před dvěma týdny. Jak to šlo?",
+  "footprintChargeTitle": "Kam se dostanou a proč",
+  "footprintChargeStage1": "Tření nabíjí plast. Vlákna třoucí se o sebe, lahev natřásaná v rozpáleném autě, jedna částice drhnoucí o druhou: každý kontakt náboj obnoví. Tomu se říká triboelektrický jev.",
+  "footprintChargeStage2": "Nabitá částice se chová jinak než neutrální. Místo usazení ulpívá, váže se na bílkoviny a tuky a pohybuje se vodou i vzduchem způsobem, jakým nenabité zrnko prachu nikdy.",
+  "footprintChargeStage3": "Právě náboj těmto částicím umožňuje proniknout do krve, do tkáně, do buňky. Náboj je prvotní příčina. Počet částic je jen příznak.",
+  "footprintChargeKnown": "Změřeno: povrchový náboj mění, jak buňky částice přijímají a zda zůstane hematoencefalická bariéra neporušená. Plastové částice byly nalezeny v lidské krvi, mozku i placentě.",
+  "footprintChargeNotKnown": "Otevřené: jak velká expozice je škodlivá. Zatím žádná studie nespojila číslo, jako je to vaše, s konkrétním onemocněním. Potvrdit, jak velká část poškození jde přes náboj, je práce, která teprve čeká — a tady přicházíte vy.",
+  "footprintChargeNext": "Dál",
+  "footprintExplainPrompt": "Jednou větou: proč na náboji záleží?",
+  "footprintExplainSave": "Uložit",
+  "footprintExplainModelAnswer": "Jeden způsob, jak to říct: náboj je to, co tyto částice nutí ulpívat a pronikat tam, kam by se neutrální zrnko nikdy nedostalo.",
+  "footprintDoorsTitle": "Co teď?",
+  "footprintDoorChange": "Změnit návyk",
+  "footprintDoorChangeBody": "Podívejte se, co jedna změna udělá s vaším rokem.",
+  "footprintDoorStudy": "Nastudovat to",
+  "footprintDoorStudyBody": "Studie za vašimi čísly a to, co zatím nikdo nezměřil.",
+  "footprintDoorHelp": "Pomoct to vyřešit",
+  "footprintDoorHelpBody": "Pošlete nápad lidem, kteří na tom pracují.",
+  "footprintStudyStartHere": "Začněte zde",
+  "footprintStudyRegional": "Měřeno u vás",
+  "footprintStudyOpenQuestions": "Tohle zatím nikdo nezměřil",
+  "footprintQuestionSize": "Velikost: {size}",
+  "footprintQuestionNext": "První krok: {step}",
+  "footprintHelpHook": "Vaším největším zdrojem je {habit}. Nikdo zatím nemá levný způsob, jak počítat nanoplasty mimo laboratoř ani jak je udržet mimo horké jídlo. Máte nápad?",
+  "footprintHelpField": "Váš nápad",
+  "footprintHelpSend": "Odeslat",
+  "footprintHelpSeed1": "Která značka lahve ve vašem autě změkne?",
+  "footprintHelpSeed2": "Kam se po prašném dni usadí prach ve vašem pokoji?",
+  "footprintHelpSeed3": "Co by přimělo plastovou krabičku přestat uvolňovat částice, když je horká?",
+  "footprintHelpSentTitle": "Odesláno",
+  "footprintHelpSentBody": "Váš nápad se vyhodnocuje. Vraťte se se podívat, jak dopadl.",
+  "footprintHelpOffline": "Bez připojení. Váš nápad je uložen a nabídneme ho k odeslání příště.",
+  "footprintConsentTitle": "Než odešlete",
+  "footprintConsentStorage": "Můj nápad uchovává NanoSolve a čtou ho lidé pracující na projektu.",
+  "footprintConsentScoring": "Můj nápad se k vyhodnocení odesílá službě s umělou inteligencí mimo mou zemi.",
+  "footprintConsentContext": "Přiložit mé odpovědi z tohoto nástroje, aby šlo nápad pochopit v souvislostech. Nepovinné.",
+  "footprintConsentAge": "Je mi 18 nebo více let, případně souhlasí můj zákonný zástupce.",
+  "footprintConsentAnonymous": "Odeslat bez mé přezdívky a e-mailu",
+  "footprintConsentPolicy": "Přečíst zásady ochrany soukromí",
+  "footprintConsentRetention": "O smazání příspěvku nás můžete požádat pomocí kódu, který se zobrazí po odeslání.",
+  "footprintConsentConfirm": "Souhlasím, odeslat",
+  "footprintRecount": "Přepočítat můj den",
+  "footprintShare": "Sdílet",
+  "footprintShareText": "{headline} Spočítáno v NanoSolve. Jde o odhad.",
+  "privacyUsageTitle": "Statistiky používání",
+  "privacyUsageBody": "Zaznamenáváme, které obrazovky otevřete a která tlačítka stisknete, abychom viděli, kde aplikace lidi mate. Každý záznam nese náhodné instalační číslo vytvořené ve vašem zařízení. Není spojené s vámi, vaším účtem, e-mailem ani telefonem a zmizí, jakmile vymažete data aplikace. Záznamy uchováváme 180 dní a pak je mažeme. Zde to můžete vypnout; když je to vypnuté, nesbírá se vůbec nic.",
+  "privacyIdeasTitle": "Nápady, které odešlete",
+  "privacyIdeasBody": "Nápad, který odešlete, uchovává NanoSolve a čtou ho lidé pracující na projektu. Odesílá se také službě s umělou inteligencí mimo vaši zemi k vyhodnocení a skóre se vrací zpět do aplikace. Pokud souhlasíte, přiloží se odpovědi, které jste zadali v nástroji stopy, aby šlo nápad pochopit v souvislostech; nápad lze odeslat i bez nich. Vaše přezdívka a e-mail se přikládají jen tehdy, když si to zvolíte. O smazání příspěvku požádejte s kódem, který se zobrazí při odeslání."
 }

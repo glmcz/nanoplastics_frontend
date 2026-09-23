@@ -70,8 +70,8 @@
   "categoryDetailSourcesCount": "sources",
   "sourcesTitle": "Sources",
   "sourcesSubtitle": "Matériaux de bibliothèque et d'éducation",
-  "resultsTitle": "Résultats",
-  "resultsSubtitle": "Évaluation et solutions",
+  "resultsTitle": "RÉSULTATS DE L'ANALYSE",
+  "resultsSubtitle": "Évaluation mathématique des idées et solutions",
   "sourcesMainReportLabel": "⭐ RAPPORT PRINCIPAL (2025)",
   "sourcesMainReportTitle": "NANOPLASTIQUES DANS LA BIOSPHÈRE, DE L'IMPACT MOLÉCULAIRE À LA CRISE PLANÉTAIRE",
   "sourcesMainReportUrl": "https://allatra.org/storage/app/media/reports/fr/Nanoplastics_in_the_Biosphere_Report.pdf",
@@ -213,8 +213,6 @@
   "sourceFragmentGrowthPacificGarbagePatch": "Croissance des fragments dans le Grand Patch de Plastique",
   "sourceGeophysicalBreak1995": "Rupture géophysique en 1995",
   "resultsBackButton": "← RETOUR",
-  "resultsTitle": "RÉSULTATS DE L'ANALYSE",
-  "resultsSubtitle": "Évaluation mathématique des idées et solutions",
   "resultsStatsTotalIdeas": "Nombre total d'idées",
   "resultsStatsAnalyzedCategories": "Catégories analysées",
   "resultsStatsActiveSolvers": "Résolveurs actifs",
@@ -233,7 +231,6 @@
   "leaderboardEvalTierC": "C · 150–399 — Atténuation générale",
   "leaderboardEvalTierP": "Participant · 1–149 — Pertinent mais vague",
   "leaderboardEvalKeyInsight": "Les idées les mieux notées s'attaquent à la charge statique — le mécanisme clé qui permet aux nanoplastiques de franchir les barrières biologiques.",
-
   "leaderboardTitle": "TOP 10 RÉSOLVEURS",
   "leaderboardSubtitle": "Contributeurs principaux aux solutions de nanoplastiques",
   "leaderboardAccessRestricted": "Accès au classement restreint",
@@ -242,7 +239,6 @@
   "leaderboardContactTitle": "Vous souhaitez collaborer ?",
   "leaderboardContactDescription": "Contactez-nous si vous souhaitez vous associer, contribuer des données ou rejoindre l'initiative NanoSolve.",
   "leaderboardContactEmail": "support@nanosolve.org",
-
   "settingsBack": "Retour",
   "settingsTitle": "Paramètres",
   "settingsSubtitle": "Gérez vos préférences",
@@ -252,7 +248,38 @@
   "settingsAbout": "À propos",
   "settingsIntroTour": "Visite guidée",
   "settingsIntroTourSubtitle": "Revoir la présentation de l'application",
-
+  "settingsTresor": "Mon Trésor",
+  "settingsKeywords": "Mots-clés de recherche",
+  "digestFeedTitle": "Résumé de Recherche",
+  "digestFeedSubtitle": "Derniers articles sur les nanoplastiques",
+  "digestFeedEmpty": "Aucun nouvel article",
+  "digestFeedLastChecked": "Dernière vérification {date}",
+  "digestFeedPaperCount": "{count} nouvel{plural} article",
+  "paperDetailTitle": "Détails de l'Article",
+  "paperDetailOpenSource": "Ouvrir l'Article",
+  "paperDetailCopyDoi": "Copier DOI",
+  "paperDetailCopied": "Copié!",
+  "paperDetailCategory": "Catégorie",
+  "paperDetailSubcategory": "Sous-catégorie",
+  "paperDetailLabels": "Mots-clés",
+  "paperDetailJournal": "Journal",
+  "paperDetailPublished": "Publié",
+  "tresorTitle": "Mon Trésor",
+  "tresorSubtitle": "Articles de recherche sauvegardés",
+  "tresorEmpty": "Aucun article sauvegardé",
+  "tresorExport": "Exporter la collection",
+  "tresorExportSubject": "Articles de recherche NanoSolve",
+  "tresorExportEmpty": "Rien à exporter",
+  "digestSettingsTitle": "Préférences de Recherche",
+  "digestSettingsSubtitle": "Personnalisez votre résumé de recherche",
+  "digestSettingsDailyDigest": "Résumé Quotidien",
+  "digestSettingsDailyDigestHint": "Recevez des articles quotidiens selon vos intérêts",
+  "digestSettingsKeywords": "Mots-clés de recherche",
+  "digestSettingsKeywordRequestMore": "Demander plus de mots-clés",
+  "digestSettingsSave": "Enregistrer les préférences",
+  "digestSettingsSaved": "Préférences enregistrées",
+  "digestSettingsError": "Erreur d'enregistrement des préférences",
+  "digestSettingsNotificationTime": "Heure de notification",
   "profileTitle": "Paramètres du profil",
   "profileSubtitle": "Personnalisez votre profil et vos préférences",
   "profilePersonalInfo": "Informations personnelles",
@@ -277,49 +304,10 @@
   "profileDeleteAccount": "Supprimer le compte",
   "profileDeleteAccountDesc": "Supprimer définitivement votre compte et vos données",
   "profileChangeAvatar": "Changer d'avatar",
-
   "languageTitle": "Langue",
   "languageSubtitle": "Choisissez votre langue préférée",
   "languageChanged": "Langue changée en",
   "languageInfoMessage": "L'application sera mise à jour dans la langue sélectionnée. Certains contenus peuvent nécessiter un redémarrage de l'application.",
-
-  "settingsTresor": "Mon Trésor",
-  "settingsKeywords": "Mots-clés de recherche",
-
-  "digestFeedTitle": "Résumé de Recherche",
-  "digestFeedSubtitle": "Derniers articles sur les nanoplastiques",
-  "digestFeedEmpty": "Aucun nouvel article",
-  "digestFeedLastChecked": "Dernière vérification {date}",
-  "digestFeedPaperCount": "{count} nouvel{plural} article",
-
-  "paperDetailTitle": "Détails de l'Article",
-  "paperDetailOpenSource": "Ouvrir l'Article",
-  "paperDetailCopyDoi": "Copier DOI",
-  "paperDetailCopied": "Copié!",
-  "paperDetailCategory": "Catégorie",
-  "paperDetailSubcategory": "Sous-catégorie",
-  "paperDetailLabels": "Mots-clés",
-  "paperDetailJournal": "Journal",
-  "paperDetailPublished": "Publié",
-
-  "tresorTitle": "Mon Trésor",
-  "tresorSubtitle": "Articles de recherche sauvegardés",
-  "tresorEmpty": "Aucun article sauvegardé",
-  "tresorExport": "Exporter la collection",
-  "tresorExportSubject": "Articles de recherche NanoSolve",
-  "tresorExportEmpty": "Rien à exporter",
-
-  "digestSettingsTitle": "Préférences de Recherche",
-  "digestSettingsSubtitle": "Personnalisez votre résumé de recherche",
-  "digestSettingsDailyDigest": "Résumé Quotidien",
-  "digestSettingsDailyDigestHint": "Recevez des articles quotidiens selon vos intérêts",
-  "digestSettingsKeywords": "Mots-clés de recherche",
-  "digestSettingsKeywordRequestMore": "Demander plus de mots-clés",
-  "digestSettingsSave": "Enregistrer les préférences",
-  "digestSettingsSaved": "Préférences enregistrées",
-  "digestSettingsError": "Erreur d'enregistrement des préférences",
-  "digestSettingsNotificationTime": "Heure de notification",
-
   "privacyTitle": "Confidentialité et sécurité",
   "privacySubtitle": "Gérez vos préférences de confidentialité",
   "privacyDataAnalytics": "Données et analytique",
@@ -336,7 +324,6 @@
   "privacyLegal": "Juridique",
   "privacyPolicy": "Politique de confidentialité",
   "privacyTermsOfService": "Conditions d'utilisation",
-
   "aboutTitle": "À propos",
   "aboutAppName": "NanoSolve Hive",
   "aboutVersion": "Version",
@@ -360,7 +347,6 @@
   "aboutShareAppLink": "Lien de téléchargement \nde l'application",
   "aboutFooterMessage": "Fait avec soin pour une planète plus propre",
   "aboutCopyright": "2026 NanoSolve. Tous droits réservés.",
-
   "updateDownloadPaused": "Téléchargement en pause",
   "updateDownloadResumed": "Téléchargement repris",
   "updateDownloadCancelled": "Téléchargement annulé",
@@ -427,7 +413,6 @@
   "aboutPlatformAndroidFull": "GitHub",
   "aboutPlatformPlayStore": "Google Play",
   "aboutPlatformIOS": "iOS",
-
   "tourCategoryGridBody": "Appuyez sur n'importe quelle carte pour explorer les domaines de recherche et publier vos idées.",
   "tourHumanPlanetBody": "Basculez entre la santé humaine et l'écosystème planétaire. Publiez vos idées pour contribuer aux solutions.",
   "tourSourcesButtonBody": "Accédez à des recherches examinées, des études de cas et des rapports téléchargeables par catégorie d'impact.",
@@ -437,19 +422,16 @@
   "tourBtnNext": "Suivant",
   "tourBtnDone": "Terminé",
   "tourBtnSkipTour": "Passer la visite",
-
   "downloadingLanguage": "Téléchargement de {languageName}",
   "downloadFailed": "Téléchargement échoué",
   "downloadFailedMessage": "Impossible de télécharger les fichiers de langue {languageName}. Voulez-vous réessayer ou utiliser l'anglais?",
   "useEnglish": "Utiliser l'anglais",
   "retry": "Réessayer",
   "cancel": "Annuler",
-
   "failedToLoadPdf": "Impossible de charger le PDF",
   "downloadingPdf": "Téléchargement du PDF…",
   "pdfLoadingLabel": "Chargement du PDF...",
   "pdfSavedSuccess": "✓ PDF enregistré avec succès",
-
   "profileNameRequired": "Veuillez entrer votre nom complet",
   "profileEmailRequired": "Veuillez entrer votre adresse e-mail",
   "profileEmailInvalid": "Veuillez entrer une adresse e-mail valide",
@@ -462,7 +444,6 @@
   "profileRegSkip": "Ignorer",
   "profileRegSubmit": "S'inscrire",
   "profileRegSaveError": "Erreur lors de l'enregistrement du profil : {error}",
-
   "sidebarLang": "Langue",
   "sidebarAiChat": "AI Assistant",
   "exploreResearchDomains": "RESEARCH DOMAINS",
@@ -474,15 +455,46 @@
   "exploreAllDomains": "All domains",
   "sourcesLibraryTitle": "EVIDENCE LIBRARY",
   "sourcesLibrarySubtitle": "Sources · {domain}",
+  "@sourcesLibrarySubtitle": {
+    "placeholders": {
+      "domain": {}
+    }
+  },
   "sourcesDescription": "Search across {count}+ curated research entries",
+  "@sourcesDescription": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "sourcesSearchPlaceholder": "Search sources...",
   "sourcesNoResults": "No sources match \"{query}\"",
+  "@sourcesNoResults": {
+    "placeholders": {
+      "query": {}
+    }
+  },
   "sourcesClearSearch": "Clear search",
   "sourcesCountBadge": "{count} sources",
+  "@sourcesCountBadge": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "sourcesHeadlineLabel": "HEADLINE",
   "sourcesStudiesLabel": "STUDIES",
   "sourcesAllatraLabel": "ALLATRA REPORTS",
   "sourcesOpenPdf": "Open PDF p.{page}",
+  "@sourcesOpenPdf": {
+    "placeholders": {
+      "page": {
+        "type": "int"
+      }
+    }
+  },
   "sourcesOpenInNewTab": "Open in new tab",
   "ideasTitle": "SUBMIT YOUR IDEA",
   "ideasSubtitle": "Propose a solution. Our AI will evaluate its impact.",
@@ -490,7 +502,21 @@
   "ideasIdeaLabel": "Your idea",
   "ideasMinChars": "minimum 10 characters",
   "ideasCharCount": "{count} characters",
+  "@ideasCharCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "ideasAttachmentsLabel": "Attachments ({count} / 10)",
+  "@ideasAttachmentsLabel": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "ideasAddFiles": "Add files",
   "ideasAttachHint": "PDF, images, video — max 95 MB each",
   "ideasNoAttachments": "No attachments yet",
@@ -560,19 +586,64 @@
   "webSidebarExpand": "Développer la barre latérale",
   "webCategoryShowcaseTitle": "Catégories de recherche",
   "webStudyCount": "{count} études",
+  "@webStudyCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "webSettingsPreferences": "PRÉFÉRENCES",
   "webSettingsLanguageBlock": "LANGUE",
   "webSettingsConnectBlock": "CONTACT",
   "webSettingsDownloadBlock": "TÉLÉCHARGEMENT",
   "webSettingsAboutBlock": "À PROPOS",
   "webIdeasTemplateFinding": "À partir du constat : \"{finding}\"",
+  "@webIdeasTemplateFinding": {
+    "placeholders": {
+      "finding": {}
+    }
+  },
   "webIdeasTemplateCategory": "Catégorie : {category}",
+  "@webIdeasTemplateCategory": {
+    "placeholders": {
+      "category": {}
+    }
+  },
   "webIdeasTemplateProblem": "Problème :",
   "webIdeasTemplateSolution": "Solution proposée :",
   "webIdeasBasedOn": "Basé sur : {value}",
+  "@webIdeasBasedOn": {
+    "placeholders": {
+      "value": {}
+    }
+  },
   "webIdeasCharacterStatus": "{count} caractères / {minimum}",
+  "@webIdeasCharacterStatus": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "minimum": {}
+    }
+  },
   "webIdeasMaxAttachments": "Maximum {count} pièces jointes.",
+  "@webIdeasMaxAttachments": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "webIdeasFileTooLarge": "{fileName} est trop volumineux (max. {maxMb} Mo).",
+  "@webIdeasFileTooLarge": {
+    "placeholders": {
+      "fileName": {},
+      "maxMb": {
+        "type": "int"
+      }
+    }
+  },
   "webDiscoveriesTitle": "DERNIÈRES DÉCOUVERTES",
   "webEvidenceByTopicTitle": "PREUVES PAR THÈME",
   "webStudyLabel": "Étude",
@@ -582,100 +653,6 @@
   "webPostIdeaDesc": "Contribuez avec une solution ou une hypothèse. Votre idée devient une partie du graphe de connaissances de la catégorie.",
   "webViewSourcesTitle": "Voir toutes les sources",
   "webViewSourcesDesc": "{count} articles évalués par les pairs. Filtrez par thème, année ou revue.",
-  "webSparkIdeaTooltip": "Créer une idée à partir de ce constat",
-  "webShowLess": "Afficher moins",
-  "webShowMore": "Afficher encore {count}",
-
-  "@sourcesLibrarySubtitle": {
-    "placeholders": {
-      "domain": {}
-    }
-  },
-  "@sourcesDescription": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "@sourcesNoResults": {
-    "placeholders": {
-      "query": {}
-    }
-  },
-  "@sourcesCountBadge": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "@sourcesOpenPdf": {
-    "placeholders": {
-      "page": {
-        "type": "int"
-      }
-    }
-  },
-  "@ideasCharCount": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "@ideasAttachmentsLabel": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "@webStudyCount": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "@webIdeasTemplateFinding": {
-    "placeholders": {
-      "finding": {}
-    }
-  },
-  "@webIdeasTemplateCategory": {
-    "placeholders": {
-      "category": {}
-    }
-  },
-  "@webIdeasBasedOn": {
-    "placeholders": {
-      "value": {}
-    }
-  },
-  "@webIdeasCharacterStatus": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      },
-      "minimum": {}
-    }
-  },
-  "@webIdeasMaxAttachments": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "@webIdeasFileTooLarge": {
-    "placeholders": {
-      "fileName": {},
-      "maxMb": {
-        "type": "int"
-      }
-    }
-  },
   "@webViewSourcesDesc": {
     "placeholders": {
       "count": {
@@ -683,6 +660,9 @@
       }
     }
   },
+  "webSparkIdeaTooltip": "Créer une idée à partir de ce constat",
+  "webShowLess": "Afficher moins",
+  "webShowMore": "Afficher encore {count}",
   "@webShowMore": {
     "placeholders": {
       "count": {
@@ -690,11 +670,177 @@
       }
     }
   },
-
   "vaultTitle": "Coffre-fort",
   "myVault": "Mon Coffre-fort",
   "vaultSaveButton": "Enregistrer dans le Coffre-fort",
   "vaultRemoveButton": "Supprimer du Coffre-fort",
   "vaultExportLabel": "Exporter le coffre-fort en tant que fichier texte",
-  "vaultEmptyMessage": "Le coffre-fort est vide"
+  "vaultEmptyMessage": "Le coffre-fort est vide",
+  "exploreTitle": "Explorer",
+  "exploreSubtitle": "Des outils qui montrent le problème dans votre propre journée",
+  "exploreFootprintTitle": "Votre année plastique",
+  "exploreFootprintHook": "Combien de plastique dans votre année ?",
+  "exploreSkip": "Pas maintenant",
+  "exploreLastCounted": "Dernier comptage : {date}",
+  "footprintIntroTitle": "Votre année plastique",
+  "footprintIntroBody": "Les nanoplastiques sont des fragments de plastique plus petits qu'une bactérie. Vous ne pouvez pas les voir. Parcourons ensemble une de vos journées et comptons-les.",
+  "footprintIntroReassurance": "Rien de tout cela n'est votre faute. Le plastique a été choisi pour vous.",
+  "footprintStart": "Commencer ma journée",
+  "footprintSkipStory": "Passer l'histoire, montrer les chiffres",
+  "footprintNext": "Suivant",
+  "footprintBack": "Retour",
+  "footprintSeeMyYear": "Voir mon année",
+  "footprintConfirmDefault": "Oui, c'est moi",
+  "footprintPredictQuestion": "Avant de commencer : selon vous, qu'est-ce qui introduit le plus de plastique en vous ?",
+  "footprintSceneWater": "Matin. Vous attrapez de l'eau.",
+  "footprintSceneLunch": "Midi. Le déjeuner arrive dans une boîte en plastique.",
+  "footprintSceneTea": "Après-midi. Quelqu'un met la bouilloire en route.",
+  "footprintSceneCups": "Entre deux cours. Café à emporter.",
+  "footprintSceneHome": "Soir. La maison, les tapis, la climatisation qui ronronne.",
+  "footprintSceneDinner": "Dîner. Quelque chose de la mer, découpé sur une planche.",
+  "footprintSceneOutside": "Dehors. Le vent se lève et l'air vire au beige.",
+  "footprintWhyWater": "La chaleur et l'agitation fragmentent la paroi de la bouteille. Une bouteille laissée dans une voiture chaude libère environ neuf fois plus de particules minuscules qu'une bouteille au frais.",
+  "footprintWhyLunch": "Un plat chaud contre du plastique souple, c'est le plus agressif de votre journée. La chaleur fragilise la surface et la nourriture l'emporte.",
+  "footprintWhyTea": "Un sachet pyramidal soyeux est une maille de plastique. L'eau bouillante est exactement ce qu'il ne faut pas verser dessus.",
+  "footprintWhyCups": "Un gobelet en carton est doublé de plastique, sinon il se détremperait. C'est cette doublure qui rencontre votre boisson.",
+  "footprintWhyHome": "Les fibres synthétiques qui se frottent se chargent d'électricité statique. C'est la charge qui les fait s'accrocher à vous et rester en suspension au lieu de se déposer, et la climatisation les fait tourner dans la pièce.",
+  "footprintWhyDinner": "Une planche en plastique libère bien plus en masse que tout le reste ici, parce qu'un couteau l'entaille chaque jour.",
+  "footprintWhyOutside": "Un jour de poussière, l'air transporte plusieurs fois plus de plastique que d'habitude.",
+  "footprintQWaterSource": "D'où vient habituellement votre eau de boisson ?",
+  "footprintQWaterAmount": "Combien buvez-vous par jour ?",
+  "footprintQBottleStorage": "Où se trouve habituellement votre bouteille ?",
+  "footprintQContainerMeals": "Repas par semaine livrés ou conservés dans une boîte en plastique",
+  "footprintQMicrowaveMeals": "Combien d'entre eux réchauffez-vous dans cette boîte ?",
+  "footprintQTeaBagType": "Quel type de sachet de thé ?",
+  "footprintQTeaCups": "Tasses par jour",
+  "footprintQTakeawayCups": "Boissons chaudes en gobelets jetables par semaine",
+  "footprintQSynthetic": "Tapis, textiles et vêtements autour de vous : quelle part est synthétique ?",
+  "footprintQIndoorHours": "Heures par jour à l'intérieur avec la climatisation en marche",
+  "footprintQSeafood": "Repas de produits de la mer par semaine",
+  "footprintQSeafoodForm": "Surtout du filet, ou de petits poissons et crevettes mangés entiers ?",
+  "footprintQCuttingBoard": "La planche à découper chez vous est-elle en plastique ou en bois ?",
+  "footprintQDustyHours": "Heures par semaine dehors les jours poussiéreux ou venteux",
+  "footprintOptSmallBottles": "Petites bouteilles",
+  "footprintOptCoolerJug": "Bonbonne de 20 L",
+  "footprintOptTapOrFilter": "Robinet ou filtre",
+  "footprintOptFridge": "Réfrigérateur",
+  "footprintOptRoom": "Température ambiante",
+  "footprintOptCarOrSun": "Voiture ou soleil",
+  "footprintOptPaperBag": "Sachet en papier",
+  "footprintOptPyramidBag": "Sachet pyramidal soyeux",
+  "footprintOptLooseLeaf": "Thé en vrac",
+  "footprintOptLittle": "Peu",
+  "footprintOptSome": "Une partie",
+  "footprintOptMost": "La plupart",
+  "footprintOptAll": "Tout",
+  "footprintOptFillet": "Filet",
+  "footprintOptWhole": "Mangés entiers",
+  "footprintOptBoardPlastic": "Plastique",
+  "footprintOptBoardWood": "Bois",
+  "footprintOptBoardUnknown": "Je ne sais pas",
+  "footprintUnitBottles": "bouteilles par jour",
+  "footprintUnitMealsWeek": "repas par semaine",
+  "footprintUnitCupsDay": "tasses par jour",
+  "footprintUnitCupsWeek": "gobelets par semaine",
+  "footprintUnitHoursDay": "heures par jour",
+  "footprintUnitHoursWeek": "heures par semaine",
+  "footprintAbout": "environ",
+  "footprintMillion": "millions",
+  "footprintBillion": "milliards",
+  "footprintTrillion": "billions",
+  "footprintPerSecond": "par seconde, toute l'année",
+  "footprintMilligram": "mg",
+  "footprintGram": "g",
+  "footprintHabitBottledWater": "Eau en bouteille",
+  "footprintHabitBottleStorage": "Où se trouve la bouteille",
+  "footprintHabitMicrowaveMeals": "Plats réchauffés dans du plastique",
+  "footprintHabitTakeawayCupsSubMicron": "Gobelets jetables, particules les plus fines",
+  "footprintHabitTeaBags": "Sachets de thé en plastique",
+  "footprintHabitTakeawayCupsMicron": "Gobelets jetables",
+  "footprintHabitSeafood": "Produits de la mer",
+  "footprintHabitCuttingBoard": "Planche à découper en plastique",
+  "footprintHabitSyntheticIndoor": "Textiles synthétiques à l'intérieur",
+  "footprintHabitDustDays": "Jours poussiéreux",
+  "footprintResultTitle": "Votre année",
+  "footprintTouchedCount": "Vous avez répondu à {answered} chapitres sur {total}",
+  "footprintEstimate": "estimation",
+  "footprintHeadline": "Votre principale source est {habit}, avec {count} particules par an. En masse, cela représente {massHabit}.",
+  "footprintPredictionRight": "Vous aviez deviné juste.",
+  "footprintPredictionWrong": "Vous aviez dit {guess}. C'est {actual}.",
+  "footprintFloorSubMicron": "compté jusqu'à 100 nanomètres",
+  "footprintFloorMicron": "compté jusqu'à 1 micromètre",
+  "footprintFloorBreathed": "compté jusqu'à 11 micromètres",
+  "footprintOpenQuestionAir": "Personne n'a compté les plus petites particules dans l'air que vous respirez. C'est une question de recherche ouverte.",
+  "footprintMethodCaption": "Une barre plus haute peut signifier un meilleur microscope, pas plus de plastique. Passez en masse pour comparer équitablement.",
+  "footprintByCount": "Par nombre",
+  "footprintByWeight": "Par masse",
+  "footprintDotScale": "Chaque point représente environ {count} particules",
+  "footprintTagMeasured": "mesuré",
+  "footprintTagCountedNotIdentified": "compté, pas forcément que du plastique",
+  "footprintTagExtrapolated": "extrapolé à partir d'une hypothèse",
+  "footprintTagChallenged": "contesté par {who}",
+  "footprintChallengerPnasLetter": "une lettre de 2024 dans PNAS",
+  "footprintChallengerEstComment": "un commentaire de 2024 dans Environmental Science & Technology",
+  "footprintChallengerBfr": "l'autorité allemande de sécurité alimentaire, 2020",
+  "footprintTagUnknown": "personne n'a mesuré cela",
+  "footprintSwapTitle": "Un seul changement",
+  "footprintSwapYours": "À vous de jouer",
+  "footprintSwapHousehold": "À votre foyer de jouer",
+  "footprintSwapSteelBottle": "Vous pourriez emporter une bouteille en inox",
+  "footprintSwapKeepBottleCool": "Vous pourriez ne plus laisser la bouteille dans la voiture",
+  "footprintSwapGlassDish": "Vous pourriez transvaser le déjeuner dans un plat en verre avant de le réchauffer",
+  "footprintSwapOwnCup": "Vous pourriez apporter votre propre tasse",
+  "footprintSwapPaperTeaBag": "Vous pourriez passer aux sachets en papier ou au thé en vrac",
+  "footprintSwapWoodenBoard": "Une planche en bois à la place de celle en plastique",
+  "footprintCommitmentPrompt": "Choisissez-en un et dites quand vous le ferez",
+  "footprintCommitmentHint": "Quand je sors le déjeuner du réfrigérateur, je le transvase dans un plat en verre",
+  "footprintCommitmentSave": "Enregistrer",
+  "footprintCommitmentCheckIn": "Vous avez choisi cela il y a deux semaines. Comment cela s'est-il passé ?",
+  "footprintChargeTitle": "Où elles vont, et pourquoi",
+  "footprintChargeStage1": "Le frottement charge le plastique. Des fibres qui se frottent, une bouteille secouée dans une voiture chaude, une particule qui racle contre une autre : chaque contact renouvelle la charge. C'est l'effet triboélectrique.",
+  "footprintChargeStage2": "Une particule chargée ne se comporte pas comme une particule neutre. Elle s'accroche au lieu de se déposer, elle se lie aux protéines et aux graisses, et elle se déplace dans l'eau et dans l'air comme une poussière non chargée ne le ferait jamais.",
+  "footprintChargeStage3": "C'est cette charge qui permet à ces particules de passer dans le sang, dans les tissus, dans une cellule. La charge est la cause profonde. Le nombre de particules n'est que le symptôme.",
+  "footprintChargeKnown": "Mesuré : la charge de surface modifie la façon dont les cellules absorbent les particules et l'intégrité de la barrière hémato-encéphalique. Des particules de plastique ont été trouvées dans le sang, le cerveau et le placenta humains.",
+  "footprintChargeNotKnown": "Ouvert : quelle exposition est nocive. Aucune étude n'a encore relié un chiffre comme le vôtre à une maladie. Confirmer quelle part des dommages passe par la charge reste à faire, et c'est là que vous intervenez.",
+  "footprintChargeNext": "Suivant",
+  "footprintExplainPrompt": "En une phrase, pourquoi la charge compte-t-elle ?",
+  "footprintExplainSave": "Enregistrer",
+  "footprintExplainModelAnswer": "Une façon de le dire : la charge est ce qui fait coller ces particules et les fait passer là où une poussière neutre n'irait jamais.",
+  "footprintDoorsTitle": "Et maintenant ?",
+  "footprintDoorChange": "Changer une habitude",
+  "footprintDoorChangeBody": "Voyez ce qu'un seul changement fait à votre année.",
+  "footprintDoorStudy": "Étudier la question",
+  "footprintDoorStudyBody": "Les études derrière vos chiffres, et ce que personne n'a encore mesuré.",
+  "footprintDoorHelp": "Aider à résoudre",
+  "footprintDoorHelpBody": "Envoyez une idée à ceux qui travaillent dessus.",
+  "footprintStudyStartHere": "Commencez ici",
+  "footprintStudyRegional": "Mesuré près de chez vous",
+  "footprintStudyOpenQuestions": "Personne n'a encore mesuré cela",
+  "footprintQuestionSize": "Taille : {size}",
+  "footprintQuestionNext": "Première étape : {step}",
+  "footprintHelpHook": "Votre principale source est {habit}. Personne ne sait compter les nanoplastiques à bas coût hors d'un laboratoire, ni les tenir à l'écart des plats chauds. Une idée ?",
+  "footprintHelpField": "Votre idée",
+  "footprintHelpSend": "Envoyer",
+  "footprintHelpSeed1": "Quelle marque de bouteille ramollit dans votre voiture ?",
+  "footprintHelpSeed2": "Où la poussière se dépose-t-elle dans votre chambre après un jour de poussière ?",
+  "footprintHelpSeed3": "Qu'est-ce qui empêcherait une boîte en plastique de relarguer quand elle est chaude ?",
+  "footprintHelpSentTitle": "Envoyé",
+  "footprintHelpSentBody": "Votre idée est en cours d'évaluation. Revenez voir ce qu'elle donne.",
+  "footprintHelpOffline": "Pas de connexion. Votre idée est enregistrée et vous sera proposée à nouveau la prochaine fois.",
+  "footprintConsentTitle": "Avant d'envoyer",
+  "footprintConsentStorage": "Mon idée est conservée par NanoSolve et lue par les personnes qui travaillent sur le projet.",
+  "footprintConsentScoring": "Mon idée est envoyée à un service d'IA hors de mon pays pour être évaluée.",
+  "footprintConsentContext": "Joindre mes réponses de cet outil, pour que l'idée soit comprise en contexte. Facultatif.",
+  "footprintConsentAge": "J'ai 18 ans ou plus, ou un tuteur donne son accord.",
+  "footprintConsentAnonymous": "Envoyer sans mon pseudo ni mon e-mail",
+  "footprintConsentPolicy": "Lire la politique de confidentialité",
+  "footprintConsentRetention": "Vous pouvez demander la suppression d'un envoi à l'aide du code affiché après l'envoi.",
+  "footprintConsentConfirm": "J'accepte, envoyer",
+  "footprintRecount": "Recompter ma journée",
+  "footprintShare": "Partager",
+  "footprintShareText": "{headline} Compté avec NanoSolve. Il s'agit d'une estimation.",
+  "privacyUsageTitle": "Statistiques d'utilisation",
+  "privacyUsageBody": "Nous enregistrons les écrans que vous ouvrez et les boutons sur lesquels vous appuyez, afin de voir où l'application perd les gens. Chaque enregistrement porte un numéro d'installation aléatoire créé sur votre appareil. Il n'est lié ni à vous, ni à votre compte, ni à votre e-mail, ni à votre téléphone, et il disparaît quand vous effacez les données de l'application. Nous conservons ces enregistrements 180 jours, puis nous les supprimons. Vous pouvez désactiver cela ici, et quand c'est désactivé, rien n'est collecté.",
+  "privacyIdeasTitle": "Idées que vous envoyez",
+  "privacyIdeasBody": "Une idée que vous soumettez est conservée par NanoSolve et lue par les personnes qui travaillent sur le projet. Elle est aussi envoyée à un service d'IA hors de votre pays pour être évaluée, et la note revient dans l'application. Si vous l'acceptez, les réponses données dans l'outil d'empreinte sont jointes pour que l'idée soit comprise en contexte ; vous pouvez envoyer l'idée sans elles. Votre pseudo et votre e-mail ne sont joints que si vous le choisissez. Pour supprimer un envoi, contactez-nous avec le code affiché au moment de l'envoi."
 }
