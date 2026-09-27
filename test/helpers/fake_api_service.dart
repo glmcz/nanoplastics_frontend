@@ -43,8 +43,6 @@ class FakeApiService extends Fake implements ApiService {
     List<IdeaAttachment>? attachments,
     String? email,
     String? turnstileToken,
-    Map<String, dynamic>? context,
-    bool anonymous = false,
   }) async {
     submitCalls.add({
       'description': description,
@@ -52,8 +50,6 @@ class FakeApiService extends Fake implements ApiService {
       'attachments': attachments,
       'email': email,
       'turnstileToken': turnstileToken,
-      'context': context,
-      'anonymous': anonymous,
     });
     return submitResult;
   }

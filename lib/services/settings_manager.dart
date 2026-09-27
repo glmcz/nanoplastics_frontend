@@ -167,26 +167,6 @@ class SettingsManager {
     await _preferencesManager.setOnboardingShown(shown);
   }
 
-  bool get hasSeenExplore {
-    _checkInitialized();
-    return _preferencesManager.hasSeenExplore;
-  }
-
-  Future<void> setExploreSeen(bool seen) async {
-    _checkInitialized();
-    await _preferencesManager.setExploreSeen(seen);
-  }
-
-  Map<String, dynamic> get footprintState {
-    _checkInitialized();
-    return _preferencesManager.footprintState;
-  }
-
-  Future<void> setFootprintState(Map<String, dynamic> value) async {
-    _checkInitialized();
-    await _preferencesManager.setFootprintState(value);
-  }
-
   bool get hasShownAdvisorTour {
     _checkInitialized();
     return _preferencesManager.hasShownAdvisorTour;

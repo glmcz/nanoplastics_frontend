@@ -139,7 +139,6 @@ class PrivacyPolicyScreen extends StatelessWidget {
           _buildSection(context, '6. Ideas you send', [
             '• An idea you submit is stored by NanoSolve and read by people working on the project',
             '• It is also sent to an AI service outside your country to be scored, and the score comes back into the App',
-            '• If you agree, the answers you gave in the footprint tool are attached so the idea can be understood in context. You can send the idea without them',
             '• Your nickname and email are attached only if you choose',
             '• To delete a submission, contact us with the code shown when you send it',
           ]),

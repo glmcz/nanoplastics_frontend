@@ -55,13 +55,11 @@ class ApiService {
     List<IdeaAttachment>? attachments,
     String? email,
     String? turnstileToken,
-    Map<String, dynamic>? context,
-    bool anonymous = false,
   }) async {
     try {
       final settings = SettingsManager();
-      final userEmail = anonymous ? '' : (email ?? settings.email);
-      final userNickName = anonymous ? '' : settings.displayName;
+      final userEmail = email ?? settings.email;
+      final userNickName = settings.displayName;
 
       // Create multipart request
       final uri = Uri.parse('$baseUrl/api/ideas');
@@ -70,12 +68,6 @@ class ApiService {
 
       if (category != null && category.isNotEmpty) {
         request.fields['category'] = category;
-      }
-
-      // Why the idea exists, not only what it says. Private on the server:
-      // never returned by any public ideas endpoint.
-      if (context != null) {
-        request.fields['context'] = jsonEncode(context);
       }
 
       if (userNickName.isNotEmpty) {

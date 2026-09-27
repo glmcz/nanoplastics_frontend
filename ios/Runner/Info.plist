@@ -34,6 +34,13 @@
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsLocalNetworking</key>
+		<true/>
+	</dict>
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>Used to reach a NanoSolve development server running on your local network.</string>
 	<key>NSCameraUsageDescription</key>
 	<string>Used to capture photos and videos to attach to your ideas.</string>
 	<key>NSDocumentUsageDescription</key>

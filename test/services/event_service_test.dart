@@ -19,13 +19,13 @@ void main() {
         return http.Response('{"accepted":2}', 200);
       });
     await service.init(enabled: true);
-    service.log('footprint_started', props: {'mode': 'story'});
-    service.log('footprint_result', props: {'mode': 'story'});
+    service.log('screen_opened', props: {'mode': 'story'});
+    service.log('button_tapped', props: {'mode': 'story'});
     await service.flush();
 
     final sent = jsonDecode(body) as List;
     expect(sent, hasLength(2));
-    expect(sent.first['name'], 'footprint_started');
+    expect(sent.first['name'], 'screen_opened');
     expect(sent.first['install_id'], isNotEmpty);
     expect(sent.first['props'], {'mode': 'story'});
   });
@@ -38,7 +38,7 @@ void main() {
         return http.Response('{}', 200);
       });
     await service.init(enabled: false);
-    service.log('footprint_started');
+    service.log('screen_opened');
     await service.flush();
     expect(called, isFalse);
     expect(service.debugQueueLength, 0,
@@ -49,7 +49,7 @@ void main() {
     final service = EventService()
       ..client = MockClient((req) async => http.Response('{}', 200));
     await service.init(enabled: true);
-    service.log('footprint_started');
+    service.log('screen_opened');
     expect(service.debugQueueLength, 1);
     service.setEnabled(false);
     expect(service.debugQueueLength, 0);
@@ -78,7 +78,7 @@ void main() {
     final service = EventService()
       ..client = MockClient((req) async => http.Response('boom', 500));
     await service.init(enabled: true);
-    service.log('footprint_result');
+    service.log('button_tapped');
     await service.flush();
     expect(service.lastFlushSucceeded, isFalse);
     expect(service.debugQueueLength, 0,
@@ -89,7 +89,7 @@ void main() {
     final service = EventService()
       ..client = MockClient((req) async => throw const SocketException('down'));
     await service.init(enabled: true);
-    service.log('footprint_result');
+    service.log('button_tapped');
     await service.flush();
     expect(service.lastFlushSucceeded, isFalse);
     expect(service.debugQueueLength, 0);
@@ -100,7 +100,7 @@ void main() {
       ..client =
           MockClient((req) async => http.Response('{"accepted":1}', 200));
     await service.init(enabled: true);
-    service.log('footprint_result');
+    service.log('button_tapped');
     await service.flush();
     expect(service.lastFlushSucceeded, isTrue);
   });
@@ -110,7 +110,7 @@ void main() {
       ..client = MockClient((req) async => http.Response('{}', 200));
     await service.init(enabled: true);
     for (var i = 0; i < 200; i++) {
-      service.log('footprint_chapter', props: {'index': i});
+      service.log('page_viewed', props: {'index': i});
     }
     expect(service.debugQueueLength, lessThanOrEqualTo(50),
         reason: 'the backend rejects a batch over fifty');
