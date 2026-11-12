@@ -1,10 +1,5 @@
 include: package:flutter_lints/flutter.yaml
 
-analyzer:
-  exclude:
-    - lib/old_backup/**
-    - integration_test/**
-
 linter:
   rules:
     prefer_const_constructors: true

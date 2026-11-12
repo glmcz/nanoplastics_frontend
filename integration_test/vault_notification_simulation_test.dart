@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
-import 'package:nanoplastics_app/config/backend_config.dart';
 import 'package:nanoplastics_app/main.dart';
 import 'package:nanoplastics_app/services/digest_service.dart';
 import 'package:nanoplastics_app/services/push_notification_service.dart';
 import 'package:nanoplastics_app/services/service_locator.dart';
 import 'package:nanoplastics_app/services/settings_manager.dart';
-import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'backend_guard.dart';
 
 const _testEmail = 'integration-test-notifications@nanosolve.org';
 
@@ -28,39 +28,27 @@ void main() {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setBool('onboarding_shown', true);
       await prefs.setBool('advisor_tour_shown', true);
-
-      debugPrint('[TEST] Backend: ${BackendConfig.getBaseUrl()}');
-
-      try {
-        final resp = await http
-            .get(Uri.parse('${BackendConfig.getBaseUrl()}/health'))
-            .timeout(const Duration(seconds: 10));
-        debugPrint('[TEST] Health: ${resp.statusCode}');
-      } catch (e) {
-        debugPrint('[TEST] Health FAILED: $e');
-      }
     });
 
     tearDownAll(() async {
       for (final id in addedPaperIds) {
+        await Future.delayed(writePace);
         await DigestService().removeFromTresor(id);
       }
     });
 
     testWidgets('Simulate 6 FCM notifications → vault', (tester) async {
+      // Here, not in setUpAll: the driver only sees failures inside a test.
+      await expectBackendHealthy();
       // Fetch papers from API
       final papers = await DigestService().fetchLatest(since: DateTime(2020));
       debugPrint('[TEST] Papers fetched: ${papers.length}');
-
-      if (papers.isEmpty) {
-        debugPrint('[TEST] No papers available — skipping');
-        return;
-      }
+      expect(papers, isNotEmpty, reason: 'digest feed returned no papers');
 
       // Register notification callback
-      PushNotificationService.onPaperOpen = (paperId) async {
-        final ok = await DigestService().addToTresor(paperId);
-        debugPrint('[TEST] onPaperOpen($paperId) → addToTresor => $ok');
+      PushNotificationService.onPaperOpen = (paper) async {
+        final ok = await DigestService().addToTresor(paper.id);
+        debugPrint('[TEST] onPaperOpen(${paper.id}) → addToTresor => $ok');
       };
 
       // Simulate 6 incoming notifications
@@ -70,7 +58,7 @@ void main() {
 
       for (final id in paperIdsToSimulate) {
         PushNotificationService.simulateIncoming(id);
-        await Future.delayed(const Duration(milliseconds: 500));
+        await Future.delayed(writePace);
       }
 
       // Query backend to get actual tresor state
@@ -82,6 +70,8 @@ void main() {
           addedPaperIds.add(id);
         }
       }
+      expect(addedPaperIds, hasLength(paperIdsToSimulate.length),
+          reason: 'a simulated notification did not reach the vault');
 
       // Show running app
       await tester.pumpWidget(const RestartableApp());
@@ -100,13 +90,9 @@ void main() {
       await tester.pumpAndSettle(const Duration(seconds: 5));
 
       debugPrint('[TEST] Verifying ${addedPaperIds.length} papers in vault UI');
-      if (addedPaperIds.isNotEmpty) {
-        expect(find.byType(ListView), findsOneWidget);
-        // Verify at least first paper is visible
-        final firstPaper =
-            papers.firstWhere((p) => addedPaperIds.contains(p.id));
-        expect(find.text(firstPaper.title), findsWidgets);
-      }
+      expect(find.byType(ListView), findsOneWidget);
+      final firstPaper = papers.firstWhere((p) => addedPaperIds.contains(p.id));
+      expect(find.text(firstPaper.title), findsWidgets);
 
       // Cleanup
       PushNotificationService.onPaperOpen = null;

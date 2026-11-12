@@ -1,5 +1,4 @@
 #!/bin/bash
-flutter test integration_test/ --flavor full -d emulator-5554
 # `flutter test integration_test/ -d <device>` installs and launches but never
 # attaches. Drive each target instead.
 for t in integration_test/*_test.dart; do
