@@ -83,3 +83,9 @@ ios/ExportOptions.plist
 ios_certificates
 sa.json
 send_notification.py
+
+# Info.plist backup written by the iOS publish scripts while the dev-only
+# local-network keys are stripped; the trap removes it on exit.
+*.dev.bak
+*.sh
+*.txt
