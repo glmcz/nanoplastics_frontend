@@ -134,6 +134,7 @@ class DigestService {
   Future<bool> updatePreferences({
     bool? enabled,
     int? digestHour,
+    bool? emailEnabled,
     List<String>? keywords,
   }) async {
     final email = _settings.email;
@@ -149,6 +150,7 @@ class DigestService {
       if (digestHour != null) {
         body['digest_hour'] = digestHour;
       }
+      if (emailEnabled != null) body['email_digest_enabled'] = emailEnabled;
       if (keywords != null) body['search_keywords'] = keywords;
 
       final url = '${_api.baseUrl}/api/users/preferences';
@@ -184,7 +186,8 @@ class DigestService {
 
   /// Fetches the user's current digest preferences from the server, or
   /// null if the user doesn't exist yet / the request fails.
-  Future<({bool enabled, int digestHour})?> fetchPreferences() async {
+  Future<({bool enabled, int digestHour, bool emailEnabled})?>
+      fetchPreferences() async {
     final email = _settings.email;
     if (email.isEmpty) return null;
 
@@ -199,6 +202,7 @@ class DigestService {
       return (
         enabled: json['daily_digest_enabled'] as bool? ?? true,
         digestHour: json['digest_hour'] as int? ?? 9,
+        emailEnabled: json['email_digest_enabled'] as bool? ?? false,
       );
     } catch (_) {
       return null;

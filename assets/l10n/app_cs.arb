@@ -274,6 +274,8 @@
   "digestSettingsSubtitle": "Přizpůsobte si přehled výzkumu",
   "digestSettingsDailyDigest": "Denní přehled",
   "digestSettingsDailyDigestHint": "Přijímejte denní články odpovídající vašim zájmům",
+  "digestSettingsEmail": "Posílat také e-mailem",
+  "digestSettingsEmailHint": "Denní článek přijde i do vaší e-mailové schránky",
   "digestSettingsKeywords": "Klíčová slova hledání",
   "digestSettingsKeywordRequestMore": "Požádat o další klíčová slova",
   "digestSettingsSave": "Uložit předvolby",

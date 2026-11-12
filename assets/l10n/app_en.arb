@@ -277,6 +277,8 @@
   "digestSettingsSubtitle": "Customize your research digest",
   "digestSettingsDailyDigest": "Daily Digest",
   "digestSettingsDailyDigestHint": "Receive daily papers matching your interests",
+  "digestSettingsEmail": "Also send by email",
+  "digestSettingsEmailHint": "The daily paper also arrives in your inbox",
   "digestSettingsKeywords": "Search Keywords",
   "digestSettingsKeywordRequestMore": "Request more keywords",
   "digestSettingsSave": "Save Preferences",

@@ -277,6 +277,8 @@
   "digestSettingsSubtitle": "خصص ملخص أبحاثك",
   "digestSettingsDailyDigest": "الملخص اليومي",
   "digestSettingsDailyDigestHint": "استلم أوراقًا بحثية يوميًا تطابق اهتماماتك",
+  "digestSettingsEmail": "الإرسال عبر البريد الإلكتروني أيضًا",
+  "digestSettingsEmailHint": "ستصلك ورقة اليوم على بريدك الإلكتروني أيضًا",
   "digestSettingsKeywords": "كلمات البحث المفتاحية",
   "digestSettingsKeywordRequestMore": "طلب المزيد من الكلمات المفتاحية",
   "digestSettingsSave": "حفظ التفضيلات",

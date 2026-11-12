@@ -274,6 +274,8 @@
   "digestSettingsSubtitle": "Personaliza tu resumen de investigación",
   "digestSettingsDailyDigest": "Resumen Diario",
   "digestSettingsDailyDigestHint": "Recibe artículos diarios según tus intereses",
+  "digestSettingsEmail": "Enviar también por correo",
+  "digestSettingsEmailHint": "El artículo del día también llegará a tu correo",
   "digestSettingsKeywords": "Palabras clave de búsqueda",
   "digestSettingsKeywordRequestMore": "Solicitar más palabras clave",
   "digestSettingsSave": "Guardar preferencias",

@@ -274,6 +274,8 @@
   "digestSettingsSubtitle": "Настройте свой обзор исследований",
   "digestSettingsDailyDigest": "Ежедневный обзор",
   "digestSettingsDailyDigestHint": "Получайте ежедневные статьи по вашим интересам",
+  "digestSettingsEmail": "Также присылать на e-mail",
+  "digestSettingsEmailHint": "Статья дня придёт и на вашу почту",
   "digestSettingsKeywords": "Ключевые слова поиска",
   "digestSettingsKeywordRequestMore": "Запросить больше ключевых слов",
   "digestSettingsSave": "Сохранить предпочтения",

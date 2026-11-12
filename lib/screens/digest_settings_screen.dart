@@ -22,6 +22,7 @@ class _DigestSettingsScreenState extends State<DigestSettingsScreen> {
   late List<String> _keywords;
   bool _digestEnabled = true;
   int _digestHour = 9;
+  bool _emailEnabled = false;
   bool _saving = false;
   String? _error;
 
@@ -38,6 +39,7 @@ class _DigestSettingsScreenState extends State<DigestSettingsScreen> {
       setState(() {
         _digestEnabled = prefs.enabled;
         _digestHour = prefs.digestHour;
+        _emailEnabled = prefs.emailEnabled;
       });
     }
   }
@@ -64,6 +66,7 @@ class _DigestSettingsScreenState extends State<DigestSettingsScreen> {
     final ok = await _svc.updatePreferences(
       enabled: _digestEnabled,
       digestHour: _digestHour,
+      emailEnabled: _emailEnabled,
       keywords: _keywords,
     );
     if (mounted) {
@@ -111,6 +114,28 @@ class _DigestSettingsScreenState extends State<DigestSettingsScreen> {
                         value: _digestEnabled,
                         activeThumbColor: AppColors.neonCyan,
                         onChanged: (v) => setState(() => _digestEnabled = v),
+                        contentPadding: EdgeInsets.zero,
+                      ),
+                    ),
+                    SizedBox(height: spacing.md),
+
+                    // Email is an extra on top of the push, off until the user asks for it.
+                    _GlassCard(
+                      child: SwitchListTile(
+                        title: Text(
+                            AppLocalizations.of(context)!.digestSettingsEmail,
+                            style: const TextStyle(
+                                color: AppColors.textMain, fontSize: 14)),
+                        subtitle: Text(
+                            AppLocalizations.of(context)!
+                                .digestSettingsEmailHint,
+                            style: const TextStyle(
+                                color: AppColors.textMuted, fontSize: 12)),
+                        value: _emailEnabled,
+                        activeThumbColor: AppColors.neonCyan,
+                        onChanged: _digestEnabled
+                            ? (v) => setState(() => _emailEnabled = v)
+                            : null,
                         contentPadding: EdgeInsets.zero,
                       ),
                     ),
