@@ -15,6 +15,8 @@ android {
     ndkVersion = flutter.ndkVersion
 
     compileOptions {
+        // flutter_local_notifications needs java.time on API < 26.
+        isCoreLibraryDesugaringEnabled = true
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
@@ -80,12 +82,15 @@ android {
             val keystorePath = System.getenv("KEYSTORE_PATH")
             val keystorePassword = System.getenv("KEYSTORE_PASSWORD")
             
-            // Only set signing config if environment variables are available (CI/CD)
-            if (!keystorePath.isNullOrEmpty() && !keystorePassword.isNullOrEmpty()) {
-                signingConfig = signingConfigs.getByName("release")
+            // CI provides the release keystore. Without it the build used to come
+            // out unsigned (INSTALL_PARSE_FAILED_NO_CERTIFICATES on every phone);
+            // a debug-signed local build at least installs for testing.
+            signingConfig = if (!keystorePath.isNullOrEmpty() && !keystorePassword.isNullOrEmpty()) {
+                signingConfigs.getByName("release")
+            } else {
+                signingConfigs.getByName("debug")
             }
-            // Local builds will use debug signing
-            
+
             isMinifyEnabled = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
@@ -94,5 +99,9 @@ android {
 
 flutter {
     source = "../.."
+}
+
+dependencies {
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
 }
 

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Status-bar icon: the NanoSolve mark from lib/widgets/nanosolve_logo.dart,
+     white on transparent. Android tints it; a full-colour launcher icon here
+     renders as a white blob. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="104"
+    android:viewportHeight="104">
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M5,41.5 a5,5 0 1,0 10,0 a5,5 0 1,0 -10,0 Z M21,26.5 a4,4 0 1,0 8,0 a4,4 0 1,0 -8,0 Z M24,61.5 a6,6 0 1,0 12,0 a6,6 0 1,0 -12,0 Z M10,76.5 a5,5 0 1,0 10,0 a5,5 0 1,0 -10,0 Z M38,51.5 a7,7 0 1,0 14,0 a7,7 0 1,0 -14,0 Z M63,36.5 a7,7 0 1,0 14,0 a7,7 0 1,0 -14,0 Z M68,66.5 a7,7 0 1,0 14,0 a7,7 0 1,0 -14,0 Z M81,51.5 a9,9 0 1,0 18,0 a9,9 0 1,0 -18,0 Z" />
+    <path
+        android:strokeColor="#FFFFFFFF"
+        android:strokeWidth="4"
+        android:strokeLineCap="round"
+        android:pathData="M45,51.5 L70,36.5 M45,51.5 L75,66.5 M70,36.5 L90,51.5 M75,66.5 L90,51.5" />
+</vector>

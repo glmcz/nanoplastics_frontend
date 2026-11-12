@@ -54,7 +54,7 @@ class UpdateReceiver : BroadcastReceiver() {
         val pendingIntent = PendingIntent.getActivity(context, 0, launchIntent, flags)
 
         val notification = NotificationCompat.Builder(context, channelId)
-            .setSmallIcon(R.mipmap.ic_launcher)
+            .setSmallIcon(R.drawable.ic_stat_nanosolve)
             .setContentTitle("NanoSolve updated")
             .setContentText("Tap to reopen the app")
             .setAutoCancel(true)

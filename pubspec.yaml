@@ -45,6 +45,7 @@ dependencies:
   image: ^4.0.0
   crypto: ^3.0.0
   vector_math: ^2.1.0
+  flutter_local_notifications: ^22.3.3
 dev_dependencies:
   integration_test:
     sdk: flutter
