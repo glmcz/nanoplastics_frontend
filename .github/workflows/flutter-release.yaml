@@ -6,12 +6,26 @@ on:
       - main
     tags:
       - "v*" # Triggers when you push a tag like v1.0.2
+    # Every release takes the next version number, so a push that leaves the
+    # app unchanged must not ship an "update" with nothing in it. Run the
+    # workflow by hand when a workflow change needs a release.
+    paths-ignore:
+      - "docs/**"
+      - "**/*.md"
+      - ".github/**"
+      - "tool/**"
   workflow_dispatch:
     inputs:
       publish_aab:
         description: "Build & publish Play Store AAB to release"
         type: boolean
         default: false
+
+# Two pushes in quick succession would both read the same last tag and
+# release the same version; queue them so the second sees the first's tag.
+concurrency:
+  group: android-release
+  cancel-in-progress: false
 
 jobs:
   build:
@@ -29,14 +43,22 @@ jobs:
         run: |
           echo "${{ secrets.FIREBASE_OPTIONS_BASE64 }}" | base64 --decode > lib/firebase_options.dart
 
-      # --- EXTRACT VERSION FROM PUBSPEC ---
-      # This pulls the 'version: 1.2.3+4' from your pubspec.yaml
-      # to use as a fallback if no git tag is present.
-      - name: Get Version from Pubspec
-        id: pubspec_version
+      # A push to main releases the version right after the last v* tag, so
+      # Android never skips or repeats a number; pubspec.yaml is not read.
+      # Pushing a v* tag by hand releases exactly that version.
+      - name: Resolve release version
         run: |
-          VERSION=$(grep 'version: ' pubspec.yaml | sed 's/version: //')
-          echo "VERSION=v$VERSION" >> $GITHUB_ENV
+          if [ "${{ github.ref_type }}" = "tag" ]; then
+            VERSION="${GITHUB_REF_NAME#v}"
+          else
+            VERSION=$(bash tool/release_version.sh next android)
+          fi
+          echo "Releasing $VERSION"
+          {
+            echo "VERSION=v$VERSION"
+            echo "BUILD_NAME=${VERSION%+*}"
+            echo "BUILD_NUMBER=${VERSION#*+}"
+          } >> "$GITHUB_ENV"
 
       - name: Setup Java
         uses: actions/setup-java@v4
@@ -120,7 +142,7 @@ jobs:
       # ---------------- FULL FLAVOR APK (sideload / in-app update) ----------------
       - name: Build FULL APK
         run: |
-          flutter build apk --release --flavor full --dart-define=DISTRIBUTION=github --dart-define=BACKEND_URL=${{ env.BACKEND_URL }}
+          flutter build apk --release --flavor full --build-name="$BUILD_NAME" --build-number="$BUILD_NUMBER" --dart-define=DISTRIBUTION=github --dart-define=BACKEND_URL=${{ env.BACKEND_URL }}
           mv build/app/outputs/flutter-apk/app-full-release.apk build/app/outputs/flutter-apk/nanoplastics_app.apk
 
       - name: Compute release metadata

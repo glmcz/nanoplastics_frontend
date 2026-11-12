@@ -14,12 +14,19 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # --- EXTRACT VERSION FROM PUBSPEC ---
-      - name: Get Version from Pubspec
-        id: pubspec_version
+      # The Play bundle is the last GitHub release, rebuilt from its own tag: the
+      # same code and version number users got as the APK.
+      - name: Check out the last Android release
         run: |
-          VERSION=$(grep 'version: ' pubspec.yaml | sed 's/version: //')
-          echo "VERSION=v$VERSION" >> $GITHUB_ENV
+          VERSION=$(bash tool/release_version.sh current android)
+          git fetch -q origin "refs/tags/v$VERSION:refs/tags/v$VERSION"
+          git checkout -q "v$VERSION"
+          echo "Bundling $VERSION"
+          {
+            echo "VERSION=v$VERSION"
+            echo "BUILD_NAME=${VERSION%+*}"
+            echo "BUILD_NUMBER=${VERSION#*+}"
+          } >> "$GITHUB_ENV"
 
       # --- RESTORE FIREBASE OPTIONS ---
       - name: Restore firebase_options.dart from secret
@@ -77,7 +84,7 @@ jobs:
       # --- BUILD PLAY AAB ---
       - name: Build PLAY AAB (Google Play)
         run: |
-          flutter build appbundle --release --flavor play --dart-define=BACKEND_URL=${{ env.BACKEND_URL }} --dart-define=IS_PLAY_STORE=true --dart-define=DISTRIBUTION=playStore
+          flutter build appbundle --release --flavor play --build-name="$BUILD_NAME" --build-number="$BUILD_NUMBER" --dart-define=BACKEND_URL=${{ env.BACKEND_URL }} --dart-define=IS_PLAY_STORE=true --dart-define=DISTRIBUTION=playStore
           cp build/app/outputs/bundle/playRelease/app-play-release.aab build/app/outputs/bundle/playRelease/nanoplastics_app_play.aab || true
 
       # --- UPLOAD TO RELEASE ---

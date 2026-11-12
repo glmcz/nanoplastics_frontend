@@ -1,6 +1,8 @@
 name: nanoplastics_app
 description: NanoSolve Hive - Crowdsourcing R&D solutions for nanoplastic pollution
 publish_to: 'none'
+# Labels local builds only. Releases take their version from git tags via
+# tool/release_version.sh (Android in CI, iOS in run_publish_ios.sh).
 version: 1.0.59+53
 
 environment:
