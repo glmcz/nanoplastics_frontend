@@ -1,3 +1,8 @@
+// Reads Roboto from the Flutter SDK with dart:io, which Chrome can't: CI runs
+// this file on the VM in its own step of flutter-release.yaml.
+@TestOn('vm')
+library;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nanoplastics_app/l10n/app_localizations.dart';

@@ -135,6 +135,9 @@ jobs:
       - name: Run Compliance Tests (Mobile platform)
         run: flutter test test/compliance/google_play_release_test.dart
 
+      - name: Run Large-Font Layout Tests (Mobile platform, real Roboto)
+        run: flutter test test/responsive/text_scale_overflow_test.dart
+
       # ---------------- L10N GENERATION ----------------
       - name: Generate l10n files
         run: bash run_generate_langs.sh
