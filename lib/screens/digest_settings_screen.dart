@@ -8,6 +8,7 @@ import '../services/service_locator.dart';
 import '../utils/app_spacing.dart';
 import '../utils/app_typography.dart';
 import '../utils/platform_adaptive.dart';
+import '../widgets/email_sign_in_sheet.dart';
 
 class DigestSettingsScreen extends StatefulWidget {
   const DigestSettingsScreen({super.key});
@@ -98,213 +99,217 @@ class _DigestSettingsScreenState extends State<DigestSettingsScreen> {
           children: [
             _buildHeader(context, spacing, typography),
             Expanded(
-              child: SingleChildScrollView(
-                padding: EdgeInsets.all(spacing.md),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Toggle
-                    _GlassCard(
-                      child: SwitchListTile(
-                        title: Text(
-                            AppLocalizations.of(context)!
-                                .digestSettingsDailyDigest,
-                            style: itemTitle),
-                        subtitle: Text(
-                            AppLocalizations.of(context)!
-                                .digestSettingsDailyDigestHint,
-                            style: itemHint),
-                        value: _digestEnabled,
-                        activeThumbColor: AppColors.neonCyan,
-                        onChanged: (v) => setState(() => _digestEnabled = v),
-                        contentPadding: EdgeInsets.zero,
+              child: SignInGate(
+                onSignedIn: _loadPreferences,
+                child: () => SingleChildScrollView(
+                  padding: EdgeInsets.all(spacing.md),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Toggle
+                      _GlassCard(
+                        child: SwitchListTile(
+                          title: Text(
+                              AppLocalizations.of(context)!
+                                  .digestSettingsDailyDigest,
+                              style: itemTitle),
+                          subtitle: Text(
+                              AppLocalizations.of(context)!
+                                  .digestSettingsDailyDigestHint,
+                              style: itemHint),
+                          value: _digestEnabled,
+                          activeThumbColor: AppColors.neonCyan,
+                          onChanged: (v) => setState(() => _digestEnabled = v),
+                          contentPadding: EdgeInsets.zero,
+                        ),
                       ),
-                    ),
-                    SizedBox(height: spacing.md),
+                      SizedBox(height: spacing.md),
 
-                    // Email is an extra on top of the push, off until the user asks for it.
-                    _GlassCard(
-                      child: SwitchListTile(
-                        title: Text(
-                            AppLocalizations.of(context)!.digestSettingsEmail,
-                            style: itemTitle),
-                        subtitle: Text(
-                            AppLocalizations.of(context)!
-                                .digestSettingsEmailHint,
-                            style: itemHint),
-                        value: _emailEnabled,
-                        activeThumbColor: AppColors.neonCyan,
-                        onChanged: _digestEnabled
-                            ? (v) => setState(() => _emailEnabled = v)
-                            : null,
-                        contentPadding: EdgeInsets.zero,
+                      // Email is an extra on top of the push, off until the user asks for it.
+                      _GlassCard(
+                        child: SwitchListTile(
+                          title: Text(
+                              AppLocalizations.of(context)!.digestSettingsEmail,
+                              style: itemTitle),
+                          subtitle: Text(
+                              AppLocalizations.of(context)!
+                                  .digestSettingsEmailHint,
+                              style: itemHint),
+                          value: _emailEnabled,
+                          activeThumbColor: AppColors.neonCyan,
+                          onChanged: _digestEnabled
+                              ? (v) => setState(() => _emailEnabled = v)
+                              : null,
+                          contentPadding: EdgeInsets.zero,
+                        ),
                       ),
-                    ),
-                    SizedBox(height: spacing.md),
+                      SizedBox(height: spacing.md),
 
-                    // Its own opt-in: email only, and independent of the daily push.
-                    _GlassCard(
-                      child: SwitchListTile(
-                        title: Text(
-                            AppLocalizations.of(context)!.digestSettingsMonthly,
-                            style: itemTitle),
-                        subtitle: Text(
-                            AppLocalizations.of(context)!
-                                .digestSettingsMonthlyHint,
-                            style: itemHint),
-                        value: _monthlyEnabled,
-                        activeThumbColor: AppColors.neonCyan,
-                        onChanged: (v) => setState(() => _monthlyEnabled = v),
-                        contentPadding: EdgeInsets.zero,
+                      // Its own opt-in: email only, and independent of the daily push.
+                      _GlassCard(
+                        child: SwitchListTile(
+                          title: Text(
+                              AppLocalizations.of(context)!
+                                  .digestSettingsMonthly,
+                              style: itemTitle),
+                          subtitle: Text(
+                              AppLocalizations.of(context)!
+                                  .digestSettingsMonthlyHint,
+                              style: itemHint),
+                          value: _monthlyEnabled,
+                          activeThumbColor: AppColors.neonCyan,
+                          onChanged: (v) => setState(() => _monthlyEnabled = v),
+                          contentPadding: EdgeInsets.zero,
+                        ),
                       ),
-                    ),
-                    SizedBox(height: spacing.md),
+                      SizedBox(height: spacing.md),
 
-                    // Digest time
-                    _GlassCard(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            AppLocalizations.of(context)!
-                                .digestSettingsNotificationTime,
-                            style: itemTitle,
-                          ),
-                          SizedBox(height: spacing.sm),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: Slider(
-                                  value: _digestHour.toDouble(),
-                                  min: 0,
-                                  max: 23,
-                                  divisions: 23,
-                                  activeColor: AppColors.neonCyan,
-                                  onChanged: (v) =>
-                                      setState(() => _digestHour = v.toInt()),
+                      // Digest time
+                      _GlassCard(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              AppLocalizations.of(context)!
+                                  .digestSettingsNotificationTime,
+                              style: itemTitle,
+                            ),
+                            SizedBox(height: spacing.sm),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Slider(
+                                    value: _digestHour.toDouble(),
+                                    min: 0,
+                                    max: 23,
+                                    divisions: 23,
+                                    activeColor: AppColors.neonCyan,
+                                    onChanged: (v) =>
+                                        setState(() => _digestHour = v.toInt()),
+                                  ),
                                 ),
-                              ),
-                              SizedBox(width: spacing.sm),
-                              Text(
-                                '${_digestHour.toString().padLeft(2, '0')}:00',
-                                style: typography.body
-                                    .copyWith(color: AppColors.neonCyan),
-                              ),
-                            ],
-                          ),
-                        ],
+                                SizedBox(width: spacing.sm),
+                                Text(
+                                  '${_digestHour.toString().padLeft(2, '0')}:00',
+                                  style: typography.body
+                                      .copyWith(color: AppColors.neonCyan),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                    SizedBox(height: spacing.md),
+                      SizedBox(height: spacing.md),
 
-                    // Keywords section label
-                    Text(
-                      AppLocalizations.of(context)!.digestSettingsKeywords,
-                      style:
-                          typography.label.copyWith(color: AppColors.textMuted),
-                    ),
-                    SizedBox(height: spacing.sm),
+                      // Keywords section label
+                      Text(
+                        AppLocalizations.of(context)!.digestSettingsKeywords,
+                        style: typography.label
+                            .copyWith(color: AppColors.textMuted),
+                      ),
+                      SizedBox(height: spacing.sm),
 
-                    _GlassCard(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // Existing chips
-                          Wrap(
-                            spacing: 6,
-                            runSpacing: 6,
-                            children: _keywords
-                                .map((kw) => _KeywordChip(label: kw))
-                                .toList(),
-                          ),
-                          SizedBox(height: spacing.md),
+                      _GlassCard(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // Existing chips
+                            Wrap(
+                              spacing: 6,
+                              runSpacing: 6,
+                              children: _keywords
+                                  .map((kw) => _KeywordChip(label: kw))
+                                  .toList(),
+                            ),
+                            SizedBox(height: spacing.md),
 
-                          // Request more keywords via email
-                          Semantics(
-                            button: true,
-                            label: AppLocalizations.of(context)!
-                                .digestSettingsKeywordRequestMore,
-                            child: InkWell(
-                              onTap: _requestMoreKeywords,
-                              borderRadius: BorderRadius.circular(6),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  const Icon(Icons.email_outlined,
-                                      color: AppColors.neonCyan, size: 16),
-                                  SizedBox(width: spacing.xs),
-                                  Flexible(
-                                    child: Text(
-                                      AppLocalizations.of(context)!
-                                          .digestSettingsKeywordRequestMore,
-                                      style: typography.body.copyWith(
-                                        color: AppColors.neonCyan,
-                                        fontWeight: FontWeight.w600,
+                            // Request more keywords via email
+                            Semantics(
+                              button: true,
+                              label: AppLocalizations.of(context)!
+                                  .digestSettingsKeywordRequestMore,
+                              child: InkWell(
+                                onTap: _requestMoreKeywords,
+                                borderRadius: BorderRadius.circular(6),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    const Icon(Icons.email_outlined,
+                                        color: AppColors.neonCyan, size: 16),
+                                    SizedBox(width: spacing.xs),
+                                    Flexible(
+                                      child: Text(
+                                        AppLocalizations.of(context)!
+                                            .digestSettingsKeywordRequestMore,
+                                        style: typography.body.copyWith(
+                                          color: AppColors.neonCyan,
+                                          fontWeight: FontWeight.w600,
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
 
-                          if (_error != null) ...[
-                            SizedBox(height: spacing.xs),
-                            Text(_error!,
-                                style: typography.bodySm
-                                    .copyWith(color: AppColors.neonCrimson)),
-                          ],
-                        ],
-                      ),
-                    ),
-
-                    SizedBox(height: spacing.xl),
-
-                    // Save button
-                    Semantics(
-                      button: true,
-                      label: AppLocalizations.of(context)!.digestSettingsSave,
-                      child: InkWell(
-                        onTap: _saving ? null : _save,
-                        borderRadius: BorderRadius.circular(12),
-                        child: Container(
-                          width: double.infinity,
-                          padding: EdgeInsets.symmetric(vertical: spacing.md),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(12),
-                            border: Border.all(
-                                color:
-                                    AppColors.neonCyan.withValues(alpha: 0.6)),
-                            boxShadow: [
-                              BoxShadow(
-                                color:
-                                    AppColors.neonCyan.withValues(alpha: 0.1),
-                                blurRadius: 12,
-                                spreadRadius: 2,
-                              ),
+                            if (_error != null) ...[
+                              SizedBox(height: spacing.xs),
+                              Text(_error!,
+                                  style: typography.bodySm
+                                      .copyWith(color: AppColors.neonCrimson)),
                             ],
-                          ),
-                          child: Center(
-                            child: _saving
-                                ? const SizedBox(
-                                    width: 18,
-                                    height: 18,
-                                    child: CircularProgressIndicator(
-                                      strokeWidth: 2,
-                                      color: AppColors.neonCyan,
+                          ],
+                        ),
+                      ),
+
+                      SizedBox(height: spacing.xl),
+
+                      // Save button
+                      Semantics(
+                        button: true,
+                        label: AppLocalizations.of(context)!.digestSettingsSave,
+                        child: InkWell(
+                          onTap: _saving ? null : _save,
+                          borderRadius: BorderRadius.circular(12),
+                          child: Container(
+                            width: double.infinity,
+                            padding: EdgeInsets.symmetric(vertical: spacing.md),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(
+                                  color: AppColors.neonCyan
+                                      .withValues(alpha: 0.6)),
+                              boxShadow: [
+                                BoxShadow(
+                                  color:
+                                      AppColors.neonCyan.withValues(alpha: 0.1),
+                                  blurRadius: 12,
+                                  spreadRadius: 2,
+                                ),
+                              ],
+                            ),
+                            child: Center(
+                              child: _saving
+                                  ? const SizedBox(
+                                      width: 18,
+                                      height: 18,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                        color: AppColors.neonCyan,
+                                      ),
+                                    )
+                                  : Text(
+                                      AppLocalizations.of(context)!
+                                          .categoryDetailBrainstormSave,
+                                      style: typography.subtitle
+                                          .copyWith(color: AppColors.neonCyan),
                                     ),
-                                  )
-                                : Text(
-                                    AppLocalizations.of(context)!
-                                        .categoryDetailBrainstormSave,
-                                    style: typography.subtitle
-                                        .copyWith(color: AppColors.neonCyan),
-                                  ),
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),

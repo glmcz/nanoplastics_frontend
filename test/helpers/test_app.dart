@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:nanoplastics_app/l10n/app_localizations.dart';
+import 'package:nanoplastics_app/l10n_web/web_localizations.dart';
 import 'package:nanoplastics_app/config/app_theme.dart';
 
 /// Wraps a widget in a fully-configured MaterialApp for widget testing.
@@ -21,6 +22,7 @@ Widget buildTestableWidget(
     locale: locale,
     localizationsDelegates: const [
       AppLocalizations.delegate,
+      WebLocalizations.delegate,
       GlobalMaterialLocalizations.delegate,
       GlobalWidgetsLocalizations.delegate,
       GlobalCupertinoLocalizations.delegate,

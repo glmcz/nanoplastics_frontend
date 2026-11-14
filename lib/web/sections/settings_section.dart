@@ -1,17 +1,12 @@
 import 'package:flutter/material.dart';
 
+import '../../config/store_links.dart';
 import '../../l10n/app_localizations.dart';
 import '../../mixins/language_selection_mixin.dart';
 import '../../utils/url_utils.dart';
 import '../web_theme.dart';
 
-const _websiteUrl = 'https://web.nanosolve.org';
 const _supportEmail = 'support@nanosolve.org';
-const _playStoreUrl =
-    'https://play.google.com/store/apps/details?id=org.nanosolve.hive';
-const _appStoreUrl = 'https://apps.apple.com/app/id6760934677';
-const _githubReleasesUrl =
-    'https://github.com/glmcz/nanoplastics_frontend/releases/latest/';
 
 class SettingsSection extends StatelessWidget {
   final AppLocalizations l10n;
@@ -72,7 +67,7 @@ class SettingsSection extends StatelessWidget {
                       icon: Icons.language,
                       label: l10n.aboutWebsite,
                       subtitle: 'web.nanosolve.org',
-                      onTap: () => openExternalUrl(_websiteUrl),
+                      onTap: () => openExternalUrl(StoreLinks.website),
                     ),
                     _LinkRow(
                       icon: Icons.email_outlined,
@@ -95,22 +90,21 @@ class SettingsSection extends StatelessWidget {
                     _LinkRow(
                       icon: Icons.android,
                       label: l10n.aboutPlatformPlayStore,
-                      subtitle:
-                          'play.google.com/store/apps/details?id=org.nanosolve.hive',
-                      onTap: () => openExternalUrl(_playStoreUrl),
+                      subtitle: 'play.google.com',
+                      onTap: () => openExternalUrl(StoreLinks.playStore),
                     ),
                     _LinkRow(
                       icon: Icons.apple,
                       label: l10n.aboutPlatformIOS,
-                      subtitle: 'apps.apple.com/app/id6760934677',
-                      onTap: () => openExternalUrl(_appStoreUrl),
+                      subtitle: 'apps.apple.com',
+                      onTap: () => openExternalUrl(StoreLinks.appStore),
                     ),
                     _LinkRow(
                       icon: Icons.code,
                       label: l10n.aboutPlatformAndroidFull,
-                      subtitle:
-                          'github.com/glmcz/nanoplastics_frontend/releases',
-                      onTap: () => openExternalUrl(_githubReleasesUrl),
+                      subtitle: 'github.com',
+                      onTap: () =>
+                          openExternalUrl(StoreLinks.githubLatestRelease),
                     ),
                   ],
                 ),

@@ -12,14 +12,15 @@ class WebLocalizationsEs extends WebLocalizations {
   String get privacyPageTitle => 'Política de privacidad';
 
   @override
-  String get privacyLastUpdated => 'Última actualización: febrero de 2026';
+  String get privacyLastUpdated =>
+      'Última actualización: 14 de noviembre de 2026';
 
   @override
   String get privacyS1Title => '1. Introducción';
 
   @override
   String get privacyS1P1 =>
-      'NanoSolve Hive («Aplicación», «nosotros», «nos» o «nuestro») se compromete a proteger su privacidad. Esta Política de privacidad explica cómo recopilamos, usamos, divulgamos y de otro modo manejamos su información cuando utiliza nuestra aplicación móvil.';
+      'NanoSolve Hive (\"Aplicación\", \"nosotros\", \"nuestro\") se compromete a proteger su privacidad. Esta Política de Privacidad explica qué información recopilamos, por qué y quién más la gestiona cuando usa la aplicación NanoSolve Hive para iPhone y Android o el sitio web web.nanosolve.org.';
 
   @override
   String get privacyS1P2 =>
@@ -33,21 +34,21 @@ class WebLocalizationsEs extends WebLocalizations {
 
   @override
   String get privacyS2DeviceItems =>
-      'Tipo de dispositivo y sistema operativo\nIdentificadores únicos del dispositivo\nInformación de red móvil\nIdioma y zona horaria del dispositivo';
+      'Tipo de dispositivo, sistema operativo y versión de la aplicación\nIdioma del dispositivo\nSu zona horaria, solo cuando guarda la configuración del resumen diario\nUn token de notificaciones push de Apple o Google, solo si permite las notificaciones';
 
   @override
   String get privacyS2UsageTitle => 'Información de uso';
 
   @override
   String get privacyS2UsageItems =>
-      'Funciones a las que accede dentro de la aplicación\nPáginas o contenido con el que interactúa\nTiempo dedicado en la aplicación\nConsultas de búsqueda y categorías visualizadas';
+      'Qué pantallas abre y qué botones pulsa, para ver dónde la aplicación confunde a la gente\nCada registro lleva un número de instalación aleatorio creado en su dispositivo. No está vinculado a usted, su cuenta, su correo ni su teléfono\nEstos registros se eliminan a los 180 días, y no se recopila nada mientras las estadísticas de uso están desactivadas';
 
   @override
-  String get privacyS2AnalyticsTitle => 'Datos de análisis y rendimiento';
+  String get privacyS2AnalyticsTitle => 'Informes de fallos';
 
   @override
   String get privacyS2AnalyticsItems =>
-      'Métricas de rendimiento de la aplicación e informes de fallos\nRegistros de errores y diagnósticos\nDatos de Firebase Analytics\nDuración y frecuencia de sesiones';
+      'Cuando la aplicación falla, Firebase Crashlytics recibe el error, la versión de la aplicación y el estado técnico del dispositivo en ese momento\nLos informes de fallos no contienen correo, apodo ni ideas\nNo se envían informes de fallos mientras las estadísticas de uso están desactivadas';
 
   @override
   String get privacyS2UserTitle =>
@@ -55,7 +56,7 @@ class WebLocalizationsEs extends WebLocalizations {
 
   @override
   String get privacyS2UserItems =>
-      'Nombre de visualización/apodo (para participación en el marcador)\nDirección de correo electrónico (para registro de perfil y notificaciones)\nIdeas de soluciones, archivos adjuntos y otras contribuciones que envíe';
+      'Nombre visible/apodo (para la clasificación)\nDirección de correo electrónico (para su perfil, el resumen diario y los correos que active)\nPreferencias del resumen diario: palabras clave, hora de entrega, zona horaria y si el correo y el resumen mensual están activados\nEstudios que guarda en su Bóveda\nIdeas de solución, archivos adjuntos y otras contribuciones que envía';
 
   @override
   String get privacyS3Title => '3. Ideas enviadas — Licencia abierta';
@@ -113,18 +114,32 @@ class WebLocalizationsEs extends WebLocalizations {
       'Si envía sin nombre, la licencia CC BY 4.0 sigue aplicándose, pero no se requiere ni es posible la atribución. No podrá reclamar autoría después del hecho para envíos anónimos.';
 
   @override
+  String get privacyS3AiTitle => 'Evaluación con IA';
+
+  @override
+  String get privacyS3AiP =>
+      'Una idea que envía la guarda NanoSolve y la leen las personas que trabajan en el proyecto. También se envía a un servicio de IA, que puede estar fuera de su país, para evaluarla, y la puntuación vuelve a la aplicación. Su apodo y correo se adjuntan solo si usted lo elige. Para eliminar un envío, contáctenos con el código que se muestra al enviarlo.';
+
+  @override
+  String get privacyS4Title => '4. Resumen diario de investigación';
+
+  @override
+  String get privacyS4Items =>
+      'El resumen diario está desactivado hasta que lo active en la aplicación en Configuración → Mi Bóveda → Preferencias de Investigación. Requiere su dirección de correo, que confirma con un código de 6 dígitos que le enviamos; el código también impide que otra persona lea o cambie su configuración.\nPara entregarlo guardamos su correo, sus palabras clave, la hora elegida, su zona horaria, si el correo del resumen y el resumen mensual están activados, y el token push de su dispositivo.\nTambién registramos qué estudio se envió a qué perfil, para que nunca reciba el mismo dos veces.\nLos estudios provienen de bases de datos científicas públicas. Para elegirlos no usamos nada sobre usted salvo sus palabras clave.\nLas notificaciones push pasan por Firebase Cloud Messaging (Google) y, en iPhone, por el servicio Apple Push Notification. Estos reciben el token push y el texto de la notificación (título y resumen del estudio), no su correo.\nLos correos del resumen y el resumen mensual se envían a través de Resend, un servicio de entrega de correo, que recibe su dirección y el mensaje.\nPara dejar de recibirlo, desactive el resumen, el correo o el resumen mensual en Preferencias de Investigación, o desactive las notificaciones de NanoSolve Hive en los ajustes de su teléfono.';
+
+  @override
   String get privacyS5Title => '5. Cómo usamos su información';
 
   @override
   String get privacyS5Items =>
-      'Mejorar la aplicación: Mantener y mejorar la funcionalidad y características de la aplicación\nAnalizar el uso: Comprender los patrones de uso para mejorar la experiencia del usuario\nDiagnosticar problemas: Identificar y corregir problemas técnicos y errores\nEnviar actualizaciones: Notificarle sobre actualizaciones importantes o avisos de seguridad\nCumplir con la ley: Cumplir con obligaciones legales y requisitos regulatorios\nFunciones comunitarias: Mostrar su perfil y soluciones en el marcador público (con su consentimiento)';
+      'Entregar el resumen diario: Enviar los estudios, notificaciones y correos que activó, a la hora que eligió\nMejorar la aplicación: Mantener y mejorar la funcionalidad y las características\nAnalizar el uso: Comprender los patrones de uso para mejorar la experiencia\nDiagnosticar problemas: Identificar y corregir problemas técnicos y errores\nCumplir la ley: Cumplir obligaciones legales y requisitos regulatorios\nFunciones comunitarias: Mostrar su apodo e ideas en la clasificación pública (con su consentimiento)';
 
   @override
   String get privacyS6Title => '6. Almacenamiento de datos y seguridad';
 
   @override
   String get privacyS6Items =>
-      'No almacenamos datos confidenciales más allá del correo electrónico/apodo de registro y las ideas o archivos adjuntos que envíe explícitamente.\nLos datos públicos (correo electrónico del usuario, apodo) se almacenan de forma segura en nuestros servidores con controles de acceso apropiados.\nEl contenido de las ideas y los metadatos asociados permanecen en forma anonimizada después de eliminar los identificadores personales.\nNunca compartimos datos personales con terceros sin su consentimiento explícito.';
+      'Solo guardamos lo que la aplicación necesita: su perfil (apodo y correo), sus preferencias del resumen y su Bóveda, y las ideas o archivos que envía.\nSu correo nunca se muestra públicamente. Su apodo aparece en la clasificación solo junto a las ideas que envía con él.\nLos datos viajan por conexiones HTTPS cifradas y se guardan en nuestros servidores, con acceso limitado a las personas que gestionan NanoSolve.\nEl contenido de las ideas y los metadatos asociados permanecen anonimizados tras eliminar los identificadores personales.\nNunca vendemos datos personales.';
 
   @override
   String get privacyS6HighlightLabel => 'Minimización de datos:';
@@ -145,18 +160,46 @@ class WebLocalizationsEs extends WebLocalizations {
 
   @override
   String get privacyS7FirebaseItems =>
-      'Propósito: Informes de fallos, análisis y monitoreo de rendimiento\nDatos recopilados: Fallos de la aplicación, métricas de rendimiento, información de sesión\nControl: Puede desactivar el análisis en Configuración de la aplicación → Privacidad y seguridad';
+      'Propósito: Informes de fallos (Crashlytics) y entrega de notificaciones push (Cloud Messaging)\nDatos: Informes de fallos descritos en la sección 2; tokens push y texto de las notificaciones\nControl: Desactive las estadísticas de uso en Configuración → Privacidad y seguridad para detener los informes de fallos; desactive las notificaciones para detener los push';
+
+  @override
+  String get privacyS7AppleTitle => 'Apple';
+
+  @override
+  String get privacyS7AppleP =>
+      'Propósito: Distribución en App Store y entrega de notificaciones push en iPhone (Apple Push Notification service)';
 
   @override
   String get privacyS7PlayTitle => 'Google Play Services';
 
   @override
   String get privacyS7PlayP =>
-      'Propósito: Distribución de aplicaciones y funcionalidad de actualización en la aplicación';
+      'Propósito: Distribución y actualizaciones de la aplicación en Android';
+
+  @override
+  String get privacyS7EmailTitle => 'Resend';
+
+  @override
+  String get privacyS7EmailP =>
+      'Propósito: Envía los correos del resumen y el resumen mensual que active. Recibe su dirección de correo y el mensaje';
+
+  @override
+  String get privacyS7AiTitle => 'Servicios de IA';
+
+  @override
+  String get privacyS7AiP =>
+      'Propósito: Evaluar las ideas que envía (ver sección 3) y resumir estudios científicos públicos para el resumen. Resumir estudios no implica datos personales';
+
+  @override
+  String get privacyS7WebTitle => 'Cloudflare y entrega de contenido';
+
+  @override
+  String get privacyS7WebP =>
+      'Nuestros servidores están detrás de Cloudflare, que los protege de ataques y ve su dirección IP. En el sitio web, Cloudflare Turnstile comprueba que una idea la envía una persona. El sitio web también carga fuentes y código de Google (gstatic.com) y jsDelivr, que reciben su dirección IP cuando su navegador los descarga';
 
   @override
   String get privacyS7Note =>
-      'No compartimos información de identificación personal (como su nombre o correo electrónico) con estos servicios a menos que lo autorice explícitamente.';
+      'Cada servicio recibe solo lo que necesita para la tarea indicada. Nunca vendemos datos personales.';
 
   @override
   String get privacyS8Title => '8. Sus derechos y opciones';
@@ -180,21 +223,21 @@ class WebLocalizationsEs extends WebLocalizations {
 
   @override
   String get privacyS8DeleteP =>
-      'Puede solicitar la eliminación completa de su cuenta y los datos asociados a través de Configuración → Privacidad y seguridad.';
+      'Configuración → Perfil de usuario → Eliminar cuenta borra su cuenta de nuestros servidores (su correo, preferencias del resumen, token push y Bóveda) y después de este dispositivo. Las ideas enviadas se quedan, sin su nombre ni su correo. Si aún no ha confirmado su correo en este dispositivo, la aplicación primero le envía un código, para que nadie más pueda eliminar su cuenta.';
 
   @override
   String get privacyS8OptoutTitle => 'Optar por no participar en el análisis';
 
   @override
   String get privacyS8OptoutP =>
-      'Puede desactivar la recopilación de análisis e informes de fallos a través de Configuración → Privacidad y seguridad. Esto no afecta la funcionalidad principal de la aplicación.';
+      'Puede desactivar las estadísticas de uso y los informes de fallos en Configuración → Privacidad y seguridad. Esto no afecta la funcionalidad principal de la aplicación.';
 
   @override
   String get privacyS8ManageTitle => 'Gestionar comunicaciones';
 
   @override
   String get privacyS8ManageP =>
-      'Puede gestionar sus preferencias de notificaciones y configuración de comunicaciones dentro de la aplicación.';
+      'Active o desactive el resumen diario, el correo del resumen y el resumen mensual en cualquier momento en Configuración → Mi Bóveda → Preferencias de Investigación. También puede desactivar las notificaciones de NanoSolve Hive en los ajustes de su teléfono.';
 
   @override
   String get privacyS9Title => '9. Privacidad de los niños';
@@ -208,7 +251,7 @@ class WebLocalizationsEs extends WebLocalizations {
 
   @override
   String get privacyS10Items =>
-      'Ideas enviadas: Retenidas indefinidamente a menos que las elimine\nPerfil de usuario: Retenido mientras la cuenta esté activa; eliminado al eliminar la cuenta\nDatos de análisis: Retenidos durante 14 meses por Firebase, luego eliminados automáticamente\nRegistros de fallos: Retenidos durante 90 días por Firebase, luego eliminados automáticamente\nConfiguración de la aplicación: Almacenada localmente en su dispositivo; eliminada cuando desinstale la aplicación';
+      'Ideas enviadas: Se conservan indefinidamente salvo que usted las elimine\nPerfil, preferencias del resumen, token push y Bóveda: Se conservan mientras exista su perfil; se borran a petición\nRegistro de envíos del resumen: Se conserva mientras exista su perfil, para no enviar nunca el mismo estudio dos veces\nEstadísticas de uso: Se eliminan a los 180 días\nInformes de fallos: Se conservan 90 días en Firebase Crashlytics y luego se eliminan automáticamente\nAjustes de la aplicación: Se guardan localmente en su dispositivo; se eliminan al desinstalar la aplicación';
 
   @override
   String get privacyS11Title => '11. Transferencias internacionales de datos';
@@ -259,8 +302,7 @@ class WebLocalizationsEs extends WebLocalizations {
       'Equipo de privacidad de NanoSolve Hive';
 
   @override
-  String get privacyS15HighlightEmail =>
-      'Correo electrónico: support@nanosolve.com';
+  String get privacyS15HighlightEmail => 'Correo: support@nanosolve.org';
 
   @override
   String get privacyS15HighlightContact =>

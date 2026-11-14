@@ -8,6 +8,7 @@ import '../models/digest_paper.dart';
 import '../services/digest_service.dart';
 import '../utils/app_spacing.dart';
 import '../utils/app_sizing.dart';
+import '../widgets/email_sign_in_sheet.dart';
 
 class PaperDetailScreen extends StatefulWidget {
   final DigestPaper paper;
@@ -30,9 +31,13 @@ class _PaperDetailScreenState extends State<PaperDetailScreen> {
 
   Future<void> _toggleTresor() async {
     if (_tresorLoading) return;
+    final svc = DigestService();
+    if (!await svc.isSignedIn()) {
+      if (!mounted || !await showEmailSignInSheet(context)) return;
+    }
+    if (!mounted) return;
     setState(() => _tresorLoading = true);
 
-    final svc = DigestService();
     debugPrint('[VAULT] toggle paperId=${widget.paper.id} inTresor=$_inTresor');
     final success = _inTresor
         ? await svc.removeFromTresor(widget.paper.id)
@@ -66,9 +71,12 @@ class _PaperDetailScreenState extends State<PaperDetailScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Title
+                        // Papers are in English. Without an explicit
+                        // direction an Arabic UI moves the final period to
+                        // the front of every title and summary.
                         Text(
                           paper.title,
+                          textDirection: TextDirection.ltr,
                           style: const TextStyle(
                             color: AppColors.textMain,
                             fontSize: 18,
@@ -82,6 +90,7 @@ class _PaperDetailScreenState extends State<PaperDetailScreen> {
                         if (paper.perex != null) ...[
                           Text(
                             paper.perex!,
+                            textDirection: TextDirection.ltr,
                             style: const TextStyle(
                               color: AppColors.textMuted,
                               fontSize: 14,
@@ -246,6 +255,7 @@ class _MetaRow extends StatelessWidget {
     ];
     return Text(
       parts.join(' · '),
+      textDirection: TextDirection.ltr,
       style: const TextStyle(
         color: AppColors.textDark,
         fontSize: 12,

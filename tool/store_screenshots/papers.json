@@ -1,0 +1,125 @@
+[
+  {
+    "id": "fbb001fb-741d-4fdb-b26b-5673f7af7c2e",
+    "title": "From Soil to Grain: Radiotracer Evidence for Nanoplastics' Entry into the Rice Food Chain.",
+    "perex": "Researchers used radiolabeled nanoplastics to track their movement into rice. They found that nanoplastics can accumulate in rice grains, indicating a potential pathway for human exposure through diet.",
+    "category": "planet",
+    "subcategory": "food_chain",
+    "labels": [
+      "nanoplastics",
+      "rice",
+      "food chain",
+      "hydroponics",
+      "soil cultivation",
+      "polystyrene"
+    ],
+    "matched_keywords": [
+      "nanoplastics",
+      "nanoplastic"
+    ],
+    "source_url": "https://pubmed.ncbi.nlm.nih.gov/43007168/",
+    "published_date": "2026-11-10",
+    "doi": "10.1021/acs.est.6c05966",
+    "authors": "Chen Y, Zheng N, Xu L, Chen Y, Yao S, Yu Z, Zhang S, Wang H, Gan J",
+    "journal": "Environmental science & technology",
+    "source": "pubmed"
+  },
+  {
+    "id": "4734e636-b7e3-441e-80a3-8f9954c52c74",
+    "title": "Inhalation of Environmentally Simulated PET Nanoplastics Induces Demyelinating Disorders via the CXCL12/CXCR4 Axis.",
+    "perex": "Inhaling environmentally simulated PET nanoplastics, at levels mirroring real-world human exposure, directly leads to their accumulation in the brain, causing damage like demyelination, neuroinflammation, and cognitive problems. This research identifies a specific molecular pathway involved, offering a potential target for preventive strategies against neurological disorders caused by airborne plastic exposure.",
+    "category": "human",
+    "subcategory": "nervous_system",
+    "labels": [
+      "PET nanoplastics",
+      "inhalation",
+      "demyelination",
+      "neuroinflammation",
+      "CXCL12/CXCR4 axis",
+      "cognitive deficits"
+    ],
+    "matched_keywords": [
+      "nanoplastics",
+      "nanoplastic",
+      "microplastics"
+    ],
+    "source_url": "https://pubmed.ncbi.nlm.nih.gov/42899647/",
+    "published_date": "2026-10-20",
+    "doi": "10.1021/acs.est.6c03987",
+    "authors": "Liu S, Dong J, Hu Y, Zhu Q, Fu H, Gao J, Weng X, Hu L, Liao C, Jiang G",
+    "journal": "Environmental science & technology",
+    "source": "pubmed"
+  },
+  {
+    "id": "f1ef942d-d65a-453d-8107-9427d90a8fc1",
+    "title": "River Plastic Retention and Export across Europe",
+    "perex": "A new model shows that only a tiny fraction of plastic emitted to the environment (0.1% of microplastics and 0.5% of macroplastics) actually leaves European rivers to the sea, while most is retained in rivers or on land. This highlights rivers as major storage points and suggests that mitigation efforts should focus on reducing river and land retention rather than just ocean export.",
+    "category": "planet",
+    "subcategory": "freshwater",
+    "labels": [
+      "microplastic",
+      "macroplastic",
+      "river transport",
+      "plastic retention",
+      "Europe"
+    ],
+    "matched_keywords": [
+      "microplastics"
+    ],
+    "source_url": "https://openalex.org/https://openalex.org/W7134887315",
+    "published_date": "2026-10-23",
+    "doi": "10.1021/acs.est.6c03752",
+    "authors": "Miranda Stibora, Tim H. M. van Emmerik, Daniel González-Fernández, Albrecht Weerts, Miguel Jorge Sánchez-Guerrero-Hernández, Gert Everaert, Kryss Waldschläger",
+    "journal": "Environmental Science & Technology",
+    "source": "openalex"
+  },
+  {
+    "id": "69c383b9-bab0-4ee1-ba7f-e4658aff0267",
+    "title": "Undiseased and diseased abdominal aortas contain environmentally relevant micronanoplastics.",
+    "perex": "Micronanoplastics (MNPs) were detected in human abdominal aortas, including in diseased and undiseased tissues. The most prevalent polymers found were polyethylene, polyvinyl chloride, and polypropylene. These findings suggest MNPs may accumulate in atherosclerotic lesions and highlight the need for further research into their role in vascular disease.",
+    "category": "human",
+    "subcategory": "cardiovascular",
+    "labels": [
+      "micronanoplastics",
+      "aorta",
+      "atherosclerosis",
+      "polyethylene",
+      "polyvinyl chloride",
+      "polypropylene"
+    ],
+    "matched_keywords": [
+      "nanoplastics",
+      "nanoplastic",
+      "microplastics"
+    ],
+    "source_url": "https://pubmed.ncbi.nlm.nih.gov/42927192/",
+    "published_date": "2026-09-21",
+    "doi": "10.1016/j.jvssci.2026.100449",
+    "authors": "Massie PL, Garcia MA, Gallego DF, Schlosser C, Patil S, El Hayek E, Decker A, Liu R, MazloumiBakhshayesh M, Risotto-Urbanowicz E, Justus MP, Pace C, Rumma RT, Campen MJ, Clark RM",
+    "journal": "JVS-vascular science",
+    "source": "pubmed"
+  },
+  {
+    "id": "665f19de-de6b-46be-8c65-d9246e1b7a71",
+    "title": "Microplastics in the oceans: the many ways they can harm coral life",
+    "perex": "The study shows that red corals ingest and accumulate microplastic particles, mainly polypropylene and polystyrene, either directly or via contaminated zooplankton. These particles trigger feeding problems, mucus release, DNA damage and shifts in the coral microbiome, which together promote harmful bacterial growth. The findings warn that rising plastic pollution could increase coral mortality and threaten reef ecosystems.",
+    "category": "animals",
+    "subcategory": "marine_fauna",
+    "labels": [
+      "polypropylene",
+      "polystyrene",
+      "red coral",
+      "microplastics",
+      "DNA damage"
+    ],
+    "matched_keywords": [
+      "microplastics"
+    ],
+    "source_url": "https://openalex.org/https://openalex.org/W7225712925",
+    "published_date": "2026-11-10",
+    "doi": "10.37207/crm.4.1r",
+    "authors": "Cinzia Corinaldesi, Sara Canensi, Antonio Dell’Anno, Michael Tangherlini, Iole Di Capua, Stefano Varrella, Trevor J. Willis, Carlo Cerrano, Roberto Danovaro",
+    "journal": "Climanosco Research Manuscripts",
+    "source": "openalex"
+  }
+]

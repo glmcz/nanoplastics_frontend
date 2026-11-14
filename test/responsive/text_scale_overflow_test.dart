@@ -19,8 +19,8 @@ import 'package:nanoplastics_app/screens/solvers_leaderboard_screen.dart';
 import 'package:nanoplastics_app/screens/sources_screen.dart';
 import 'package:nanoplastics_app/screens/user_settings/about_screen.dart';
 import 'package:nanoplastics_app/screens/user_settings/language_screen.dart';
-import 'package:nanoplastics_app/screens/user_settings/privacy_policy_screen.dart';
 import 'package:nanoplastics_app/screens/user_settings/privacy_security_screen.dart';
+import 'package:nanoplastics_app/web/web_privacy_screen.dart';
 import 'package:nanoplastics_app/screens/user_settings/terms_of_service_screen.dart';
 import 'package:nanoplastics_app/screens/user_settings/user_profile.dart';
 import 'package:nanoplastics_app/screens/user_settings/user_settings_screen.dart';
@@ -78,6 +78,8 @@ void main() {
       settles: false
     ),
     'Vault': (build: () => const VaultScreen(), settles: true),
+    // The same screen before the email is confirmed: the sign-in invitation.
+    'VaultSignedOut': (build: () => const VaultScreen(), settles: true),
     'PaperDetail': (
       build: () => const PaperDetailScreen(paper: _paper),
       settles: true
@@ -103,7 +105,7 @@ void main() {
     ),
     'About': (build: () => const AboutScreen(), settles: true),
     'Language': (build: () => const LanguageScreen(), settles: true),
-    'PrivacyPolicy': (build: () => const PrivacyPolicyScreen(), settles: true),
+    'PrivacyPolicy': (build: () => const WebPrivacyScreen(), settles: true),
     'Terms': (build: () => const TermsOfServiceScreen(), settles: true),
   };
 
@@ -118,7 +120,8 @@ void main() {
                 'email': 'test@example.com',
                 'onboarding_shown': name != 'Onboarding',
               });
-              DigestService.overrideForTesting(FakeDigestService());
+              DigestService.overrideForTesting(
+                  FakeDigestService()..signedIn = name != 'VaultSignedOut');
               addTearDown(() => DigestService.overrideForTesting(null));
               setScreenSize(tester, device);
 

@@ -12,14 +12,14 @@ class WebLocalizationsCs extends WebLocalizations {
   String get privacyPageTitle => 'Zásady ochrany osobních údajů';
 
   @override
-  String get privacyLastUpdated => 'Poslední aktualizace: únor 2026';
+  String get privacyLastUpdated => 'Poslední aktualizace: 14. listopadu 2026';
 
   @override
   String get privacyS1Title => '1. Úvod';
 
   @override
   String get privacyS1P1 =>
-      'NanoSolve Hive (\"Aplikace\", \"my\", \"nás\" nebo \"naše\") se zavazuje chránit vaše soukromí. Tyto zásady ochrany osobních údajů vysvětlují, jak shromažďujeme, používáme, zpřístupňujeme a jinak nakládáme s vašimi informacemi při používání naší mobilní aplikace.';
+      'NanoSolve Hive („aplikace\", „my\", „náš\" nebo „nás\") chrání vaše soukromí. Tyto zásady ochrany osobních údajů vysvětlují, jaké informace shromažďujeme, proč a kdo další s nimi pracuje, když používáte aplikaci NanoSolve Hive pro iPhone a Android nebo web web.nanosolve.org.';
 
   @override
   String get privacyS1P2 =>
@@ -33,28 +33,28 @@ class WebLocalizationsCs extends WebLocalizations {
 
   @override
   String get privacyS2DeviceItems =>
-      'Typ zařízení a operační systém\nJedineční identifikátory zařízení\nInformace o mobilní síti\nJazyk a časové pásmo zařízení';
+      'Typ zařízení, operační systém a verze aplikace\nJazyk zařízení\nVaše časové pásmo, jen když uložíte nastavení denního přehledu\nToken push notifikací od Applu nebo Googlu, jen pokud notifikace povolíte';
 
   @override
   String get privacyS2UsageTitle => 'Informace o používání';
 
   @override
   String get privacyS2UsageItems =>
-      'Funkce, ke kterým v aplikaci přistupujete\nStránky nebo obsah, se kterým interagujete\nČas strávený v aplikaci\nVyhledávací dotazy a prohlížené kategorie';
+      'Které obrazovky otevíráte a která tlačítka mačkáte, abychom viděli, kde je aplikace matoucí\nKaždý záznam nese náhodné číslo instalace vytvořené ve vašem zařízení. Není spojené s vámi, vaším účtem, e-mailem ani telefonem\nZáznamy mažeme po 180 dnech a při vypnutých statistikách používání se nesbírá nic';
 
   @override
-  String get privacyS2AnalyticsTitle => 'Analytická data a data o výkonu';
+  String get privacyS2AnalyticsTitle => 'Hlášení pádů';
 
   @override
   String get privacyS2AnalyticsItems =>
-      'Metriky výkonu aplikace a zprávy o pádech\nProtokoly chyb a diagnostická data\nData Firebase Analytics\nDélka a frekvence relací';
+      'Když aplikace spadne, Firebase Crashlytics dostane chybu, verzi aplikace a technický stav zařízení v tu chvíli\nHlášení pádů neobsahují e-mail, přezdívku ani nápady\nPři vypnutých statistikách používání se hlášení pádů neodesílají';
 
   @override
   String get privacyS2UserTitle => 'Volitelné informace poskytnuté uživatelem';
 
   @override
   String get privacyS2UserItems =>
-      'Zobrazované jméno/přezdívka (pro účast v žebříčku)\nE-mailová adresa (pro registraci profilu a oznámení)\nNávrhy řešení, přílohy a další příspěvky, které odesíláte';
+      'Zobrazované jméno/přezdívka (pro žebříček)\nE-mailová adresa (pro profil, denní přehled a e-maily, které si zapnete)\nPředvolby denního přehledu: klíčová slova, hodina doručení, časové pásmo a zda je zapnutý e-mail a měsíční shrnutí\nStudie uložené do Trezoru\nNápady na řešení, přílohy a další příspěvky, které odešlete';
 
   @override
   String get privacyS3Title => '3. Odeslané nápady — otevřená licence';
@@ -112,18 +112,32 @@ class WebLocalizationsCs extends WebLocalizations {
       'Pokud příspěvek odešlete bez jména, licence CC BY 4.0 se stále uplatňuje, ale uvedení autorství není vyžadováno ani možné. U anonymních příspěvků nebudete moci zpětně uplatnit autorství.';
 
   @override
+  String get privacyS3AiTitle => 'Hodnocení pomocí AI';
+
+  @override
+  String get privacyS3AiP =>
+      'Nápad, který odešlete, ukládá NanoSolve a čtou ho lidé pracující na projektu. Zároveň je odeslán službě AI, která může být mimo vaši zemi, k ohodnocení a hodnocení se vrátí do aplikace. Přezdívka a e-mail se připojí jen tehdy, když to zvolíte. Chcete-li příspěvek smazat, kontaktujte nás s kódem, který se zobrazí při odeslání.';
+
+  @override
+  String get privacyS4Title => '4. Denní výzkumný přehled';
+
+  @override
+  String get privacyS4Items =>
+      'Denní přehled je vypnutý, dokud ho v aplikaci nezapnete v Nastavení → Můj trezor → Předvolby výzkumu. Potřebuje vaši e-mailovou adresu, kterou potvrdíte šestimístným kódem, který na ni pošleme; kód zároveň brání komukoli jinému číst nebo měnit vaše nastavení.\nAbychom ho mohli doručit, ukládáme váš e-mail, klíčová slova, zvolenou hodinu, časové pásmo, zda je zapnutý e-mail a měsíční shrnutí, a push token vašeho zařízení.\nZaznamenáváme také, která studie byla odeslána kterému profilu, abyste stejnou studii nedostali dvakrát.\nStudie pocházejí z veřejných vědeckých databází. K výběru nepoužíváme nic o vás kromě vašich klíčových slov.\nPush notifikace procházejí přes Firebase Cloud Messaging (Google) a na iPhonu přes službu Apple Push Notification. Ty dostanou push token a text notifikace (název a shrnutí studie), ne váš e-mail.\nE-maily s přehledem a měsíční shrnutí odesíláme přes Resend, službu pro doručování e-mailů, která dostane vaši e-mailovou adresu a zprávu.\nChcete-li příjem zastavit, vypněte přehled, e-mail nebo měsíční shrnutí v Předvolbách výzkumu, nebo vypněte notifikace pro NanoSolve Hive v nastavení telefonu.';
+
+  @override
   String get privacyS5Title => '5. Jak používáme vaše informace';
 
   @override
   String get privacyS5Items =>
-      'Zlepšení aplikace: Udržování a rozvoj funkčnosti a funkcí aplikace\nAnalýza používání: Pochopení vzorců používání pro zlepšení uživatelského zážitku\nDiagnostika problémů: Identifikace a oprava technických problémů a chyb\nZasílání aktualizací: Informování o důležitých aktualizacích nebo bezpečnostních oznámeních\nDodržování zákonů: Plnění právních závazků a regulatorních požadavků\nKomunitní funkce: Zobrazení vašeho profilu a řešení ve veřejném žebříčku (s vaším souhlasem)';
+      'Doručování denního přehledu: Posíláme studie, notifikace a e-maily, které jste si zapnuli, v hodinu, kterou jste zvolili\nZlepšování aplikace: Údržba a rozvoj funkcí aplikace\nAnalýza používání: Porozumění vzorcům používání pro lepší uživatelský zážitek\nDiagnostika problémů: Hledání a oprava technických problémů a chyb\nDodržování zákonů: Plnění právních povinností a regulatorních požadavků\nKomunitní funkce: Zobrazení vaší přezdívky a nápadů ve veřejném žebříčku (s vaším souhlasem)';
 
   @override
   String get privacyS6Title => '6. Ukládání dat a zabezpečení';
 
   @override
   String get privacyS6Items =>
-      'Neukládáme žádné citlivé nebo důvěrné údaje nad rámec registračního e-mailu/přezdívky a nápadů nebo příloh, které výslovně odešlete.\nVerejná data (e-mail uživatele, přezdívka) jsou bezpečně uložena na našich serverech s příslušnými kontrolami přístupu.\nObsah nápadů a přidružená metadata zůstávají v anonymizované podobě po odstranění osobních identifikátorů.\nNikdy nesdílíme osobní údaje s třetími stranami bez vašeho výslovného souhlasu.';
+      'Ukládáme jen to, co aplikace potřebuje: váš profil (přezdívku a e-mail), předvolby přehledu a Trezor a nápady či přílohy, které odešlete.\nVáš e-mail se nikdy veřejně nezobrazuje. Přezdívka se v žebříčku objeví jen u nápadů, které pod ní odešlete.\nData putují šifrovaným spojením HTTPS a jsou uložena na našich serverech, k nimž mají přístup jen lidé provozující NanoSolve.\nObsah nápadů a související metadata zůstávají v anonymizované podobě po odstranění osobních identifikátorů.\nOsobní údaje nikdy neprodáváme.';
 
   @override
   String get privacyS6HighlightLabel => 'Minimalizace dat:';
@@ -144,18 +158,46 @@ class WebLocalizationsCs extends WebLocalizations {
 
   @override
   String get privacyS7FirebaseItems =>
-      'Účel: Hlášení pádů, analytika a sledování výkonu\nShromažďovaná data: Pády aplikace, metriky výkonu, informace o relacích\nOvládání: Analytiku můžete deaktivovat v Nastavení aplikace → Soukromí a zabezpečení';
+      'Účel: Hlášení pádů (Crashlytics) a doručování push notifikací (Cloud Messaging)\nData: Hlášení pádů popsaná v oddílu 2; push tokeny a text notifikací\nOvládání: Vypnutím statistik používání v Nastavení → Soukromí a zabezpečení zastavíte hlášení pádů; vypnutím notifikací zastavíte push zprávy';
+
+  @override
+  String get privacyS7AppleTitle => 'Apple';
+
+  @override
+  String get privacyS7AppleP =>
+      'Účel: Distribuce přes App Store a doručování push notifikací na iPhonu (Apple Push Notification service)';
 
   @override
   String get privacyS7PlayTitle => 'Google Play Services';
 
   @override
   String get privacyS7PlayP =>
-      'Účel: Distribuce aplikace a funkce aktualizace v aplikaci';
+      'Účel: Distribuce a aktualizace aplikace na Androidu';
+
+  @override
+  String get privacyS7EmailTitle => 'Resend';
+
+  @override
+  String get privacyS7EmailP =>
+      'Účel: Odesílá e-maily s přehledem a měsíční shrnutí, které si zapnete. Dostává vaši e-mailovou adresu a zprávu';
+
+  @override
+  String get privacyS7AiTitle => 'Služby AI';
+
+  @override
+  String get privacyS7AiP =>
+      'Účel: Hodnocení nápadů, které odešlete (viz oddíl 3), a shrnování veřejných vědeckých studií pro přehled. Shrnování studií nepracuje s žádnými osobními údaji';
+
+  @override
+  String get privacyS7WebTitle => 'Cloudflare a doručování obsahu';
+
+  @override
+  String get privacyS7WebP =>
+      'Naše servery jsou za službou Cloudflare, která je chrání před útoky a vidí vaši IP adresu. Na webu Cloudflare Turnstile ověřuje, že nápad odesílá člověk. Web také načítá písma a kód od Googlu (gstatic.com) a jsDelivr, které při stažení dostanou vaši IP adresu';
 
   @override
   String get privacyS7Note =>
-      'S těmito službami nesdílíme osobní identifikační informace (jako je vaše jméno nebo e-mail), pokud to výslovně nepovolíte.';
+      'Každá služba dostane jen to, co potřebuje k úkolu uvedenému výše. Osobní údaje nikdy neprodáváme.';
 
   @override
   String get privacyS8Title => '8. Vaše práva a možnosti';
@@ -179,21 +221,21 @@ class WebLocalizationsCs extends WebLocalizations {
 
   @override
   String get privacyS8DeleteP =>
-      'Úplné smazání svého účtu a přidružených dat můžete požádat prostřednictvím Nastavení → Soukromí a zabezpečení.';
+      'Nastavení → Profil uživatele → Smazat účet vymaže váš účet z našich serverů (e-mail, předvolby přehledu, push token a Trezor) a poté z tohoto zařízení. Odeslané nápady zůstanou, ale bez vašeho jména a e-mailu. Pokud jste na tomto zařízení e-mail ještě nepotvrdili, aplikace vám nejprve pošle kód, aby váš účet nemohl smazat nikdo jiný.';
 
   @override
   String get privacyS8OptoutTitle => 'Odhlášení z analytiky';
 
   @override
   String get privacyS8OptoutP =>
-      'Sběr analytiky a hlášení pádů můžete deaktivovat prostřednictvím Nastavení → Soukromí a zabezpečení. To nemá vliv na základní funkčnost aplikace.';
+      'Statistiky používání a hlášení pádů můžete vypnout v Nastavení → Soukromí a zabezpečení. Na základní funkce aplikace to nemá vliv.';
 
   @override
   String get privacyS8ManageTitle => 'Správa komunikací';
 
   @override
   String get privacyS8ManageP =>
-      'Nastavení oznámení a komunikace můžete spravovat v aplikaci.';
+      'Denní přehled, e-mail s přehledem a měsíční shrnutí můžete kdykoli zapnout či vypnout v Nastavení → Můj trezor → Předvolby výzkumu. Notifikace pro NanoSolve Hive lze vypnout také v nastavení telefonu.';
 
   @override
   String get privacyS9Title => '9. Soukromí dětí';
@@ -207,7 +249,7 @@ class WebLocalizationsCs extends WebLocalizations {
 
   @override
   String get privacyS10Items =>
-      'Odeslané nápady: Uchovávány na dobu neurčitou, dokud je neodstraníte\nProfil uživatele: Uchováván po dobu aktivity účtu; smazán při zrušení účtu\nAnalytická data: Uchovávána 14 měsíců ve Firebase, poté automaticky smazána\nProtokoly pádů: Uchovávány 90 dní ve Firebase, poté automaticky smazány\nNastavení aplikace: Uloženo lokálně na vašem zařízení; smazáno při odinstalování aplikace';
+      'Odeslané nápady: Uchovávány neomezeně, pokud je nesmažete\nProfil uživatele, předvolby přehledu, push token a Trezor: Uchovávány, dokud profil existuje; na žádost smazány\nZáznam doručených přehledů: Uchováván, dokud profil existuje, aby se stejná studie neposlala dvakrát\nStatistiky používání: Smazány po 180 dnech\nHlášení pádů: Uchovávána 90 dní ve Firebase Crashlytics, poté automaticky smazána\nNastavení aplikace: Uložena lokálně ve vašem zařízení; smazána při odinstalaci aplikace';
 
   @override
   String get privacyS11Title => '11. Mezinárodní přenosy dat';
@@ -256,7 +298,7 @@ class WebLocalizationsCs extends WebLocalizations {
   String get privacyS15HighlightTeam => 'Tým pro soukromí NanoSolve Hive';
 
   @override
-  String get privacyS15HighlightEmail => 'E-mail: support@nanosolve.com';
+  String get privacyS15HighlightEmail => 'E-mail: support@nanosolve.org';
 
   @override
   String get privacyS15HighlightContact =>

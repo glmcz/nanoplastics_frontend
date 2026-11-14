@@ -177,6 +177,16 @@ class SettingsManager {
     await _preferencesManager.setAdvisorTourShown(shown);
   }
 
+  bool get hasShownVaultIntro {
+    _checkInitialized();
+    return _preferencesManager.hasShownVaultIntro;
+  }
+
+  Future<void> setVaultIntroShown(bool shown) async {
+    _checkInitialized();
+    await _preferencesManager.setVaultIntroShown(shown);
+  }
+
   String get userLanguage {
     _checkInitialized();
     return _preferencesManager.userLanguage;

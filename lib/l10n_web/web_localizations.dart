@@ -115,7 +115,7 @@ abstract class WebLocalizations {
   /// No description provided for @privacyLastUpdated.
   ///
   /// In en, this message translates to:
-  /// **'Last Updated: February 2026'**
+  /// **'Last Updated: November 14, 2026'**
   String get privacyLastUpdated;
 
   /// No description provided for @privacyS1Title.
@@ -127,7 +127,7 @@ abstract class WebLocalizations {
   /// No description provided for @privacyS1P1.
   ///
   /// In en, this message translates to:
-  /// **'NanoSolve Hive (\"App\", \"we\", \"our\", or \"us\") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and otherwise handle your information when you use our mobile application.'**
+  /// **'NanoSolve Hive (\"App\", \"we\", \"our\", or \"us\") is committed to protecting your privacy. This Privacy Policy explains what information we collect, why, and who else handles it when you use the NanoSolve Hive app for iPhone and Android or the website web.nanosolve.org.'**
   String get privacyS1P1;
 
   /// No description provided for @privacyS1P2.
@@ -151,7 +151,7 @@ abstract class WebLocalizations {
   /// No description provided for @privacyS2DeviceItems.
   ///
   /// In en, this message translates to:
-  /// **'Device type and operating system\nUnique device identifiers\nMobile network information\nDevice locale and timezone'**
+  /// **'Device type, operating system and app version\nDevice language\nYour time zone, only when you save daily digest settings\nA push notification token from Apple or Google, only if you allow notifications'**
   String get privacyS2DeviceItems;
 
   /// No description provided for @privacyS2UsageTitle.
@@ -163,19 +163,19 @@ abstract class WebLocalizations {
   /// No description provided for @privacyS2UsageItems.
   ///
   /// In en, this message translates to:
-  /// **'Features you access within the application\nPages or content you interact with\nTime spent in the application\nSearch queries and categories viewed'**
+  /// **'Which screens you open and which buttons you press, so we can see where the app confuses people\nEach record carries a random installation number created on your device. It is not linked to you, your account, your email or your phone\nThese records are deleted after 180 days, and nothing is collected while usage statistics are turned off'**
   String get privacyS2UsageItems;
 
   /// No description provided for @privacyS2AnalyticsTitle.
   ///
   /// In en, this message translates to:
-  /// **'Analytics and Performance Data'**
+  /// **'Crash Reports'**
   String get privacyS2AnalyticsTitle;
 
   /// No description provided for @privacyS2AnalyticsItems.
   ///
   /// In en, this message translates to:
-  /// **'App performance metrics and crash reports\nError logs and diagnostics\nFirebase Analytics data\nSession duration and frequency'**
+  /// **'When the app crashes, Firebase Crashlytics receives the error, the app version and the device\'s technical state at that moment\nCrash reports contain no email, nickname or ideas\nNo crash reports are sent while usage statistics are turned off'**
   String get privacyS2AnalyticsItems;
 
   /// No description provided for @privacyS2UserTitle.
@@ -187,7 +187,7 @@ abstract class WebLocalizations {
   /// No description provided for @privacyS2UserItems.
   ///
   /// In en, this message translates to:
-  /// **'Display name/nickname (for leaderboard participation)\nEmail address (for profile registration and notifications)\nSolution ideas, attachments, and other contributions you submit'**
+  /// **'Display name/nickname (for the leaderboard)\nEmail address (for your profile, the daily digest and the emails you opt into)\nDaily digest preferences: keywords, delivery hour, time zone, and whether email and the monthly summary are on\nPapers you save to your Vault\nSolution ideas, attachments, and other contributions you submit'**
   String get privacyS2UserItems;
 
   /// No description provided for @privacyS3Title.
@@ -286,6 +286,30 @@ abstract class WebLocalizations {
   /// **'If you submit without a name, the CC BY 4.0 license still applies but no attribution is required or possible. You will not be able to claim authorship after the fact for anonymous submissions.'**
   String get privacyS3AnonP;
 
+  /// No description provided for @privacyS3AiTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'AI scoring'**
+  String get privacyS3AiTitle;
+
+  /// No description provided for @privacyS3AiP.
+  ///
+  /// In en, this message translates to:
+  /// **'An idea you submit is stored by NanoSolve and read by people working on the project. It is also sent to an AI service, which may be outside your country, to be scored, and the score comes back into the app. Your nickname and email are attached only if you choose. To delete a submission, contact us with the code shown when you send it.'**
+  String get privacyS3AiP;
+
+  /// No description provided for @privacyS4Title.
+  ///
+  /// In en, this message translates to:
+  /// **'4. Daily Research Digest'**
+  String get privacyS4Title;
+
+  /// No description provided for @privacyS4Items.
+  ///
+  /// In en, this message translates to:
+  /// **'The daily digest is off until you turn it on in the app under Settings → My Vault → Research Preferences. It needs your email address, which you confirm with a 6-digit code we send to it; the code also keeps anyone else from reading or changing your settings.\nTo deliver it we store your email, your keywords, the hour you chose, your time zone, whether digest email and the monthly summary are on, and your device\'s push token.\nWe also record which paper was sent to which profile, so you never get the same paper twice.\nPapers come from public scientific databases. Choosing one uses nothing about you except your keywords.\nPush notifications travel through Firebase Cloud Messaging (Google) and, on iPhone, the Apple Push Notification service. They receive the push token and the notification text (the paper\'s title and summary), not your email.\nDigest emails and the monthly summary are sent through Resend, an email delivery service, which receives your email address and the message.\nTo stop, switch the digest, email or monthly summary off in Research Preferences, or turn off notifications for NanoSolve Hive in your phone\'s settings.'**
+  String get privacyS4Items;
+
   /// No description provided for @privacyS5Title.
   ///
   /// In en, this message translates to:
@@ -295,7 +319,7 @@ abstract class WebLocalizations {
   /// No description provided for @privacyS5Items.
   ///
   /// In en, this message translates to:
-  /// **'Improve the App: Maintain and enhance application functionality and features\nAnalyze Usage: Understand usage patterns to improve user experience\nDiagnose Issues: Identify and fix technical problems and bugs\nSend Updates: Notify you of important updates or security notices\nComply with Law: Meet legal obligations and regulatory requirements\nCommunity Features: Display your profile and solutions on the public leaderboard (with your consent)'**
+  /// **'Deliver the Daily Digest: Send the papers, notifications and emails you opted into, at the hour you chose\nImprove the App: Maintain and enhance application functionality and features\nAnalyze Usage: Understand usage patterns to improve user experience\nDiagnose Issues: Identify and fix technical problems and bugs\nComply with Law: Meet legal obligations and regulatory requirements\nCommunity Features: Display your nickname and ideas on the public leaderboard (with your consent)'**
   String get privacyS5Items;
 
   /// No description provided for @privacyS6Title.
@@ -307,7 +331,7 @@ abstract class WebLocalizations {
   /// No description provided for @privacyS6Items.
   ///
   /// In en, this message translates to:
-  /// **'We don\'t store any sensitive or confidential data beyond the registration email/nickname and the ideas or attachments you explicitly submit.\nPublic data (user email, nickname) is stored securely on our servers with appropriate access controls.\nIdea content and associated metadata remain in anonymized form after removing personal identifiers.\nWe never share personal data with third parties without your explicit consent.'**
+  /// **'We store only what the app needs: your profile (nickname and email), your digest preferences and Vault, and the ideas or attachments you submit.\nYour email is never shown publicly. Your nickname appears on the leaderboard only next to ideas you submit under it.\nData travels over encrypted HTTPS connections and is stored on our servers, with access limited to the people running NanoSolve.\nIdea content and associated metadata remain in anonymized form after removing personal identifiers.\nWe never sell personal data.'**
   String get privacyS6Items;
 
   /// No description provided for @privacyS6HighlightLabel.
@@ -343,8 +367,20 @@ abstract class WebLocalizations {
   /// No description provided for @privacyS7FirebaseItems.
   ///
   /// In en, this message translates to:
-  /// **'Purpose: Crash reporting, analytics, and performance monitoring\nData Collected: App crashes, performance metrics, session information\nControl: You can disable analytics in app Settings → Privacy & Security'**
+  /// **'Purpose: Crash reporting (Crashlytics) and push notification delivery (Cloud Messaging)\nData: Crash reports as described in section 2; push tokens and notification text\nControl: Turn off usage statistics in Settings → Privacy & Security to stop crash reports; turn off notifications to stop pushes'**
   String get privacyS7FirebaseItems;
+
+  /// No description provided for @privacyS7AppleTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Apple'**
+  String get privacyS7AppleTitle;
+
+  /// No description provided for @privacyS7AppleP.
+  ///
+  /// In en, this message translates to:
+  /// **'Purpose: App Store distribution and push notification delivery on iPhone (Apple Push Notification service)'**
+  String get privacyS7AppleP;
 
   /// No description provided for @privacyS7PlayTitle.
   ///
@@ -355,13 +391,49 @@ abstract class WebLocalizations {
   /// No description provided for @privacyS7PlayP.
   ///
   /// In en, this message translates to:
-  /// **'Purpose: App distribution and in-app update functionality'**
+  /// **'Purpose: App distribution and updates on Android'**
   String get privacyS7PlayP;
+
+  /// No description provided for @privacyS7EmailTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Resend'**
+  String get privacyS7EmailTitle;
+
+  /// No description provided for @privacyS7EmailP.
+  ///
+  /// In en, this message translates to:
+  /// **'Purpose: Sends the digest emails and monthly summary you opt into. Receives your email address and the message'**
+  String get privacyS7EmailP;
+
+  /// No description provided for @privacyS7AiTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'AI services'**
+  String get privacyS7AiTitle;
+
+  /// No description provided for @privacyS7AiP.
+  ///
+  /// In en, this message translates to:
+  /// **'Purpose: Scoring the ideas you submit (see section 3) and summarizing public research papers for the digest. Summarizing papers involves no personal data'**
+  String get privacyS7AiP;
+
+  /// No description provided for @privacyS7WebTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Cloudflare and content delivery'**
+  String get privacyS7WebTitle;
+
+  /// No description provided for @privacyS7WebP.
+  ///
+  /// In en, this message translates to:
+  /// **'Our servers sit behind Cloudflare, which shields them from attacks and sees your IP address. On the website, Cloudflare Turnstile checks that an idea is submitted by a person. The website also loads fonts and code from Google (gstatic.com) and jsDelivr, which receive your IP address when your browser fetches them'**
+  String get privacyS7WebP;
 
   /// No description provided for @privacyS7Note.
   ///
   /// In en, this message translates to:
-  /// **'We do not share personal identifiable information (such as your name or email) with these services unless you explicitly authorize it.'**
+  /// **'Each service receives only what it needs for the job listed above. We never sell personal data.'**
   String get privacyS7Note;
 
   /// No description provided for @privacyS8Title.
@@ -403,7 +475,7 @@ abstract class WebLocalizations {
   /// No description provided for @privacyS8DeleteP.
   ///
   /// In en, this message translates to:
-  /// **'You can request complete deletion of your account and associated data through Settings → Privacy & Security.'**
+  /// **'Settings → User Profile → Delete account erases your account from our servers (your email, digest preferences, push token and Vault) and then from this device. Ideas you submitted stay, without your name and email. If you have not confirmed your email on this device, the app first sends you a code, so nobody else can delete your account.'**
   String get privacyS8DeleteP;
 
   /// No description provided for @privacyS8OptoutTitle.
@@ -415,7 +487,7 @@ abstract class WebLocalizations {
   /// No description provided for @privacyS8OptoutP.
   ///
   /// In en, this message translates to:
-  /// **'You can disable analytics collection and crash reporting through Settings → Privacy & Security. This does not affect core app functionality.'**
+  /// **'You can turn off usage statistics and crash reporting in Settings → Privacy & Security. This does not affect core app functionality.'**
   String get privacyS8OptoutP;
 
   /// No description provided for @privacyS8ManageTitle.
@@ -427,7 +499,7 @@ abstract class WebLocalizations {
   /// No description provided for @privacyS8ManageP.
   ///
   /// In en, this message translates to:
-  /// **'You can manage your notification preferences and communication settings within the application.'**
+  /// **'Turn the daily digest, digest email and monthly summary on or off at any time under Settings → My Vault → Research Preferences. You can also turn off notifications for NanoSolve Hive in your phone\'s settings.'**
   String get privacyS8ManageP;
 
   /// No description provided for @privacyS9Title.
@@ -451,7 +523,7 @@ abstract class WebLocalizations {
   /// No description provided for @privacyS10Items.
   ///
   /// In en, this message translates to:
-  /// **'Submitted Ideas: Retained indefinitely unless deleted by you\nUser Profile: Retained while account is active; deleted upon account deletion\nAnalytics Data: Retained for 14 months by Firebase, then automatically deleted\nCrash Logs: Retained for 90 days by Firebase, then automatically deleted\nApp Settings: Stored locally on your device; deleted when you uninstall the app'**
+  /// **'Submitted Ideas: Retained indefinitely unless deleted by you\nUser Profile, digest preferences, push token and Vault: Retained while your profile exists; erased on request\nDigest delivery log: Retained while your profile exists, so the same paper is never sent twice\nUsage Statistics: Deleted after 180 days\nCrash Reports: Retained for 90 days by Firebase Crashlytics, then automatically deleted\nApp Settings: Stored locally on your device; deleted when you uninstall the app'**
   String get privacyS10Items;
 
   /// No description provided for @privacyS11Title.
@@ -535,7 +607,7 @@ abstract class WebLocalizations {
   /// No description provided for @privacyS15HighlightEmail.
   ///
   /// In en, this message translates to:
-  /// **'Email: support@nanosolve.com'**
+  /// **'Email: support@nanosolve.org'**
   String get privacyS15HighlightEmail;
 
   /// No description provided for @privacyS15HighlightContact.

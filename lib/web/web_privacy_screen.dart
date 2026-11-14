@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 import '../config/app_colors.dart';
+import '../config/store_links.dart';
 import '../l10n_web/web_localizations.dart';
 import '../utils/url_utils.dart';
 import 'web_theme.dart';
@@ -99,6 +100,14 @@ class WebPrivacyScreen extends StatelessWidget {
                       _BulletList(l10n.privacyS3NeverItems.split('\n')),
                       _H3(l10n.privacyS3AnonTitle),
                       _P(l10n.privacyS3AnonP),
+                      _H3(l10n.privacyS3AiTitle),
+                      _P(l10n.privacyS3AiP),
+                    ],
+                  ),
+                  _Section(
+                    title: l10n.privacyS4Title,
+                    children: [
+                      _BulletList(l10n.privacyS4Items.split('\n')),
                     ],
                   ),
                   // Section 5: How We Use Your Information
@@ -136,8 +145,16 @@ class WebPrivacyScreen extends StatelessWidget {
                       _P(l10n.privacyS7Intro),
                       _H3(l10n.privacyS7FirebaseTitle),
                       _BulletList(l10n.privacyS7FirebaseItems.split('\n')),
+                      _H3(l10n.privacyS7AppleTitle),
+                      _P(l10n.privacyS7AppleP),
                       _H3(l10n.privacyS7PlayTitle),
                       _P(l10n.privacyS7PlayP),
+                      _H3(l10n.privacyS7EmailTitle),
+                      _P(l10n.privacyS7EmailP),
+                      _H3(l10n.privacyS7AiTitle),
+                      _P(l10n.privacyS7AiP),
+                      _H3(l10n.privacyS7WebTitle),
+                      _P(l10n.privacyS7WebP),
                       _P(l10n.privacyS7Note),
                     ],
                   ),
@@ -233,7 +250,7 @@ class WebPrivacyScreen extends StatelessWidget {
                     title: l10n.privacyS16Title,
                     children: [
                       _LinkLine(
-                        url: 'https://github.com/glmcz/nanoplastics_frontend',
+                        url: StoreLinks.githubRepo,
                         label: l10n.privacyS16GithubLabel,
                       ),
                       _LinkLine(
@@ -301,16 +318,15 @@ class WebPrivacyScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             TextButton(
-              onPressed: () => Navigator.of(context).pop(),
+              onPressed: () => Navigator.of(context).maybePop(),
               child: Text(
                 l10n.privacyFooterHome,
                 style: const TextStyle(color: AppColors.neonCyan),
               ),
             ),
             const Text(' · ', style: TextStyle(color: WebTheme.textMuted)),
-            GestureDetector(
-              onTap: () => openExternalUrl(
-                  'https://github.com/glmcz/nanoplastics_frontend'),
+            TextButton(
+              onPressed: () => openExternalUrl(StoreLinks.githubRepo),
               child: Text(
                 l10n.privacyFooterGithub,
                 style: const TextStyle(color: AppColors.neonCyan),

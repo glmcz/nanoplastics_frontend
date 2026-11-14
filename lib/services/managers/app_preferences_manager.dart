@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class AppPreferencesManager {
   static const String _onboardingShownKey = 'onboarding_shown';
   static const String _advisorTourShownKey = 'advisor_tour_shown';
+  static const String _vaultIntroShownKey = 'vault_intro_shown';
   static const String _userLanguageKey = 'user_language';
   static const String _notificationsEnabledKey = 'notifications_enabled';
   static const String _darkModeKey = 'dark_mode';
@@ -29,6 +30,13 @@ class AppPreferencesManager {
 
   Future<void> setAdvisorTourShown(bool shown) async {
     await _prefs.setBool(_advisorTourShownKey, shown);
+  }
+
+  // Vault intro: the tour step that came after many users had finished the tour
+  bool get hasShownVaultIntro => _prefs.getBool(_vaultIntroShownKey) ?? false;
+
+  Future<void> setVaultIntroShown(bool shown) async {
+    await _prefs.setBool(_vaultIntroShownKey, shown);
   }
 
   // Language

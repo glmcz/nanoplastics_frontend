@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show defaultTargetPlatform;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show Clipboard, ClipboardData;
 import 'package:flutter_custom_tabs/flutter_custom_tabs.dart';
@@ -6,6 +7,7 @@ import 'package:qr_flutter/qr_flutter.dart';
 import '../../l10n/app_localizations.dart';
 import '../../config/app_colors.dart';
 import '../../config/app_constants.dart';
+import '../../config/store_links.dart';
 import '../../utils/app_spacing.dart';
 import '../../utils/app_sizing.dart';
 import '../../utils/app_typography.dart';
@@ -27,11 +29,11 @@ class AboutScreen extends StatefulWidget {
 }
 
 class _AboutScreenState extends State<AboutScreen> {
-  String _selectedPlatform = 'play_store';
+  // An iPhone user who opens Share most likely shares with another iPhone.
+  String _selectedPlatform =
+      defaultTargetPlatform == TargetPlatform.iOS ? 'app_store' : 'play_store';
   late String appVersion;
   CustomTabsSession? _customTabsSession;
-
-  /// for warm up browser.
 
   @override
   void initState() {
@@ -47,7 +49,7 @@ class _AboutScreenState extends State<AboutScreen> {
       _customTabsSession = session;
       // Pre-fetch the website so it loads instantly on tap
       await mayLaunchUrl(
-        Uri.parse('https://glmcz.github.io/nanoplastics_frontend/'),
+        Uri.parse(StoreLinks.website),
         customTabsSession: session,
       );
     } catch (_) {
@@ -74,12 +76,12 @@ class _AboutScreenState extends State<AboutScreen> {
   String _getDownloadUrl() {
     switch (_selectedPlatform) {
       case 'play_store':
-        return 'https://play.google.com/store/apps/details?id=org.nanosolve.hive';
+        return StoreLinks.playStore;
       case 'app_store':
-        return 'https://apps.apple.com/app/id6760934677';
+        return StoreLinks.appStore;
       case 'public':
       default:
-        return 'https://github.com/glmcz/nanoplastics_frontend/releases';
+        return StoreLinks.githubLatestRelease;
     }
   }
 
@@ -285,14 +287,7 @@ class _AboutScreenState extends State<AboutScreen> {
             spacing: spacing,
             sizing: sizing,
             typography: typography,
-            onTap: () {
-              if (PlatformAdaptive.isWeb) {
-                Navigator.of(context).pushNamed('/privacy');
-              } else {
-                _launchUrl(
-                    '${AppLocalizations.of(context)!.aboutWebsiteUrl}/privacy/');
-              }
-            },
+            onTap: () => Navigator.of(context).pushNamed('/privacy'),
           ),
           SizedBox(height: spacing.cardSpacing * 2),
           SectionTitle(AppLocalizations.of(context)!.aboutShare,
@@ -572,7 +567,7 @@ class _AboutScreenState extends State<AboutScreen> {
           ),
           const SizedBox(height: AppConstants.space16),
           InkWell(
-            onTap: () => _launchUrl(appDownloadUrl),
+            onTap: () => _openStore(appDownloadUrl),
             child: Container(
               padding: const EdgeInsets.symmetric(
                 horizontal: AppConstants.space16,
@@ -684,6 +679,15 @@ class _AboutScreenState extends State<AboutScreen> {
         ),
       ],
     );
+  }
+
+  /// Store pages open in the store app itself. Inside Safari View Controller
+  /// or a Custom Tab the App Store page only offers "View in App Store",
+  /// one more tap before the user can install.
+  Future<void> _openStore(String url) async {
+    final opened = await PlatformAdaptive.launchExternalUrl(url)
+        .catchError((Object _) => false);
+    if (!opened) await _launchUrl(url);
   }
 
   Future<void> _launchUrl(String url) async {

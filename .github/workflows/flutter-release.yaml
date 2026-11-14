@@ -138,6 +138,11 @@ jobs:
       - name: Run Large-Font Layout Tests (Mobile platform, real Roboto)
         run: flutter test test/responsive/text_scale_overflow_test.dart
 
+      # dart:io tests the Chrome run skips: landing layout reads real fonts,
+      # the privacy test reads the policy text off disk.
+      - name: Run Landing and Privacy Tests (VM)
+        run: flutter test test/web/landing_screen_test.dart test/features/privacy_test.dart
+
       # ---------------- L10N GENERATION ----------------
       - name: Generate l10n files
         run: bash run_generate_langs.sh

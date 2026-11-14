@@ -3,10 +3,21 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
 import '../models/digest_paper.dart';
 import 'api_service.dart';
+import 'encryption_service.dart';
 import 'http/app_http_client.dart';
 import 'logger_service.dart';
 import 'settings_manager.dart';
 
+enum CodeRequestResult { sent, invalidEmail, tooSoon, failed }
+
+enum SignInResult { signedIn, wrongCode, locked, failed }
+
+/// The research digest and the Vault, both kept on the server per user.
+///
+/// The server knows a user by a token bought with an emailed code (backend
+/// `digest/auth.rs`). Until the user confirms their email the token is
+/// missing, and the screens that need the server ask for the code first.
+/// Requests still carry `email`, which only a server from before sign-in reads.
 class DigestService {
   static final DigestService _instance = DigestService._internal();
   DigestService._internal();
@@ -25,42 +36,166 @@ class DigestService {
   final Set<String> _tresorIds = {};
   Set<String> get tresorIds => Set.unmodifiable(_tresorIds);
 
+  // ── Account ──────────────────────────────────────────────────────────────────
+
+  static const _accountKey = 'hive_account';
+
+  /// The token and the address it was issued for. A token for another address
+  /// than the profile's no longer counts: the user changed their email.
+  ({String email, String token})? _account;
+  Future<void>? _accountLoad;
+
+  /// The token push registration was waiting on, sent once the user signs in.
+  String? _pendingFcmToken;
+
+  static String _normalize(String email) => email.trim().toLowerCase();
+
+  Future<void> _loadAccount() => _accountLoad ??= () async {
+        final raw = await EncryptionService.secureRead(_accountKey);
+        if (raw == null) return;
+        try {
+          final json = jsonDecode(raw) as Map<String, dynamic>;
+          _account = (
+            email: json['email'] as String,
+            token: json['token'] as String,
+          );
+        } catch (_) {
+          await EncryptionService.secureDelete(_accountKey);
+        }
+      }();
+
+  /// Whether the user has confirmed the email in their profile.
+  Future<bool> isSignedIn() async {
+    await _loadAccount();
+    final a = _account;
+    return a != null &&
+        _settings.email.isNotEmpty &&
+        a.email == _normalize(_settings.email);
+  }
+
+  Future<String?> _token() async => await isSignedIn() ? _account!.token : null;
+
+  Future<Map<String, String>> _headers({bool json = false}) async {
+    final token = await _token();
+    return {
+      if (json) 'Content-Type': 'application/json',
+      if (token != null) 'Authorization': 'Bearer $token',
+    };
+  }
+
+  /// A 401 means the token was revoked or the account deleted elsewhere.
+  Future<void> _onStatus(int status) async {
+    if (status == 401) await _forgetAccount();
+  }
+
+  Future<void> _forgetAccount() async {
+    _account = null;
+    _tresorIds.clear();
+    await EncryptionService.secureDelete(_accountKey);
+  }
+
+  Future<CodeRequestResult> requestCode(String email) async {
+    try {
+      final resp = await AppHttpClient.instance
+          .post(
+            Uri.parse('${_api.baseUrl}/api/users/auth/request-code'),
+            headers: {'Content-Type': 'application/json'},
+            body: jsonEncode({'email': email.trim()}),
+          )
+          .timeout(const Duration(seconds: 15));
+      return switch (resp.statusCode) {
+        202 => CodeRequestResult.sent,
+        400 => CodeRequestResult.invalidEmail,
+        429 => CodeRequestResult.tooSoon,
+        _ => CodeRequestResult.failed,
+      };
+    } catch (e, st) {
+      LoggerService().logError('requestCode', e, st);
+      return CodeRequestResult.failed;
+    }
+  }
+
+  /// Checks the emailed code. On success the token is stored and the profile
+  /// takes the confirmed address.
+  Future<SignInResult> verifyCode(String email, String code) async {
+    try {
+      final resp = await AppHttpClient.instance
+          .post(
+            Uri.parse('${_api.baseUrl}/api/users/auth/verify-code'),
+            headers: {'Content-Type': 'application/json'},
+            body: jsonEncode({
+              'email': email.trim(),
+              'code': code.trim(),
+              if (_settings.displayName.isNotEmpty)
+                'display_name': _settings.displayName,
+            }),
+          )
+          .timeout(const Duration(seconds: 15));
+      if (resp.statusCode == 401) return SignInResult.wrongCode;
+      if (resp.statusCode == 429) return SignInResult.locked;
+      if (resp.statusCode != 200) return SignInResult.failed;
+
+      final json = jsonDecode(resp.body) as Map<String, dynamic>;
+      final confirmed = _normalize(json['email'] as String);
+      _account = (email: confirmed, token: json['token'] as String);
+      await EncryptionService.secureWrite(_accountKey,
+          jsonEncode({'email': confirmed, 'token': _account!.token}));
+      if (_normalize(_settings.email) != confirmed) {
+        await _settings.setEmail(confirmed);
+      }
+      final pending = _pendingFcmToken;
+      if (pending != null) await updateFcmToken(pending);
+      await syncUser();
+      return SignInResult.signedIn;
+    } catch (e, st) {
+      LoggerService().logError('verifyCode', e, st);
+      return SignInResult.failed;
+    }
+  }
+
+  /// Erases the account on the server: profile, digest settings, push token
+  /// and Vault. Ideas stay, without the name and email.
+  Future<bool> deleteAccount() async {
+    final headers = await _headers();
+    if (!headers.containsKey('Authorization')) return false;
+    try {
+      final resp = await AppHttpClient.instance
+          .delete(Uri.parse('${_api.baseUrl}/api/users/me'), headers: headers)
+          .timeout(const Duration(seconds: 15));
+      if (resp.statusCode == 204) {
+        await _forgetAccount();
+        return true;
+      }
+      return false;
+    } catch (e, st) {
+      LoggerService().logError('deleteAccount', e, st);
+      return false;
+    }
+  }
+
   // ── User sync ────────────────────────────────────────────────────────────────
 
-  /// Called fire-and-forget on app start. Upserts user, warms tresor cache.
+  /// Called fire-and-forget on app start, and after sign-in. Reads the
+  /// keywords and warms the tresor cache.
   Future<void> syncUser() async {
+    if (!await isSignedIn()) return;
     final email = _settings.email;
-    if (email.isEmpty) return;
 
     try {
-      // Try to get existing user
-      final meUri = Uri.parse(
-          '${_api.baseUrl}/api/users/me?email=${Uri.encodeComponent(email)}');
       final meResp = await AppHttpClient.instance
-          .get(meUri)
+          .get(
+            Uri.parse(
+                '${_api.baseUrl}/api/users/me?email=${Uri.encodeComponent(email)}'),
+            headers: await _headers(),
+          )
           .timeout(const Duration(seconds: 8));
+      await _onStatus(meResp.statusCode);
+      if (meResp.statusCode == 200) _syncKeywordsFromJson(meResp.body);
 
-      if (meResp.statusCode == 404) {
-        // Register new user
-        final regResp = await AppHttpClient.instance
-            .post(
-              Uri.parse('${_api.baseUrl}/api/users/register'),
-              headers: {'Content-Type': 'application/json'},
-              body: jsonEncode({
-                'email': email,
-                'display_name': _settings.displayName,
-              }),
-            )
-            .timeout(const Duration(seconds: 8));
-
-        if (regResp.statusCode == 201) {
-          _syncKeywordsFromJson(regResp.body);
-        }
-      } else if (meResp.statusCode == 200) {
-        _syncKeywordsFromJson(meResp.body);
-      }
-
-      await _loadTresorIds(email);
+      final ids = await getTresorIds();
+      _tresorIds
+        ..clear()
+        ..addAll(ids);
     } catch (e) {
       LoggerService()
           .logUserAction('digest_sync_failed', params: {'error': e.toString()});
@@ -77,15 +212,10 @@ class DigestService {
     } catch (_) {}
   }
 
-  Future<void> _loadTresorIds(String email) async {
-    final ids = await getTresorIds(email: email);
-    _tresorIds
-      ..clear()
-      ..addAll(ids);
-  }
+  // ── Papers ───────────────────────────────────────────────────────────────────
 
-  // ── Feed ─────────────────────────────────────────────────────────────────────
-
+  /// Recent papers about micro- and nanoplastics, newest first. Public: no
+  /// account needed. The on-device vault tests pick their papers from here.
   Future<List<DigestPaper>> fetchLatest({
     DateTime? since,
     List<String>? keywords,
@@ -165,13 +295,14 @@ class DigestService {
       final resp = await AppHttpClient.instance
           .put(
             Uri.parse(url),
-            headers: {'Content-Type': 'application/json'},
+            headers: await _headers(json: true),
             body: jsonEncode(body),
           )
           .timeout(const Duration(seconds: 10));
 
       LoggerService()
           .logNetworkCall(url, method: 'PUT', statusCode: resp.statusCode);
+      await _onStatus(resp.statusCode);
       if (resp.statusCode != 200) {
         LoggerService().logError(
             'updatePreferences', 'status ${resp.statusCode}: ${resp.body}');
@@ -216,9 +347,13 @@ class DigestService {
 
     try {
       final resp = await AppHttpClient.instance
-          .get(Uri.parse(
-              '${_api.baseUrl}/api/users/me?email=${Uri.encodeComponent(email)}'))
+          .get(
+            Uri.parse(
+                '${_api.baseUrl}/api/users/me?email=${Uri.encodeComponent(email)}'),
+            headers: await _headers(),
+          )
           .timeout(const Duration(seconds: 8));
+      await _onStatus(resp.statusCode);
       if (resp.statusCode != 200) return null;
 
       final json = jsonDecode(resp.body) as Map<String, dynamic>;
@@ -235,18 +370,17 @@ class DigestService {
 
   // ── Tresor ───────────────────────────────────────────────────────────────────
 
-  Future<List<String>> getTresorIds({String? email}) async {
-    final resolvedEmail = email ?? _settings.email;
-    if (resolvedEmail.isEmpty) return [];
+  Uri _userUri(String path) => Uri.parse(
+      '${_api.baseUrl}$path?email=${Uri.encodeComponent(_settings.email)}');
+
+  Future<List<String>> getTresorIds() async {
+    if (_settings.email.isEmpty) return [];
 
     try {
       final resp = await AppHttpClient.instance
-          .get(
-            Uri.parse(
-                '${_api.baseUrl}/api/users/tresor?email=${Uri.encodeComponent(resolvedEmail)}'),
-          )
+          .get(_userUri('/api/users/tresor'), headers: await _headers())
           .timeout(const Duration(seconds: 10));
-
+      await _onStatus(resp.statusCode);
       if (resp.statusCode != 200) return [];
       final json = jsonDecode(resp.body) as Map<String, dynamic>;
       return ((json['paper_ids'] as List<dynamic>?) ?? []).cast<String>();
@@ -263,10 +397,11 @@ class DigestService {
       final resp = await AppHttpClient.instance
           .post(
             Uri.parse('${_api.baseUrl}/api/users/tresor'),
-            headers: {'Content-Type': 'application/json'},
+            headers: await _headers(json: true),
             body: jsonEncode({'email': email, 'paper_id': paperId}),
           )
           .timeout(const Duration(seconds: 8));
+      await _onStatus(resp.statusCode);
 
       if (resp.statusCode == 201) {
         _tresorIds.add(paperId);
@@ -279,16 +414,14 @@ class DigestService {
   }
 
   Future<bool> removeFromTresor(String paperId) async {
-    final email = _settings.email;
-    if (email.isEmpty) return false;
+    if (_settings.email.isEmpty) return false;
 
     try {
       final resp = await AppHttpClient.instance
-          .delete(
-            Uri.parse(
-                '${_api.baseUrl}/api/users/tresor/$paperId?email=${Uri.encodeComponent(email)}'),
-          )
+          .delete(_userUri('/api/users/tresor/$paperId'),
+              headers: await _headers())
           .timeout(const Duration(seconds: 8));
+      await _onStatus(resp.statusCode);
 
       if (resp.statusCode == 204) {
         _tresorIds.remove(paperId);
@@ -300,11 +433,12 @@ class DigestService {
     }
   }
 
+  /// Registers this device for the push. Before sign-in the server would not
+  /// know whose device it is, so the token waits for [verifyCode].
   Future<void> updateFcmToken(String token) async {
     final email = _settings.email;
-    if (email.isEmpty) {
-      LoggerService().logError(
-          'updateFcmToken', 'no email set — push token not registered', null);
+    if (email.isEmpty || !await isSignedIn()) {
+      _pendingFcmToken = token;
       return;
     }
 
@@ -312,13 +446,16 @@ class DigestService {
       final resp = await AppHttpClient.instance
           .put(
             Uri.parse('${_api.baseUrl}/api/users/fcm-token'),
-            headers: {'Content-Type': 'application/json'},
+            headers: await _headers(json: true),
             body: jsonEncode({'email': email, 'token': token}),
           )
           .timeout(const Duration(seconds: 8));
+      await _onStatus(resp.statusCode);
       if (resp.statusCode < 200 || resp.statusCode >= 300) {
         LoggerService().logError(
             'updateFcmToken', 'HTTP ${resp.statusCode}: ${resp.body}', null);
+      } else {
+        _pendingFcmToken = null;
       }
     } catch (e, st) {
       // Silence here meant a device that could never be pushed to, with nothing
@@ -328,16 +465,13 @@ class DigestService {
   }
 
   Future<List<DigestPaper>> fetchSavedPapers() async {
-    final email = _settings.email;
-    if (email.isEmpty) return [];
+    if (_settings.email.isEmpty) return [];
 
     try {
       final resp = await AppHttpClient.instance
-          .get(
-            Uri.parse(
-                '${_api.baseUrl}/api/users/tresor/papers?email=${Uri.encodeComponent(email)}'),
-          )
+          .get(_userUri('/api/users/tresor/papers'), headers: await _headers())
           .timeout(const Duration(seconds: 15));
+      await _onStatus(resp.statusCode);
 
       if (resp.statusCode != 200) return [];
       final json = jsonDecode(resp.body) as Map<String, dynamic>;
@@ -352,16 +486,13 @@ class DigestService {
   }
 
   Future<String?> exportTresor() async {
-    final email = _settings.email;
-    if (email.isEmpty) return null;
+    if (_settings.email.isEmpty) return null;
 
     try {
       final resp = await AppHttpClient.instance
-          .get(
-            Uri.parse(
-                '${_api.baseUrl}/api/users/tresor/export?email=${Uri.encodeComponent(email)}'),
-          )
+          .get(_userUri('/api/users/tresor/export'), headers: await _headers())
           .timeout(const Duration(seconds: 15));
+      await _onStatus(resp.statusCode);
 
       return resp.statusCode == 200 ? resp.body : null;
     } catch (_) {

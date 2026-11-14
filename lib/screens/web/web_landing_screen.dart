@@ -1,6 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:vector_math/vector_math_64.dart' show Vector3;
+import 'package:qr_flutter/qr_flutter.dart';
 
 import '../../main.dart';
 import '../../l10n/app_localizations.dart';
@@ -9,6 +9,7 @@ import '../../models/category_detail_data.dart';
 import '../../services/settings_manager.dart';
 import '../../utils/url_utils.dart';
 import '../../config/app_colors.dart';
+import '../../config/store_links.dart';
 import '../../web/web_app_shell.dart';
 import '../../widgets/nanosolve_logo.dart';
 
@@ -130,13 +131,7 @@ const _textSoft = Color(0xFFB9DCD4);
 const _textMuted = Color(0xFF7EAAA0);
 const _accent = Color(0xFF6DF5D8);
 const _accentStrong = Color(0xFF2DD4BF);
-const _githubLatestReleaseUrl =
-    'https://github.com/glmcz/nanoplastics_frontend/releases/latest/';
-const _githubRepoUrl = 'https://github.com/glmcz/nanoplastics_frontend';
-
-void _openExternalUrl(String url) {
-  openExternalUrl(url);
-}
+const _qrInk = Color(0xFF0A0A12);
 
 // ── Screen ────────────────────────────────────────────────────────────────────
 
@@ -148,8 +143,10 @@ class WebLandingScreen extends StatefulWidget {
 }
 
 class _WebLandingScreenState extends State<WebLandingScreen> {
+  final GlobalKey _digestSectionKey = GlobalKey();
   final GlobalKey _whySectionKey = GlobalKey();
   final GlobalKey _howSectionKey = GlobalKey();
+  final GlobalKey _downloadSectionKey = GlobalKey();
   bool _isChangingLanguage = false;
 
   Future<void> _scrollToSection(GlobalKey key) async {
@@ -213,9 +210,10 @@ class _WebLandingScreenState extends State<WebLandingScreen> {
               selectedLanguage: selectedLanguage,
               onSelectLanguage: _selectLanguage,
               onLaunchWorkspace: () => _openWorkspace(context),
+              onOpenDigest: () => _scrollToSection(_digestSectionKey),
               onOpenWhy: () => _scrollToSection(_whySectionKey),
               onOpenHow: () => _scrollToSection(_howSectionKey),
-              onOpenDownload: () {},
+              onOpenDownload: () => _scrollToSection(_downloadSectionKey),
             ),
             Expanded(
               child: SingleChildScrollView(
@@ -223,9 +221,11 @@ class _WebLandingScreenState extends State<WebLandingScreen> {
                   children: [
                     _HeroSection(
                       l10n: l10n,
-                      selectedLanguage: selectedLanguage,
-                      onSelectLanguage: _selectLanguage,
                       onLaunchWorkspace: () => _openWorkspace(context),
+                    ),
+                    KeyedSubtree(
+                      key: _digestSectionKey,
+                      child: _DigestSection(l10n: l10n),
                     ),
                     KeyedSubtree(
                       key: _whySectionKey,
@@ -240,6 +240,10 @@ class _WebLandingScreenState extends State<WebLandingScreen> {
                       categories: categories,
                       onOpenCategory: (key) =>
                           _openWorkspace(context, categoryKey: key),
+                    ),
+                    KeyedSubtree(
+                      key: _downloadSectionKey,
+                      child: _DownloadSection(l10n: l10n),
                     ),
                     _Footer(
                       l10n: l10n,
@@ -263,25 +267,26 @@ class _LandingTopBar extends StatelessWidget {
   final String selectedLanguage;
   final ValueChanged<String> onSelectLanguage;
   final VoidCallback onLaunchWorkspace;
+  final VoidCallback onOpenDigest;
   final VoidCallback onOpenWhy;
   final VoidCallback onOpenHow;
-  // Kept for hot-reload field compatibility; intentionally unused.
-  final VoidCallback? onOpenDownload;
+  final VoidCallback onOpenDownload;
   const _LandingTopBar({
     required this.l10n,
     required this.selectedLanguage,
     required this.onSelectLanguage,
     required this.onLaunchWorkspace,
+    required this.onOpenDigest,
     required this.onOpenWhy,
     required this.onOpenHow,
-    this.onOpenDownload,
+    required this.onOpenDownload,
   });
 
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.sizeOf(context).width;
-    final compact = width < 980;
-    final phone = width < 500;
+    final compact = width < 1080;
+    final phone = width < 560;
 
     return DecoratedBox(
       decoration: BoxDecoration(
@@ -300,32 +305,113 @@ class _LandingTopBar extends StatelessWidget {
         child: _constrain(
           child: Row(
             children: [
-              const NanosolveLogo(height: 50),
-              const Spacer(),
-              if (!compact) ...[
-                _topLink(l10n.landingNavWhy, onTap: onOpenWhy),
-                const SizedBox(width: 2),
-                _topLink(l10n.landingNavHow, onTap: onOpenHow),
-              ],
-              if (!phone) ...[
-                const SizedBox(width: 10),
-                _PillButton(
-                  label: l10n.landingLaunchWorkspace,
-                  onTap: onLaunchWorkspace,
-                  primary: true,
+              // The logo gives way first: on a narrow phone with a long
+              // button label (es, ru) there is no room for all three.
+              Expanded(
+                child: Align(
+                  alignment: AlignmentDirectional.centerStart,
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: NanosolveLogo(height: phone ? 38 : 50),
+                  ),
                 ),
+              ),
+              if (!compact) ...[
+                _HoverUnderlineLink(
+                    label: l10n.landingNavDigest, onTap: onOpenDigest),
+                _HoverUnderlineLink(
+                    label: l10n.landingNavWhy, onTap: onOpenWhy),
+                _HoverUnderlineLink(
+                    label: l10n.landingNavHow, onTap: onOpenHow),
+                _HoverUnderlineLink(
+                    label: l10n.landingNavDownload, onTap: onOpenDownload),
+                const SizedBox(width: 6),
               ],
+              _LanguageMenu(
+                l10n: l10n,
+                selectedLanguage: selectedLanguage,
+                onSelectLanguage: onSelectLanguage,
+              ),
+              const SizedBox(width: 8),
+              // A phone visitor came for the app, not the desktop workspace.
+              phone
+                  ? _PillButton(
+                      label: l10n.landingNavDownload,
+                      onTap: onOpenDownload,
+                      primary: true,
+                      icon: Icons.download_rounded,
+                    )
+                  : _PillButton(
+                      label: l10n.landingLaunchWorkspace,
+                      onTap: onLaunchWorkspace,
+                      primary: true,
+                    ),
             ],
           ),
         ),
       ),
     );
   }
+}
 
-  Widget _topLink(String label, {required VoidCallback onTap}) {
-    return _HoverUnderlineLink(
-      label: label,
-      onTap: onTap,
+class _LanguageMenu extends StatelessWidget {
+  final AppLocalizations l10n;
+  final String selectedLanguage;
+  final ValueChanged<String> onSelectLanguage;
+
+  const _LanguageMenu({
+    required this.l10n,
+    required this.selectedLanguage,
+    required this.onSelectLanguage,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return PopupMenuButton<String>(
+      tooltip: l10n.sidebarLang,
+      onSelected: onSelectLanguage,
+      color: _surfaceCard,
+      itemBuilder: (context) => LanguageSelectionMixin.supportedLanguages
+          .map(
+            (lang) => PopupMenuItem<String>(
+              value: lang['code']!,
+              child: Row(
+                children: [
+                  Text(lang['flag']!),
+                  const SizedBox(width: 8),
+                  Text(
+                    lang['name']!,
+                    style: TextStyle(
+                      color: lang['code'] == selectedLanguage
+                          ? _accent
+                          : _textMain,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          )
+          .toList(growable: false),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(Icons.language, size: 16, color: _textSoft),
+            const SizedBox(width: 5),
+            Text(
+              selectedLanguage.toUpperCase(),
+              style: const TextStyle(
+                color: _textSoft,
+                fontSize: 12,
+                fontWeight: FontWeight.w700,
+                letterSpacing: 0.4,
+              ),
+            ),
+            const Icon(Icons.expand_more_rounded, size: 14, color: _textMuted),
+          ],
+        ),
+      ),
     );
   }
 }
@@ -344,11 +430,12 @@ class _HoverUnderlineLinkState extends State<_HoverUnderlineLink> {
 
   @override
   Widget build(BuildContext context) {
-    return MouseRegion(
-      onEnter: (_) => setState(() => _hovered = true),
-      onExit: (_) => setState(() => _hovered = false),
-      child: GestureDetector(
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
         onTap: widget.onTap,
+        onHover: (hovered) => setState(() => _hovered = hovered),
+        borderRadius: BorderRadius.circular(8),
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
@@ -375,13 +462,9 @@ class _HoverUnderlineLinkState extends State<_HoverUnderlineLink> {
 
 class _HeroSection extends StatelessWidget {
   final AppLocalizations l10n;
-  final String selectedLanguage;
-  final ValueChanged<String> onSelectLanguage;
   final VoidCallback onLaunchWorkspace;
   const _HeroSection({
     required this.l10n,
-    required this.selectedLanguage,
-    required this.onSelectLanguage,
     required this.onLaunchWorkspace,
   });
 
@@ -400,7 +483,6 @@ class _HeroSection extends StatelessWidget {
                 borderRadius: BorderRadius.circular(20),
                 child: Stack(
                   children: [
-                    // Subtle gradient overlay for depth
                     Positioned.fill(
                       child: DecoratedBox(
                         decoration: BoxDecoration(
@@ -428,31 +510,21 @@ class _HeroSection extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 _heroText(compact: true, phone: phone),
-                                SizedBox(height: phone ? 16 : 24),
-                                _HeroSignalPanel(
-                                  l10n: l10n,
-                                  selectedLanguage: selectedLanguage,
-                                  onSelectLanguage: onSelectLanguage,
-                                  phone: phone,
-                                ),
+                                SizedBox(height: phone ? 24 : 32),
+                                _DigestPreview(l10n: l10n),
                               ],
                             )
                           : Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 Expanded(
                                     flex: 13,
                                     child: _heroText(
                                         compact: false, phone: false)),
-                                const SizedBox(width: 32),
+                                const SizedBox(width: 40),
                                 Expanded(
                                   flex: 10,
-                                  child: _HeroSignalPanel(
-                                    l10n: l10n,
-                                    selectedLanguage: selectedLanguage,
-                                    onSelectLanguage: onSelectLanguage,
-                                    phone: false,
-                                  ),
+                                  child: _DigestPreview(l10n: l10n),
                                 ),
                               ],
                             ),
@@ -471,7 +543,6 @@ class _HeroSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Status badge
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
           decoration: BoxDecoration(
@@ -498,36 +569,36 @@ class _HeroSection extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 8),
-              Text(
-                l10n.landingBadgePlatforms,
-                style: const TextStyle(
-                  color: _accent,
-                  fontSize: 11,
-                  fontWeight: FontWeight.w700,
-                  letterSpacing: 0.8,
+              Flexible(
+                child: Text(
+                  l10n.landingBadgePlatforms,
+                  style: const TextStyle(
+                    color: _accent,
+                    fontSize: 11,
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: 0.8,
+                  ),
                 ),
               ),
             ],
           ),
         ),
         SizedBox(height: phone ? 16 : 24),
-        // Main headline
         Text(
           l10n.landingHeroTitle,
           style: TextStyle(
             color: _textMain,
             fontSize: phone
-                ? 24
+                ? 28
                 : compact
-                    ? 32
-                    : 42,
+                    ? 36
+                    : 46,
             fontWeight: FontWeight.w800,
             height: 1.08,
             letterSpacing: phone ? -0.5 : -1.0,
           ),
         ),
         const SizedBox(height: 16),
-        // Subtitle
         Text(
           l10n.landingHeroSubtitle,
           style: const TextStyle(
@@ -538,21 +609,22 @@ class _HeroSection extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 28),
-        // CTA buttons
         Wrap(
           spacing: 10,
           runSpacing: 10,
+          crossAxisAlignment: WrapCrossAlignment.center,
           children: [
+            _StoreButton(l10n: l10n, store: _Store.apple),
+            _StoreButton(l10n: l10n, store: _Store.google),
             _PillButton(
               label: l10n.landingLaunchWorkspace,
               onTap: onLaunchWorkspace,
-              primary: true,
+              primary: false,
               icon: Icons.rocket_launch_rounded,
             ),
           ],
         ),
         const SizedBox(height: 16),
-        // Footnote
         Row(
           children: [
             const Icon(Icons.verified_outlined, size: 13, color: _textMuted),
@@ -574,224 +646,313 @@ class _HeroSection extends StatelessWidget {
   }
 }
 
-class _HeroSignalPanel extends StatelessWidget {
+/// What the digest looks like on a phone: the morning notification and the
+/// paper it opens. Built from widgets, so it follows the page language.
+class _DigestPreview extends StatelessWidget {
   final AppLocalizations l10n;
-  final String selectedLanguage;
-  final ValueChanged<String> onSelectLanguage;
-  final bool phone;
-
-  const _HeroSignalPanel({
-    required this.l10n,
-    required this.selectedLanguage,
-    required this.onSelectLanguage,
-    this.phone = false,
-  });
+  const _DigestPreview({required this.l10n});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: _line, width: 0.5),
-        color: _bgOcean.withValues(alpha: 0.35),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.15),
-            blurRadius: 20,
-            offset: const Offset(0, 8),
+    return Semantics(
+      label: '${l10n.landingDigestPreviewExample}: '
+          '${l10n.landingDigestPreviewTitle}',
+      child: Container(
+        padding: const EdgeInsets.all(18),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(24),
+          border: Border.all(color: _line, width: 0.5),
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              _bgOcean.withValues(alpha: 0.55),
+              _surfaceStrong.withValues(alpha: 0.4),
+            ],
           ),
-        ],
-      ),
-      padding: EdgeInsets.all(phone ? 12 : 20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              const NanosolveLogo(height: 26),
-              const SizedBox(width: 10),
-              Container(
+          boxShadow: [
+            BoxShadow(
+              color: _accent.withValues(alpha: 0.06),
+              blurRadius: 40,
+              spreadRadius: 2,
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Row(
+              children: [
+                const Text(
+                  '07:30',
+                  style: TextStyle(
+                    color: _textMain,
+                    fontSize: 34,
+                    fontWeight: FontWeight.w300,
+                    letterSpacing: -0.5,
+                  ),
+                ),
+                const Spacer(),
+                Container(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                   decoration: BoxDecoration(
-                    color: _accent.withValues(alpha: 0.12),
+                    color: _surfaceSubtle,
                     borderRadius: BorderRadius.circular(6),
-                  )),
-            ],
-          ),
-          const SizedBox(height: 16),
-          _SignalChipRow(
-            icon: Icons.public,
-            title: l10n.landingGithubBuildCta,
-            subtitle: 'github.com',
-            onTap: () => _openExternalUrl(_githubRepoUrl),
-          ),
-          const SizedBox(height: 8),
-          _SignalChipRow(
-            icon: Icons.privacy_tip_outlined,
-            title: l10n.landingFooterPrivacy,
-            subtitle: '/privacy',
-            onTap: () => Navigator.pushNamed(context, '/privacy'),
-          ),
-          const SizedBox(height: 8),
-          PopupMenuButton<String>(
-            tooltip: l10n.sidebarLang,
-            onSelected: onSelectLanguage,
-            itemBuilder: (context) => LanguageSelectionMixin.supportedLanguages
-                .map(
-                  (lang) => PopupMenuItem<String>(
-                    value: lang['code']!,
-                    child: Row(
-                      children: [
-                        Text(lang['flag']!),
-                        const SizedBox(width: 8),
-                        Text(lang['name']!),
-                      ],
-                    ),
                   ),
-                )
-                .toList(growable: false),
-            child: _SignalChipRow(
-              icon: Icons.language,
-              title: l10n.sidebarLang,
-              subtitle: selectedLanguage.toUpperCase(),
-              interactive: true,
-            ),
-          ),
-          const SizedBox(height: 16),
-          // Highlighted feature row
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.all(14),
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  _accent.withValues(alpha: 0.08),
-                  _surfaceStrong.withValues(alpha: 0.5),
-                ],
-              ),
-              borderRadius: BorderRadius.circular(12),
-              border:
-                  Border.all(color: _accent.withValues(alpha: 0.2), width: 0.5),
-            ),
-            child: Row(
-              children: [
-                Container(
-                  width: 28,
-                  height: 28,
-                  decoration: BoxDecoration(
-                    color: _accent.withValues(alpha: 0.15),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child:
-                      const Icon(Icons.bolt_rounded, color: _accent, size: 16),
-                ),
-                const SizedBox(width: 10),
-                const Expanded(
                   child: Text(
-                    'All relevant sources in one place',
-                    style: TextStyle(
-                      color: _textMain,
-                      fontSize: 12,
+                    l10n.landingDigestPreviewExample,
+                    style: const TextStyle(
+                      color: _textMuted,
+                      fontSize: 10,
                       fontWeight: FontWeight.w700,
+                      letterSpacing: 0.4,
                     ),
                   ),
                 ),
               ],
             ),
-          ),
-        ],
+            const SizedBox(height: 14),
+            // The push notification
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.white.withValues(alpha: 0.09),
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(
+                    color: Colors.white.withValues(alpha: 0.08), width: 0.5),
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    width: 34,
+                    height: 34,
+                    padding: const EdgeInsets.all(5),
+                    decoration: BoxDecoration(
+                      color: _bgDeep,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Image.asset('assets/images/app_logo.png'),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            const Expanded(
+                              child: Text(
+                                'NanoSolve Hive',
+                                style: TextStyle(
+                                  color: _textSoft,
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                            Text(
+                              l10n.landingDigestPreviewNow,
+                              style: const TextStyle(
+                                  color: _textMuted, fontSize: 11),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 3),
+                        Text(
+                          l10n.landingDigestPreviewTitle,
+                          style: const TextStyle(
+                            color: _textMain,
+                            fontSize: 13,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          l10n.landingDigestPreviewPaper,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            color: _textSoft,
+                            fontSize: 12,
+                            height: 1.35,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 12),
+            // The paper it opens
+            Container(
+              padding: const EdgeInsets.all(14),
+              decoration: BoxDecoration(
+                color: _surfaceCard,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(
+                    color: _accent.withValues(alpha: 0.25), width: 0.5),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Wrap(
+                    spacing: 6,
+                    runSpacing: 6,
+                    children: [
+                      _Tag('charge', Color(0xFFFBBF24)),
+                      _Tag('nanoplastics', _accent),
+                      _Tag('Europe PMC', Color(0xFF818CF8)),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    l10n.landingDigestPreviewPaper,
+                    style: const TextStyle(
+                      color: _textMain,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w700,
+                      height: 1.3,
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  Row(
+                    children: [
+                      const Icon(Icons.bookmark_add_outlined,
+                          size: 16, color: _accent),
+                      const SizedBox(width: 6),
+                      Flexible(
+                        child: Text(
+                          l10n.vaultSaveButton,
+                          style: const TextStyle(
+                            color: _accent,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ),
+                      const Spacer(),
+                      const Icon(Icons.open_in_new_rounded,
+                          size: 15, color: _textMuted),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
 }
 
-class _SignalChipRow extends StatelessWidget {
-  final IconData icon;
-  final String title;
-  final String subtitle;
-  final VoidCallback? onTap;
-  final bool interactive;
-
-  const _SignalChipRow({
-    required this.icon,
-    required this.title,
-    required this.subtitle,
-    this.onTap,
-    this.interactive = false,
-  });
+class _Tag extends StatelessWidget {
+  final String label;
+  final Color color;
+  const _Tag(this.label, this.color);
 
   @override
   Widget build(BuildContext context) {
-    final row = Container(
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: _line.withValues(alpha: 0.5), width: 0.5),
-        color: _surfaceStrong.withValues(alpha: 0.25),
+        color: color.withValues(alpha: 0.12),
+        borderRadius: BorderRadius.circular(6),
+        border: Border.all(color: color.withValues(alpha: 0.3), width: 0.5),
       ),
-      child: Row(
-        children: [
-          Container(
-            width: 24,
-            height: 24,
-            decoration: BoxDecoration(
-              color: _accent.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(6),
-            ),
-            child: Icon(icon, size: 13, color: _accent),
-          ),
-          const SizedBox(width: 10),
-          Expanded(
-            child: Text(
-              title,
-              style: const TextStyle(
-                color: _textMain,
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-              ),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-          const SizedBox(width: 8),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-            decoration: BoxDecoration(
-              color: _surfaceSubtle,
-              borderRadius: BorderRadius.circular(4),
-            ),
-            child: Text(
-              subtitle,
-              style: const TextStyle(
-                color: _textMuted,
-                fontSize: 10,
-                fontWeight: FontWeight.w700,
-                letterSpacing: 0.3,
-              ),
-            ),
-          ),
-          if (interactive) ...[
-            const SizedBox(width: 6),
-            const Icon(Icons.expand_more_rounded, size: 14, color: _textMuted),
-          ],
-        ],
-      ),
-    );
-
-    if (onTap == null) return row;
-
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        borderRadius: BorderRadius.circular(10),
-        onTap: onTap,
-        child: row,
+      child: Text(
+        label,
+        style: TextStyle(
+          color: color,
+          fontSize: 10.5,
+          fontWeight: FontWeight.w700,
+        ),
       ),
     );
   }
 }
+
+// ── Daily digest ──────────────────────────────────────────────────────────────
+
+class _DigestSection extends StatelessWidget {
+  final AppLocalizations l10n;
+  const _DigestSection({required this.l10n});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+      child: _constrain(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _SectionHeader(
+              label: l10n.landingDigestLabel,
+              title: l10n.landingDigestTitle,
+              subtitle: l10n.landingDigestSubtitle,
+            ),
+            const SizedBox(height: 24),
+            _AdaptiveGrid(
+              minChildWidth: 250,
+              children: [
+                _FeatureCard(
+                  icon: Icons.travel_explore_rounded,
+                  accentColor: const Color(0xFF6DF5D8),
+                  title: l10n.landingDigestSourcesTitle,
+                  desc: l10n.landingDigestSourcesDesc,
+                ),
+                _FeatureCard(
+                  icon: Icons.bolt_rounded,
+                  accentColor: const Color(0xFFFBBF24),
+                  title: l10n.landingDigestPickTitle,
+                  desc: l10n.landingDigestPickDesc,
+                ),
+                _FeatureCard(
+                  icon: Icons.notifications_active_outlined,
+                  accentColor: const Color(0xFF818CF8),
+                  title: l10n.landingDigestTimeTitle,
+                  desc: l10n.landingDigestTimeDesc,
+                ),
+                _FeatureCard(
+                  icon: Icons.bookmarks_outlined,
+                  accentColor: const Color(0xFFF472B6),
+                  title: l10n.landingDigestVaultTitle,
+                  desc: l10n.landingDigestVaultDesc,
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Padding(
+                  padding: EdgeInsets.only(top: 1),
+                  child: Icon(Icons.toggle_off_outlined,
+                      size: 16, color: _textMuted),
+                ),
+                const SizedBox(width: 8),
+                Flexible(
+                  child: Text(
+                    l10n.landingDigestOptIn,
+                    style: const TextStyle(
+                      color: _textMuted,
+                      fontSize: 12.5,
+                      height: 1.5,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// ── How it works ──────────────────────────────────────────────────────────────
 
 class _HowItWorksSection extends StatelessWidget {
   final AppLocalizations l10n;
@@ -803,346 +964,268 @@ class _HowItWorksSection extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 40),
       child: _constrain(
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            final compact = constraints.maxWidth < 1000;
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _SectionHeader(
+              label: l10n.landingHowLabel,
+              title: l10n.landingNavHow,
+              subtitle: l10n.landingHowSubtitle,
+            ),
+            const SizedBox(height: 32),
+            _AdaptiveGrid(
+              minChildWidth: 300,
               children: [
-                _SectionHeader(
-                  label: 'WORKFLOW',
-                  title: l10n.landingNavHow,
-                  subtitle: l10n.landingWhyFeatureActionableDesc,
+                _StepCard(
+                  index: 1,
+                  title: l10n.landingHowStepDigestTitle,
+                  desc: l10n.landingHowStepDigestDesc,
                 ),
-                const SizedBox(height: 32),
-                if (compact)
-                  Column(
-                    children: [
-                      _StepCard(
-                        index: 1,
-                        title: l10n.navExplore,
-                        desc: l10n.landingCategoriesSubtitle,
-                      ),
-                      const SizedBox(height: 12),
-                      _StepCard(
-                        index: 2,
-                        title: l10n.sourcesTitle,
-                        desc: l10n.sourcesSubtitle,
-                      ),
-                      const SizedBox(height: 12),
-                      _StepCard(
-                        index: 3,
-                        title: l10n.categoryDetailIdeas,
-                        desc: l10n.landingWhyFeatureActionableDesc,
-                      ),
-                    ],
-                  )
-                else
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Expanded(
-                        flex: 1,
-                        child: Column(
-                          children: [
-                            _StepCard(
-                              index: 1,
-                              title: l10n.navExplore,
-                              desc: l10n.landingCategoriesSubtitle,
-                            ),
-                            const SizedBox(height: 12),
-                            _StepCard(
-                              index: 2,
-                              title: l10n.sourcesTitle,
-                              desc: l10n.sourcesSubtitle,
-                            ),
-                            const SizedBox(height: 12),
-                            _StepCard(
-                              index: 3,
-                              title: l10n.categoryDetailIdeas,
-                              desc: l10n.landingWhyFeatureActionableDesc,
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(width: 32),
-                      const Expanded(
-                        flex: 1,
-                        child: _MobileQRMockup(),
-                      ),
-                    ],
-                  ),
+                _StepCard(
+                  index: 2,
+                  title: l10n.navExplore,
+                  desc: l10n.landingCategoriesSubtitle,
+                ),
+                _StepCard(
+                  index: 3,
+                  title: l10n.categoryDetailIdeas,
+                  desc: l10n.landingWhyFeatureActionableDesc,
+                ),
               ],
-            );
-          },
+            ),
+          ],
         ),
       ),
     );
   }
 }
 
-// ── Mobile QR Mockup ──────────────────────────────────────────────────────────
+// ── Download ──────────────────────────────────────────────────────────────────
 
-class _MobileQRMockup extends StatelessWidget {
-  const _MobileQRMockup();
+class _DownloadSection extends StatelessWidget {
+  final AppLocalizations l10n;
+  const _DownloadSection({required this.l10n});
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: SizedBox(
-        height: 520,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            // ── Phone with 3D perspective tilt ──
-            Transform(
-              alignment: Alignment.center,
-              transform: Matrix4.identity()
-                ..setEntry(3, 2, 0.001) // perspective
-                ..rotateY(0.05), // subtle Y rotation
-              child: Container(
-                width: 246,
-                height: 506,
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [
-                      Color(0xFF2D3748),
-                      Color(0xFF111827),
-                      Color(0xFF334155),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 40),
+      child: _constrain(
+        // Full width, like the other sections; a Wrap alone would shrink
+        // the column to the two cards and center it.
+        child: SizedBox(
+          width: double.infinity,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _SectionHeader(
+                label: l10n.landingDownloadLabel,
+                title: l10n.landingDownloadTitle,
+                subtitle: l10n.landingDownloadSubtitle,
+              ),
+              const SizedBox(height: 28),
+              LayoutBuilder(
+                builder: (context, constraints) {
+                  // Nobody scans a code on the phone that shows it, so phones
+                  // get the store buttons alone.
+                  if (constraints.maxWidth < 600) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        _StoreButton(
+                            l10n: l10n, store: _Store.apple, expand: true),
+                        const SizedBox(height: 10),
+                        _StoreButton(
+                            l10n: l10n, store: _Store.google, expand: true),
+                      ],
+                    );
+                  }
+                  return Wrap(
+                    spacing: 20,
+                    runSpacing: 20,
+                    children: [
+                      _QrCard(l10n: l10n, store: _Store.apple),
+                      _QrCard(l10n: l10n, store: _Store.google),
                     ],
-                    stops: [0.0, 0.55, 1.0],
-                  ),
-                  borderRadius: BorderRadius.circular(36),
-                  border:
-                      Border.all(color: const Color(0xFF475569), width: 1.1),
-                  boxShadow: [
-                    // Ambient accent glow
-                    BoxShadow(
-                      color: _accent.withValues(alpha: 0.06),
-                      blurRadius: 56,
-                      spreadRadius: 5,
-                    ),
-                    // Main depth shadow
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.48),
-                      blurRadius: 36,
-                      offset: const Offset(10, 20),
-                    ),
-                    // Secondary side shadow
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.2),
-                      blurRadius: 18,
-                      offset: const Offset(-5, 7),
-                    ),
-                  ],
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(4),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF020617),
-                      borderRadius: BorderRadius.circular(32),
-                      border: Border.all(
-                        color: const Color(0xFF0F172A),
-                        width: 1,
-                      ),
-                    ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(29),
-                      child: Stack(
-                        children: [
-                          Column(
-                            children: [
-                              // Status bar
-                              Container(
-                                height: 34,
-                                color: _surfaceStrong.withValues(alpha: 0.86),
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 14),
-                                child: const Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      '9:41',
-                                      style: TextStyle(
-                                        color: _textMain,
-                                        fontSize: 11,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                    Row(
-                                      children: [
-                                        Icon(Icons.signal_cellular_alt,
-                                            size: 11, color: _textSoft),
-                                        SizedBox(width: 3),
-                                        Icon(Icons.battery_full,
-                                            size: 11, color: _textSoft),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              // App screenshot
-                              Expanded(
-                                child: Image.asset(
-                                  'assets/images/app_screenshot.png',
-                                  fit: BoxFit.cover,
-                                  width: double.infinity,
-                                ),
-                              ),
-                              // Home indicator
-                              Container(
-                                height: 16,
-                                color: _surfaceStrong,
-                                child: Center(
-                                  child: Container(
-                                    width: 100,
-                                    height: 4,
-                                    decoration: BoxDecoration(
-                                      color: _textSoft.withValues(alpha: 0.3),
-                                      borderRadius: BorderRadius.circular(2),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          // Dynamic-island style notch
-                          Positioned(
-                            top: 6,
-                            left: 0,
-                            right: 0,
-                            child: Center(
-                              child: Container(
-                                width: 88,
-                                height: 18,
-                                decoration: BoxDecoration(
-                                  color: const Color(0xFF020617),
-                                  borderRadius: BorderRadius.circular(12),
-                                  border: Border.all(
-                                    color: const Color(0xFF111827),
-                                    width: 0.6,
-                                  ),
-                                ),
-                              ),
+                  );
+                },
+              ),
+              const SizedBox(height: 20),
+              Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  onTap: () => openExternalUrl(StoreLinks.githubLatestRelease),
+                  borderRadius: BorderRadius.circular(8),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 6),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(Icons.code_rounded,
+                            size: 16, color: _textMuted),
+                        const SizedBox(width: 8),
+                        Flexible(
+                          child: Text(
+                            l10n.landingGithubApkNote,
+                            style: const TextStyle(
+                              color: _textSoft,
+                              fontSize: 13,
+                              decoration: TextDecoration.underline,
+                              decorationColor: _textMuted,
                             ),
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
               ),
-            ),
-            const SizedBox(width: 20),
-            // ── QR card floating beside the phone ──
-            Transform(
-              alignment: Alignment.center,
-              transform: Matrix4.identity()
-                ..setEntry(3, 2, 0.001)
-                ..rotateY(-0.08)
-                ..translateByVector3(Vector3(0.0, 30.0, 0.0)),
-              child: Container(
-                width: 140,
-                padding: const EdgeInsets.all(14),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(18),
-                  boxShadow: [
-                    BoxShadow(
-                      color: _accent.withValues(alpha: 0.1),
-                      blurRadius: 30,
-                      spreadRadius: 2,
-                    ),
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.3),
-                      blurRadius: 24,
-                      offset: const Offset(4, 12),
-                    ),
-                  ],
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _QrCard extends StatelessWidget {
+  final AppLocalizations l10n;
+  final _Store store;
+  const _QrCard({required this.l10n, required this.store});
+
+  @override
+  Widget build(BuildContext context) {
+    final apple = store == _Store.apple;
+    return _Card(
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(apple ? Icons.apple : Icons.android,
+                    size: 18, color: _textMain),
+                const SizedBox(width: 6),
+                Text(
+                  apple ? 'iPhone' : 'Android',
+                  style: const TextStyle(
+                    color: _textMain,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
-                child: Column(
+              ],
+            ),
+            const SizedBox(height: 14),
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(14),
+              ),
+              child: QrImageView(
+                data: store.url,
+                size: 172,
+                backgroundColor: Colors.white,
+                semanticsLabel: store.url,
+                eyeStyle: const QrEyeStyle(
+                  eyeShape: QrEyeShape.square,
+                  color: _qrInk,
+                ),
+                dataModuleStyle: const QrDataModuleStyle(
+                  dataModuleShape: QrDataModuleShape.square,
+                  color: _qrInk,
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+            _StoreButton(l10n: l10n, store: store),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+enum _Store {
+  apple(StoreLinks.appStore),
+  google(StoreLinks.playStore);
+
+  const _Store(this.url);
+  final String url;
+}
+
+class _StoreButton extends StatelessWidget {
+  final AppLocalizations l10n;
+  final _Store store;
+  final bool expand;
+  const _StoreButton({
+    required this.l10n,
+    required this.store,
+    this.expand = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final apple = store == _Store.apple;
+    final overline =
+        apple ? l10n.landingAppStoreOverline : l10n.landingGooglePlayOverline;
+    final name = apple ? 'App Store' : 'Google Play';
+
+    return Semantics(
+      button: true,
+      link: true,
+      label: '$overline $name',
+      excludeSemantics: true,
+      child: Material(
+        color: Colors.black,
+        borderRadius: BorderRadius.circular(12),
+        child: InkWell(
+          onTap: () => openExternalUrl(store.url),
+          borderRadius: BorderRadius.circular(12),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: _lineBright, width: 0.8),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment:
+                  expand ? MainAxisAlignment.center : MainAxisAlignment.start,
+              children: [
+                Icon(apple ? Icons.apple : Icons.android,
+                    size: 26, color: Colors.white),
+                const SizedBox(width: 10),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
-                      child: Image.asset(
-                        'assets/images/nanosolve_qr.jpg',
-                        width: 110,
-                        height: 110,
-                        fit: BoxFit.contain,
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    const Text(
-                      'Scan to Download',
-                      style: TextStyle(
-                        color: Color(0xFF0A3A4A),
+                    Text(
+                      overline,
+                      style: const TextStyle(
+                        color: Color(0xFFD1D5DB),
                         fontSize: 10,
-                        fontWeight: FontWeight.w800,
-                        letterSpacing: 0.3,
+                        height: 1.1,
                       ),
                     ),
-                    const SizedBox(height: 4),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 3),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF0A3A4A),
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                      child: const Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(Icons.android,
-                              size: 10, color: Color(0xFF6DF5D8)),
-                          SizedBox(width: 4),
-                          Text(
-                            'Google Play',
-                            style: TextStyle(
-                              color: Color(0xFF6DF5D8),
-                              fontSize: 8,
-                              fontWeight: FontWeight.w700,
-                              letterSpacing: 0.4,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 3),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF111827),
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                      child: const Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(Icons.apple, size: 10, color: Colors.white),
-                          SizedBox(width: 4),
-                          Text(
-                            'iPhone App Store',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 7.5,
-                              fontWeight: FontWeight.w700,
-                              letterSpacing: 0.2,
-                            ),
-                          ),
-                        ],
+                    Text(
+                      name,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 17,
+                        fontWeight: FontWeight.w700,
+                        height: 1.15,
+                        letterSpacing: -0.2,
                       ),
                     ),
                   ],
                 ),
-              ),
+              ],
             ),
-          ].reversed.toList(),
+          ),
         ),
       ),
     );
@@ -1235,8 +1318,6 @@ class _StepCardState extends State<_StepCard> {
                           fontSize: 13,
                           height: 1.5,
                         ),
-                        maxLines: 3,
-                        overflow: TextOverflow.ellipsis,
                       ),
                     ],
                   ),
@@ -1266,7 +1347,7 @@ class _WhySection extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _SectionHeader(
-              label: 'WHY NANOSOLVE',
+              label: l10n.landingWhyLabel,
               title: l10n.landingWhyTitle,
               subtitle: l10n.landingWhySubtitle,
             ),
@@ -1931,19 +2012,19 @@ class _CategoryGrid extends StatelessWidget {
             : w >= 600
                 ? 2
                 : 1;
-        final ratio = cols == 1
-            ? 2.2
-            : cols == 2
-                ? 1.6
-                : 1.8;
         final gap = cols == 1 ? 12.0 : 20.0;
-        return GridView.count(
-          crossAxisCount: cols,
+        // A fixed height, not an aspect ratio: the card holds a two-line
+        // title and a three-line description whatever its width, and a
+        // width-derived height left a phone card ~30 px short.
+        return GridView(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
-          mainAxisSpacing: gap,
-          crossAxisSpacing: cols == 1 ? 0 : gap,
-          childAspectRatio: ratio,
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: cols,
+            mainAxisSpacing: gap,
+            crossAxisSpacing: cols == 1 ? 0 : gap,
+            mainAxisExtent: 196,
+          ),
           children: children,
         );
       },
@@ -1974,14 +2055,14 @@ class _CategoryCardState extends State<_CategoryCard> {
   Widget build(BuildContext context) {
     final c = widget.cat;
     final title = widget.detailData?.title ?? c.title;
-    final desc = c.desc;
+    final desc = widget.detailData?.subtitle ?? c.desc;
     final domainColor =
         c.isHuman ? const Color(0xFF7DD3FC) : const Color(0xFF86EFAC);
     final pattern = _patternFor[c.key] ?? _IllustrationPattern.scatter;
 
     return Semantics(
       button: true,
-      label: c.title,
+      label: title,
       child: MouseRegion(
         onEnter: (_) => setState(() => _hovered = true),
         onExit: (_) => setState(() => _hovered = false),
@@ -2199,20 +2280,31 @@ class _Footer extends StatelessWidget {
                   child: Column(
                     children: [
                       Text(
-                        l10n.landingWhyFeatureTrustDesc,
+                        l10n.landingFooterCtaTitle,
                         textAlign: TextAlign.center,
                         style: const TextStyle(
-                          color: _textSoft,
-                          fontSize: 14,
-                          height: 1.55,
+                          color: _textMain,
+                          fontSize: 22,
+                          fontWeight: FontWeight.w800,
+                          letterSpacing: -0.3,
                         ),
                       ),
                       const SizedBox(height: 20),
-                      _PillButton(
-                        label: l10n.landingLaunchWorkspace,
-                        onTap: onLaunchWorkspace,
-                        primary: true,
-                        icon: Icons.rocket_launch_rounded,
+                      Wrap(
+                        alignment: WrapAlignment.center,
+                        crossAxisAlignment: WrapCrossAlignment.center,
+                        spacing: 10,
+                        runSpacing: 10,
+                        children: [
+                          _StoreButton(l10n: l10n, store: _Store.apple),
+                          _StoreButton(l10n: l10n, store: _Store.google),
+                          _PillButton(
+                            label: l10n.landingLaunchWorkspace,
+                            onTap: onLaunchWorkspace,
+                            primary: false,
+                            icon: Icons.rocket_launch_rounded,
+                          ),
+                        ],
                       ),
                     ],
                   ),
@@ -2232,17 +2324,18 @@ class _Footer extends StatelessWidget {
                     builder: (context, constraints) {
                       final phone = constraints.maxWidth < 480;
                       final links = Wrap(
+                        alignment: WrapAlignment.end,
                         spacing: 20,
                         runSpacing: 8,
                         children: [
                           _footerLink(
                             l10n.landingFooterGithub,
-                            onTap: () => _openExternalUrl(_githubRepoUrl),
+                            onTap: () => openExternalUrl(StoreLinks.githubRepo),
                           ),
                           _footerLink(
                             l10n.landingFooterReleases,
                             onTap: () =>
-                                _openExternalUrl(_githubLatestReleaseUrl),
+                                openExternalUrl(StoreLinks.githubLatestRelease),
                           ),
                           _footerLink(
                             l10n.landingFooterPrivacy,
@@ -2268,8 +2361,19 @@ class _Footer extends StatelessWidget {
                           ],
                         );
                       }
+                      // Expanded gives the Wrap a width to wrap within;
+                      // beside a Spacer it had none and ran off the edge.
                       return Row(
-                        children: [copyright, const Spacer(), links],
+                        children: [
+                          copyright,
+                          const SizedBox(width: 24),
+                          Expanded(
+                            child: Align(
+                              alignment: AlignmentDirectional.centerEnd,
+                              child: links,
+                            ),
+                          ),
+                        ],
                       );
                     },
                   ),
@@ -2626,17 +2730,26 @@ class _AdaptiveGrid extends StatelessWidget {
 
   const _AdaptiveGrid({required this.children, required this.minChildWidth});
 
+  // Measures the space it is given, not the screen: the page is capped at
+  // 1140 px and padded, so screen width overflowed phones and left wide
+  // screens with one oversized card per row.
   @override
   Widget build(BuildContext context) {
-    final available = MediaQuery.sizeOf(context).width - 40;
-    final cols = (available / minChildWidth).floor().clamp(1, children.length);
-    final itemWidth = (available - (cols - 1) * 12) / cols;
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final available = constraints.maxWidth;
+        final cols =
+            (available / minChildWidth).floor().clamp(1, children.length);
+        final itemWidth = (available - (cols - 1) * 12) / cols;
 
-    return Wrap(
-      spacing: 12,
-      runSpacing: 12,
-      children:
-          children.map((c) => SizedBox(width: itemWidth, child: c)).toList(),
+        return Wrap(
+          spacing: 12,
+          runSpacing: 12,
+          children: children
+              .map((c) => SizedBox(width: itemWidth, child: c))
+              .toList(),
+        );
+      },
     );
   }
 }

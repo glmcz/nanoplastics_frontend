@@ -5,7 +5,7 @@
     "display": "standalone",
     "background_color": "#0D1117",
     "theme_color": "#A8D5BA",
-    "description": "Nanoplastic pollution solutions platform. Explore impacts, submit ideas, and climb the solver leaderboard.",
+    "description": "A daily digest of new micro- and nanoplastics research, plus the evidence behind it and a place to share ideas.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

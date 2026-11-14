@@ -9,6 +9,8 @@ import '../utils/app_spacing.dart';
 import '../utils/app_sizing.dart';
 import 'paper_detail_screen.dart';
 import 'digest_settings_screen.dart';
+import '../widgets/email_sign_in_sheet.dart';
+import '../widgets/vault_setup.dart';
 
 class VaultScreen extends StatefulWidget {
   const VaultScreen({super.key});
@@ -31,7 +33,9 @@ class _VaultScreenState extends State<VaultScreen> {
   void _deletePaper(String paperId) {
     DigestService().removeFromTresor(paperId).then((_) {
       if (mounted) {
-        setState(() => _papersFuture = DigestService().fetchSavedPapers());
+        setState(() {
+          _papersFuture = DigestService().fetchSavedPapers();
+        });
       }
     });
   }
@@ -66,39 +70,47 @@ class _VaultScreenState extends State<VaultScreen> {
           children: [
             _buildHeader(context, spacing, sizing),
             Expanded(
-              child: FutureBuilder<List<DigestPaper>>(
-                future: _papersFuture,
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(
-                      child:
-                          CircularProgressIndicator(color: AppColors.neonCyan),
-                    );
-                  }
-                  final papers = snapshot.data ?? [];
-                  if (papers.isEmpty) {
-                    return _buildEmpty();
-                  }
-                  return RefreshIndicator(
-                    color: AppColors.neonCyan,
-                    backgroundColor: AppColors.cardBackground,
-                    onRefresh: () async {
-                      setState(() {
-                        _papersFuture = DigestService().fetchSavedPapers();
-                      });
-                      await _papersFuture;
-                    },
-                    child: ListView.builder(
-                      padding: EdgeInsets.all(spacing.md),
-                      itemCount: papers.length,
-                      itemBuilder: (context, i) => _VaultCard(
-                        paper: papers[i],
-                        spacing: spacing,
-                        onDelete: () => _deletePaper(papers[i].id),
-                      ),
-                    ),
-                  );
+              child: SignInGate(
+                onSignedIn: () {
+                  setState(() {
+                    _papersFuture = DigestService().fetchSavedPapers();
+                  });
+                  continueToDigestIfOff(context);
                 },
+                child: () => FutureBuilder<List<DigestPaper>>(
+                  future: _papersFuture,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(
+                        child: CircularProgressIndicator(
+                            color: AppColors.neonCyan),
+                      );
+                    }
+                    final papers = snapshot.data ?? [];
+                    if (papers.isEmpty) {
+                      return _buildEmpty();
+                    }
+                    return RefreshIndicator(
+                      color: AppColors.neonCyan,
+                      backgroundColor: AppColors.cardBackground,
+                      onRefresh: () async {
+                        setState(() {
+                          _papersFuture = DigestService().fetchSavedPapers();
+                        });
+                        await _papersFuture;
+                      },
+                      child: ListView.builder(
+                        padding: EdgeInsets.all(spacing.md),
+                        itemCount: papers.length,
+                        itemBuilder: (context, i) => _VaultCard(
+                          paper: papers[i],
+                          spacing: spacing,
+                          onDelete: () => _deletePaper(papers[i].id),
+                        ),
+                      ),
+                    );
+                  },
+                ),
               ),
             ),
           ],
@@ -194,20 +206,38 @@ class _VaultScreenState extends State<VaultScreen> {
 
   Widget _buildEmpty() {
     return Center(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(Icons.lock_outline,
-              color: AppColors.neonCyan.withValues(alpha: 0.3), size: 48),
-          const SizedBox(height: 16),
-          Text(AppLocalizations.of(context)!.vaultEmptyMessage,
-              style: const TextStyle(color: AppColors.textMuted, fontSize: 16)),
-          const SizedBox(height: 8),
-          const Text(
-            'Tap ♥ on a paper to save it here',
-            style: TextStyle(color: AppColors.textDark, fontSize: 13),
-          ),
-        ],
+      child: SingleChildScrollView(
+        padding: EdgeInsets.all(AppSpacing.of(context).lg),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.lock_outline,
+                color: AppColors.neonCyan.withValues(alpha: 0.3), size: 48),
+            const SizedBox(height: 16),
+            Text(AppLocalizations.of(context)!.vaultEmptyMessage,
+                style:
+                    const TextStyle(color: AppColors.textMuted, fontSize: 16)),
+            const SizedBox(height: 8),
+            Text(
+              AppLocalizations.of(context)!.vaultEmptyHint,
+              textAlign: TextAlign.center,
+              style: const TextStyle(color: AppColors.textDark, fontSize: 13),
+            ),
+            const SizedBox(height: 16),
+            TextButton.icon(
+              onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const DigestSettingsScreen()),
+              ),
+              icon: const Icon(Icons.notifications_active_outlined,
+                  color: AppColors.neonCyan),
+              label: Text(
+                AppLocalizations.of(context)!.vaultChooseDigest,
+                style: const TextStyle(color: AppColors.neonCyan),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -292,6 +322,7 @@ class _VaultCard extends StatelessWidget {
                 SizedBox(height: spacing.xs),
                 Text(
                   paper.title,
+                  textDirection: TextDirection.ltr,
                   style: const TextStyle(
                     color: AppColors.textMain,
                     fontSize: 13,
@@ -304,6 +335,7 @@ class _VaultCard extends StatelessWidget {
                   SizedBox(height: spacing.xs),
                   Text(
                     paper.perex!,
+                    textDirection: TextDirection.ltr,
                     style: const TextStyle(
                         color: AppColors.textMuted, fontSize: 12),
                     maxLines: 2,

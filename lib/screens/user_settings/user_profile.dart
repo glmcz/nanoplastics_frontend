@@ -17,6 +17,8 @@ import '../../widgets/glowing_header_separator.dart';
 import '../../widgets/shared/section_title.dart';
 import '../../utils/app_theme_colors.dart';
 import '../../main.dart';
+import '../../services/digest_service.dart';
+import '../../widgets/email_sign_in_sheet.dart';
 
 class UserProfileScreen extends StatefulWidget {
   const UserProfileScreen({super.key});
@@ -758,6 +760,28 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     );
   }
 
+  /// Deletes the server account first, then this device's copy. Clearing only
+  /// the phone used to leave email, keywords and push token on the server.
+  Future<void> _deleteAccount() async {
+    final digest = DigestService();
+    if (_settingsManager.email.isNotEmpty) {
+      if (!await digest.isSignedIn()) {
+        // Only the owner of the address may delete what is stored under it.
+        if (!mounted || !await showEmailSignInSheet(context)) return;
+      }
+      if (!await digest.deleteAccount()) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content:
+                  Text(AppLocalizations.of(context)!.accountDeleteFailed)));
+        }
+        return;
+      }
+    }
+    await _settingsManager.deleteAccount();
+    if (mounted) Navigator.of(context).popUntil((route) => route.isFirst);
+  }
+
   void _showDeleteConfirmation() {
     showDialog(
       context: context,
@@ -782,12 +806,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
           ),
           TextButton(
             onPressed: () async {
-              final nav = Navigator.of(context);
-              await _settingsManager.deleteAccount();
-              if (mounted) {
-                nav.pop(); // dismiss dialog
-                nav.popUntil((route) => route.isFirst);
-              }
+              Navigator.pop(context);
+              await _deleteAccount();
             },
             child: Text(
                 AppLocalizations.of(context)!.profileDeleteConfirmAction,

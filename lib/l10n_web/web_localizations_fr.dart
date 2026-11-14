@@ -12,14 +12,14 @@ class WebLocalizationsFr extends WebLocalizations {
   String get privacyPageTitle => 'Politique de confidentialité';
 
   @override
-  String get privacyLastUpdated => 'Dernière mise à jour : février 2026';
+  String get privacyLastUpdated => 'Dernière mise à jour : 14 novembre 2026';
 
   @override
   String get privacyS1Title => '1. Introduction';
 
   @override
   String get privacyS1P1 =>
-      'NanoSolve Hive (« Application », « nous », « notre » ou « nos ») s\'engage à protéger votre vie privée. Cette politique de confidentialité explique comment nous collectons, utilisons, divulguons et traitons autrement vos informations lorsque vous utilisez notre application mobile.';
+      'NanoSolve Hive (« l\'Application », « nous », « notre ») s\'engage à protéger votre vie privée. Cette politique de confidentialité explique quelles informations nous collectons, pourquoi, et qui d\'autre les traite lorsque vous utilisez l\'application NanoSolve Hive pour iPhone et Android ou le site web.nanosolve.org.';
 
   @override
   String get privacyS1P2 =>
@@ -33,21 +33,21 @@ class WebLocalizationsFr extends WebLocalizations {
 
   @override
   String get privacyS2DeviceItems =>
-      'Type d\'appareil et système d\'exploitation\nIdentifiants uniques de l\'appareil\nInformations sur le réseau mobile\nParamètres régionaux et fuseau horaire de l\'appareil';
+      'Type d\'appareil, système d\'exploitation et version de l\'application\nLangue de l\'appareil\nVotre fuseau horaire, uniquement lorsque vous enregistrez les réglages de la veille quotidienne\nUn jeton de notifications push d\'Apple ou de Google, uniquement si vous autorisez les notifications';
 
   @override
   String get privacyS2UsageTitle => 'Informations d\'utilisation';
 
   @override
   String get privacyS2UsageItems =>
-      'Fonctionnalités auxquelles vous accédez dans l\'application\nPages ou contenus avec lesquels vous interagissez\nTemps passé dans l\'application\nRequêtes de recherche et catégories consultées';
+      'Les écrans que vous ouvrez et les boutons sur lesquels vous appuyez, pour voir où l\'application déroute les gens\nChaque enregistrement porte un numéro d\'installation aléatoire créé sur votre appareil. Il n\'est lié ni à vous, ni à votre compte, ni à votre e-mail, ni à votre téléphone\nCes enregistrements sont supprimés après 180 jours, et rien n\'est collecté tant que les statistiques d\'utilisation sont désactivées';
 
   @override
-  String get privacyS2AnalyticsTitle => 'Données analytiques et de performance';
+  String get privacyS2AnalyticsTitle => 'Rapports de plantage';
 
   @override
   String get privacyS2AnalyticsItems =>
-      'Métriques de performance de l\'application et rapports de plantage\nJournaux d\'erreurs et diagnostics\nDonnées Firebase Analytics\nDurée et fréquence des sessions';
+      'Lorsque l\'application plante, Firebase Crashlytics reçoit l\'erreur, la version de l\'application et l\'état technique de l\'appareil à ce moment\nLes rapports de plantage ne contiennent ni e-mail, ni pseudo, ni idées\nAucun rapport n\'est envoyé tant que les statistiques d\'utilisation sont désactivées';
 
   @override
   String get privacyS2UserTitle =>
@@ -55,7 +55,7 @@ class WebLocalizationsFr extends WebLocalizations {
 
   @override
   String get privacyS2UserItems =>
-      'Nom d\'affichage/pseudo (pour la participation au classement)\nAdresse e-mail (pour l\'inscription au profil et les notifications)\nIdées de solutions, pièces jointes et autres contributions que vous soumettez';
+      'Nom affiché/pseudo (pour le classement)\nAdresse e-mail (pour votre profil, la veille quotidienne et les e-mails que vous activez)\nPréférences de la veille quotidienne : mots-clés, heure d\'envoi, fuseau horaire, et activation de l\'e-mail et du bilan mensuel\nÉtudes enregistrées dans votre Coffre-fort\nIdées de solutions, pièces jointes et autres contributions que vous envoyez';
 
   @override
   String get privacyS3Title => '3. Idées soumises — Licence ouverte';
@@ -113,18 +113,32 @@ class WebLocalizationsFr extends WebLocalizations {
       'Si vous soumettez sans nom, la licence CC BY 4.0 s\'applique toujours mais aucune attribution n\'est requise ni possible. Vous ne pourrez pas revendiquer la paternité a posteriori pour les soumissions anonymes.';
 
   @override
+  String get privacyS3AiTitle => 'Évaluation par IA';
+
+  @override
+  String get privacyS3AiP =>
+      'Une idée que vous soumettez est conservée par NanoSolve et lue par les personnes qui travaillent sur le projet. Elle est aussi envoyée à un service d\'IA, qui peut se trouver hors de votre pays, pour être évaluée, et la note revient dans l\'application. Votre pseudo et votre e-mail ne sont joints que si vous le choisissez. Pour supprimer une contribution, contactez-nous avec le code affiché lors de l\'envoi.';
+
+  @override
+  String get privacyS4Title => '4. Veille scientifique quotidienne';
+
+  @override
+  String get privacyS4Items =>
+      'La veille quotidienne est désactivée tant que vous ne l\'activez pas dans l\'application, sous Paramètres → Mon Coffre-fort → Préférences de Recherche. Elle nécessite votre adresse e-mail, que vous confirmez avec un code à 6 chiffres que nous y envoyons ; ce code empêche aussi quiconque de lire ou de modifier vos réglages.\nPour l\'envoyer, nous conservons votre e-mail, vos mots-clés, l\'heure choisie, votre fuseau horaire, l\'activation de l\'e-mail et du bilan mensuel, et le jeton push de votre appareil.\nNous enregistrons aussi quelle étude a été envoyée à quel profil, pour que vous ne receviez jamais deux fois la même.\nLes études proviennent de bases de données scientifiques publiques. Leur choix n\'utilise rien de vous, sauf vos mots-clés.\nLes notifications push passent par Firebase Cloud Messaging (Google) et, sur iPhone, par le service Apple Push Notification. Ceux-ci reçoivent le jeton push et le texte de la notification (titre et résumé de l\'étude), pas votre e-mail.\nLes e-mails de la veille et le bilan mensuel sont envoyés via Resend, un service d\'envoi d\'e-mails, qui reçoit votre adresse et le message.\nPour arrêter, désactivez la veille, l\'e-mail ou le bilan mensuel dans les Préférences de Recherche, ou coupez les notifications de NanoSolve Hive dans les réglages de votre téléphone.';
+
+  @override
   String get privacyS5Title => '5. Comment nous utilisons vos informations';
 
   @override
   String get privacyS5Items =>
-      'Améliorer l\'application : Maintenir et améliorer les fonctionnalités de l\'application\nAnalyser l\'utilisation : Comprendre les modèles d\'utilisation pour améliorer l\'expérience utilisateur\nDiagnostiquer les problèmes : Identifier et corriger les problèmes techniques et les bugs\nEnvoyer des mises à jour : Vous informer des mises à jour importantes ou des avis de sécurité\nRespecter la loi : Respecter les obligations légales et les exigences réglementaires\nFonctionnalités communautaires : Afficher votre profil et vos solutions dans le classement public (avec votre consentement)';
+      'Envoyer la veille quotidienne : Envoyer les études, notifications et e-mails que vous avez activés, à l\'heure choisie\nAméliorer l\'application : Maintenir et améliorer les fonctionnalités\nAnalyser l\'utilisation : Comprendre les usages pour améliorer l\'expérience\nDiagnostiquer les problèmes : Identifier et corriger les problèmes techniques et les bugs\nRespecter la loi : Remplir les obligations légales et réglementaires\nFonctions communautaires : Afficher votre pseudo et vos idées dans le classement public (avec votre consentement)';
 
   @override
   String get privacyS6Title => '6. Stockage des données et sécurité';
 
   @override
   String get privacyS6Items =>
-      'Nous ne stockons aucune donnée sensible ou confidentielle au-delà de l\'e-mail/pseudo d\'inscription et des idées ou pièces jointes que vous soumettez explicitement.\nLes données publiques (e-mail de l\'utilisateur, pseudo) sont stockées de manière sécurisée sur nos serveurs avec des contrôles d\'accès appropriés.\nLe contenu des idées et les métadonnées associées restent sous forme anonymisée après la suppression des identifiants personnels.\nNous ne partageons jamais des données personnelles avec des tiers sans votre consentement explicite.';
+      'Nous ne conservons que ce dont l\'application a besoin : votre profil (pseudo et e-mail), vos préférences de veille et votre Coffre-fort, et les idées ou pièces jointes que vous envoyez.\nVotre e-mail n\'est jamais affiché publiquement. Votre pseudo n\'apparaît dans le classement qu\'à côté des idées soumises sous ce nom.\nLes données circulent via des connexions HTTPS chiffrées et sont stockées sur nos serveurs, accessibles uniquement aux personnes qui gèrent NanoSolve.\nLe contenu des idées et les métadonnées associées restent anonymisés après suppression des identifiants personnels.\nNous ne vendons jamais de données personnelles.';
 
   @override
   String get privacyS6HighlightLabel => 'Minimisation des données :';
@@ -145,18 +159,46 @@ class WebLocalizationsFr extends WebLocalizations {
 
   @override
   String get privacyS7FirebaseItems =>
-      'Objectif : Rapports de plantage, analyses et surveillance des performances\nDonnées collectées : Plantages de l\'application, métriques de performance, informations de session\nContrôle : Vous pouvez désactiver les analyses dans Paramètres de l\'application → Confidentialité et sécurité';
+      'Objet : Rapports de plantage (Crashlytics) et envoi des notifications push (Cloud Messaging)\nDonnées : Rapports de plantage décrits à la section 2 ; jetons push et texte des notifications\nContrôle : Désactivez les statistiques d\'utilisation dans Paramètres → Confidentialité et sécurité pour arrêter les rapports ; coupez les notifications pour arrêter les push';
+
+  @override
+  String get privacyS7AppleTitle => 'Apple';
+
+  @override
+  String get privacyS7AppleP =>
+      'Objet : Distribution sur l\'App Store et envoi des notifications push sur iPhone (Apple Push Notification service)';
 
   @override
   String get privacyS7PlayTitle => 'Google Play Services';
 
   @override
   String get privacyS7PlayP =>
-      'Objectif : Distribution de l\'application et fonctionnalité de mise à jour intégrée';
+      'Objet : Distribution et mises à jour de l\'application sur Android';
+
+  @override
+  String get privacyS7EmailTitle => 'Resend';
+
+  @override
+  String get privacyS7EmailP =>
+      'Objet : Envoie les e-mails de veille et le bilan mensuel que vous activez. Reçoit votre adresse e-mail et le message';
+
+  @override
+  String get privacyS7AiTitle => 'Services d\'IA';
+
+  @override
+  String get privacyS7AiP =>
+      'Objet : Évaluer les idées que vous soumettez (voir section 3) et résumer des études scientifiques publiques pour la veille. Résumer des études n\'implique aucune donnée personnelle';
+
+  @override
+  String get privacyS7WebTitle => 'Cloudflare et diffusion de contenu';
+
+  @override
+  String get privacyS7WebP =>
+      'Nos serveurs sont derrière Cloudflare, qui les protège des attaques et voit votre adresse IP. Sur le site, Cloudflare Turnstile vérifie qu\'une idée est envoyée par une personne. Le site charge aussi des polices et du code depuis Google (gstatic.com) et jsDelivr, qui reçoivent votre adresse IP lorsque votre navigateur les télécharge';
 
   @override
   String get privacyS7Note =>
-      'Nous ne partageons pas d\'informations d\'identification personnelle (comme votre nom ou e-mail) avec ces services sauf si vous l\'autorisez explicitement.';
+      'Chaque service ne reçoit que ce dont il a besoin pour la tâche indiquée. Nous ne vendons jamais de données personnelles.';
 
   @override
   String get privacyS8Title => '8. Vos droits et choix';
@@ -180,21 +222,21 @@ class WebLocalizationsFr extends WebLocalizations {
 
   @override
   String get privacyS8DeleteP =>
-      'Vous pouvez demander la suppression complète de votre compte et des données associées via Paramètres → Confidentialité et sécurité.';
+      'Paramètres → Profil utilisateur → Supprimer le compte efface votre compte de nos serveurs (e-mail, préférences de veille, jeton push et Coffre-fort), puis de cet appareil. Les idées envoyées restent, sans votre nom ni votre e-mail. Si vous n\'avez pas encore confirmé votre e-mail sur cet appareil, l\'application vous envoie d\'abord un code, pour que personne d\'autre ne puisse supprimer votre compte.';
 
   @override
   String get privacyS8OptoutTitle => 'Se désabonner des analyses';
 
   @override
   String get privacyS8OptoutP =>
-      'Vous pouvez désactiver la collecte d\'analyses et les rapports de plantage via Paramètres → Confidentialité et sécurité. Cela n\'affecte pas les fonctionnalités principales de l\'application.';
+      'Vous pouvez désactiver les statistiques d\'utilisation et les rapports de plantage dans Paramètres → Confidentialité et sécurité. Cela n\'affecte pas les fonctionnalités principales de l\'application.';
 
   @override
   String get privacyS8ManageTitle => 'Gérer les communications';
 
   @override
   String get privacyS8ManageP =>
-      'Vous pouvez gérer vos préférences de notification et les paramètres de communication dans l\'application.';
+      'Activez ou désactivez à tout moment la veille quotidienne, l\'e-mail de veille et le bilan mensuel sous Paramètres → Mon Coffre-fort → Préférences de Recherche. Vous pouvez aussi couper les notifications de NanoSolve Hive dans les réglages de votre téléphone.';
 
   @override
   String get privacyS9Title => '9. Confidentialité des enfants';
@@ -208,7 +250,7 @@ class WebLocalizationsFr extends WebLocalizations {
 
   @override
   String get privacyS10Items =>
-      'Idées soumises : Conservées indéfiniment sauf si vous les supprimez\nProfil utilisateur : Conservé tant que le compte est actif ; supprimé lors de la suppression du compte\nDonnées analytiques : Conservées pendant 14 mois par Firebase, puis automatiquement supprimées\nJournaux de plantage : Conservés pendant 90 jours par Firebase, puis automatiquement supprimés\nParamètres de l\'application : Stockés localement sur votre appareil ; supprimés lorsque vous désinstallez l\'application';
+      'Idées soumises : Conservées indéfiniment sauf suppression de votre part\nProfil, préférences de veille, jeton push et Coffre-fort : Conservés tant que votre profil existe ; effacés sur demande\nJournal des envois de la veille : Conservé tant que votre profil existe, pour ne jamais envoyer deux fois la même étude\nStatistiques d\'utilisation : Supprimées après 180 jours\nRapports de plantage : Conservés 90 jours par Firebase Crashlytics, puis supprimés automatiquement\nRéglages de l\'application : Stockés localement sur votre appareil ; supprimés à la désinstallation';
 
   @override
   String get privacyS11Title => '11. Transferts internationaux de données';
@@ -261,7 +303,7 @@ class WebLocalizationsFr extends WebLocalizations {
       'Équipe de confidentialité NanoSolve Hive';
 
   @override
-  String get privacyS15HighlightEmail => 'E-mail : support@nanosolve.com';
+  String get privacyS15HighlightEmail => 'E-mail : support@nanosolve.org';
 
   @override
   String get privacyS15HighlightContact =>

@@ -12,14 +12,14 @@ class WebLocalizationsEn extends WebLocalizations {
   String get privacyPageTitle => 'Privacy Policy';
 
   @override
-  String get privacyLastUpdated => 'Last Updated: February 2026';
+  String get privacyLastUpdated => 'Last Updated: November 14, 2026';
 
   @override
   String get privacyS1Title => '1. Introduction';
 
   @override
   String get privacyS1P1 =>
-      'NanoSolve Hive (\"App\", \"we\", \"our\", or \"us\") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and otherwise handle your information when you use our mobile application.';
+      'NanoSolve Hive (\"App\", \"we\", \"our\", or \"us\") is committed to protecting your privacy. This Privacy Policy explains what information we collect, why, and who else handles it when you use the NanoSolve Hive app for iPhone and Android or the website web.nanosolve.org.';
 
   @override
   String get privacyS1P2 =>
@@ -33,28 +33,28 @@ class WebLocalizationsEn extends WebLocalizations {
 
   @override
   String get privacyS2DeviceItems =>
-      'Device type and operating system\nUnique device identifiers\nMobile network information\nDevice locale and timezone';
+      'Device type, operating system and app version\nDevice language\nYour time zone, only when you save daily digest settings\nA push notification token from Apple or Google, only if you allow notifications';
 
   @override
   String get privacyS2UsageTitle => 'Usage Information';
 
   @override
   String get privacyS2UsageItems =>
-      'Features you access within the application\nPages or content you interact with\nTime spent in the application\nSearch queries and categories viewed';
+      'Which screens you open and which buttons you press, so we can see where the app confuses people\nEach record carries a random installation number created on your device. It is not linked to you, your account, your email or your phone\nThese records are deleted after 180 days, and nothing is collected while usage statistics are turned off';
 
   @override
-  String get privacyS2AnalyticsTitle => 'Analytics and Performance Data';
+  String get privacyS2AnalyticsTitle => 'Crash Reports';
 
   @override
   String get privacyS2AnalyticsItems =>
-      'App performance metrics and crash reports\nError logs and diagnostics\nFirebase Analytics data\nSession duration and frequency';
+      'When the app crashes, Firebase Crashlytics receives the error, the app version and the device\'s technical state at that moment\nCrash reports contain no email, nickname or ideas\nNo crash reports are sent while usage statistics are turned off';
 
   @override
   String get privacyS2UserTitle => 'Optional User-Provided Information';
 
   @override
   String get privacyS2UserItems =>
-      'Display name/nickname (for leaderboard participation)\nEmail address (for profile registration and notifications)\nSolution ideas, attachments, and other contributions you submit';
+      'Display name/nickname (for the leaderboard)\nEmail address (for your profile, the daily digest and the emails you opt into)\nDaily digest preferences: keywords, delivery hour, time zone, and whether email and the monthly summary are on\nPapers you save to your Vault\nSolution ideas, attachments, and other contributions you submit';
 
   @override
   String get privacyS3Title => '3. Submitted Ideas — Open License';
@@ -112,18 +112,32 @@ class WebLocalizationsEn extends WebLocalizations {
       'If you submit without a name, the CC BY 4.0 license still applies but no attribution is required or possible. You will not be able to claim authorship after the fact for anonymous submissions.';
 
   @override
+  String get privacyS3AiTitle => 'AI scoring';
+
+  @override
+  String get privacyS3AiP =>
+      'An idea you submit is stored by NanoSolve and read by people working on the project. It is also sent to an AI service, which may be outside your country, to be scored, and the score comes back into the app. Your nickname and email are attached only if you choose. To delete a submission, contact us with the code shown when you send it.';
+
+  @override
+  String get privacyS4Title => '4. Daily Research Digest';
+
+  @override
+  String get privacyS4Items =>
+      'The daily digest is off until you turn it on in the app under Settings → My Vault → Research Preferences. It needs your email address, which you confirm with a 6-digit code we send to it; the code also keeps anyone else from reading or changing your settings.\nTo deliver it we store your email, your keywords, the hour you chose, your time zone, whether digest email and the monthly summary are on, and your device\'s push token.\nWe also record which paper was sent to which profile, so you never get the same paper twice.\nPapers come from public scientific databases. Choosing one uses nothing about you except your keywords.\nPush notifications travel through Firebase Cloud Messaging (Google) and, on iPhone, the Apple Push Notification service. They receive the push token and the notification text (the paper\'s title and summary), not your email.\nDigest emails and the monthly summary are sent through Resend, an email delivery service, which receives your email address and the message.\nTo stop, switch the digest, email or monthly summary off in Research Preferences, or turn off notifications for NanoSolve Hive in your phone\'s settings.';
+
+  @override
   String get privacyS5Title => '5. How We Use Your Information';
 
   @override
   String get privacyS5Items =>
-      'Improve the App: Maintain and enhance application functionality and features\nAnalyze Usage: Understand usage patterns to improve user experience\nDiagnose Issues: Identify and fix technical problems and bugs\nSend Updates: Notify you of important updates or security notices\nComply with Law: Meet legal obligations and regulatory requirements\nCommunity Features: Display your profile and solutions on the public leaderboard (with your consent)';
+      'Deliver the Daily Digest: Send the papers, notifications and emails you opted into, at the hour you chose\nImprove the App: Maintain and enhance application functionality and features\nAnalyze Usage: Understand usage patterns to improve user experience\nDiagnose Issues: Identify and fix technical problems and bugs\nComply with Law: Meet legal obligations and regulatory requirements\nCommunity Features: Display your nickname and ideas on the public leaderboard (with your consent)';
 
   @override
   String get privacyS6Title => '6. Data Storage and Security';
 
   @override
   String get privacyS6Items =>
-      'We don\'t store any sensitive or confidential data beyond the registration email/nickname and the ideas or attachments you explicitly submit.\nPublic data (user email, nickname) is stored securely on our servers with appropriate access controls.\nIdea content and associated metadata remain in anonymized form after removing personal identifiers.\nWe never share personal data with third parties without your explicit consent.';
+      'We store only what the app needs: your profile (nickname and email), your digest preferences and Vault, and the ideas or attachments you submit.\nYour email is never shown publicly. Your nickname appears on the leaderboard only next to ideas you submit under it.\nData travels over encrypted HTTPS connections and is stored on our servers, with access limited to the people running NanoSolve.\nIdea content and associated metadata remain in anonymized form after removing personal identifiers.\nWe never sell personal data.';
 
   @override
   String get privacyS6HighlightLabel => 'Data Minimization:';
@@ -144,18 +158,46 @@ class WebLocalizationsEn extends WebLocalizations {
 
   @override
   String get privacyS7FirebaseItems =>
-      'Purpose: Crash reporting, analytics, and performance monitoring\nData Collected: App crashes, performance metrics, session information\nControl: You can disable analytics in app Settings → Privacy & Security';
+      'Purpose: Crash reporting (Crashlytics) and push notification delivery (Cloud Messaging)\nData: Crash reports as described in section 2; push tokens and notification text\nControl: Turn off usage statistics in Settings → Privacy & Security to stop crash reports; turn off notifications to stop pushes';
+
+  @override
+  String get privacyS7AppleTitle => 'Apple';
+
+  @override
+  String get privacyS7AppleP =>
+      'Purpose: App Store distribution and push notification delivery on iPhone (Apple Push Notification service)';
 
   @override
   String get privacyS7PlayTitle => 'Google Play Services';
 
   @override
   String get privacyS7PlayP =>
-      'Purpose: App distribution and in-app update functionality';
+      'Purpose: App distribution and updates on Android';
+
+  @override
+  String get privacyS7EmailTitle => 'Resend';
+
+  @override
+  String get privacyS7EmailP =>
+      'Purpose: Sends the digest emails and monthly summary you opt into. Receives your email address and the message';
+
+  @override
+  String get privacyS7AiTitle => 'AI services';
+
+  @override
+  String get privacyS7AiP =>
+      'Purpose: Scoring the ideas you submit (see section 3) and summarizing public research papers for the digest. Summarizing papers involves no personal data';
+
+  @override
+  String get privacyS7WebTitle => 'Cloudflare and content delivery';
+
+  @override
+  String get privacyS7WebP =>
+      'Our servers sit behind Cloudflare, which shields them from attacks and sees your IP address. On the website, Cloudflare Turnstile checks that an idea is submitted by a person. The website also loads fonts and code from Google (gstatic.com) and jsDelivr, which receive your IP address when your browser fetches them';
 
   @override
   String get privacyS7Note =>
-      'We do not share personal identifiable information (such as your name or email) with these services unless you explicitly authorize it.';
+      'Each service receives only what it needs for the job listed above. We never sell personal data.';
 
   @override
   String get privacyS8Title => '8. Your Rights and Choices';
@@ -179,21 +221,21 @@ class WebLocalizationsEn extends WebLocalizations {
 
   @override
   String get privacyS8DeleteP =>
-      'You can request complete deletion of your account and associated data through Settings → Privacy & Security.';
+      'Settings → User Profile → Delete account erases your account from our servers (your email, digest preferences, push token and Vault) and then from this device. Ideas you submitted stay, without your name and email. If you have not confirmed your email on this device, the app first sends you a code, so nobody else can delete your account.';
 
   @override
   String get privacyS8OptoutTitle => 'Opt-Out of Analytics';
 
   @override
   String get privacyS8OptoutP =>
-      'You can disable analytics collection and crash reporting through Settings → Privacy & Security. This does not affect core app functionality.';
+      'You can turn off usage statistics and crash reporting in Settings → Privacy & Security. This does not affect core app functionality.';
 
   @override
   String get privacyS8ManageTitle => 'Manage Communications';
 
   @override
   String get privacyS8ManageP =>
-      'You can manage your notification preferences and communication settings within the application.';
+      'Turn the daily digest, digest email and monthly summary on or off at any time under Settings → My Vault → Research Preferences. You can also turn off notifications for NanoSolve Hive in your phone\'s settings.';
 
   @override
   String get privacyS9Title => '9. Children\'s Privacy';
@@ -207,7 +249,7 @@ class WebLocalizationsEn extends WebLocalizations {
 
   @override
   String get privacyS10Items =>
-      'Submitted Ideas: Retained indefinitely unless deleted by you\nUser Profile: Retained while account is active; deleted upon account deletion\nAnalytics Data: Retained for 14 months by Firebase, then automatically deleted\nCrash Logs: Retained for 90 days by Firebase, then automatically deleted\nApp Settings: Stored locally on your device; deleted when you uninstall the app';
+      'Submitted Ideas: Retained indefinitely unless deleted by you\nUser Profile, digest preferences, push token and Vault: Retained while your profile exists; erased on request\nDigest delivery log: Retained while your profile exists, so the same paper is never sent twice\nUsage Statistics: Deleted after 180 days\nCrash Reports: Retained for 90 days by Firebase Crashlytics, then automatically deleted\nApp Settings: Stored locally on your device; deleted when you uninstall the app';
 
   @override
   String get privacyS11Title => '11. International Data Transfers';
@@ -256,7 +298,7 @@ class WebLocalizationsEn extends WebLocalizations {
   String get privacyS15HighlightTeam => 'NanoSolve Hive Privacy Team';
 
   @override
-  String get privacyS15HighlightEmail => 'Email: support@nanosolve.com';
+  String get privacyS15HighlightEmail => 'Email: support@nanosolve.org';
 
   @override
   String get privacyS15HighlightContact =>

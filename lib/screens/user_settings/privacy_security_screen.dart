@@ -7,7 +7,6 @@ import '../../utils/app_sizing.dart';
 import '../../utils/app_typography.dart';
 import '../../services/settings_manager.dart';
 import '../../services/service_locator.dart';
-import 'privacy_policy_screen.dart';
 import 'terms_of_service_screen.dart';
 import '../../widgets/nanosolve_logo.dart';
 import '../../widgets/glowing_header_separator.dart';
@@ -245,9 +244,8 @@ class _PrivacySecurityScreenState extends State<PrivacySecurityScreen> {
             cardSpace: cardSpace,
             arrowSz: arrowSz,
             cardTitleStyle: cardTitleStyle,
-            onTap: () => Navigator.of(context).push(
-              MaterialPageRoute(builder: (_) => const PrivacyPolicyScreen()),
-            ),
+            // The same policy the website shows, so the two cannot drift.
+            onTap: () => Navigator.of(context).pushNamed('/privacy'),
           ),
           SizedBox(height: cardSpace),
           _buildLinkItem(

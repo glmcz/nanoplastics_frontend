@@ -57,8 +57,39 @@ class FakeDigestService extends Fake implements DigestService {
   Future<void> syncUser() async {}
 
   @override
-  Future<List<String>> getTresorIds({String? email}) async =>
-      tresorIds.toList();
+  Future<List<String>> getTresorIds() async => tresorIds.toList();
+
+  /// Whether the user has confirmed their email. Screens behind the sign-in
+  /// gate show their content only when true.
+  bool signedIn = true;
+
+  /// What the server says about the emailed code; null means a wrong code.
+  bool codeAccepted = true;
+
+  /// Whether the server erased the account.
+  bool deleteSucceeds = true;
+  int deleteCalls = 0;
+
+  @override
+  Future<bool> isSignedIn() async => signedIn;
+
+  @override
+  Future<CodeRequestResult> requestCode(String email) async =>
+      CodeRequestResult.sent;
+
+  @override
+  Future<SignInResult> verifyCode(String email, String code) async {
+    if (!codeAccepted) return SignInResult.wrongCode;
+    signedIn = true;
+    return SignInResult.signedIn;
+  }
+
+  @override
+  Future<bool> deleteAccount() async {
+    deleteCalls++;
+    if (deleteSucceeds) signedIn = false;
+    return deleteSucceeds;
+  }
 
   @override
   Future<List<DigestPaper>> fetchLatest({
