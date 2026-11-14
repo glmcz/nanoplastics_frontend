@@ -200,7 +200,7 @@ class DigestService {
 
       final json = jsonDecode(resp.body) as Map<String, dynamic>;
       return (
-        enabled: json['daily_digest_enabled'] as bool? ?? true,
+        enabled: json['daily_digest_enabled'] as bool? ?? false,
         digestHour: json['digest_hour'] as int? ?? 9,
         emailEnabled: json['email_digest_enabled'] as bool? ?? false,
       );

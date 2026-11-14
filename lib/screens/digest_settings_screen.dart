@@ -20,7 +20,7 @@ class _DigestSettingsScreenState extends State<DigestSettingsScreen> {
   final _svc = DigestService();
 
   late List<String> _keywords;
-  bool _digestEnabled = true;
+  bool _digestEnabled = false;
   int _digestHour = 9;
   bool _emailEnabled = false;
   bool _saving = false;
