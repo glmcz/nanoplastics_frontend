@@ -101,6 +101,8 @@ jobs:
         with:
           packageName: org.nanosolve.hive
           releaseFiles: build/app/outputs/bundle/playRelease/app-play-release.aab
-          track: production
+          tracks: production
           serviceAccountJsonPlainText: ${{ secrets.PLAY_STORE_SERVICE_ACCOUNT_JSON }}
           status: completed
+          # Play holds this app's changes for a manual "Send for review" in the console.
+          changesNotSentForReview: true
