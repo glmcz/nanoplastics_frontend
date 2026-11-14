@@ -6,7 +6,7 @@ import '../services/digest_service.dart';
 import '../services/push_notification_service.dart';
 import '../services/service_locator.dart';
 import '../utils/app_spacing.dart';
-import '../utils/app_sizing.dart';
+import '../utils/app_typography.dart';
 import '../utils/platform_adaptive.dart';
 
 class DigestSettingsScreen extends StatefulWidget {
@@ -23,6 +23,7 @@ class _DigestSettingsScreenState extends State<DigestSettingsScreen> {
   bool _digestEnabled = false;
   int _digestHour = 9;
   bool _emailEnabled = false;
+  bool _monthlyEnabled = false;
   bool _saving = false;
   String? _error;
 
@@ -40,6 +41,7 @@ class _DigestSettingsScreenState extends State<DigestSettingsScreen> {
         _digestEnabled = prefs.enabled;
         _digestHour = prefs.digestHour;
         _emailEnabled = prefs.emailEnabled;
+        _monthlyEnabled = prefs.monthlyEnabled;
       });
     }
   }
@@ -67,6 +69,7 @@ class _DigestSettingsScreenState extends State<DigestSettingsScreen> {
       enabled: _digestEnabled,
       digestHour: _digestHour,
       emailEnabled: _emailEnabled,
+      monthlyEnabled: _monthlyEnabled,
       keywords: _keywords,
     );
     if (mounted) {
@@ -84,14 +87,16 @@ class _DigestSettingsScreenState extends State<DigestSettingsScreen> {
   @override
   Widget build(BuildContext context) {
     final spacing = AppSpacing.of(context);
-    final sizing = AppSizing.of(context);
+    final typography = AppTypography.of(context);
+    final itemTitle = typography.title.copyWith(color: AppColors.textMain);
+    final itemHint = typography.bodySm.copyWith(color: AppColors.textMuted);
 
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
         child: Column(
           children: [
-            _buildHeader(context, spacing, sizing),
+            _buildHeader(context, spacing, typography),
             Expanded(
               child: SingleChildScrollView(
                 padding: EdgeInsets.all(spacing.md),
@@ -104,13 +109,11 @@ class _DigestSettingsScreenState extends State<DigestSettingsScreen> {
                         title: Text(
                             AppLocalizations.of(context)!
                                 .digestSettingsDailyDigest,
-                            style: const TextStyle(
-                                color: AppColors.textMain, fontSize: 14)),
+                            style: itemTitle),
                         subtitle: Text(
                             AppLocalizations.of(context)!
                                 .digestSettingsDailyDigestHint,
-                            style: const TextStyle(
-                                color: AppColors.textMuted, fontSize: 12)),
+                            style: itemHint),
                         value: _digestEnabled,
                         activeThumbColor: AppColors.neonCyan,
                         onChanged: (v) => setState(() => _digestEnabled = v),
@@ -124,18 +127,34 @@ class _DigestSettingsScreenState extends State<DigestSettingsScreen> {
                       child: SwitchListTile(
                         title: Text(
                             AppLocalizations.of(context)!.digestSettingsEmail,
-                            style: const TextStyle(
-                                color: AppColors.textMain, fontSize: 14)),
+                            style: itemTitle),
                         subtitle: Text(
                             AppLocalizations.of(context)!
                                 .digestSettingsEmailHint,
-                            style: const TextStyle(
-                                color: AppColors.textMuted, fontSize: 12)),
+                            style: itemHint),
                         value: _emailEnabled,
                         activeThumbColor: AppColors.neonCyan,
                         onChanged: _digestEnabled
                             ? (v) => setState(() => _emailEnabled = v)
                             : null,
+                        contentPadding: EdgeInsets.zero,
+                      ),
+                    ),
+                    SizedBox(height: spacing.md),
+
+                    // Its own opt-in: email only, and independent of the daily push.
+                    _GlassCard(
+                      child: SwitchListTile(
+                        title: Text(
+                            AppLocalizations.of(context)!.digestSettingsMonthly,
+                            style: itemTitle),
+                        subtitle: Text(
+                            AppLocalizations.of(context)!
+                                .digestSettingsMonthlyHint,
+                            style: itemHint),
+                        value: _monthlyEnabled,
+                        activeThumbColor: AppColors.neonCyan,
+                        onChanged: (v) => setState(() => _monthlyEnabled = v),
                         contentPadding: EdgeInsets.zero,
                       ),
                     ),
@@ -149,11 +168,7 @@ class _DigestSettingsScreenState extends State<DigestSettingsScreen> {
                           Text(
                             AppLocalizations.of(context)!
                                 .digestSettingsNotificationTime,
-                            style: const TextStyle(
-                              color: AppColors.textMain,
-                              fontSize: 14,
-                              fontWeight: FontWeight.w600,
-                            ),
+                            style: itemTitle,
                           ),
                           SizedBox(height: spacing.sm),
                           Row(
@@ -171,11 +186,9 @@ class _DigestSettingsScreenState extends State<DigestSettingsScreen> {
                               ),
                               SizedBox(width: spacing.sm),
                               Text(
-                                '${_digestHour.toString().padLeft(2, '0')}:00 UTC',
-                                style: const TextStyle(
-                                  color: AppColors.neonCyan,
-                                  fontSize: 13,
-                                ),
+                                '${_digestHour.toString().padLeft(2, '0')}:00',
+                                style: typography.body
+                                    .copyWith(color: AppColors.neonCyan),
                               ),
                             ],
                           ),
@@ -187,12 +200,8 @@ class _DigestSettingsScreenState extends State<DigestSettingsScreen> {
                     // Keywords section label
                     Text(
                       AppLocalizations.of(context)!.digestSettingsKeywords,
-                      style: const TextStyle(
-                        color: AppColors.textMuted,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600,
-                        letterSpacing: 0.8,
-                      ),
+                      style:
+                          typography.label.copyWith(color: AppColors.textMuted),
                     ),
                     SizedBox(height: spacing.sm),
 
@@ -224,13 +233,14 @@ class _DigestSettingsScreenState extends State<DigestSettingsScreen> {
                                   const Icon(Icons.email_outlined,
                                       color: AppColors.neonCyan, size: 16),
                                   SizedBox(width: spacing.xs),
-                                  Text(
-                                    AppLocalizations.of(context)!
-                                        .digestSettingsKeywordRequestMore,
-                                    style: const TextStyle(
-                                      color: AppColors.neonCyan,
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w600,
+                                  Flexible(
+                                    child: Text(
+                                      AppLocalizations.of(context)!
+                                          .digestSettingsKeywordRequestMore,
+                                      style: typography.body.copyWith(
+                                        color: AppColors.neonCyan,
+                                        fontWeight: FontWeight.w600,
+                                      ),
                                     ),
                                   ),
                                 ],
@@ -241,9 +251,8 @@ class _DigestSettingsScreenState extends State<DigestSettingsScreen> {
                           if (_error != null) ...[
                             SizedBox(height: spacing.xs),
                             Text(_error!,
-                                style: const TextStyle(
-                                    color: AppColors.neonCrimson,
-                                    fontSize: 11)),
+                                style: typography.bodySm
+                                    .copyWith(color: AppColors.neonCrimson)),
                           ],
                         ],
                       ),
@@ -288,11 +297,8 @@ class _DigestSettingsScreenState extends State<DigestSettingsScreen> {
                                 : Text(
                                     AppLocalizations.of(context)!
                                         .categoryDetailBrainstormSave,
-                                    style: const TextStyle(
-                                      color: AppColors.neonCyan,
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w700,
-                                    ),
+                                    style: typography.subtitle
+                                        .copyWith(color: AppColors.neonCyan),
                                   ),
                           ),
                         ),
@@ -309,7 +315,7 @@ class _DigestSettingsScreenState extends State<DigestSettingsScreen> {
   }
 
   Widget _buildHeader(
-      BuildContext context, AppSpacing spacing, AppSizing sizing) {
+      BuildContext context, AppSpacing spacing, AppTypography typography) {
     return ClipRect(
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
@@ -336,12 +342,10 @@ class _DigestSettingsScreenState extends State<DigestSettingsScreen> {
                 ),
               ),
               SizedBox(width: spacing.sm),
-              Text(
-                AppLocalizations.of(context)!.digestSettingsTitle,
-                style: const TextStyle(
-                  color: AppColors.textMain,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w700,
+              Expanded(
+                child: Text(
+                  AppLocalizations.of(context)!.digestSettingsTitle,
+                  style: typography.title.copyWith(color: AppColors.textMain),
                 ),
               ),
             ],
@@ -369,10 +373,9 @@ class _KeywordChip extends StatelessWidget {
         border: Border.all(color: AppColors.neonCyan.withValues(alpha: 0.4)),
       ),
       child: Text(label,
-          style: const TextStyle(
-              color: AppColors.neonCyan,
-              fontSize: 12,
-              fontWeight: FontWeight.w500)),
+          style: AppTypography.of(context)
+              .bodySm
+              .copyWith(color: AppColors.neonCyan)),
     );
   }
 }

@@ -11,6 +11,7 @@ import '../../utils/app_sizing.dart';
 import '../../utils/app_typography.dart';
 import '../../widgets/nanosolve_logo.dart';
 import '../../widgets/glowing_header_separator.dart';
+import '../../widgets/shared/section_title.dart';
 import '../../services/settings_manager.dart';
 import '../../services/logger_service.dart';
 import '../../services/web_link_cache_service.dart';
@@ -201,13 +202,13 @@ class _AboutScreenState extends State<AboutScreen> {
         children: [
           _buildAppInfo(context, spacing, sizing, typography),
           SizedBox(height: spacing.cardSpacing * 2),
-          _buildSectionTitle(
-              context, AppLocalizations.of(context)!.aboutSection, typography),
+          SectionTitle(AppLocalizations.of(context)!.aboutSection,
+              color: AppColors.pastelLavender),
           SizedBox(height: spacing.cardSpacing),
           _buildDescriptionCard(context, spacing, typography),
           SizedBox(height: spacing.cardSpacing * 2),
-          _buildSectionTitle(
-              context, AppLocalizations.of(context)!.aboutConnect, typography),
+          SectionTitle(AppLocalizations.of(context)!.aboutConnect,
+              color: AppColors.pastelLavender),
           SizedBox(height: spacing.cardSpacing),
           _buildLinkItem(
             title: AppLocalizations.of(context)!.aboutWebsite,
@@ -294,15 +295,15 @@ class _AboutScreenState extends State<AboutScreen> {
             },
           ),
           SizedBox(height: spacing.cardSpacing * 2),
-          _buildSectionTitle(
-              context, AppLocalizations.of(context)!.aboutShare, typography),
+          SectionTitle(AppLocalizations.of(context)!.aboutShare,
+              color: AppColors.pastelLavender),
           SizedBox(height: spacing.cardSpacing),
           _buildShareCard(context, spacing, sizing, typography, l10n),
           SizedBox(height: spacing.cardSpacing * 2),
           _buildFooter(context, spacing, typography),
           SizedBox(height: spacing.cardSpacing * 2),
-          _buildSectionTitle(
-              context, AppLocalizations.of(context)!.aboutLegal, typography),
+          SectionTitle(AppLocalizations.of(context)!.aboutLegal,
+              color: AppColors.pastelLavender),
           SizedBox(height: spacing.cardSpacing * 2),
           _buildLinkItem(
             title: AppLocalizations.of(context)!.aboutOpenSourceLicenses,
@@ -375,34 +376,6 @@ class _AboutScreenState extends State<AboutScreen> {
           ),
         ),
       ],
-    );
-  }
-
-  Widget _buildSectionTitle(
-      BuildContext context, String title, AppTypography typography) {
-    return Align(
-      alignment: Alignment.centerLeft,
-      child: Row(
-        children: [
-          Container(
-            width: 4,
-            height: 20,
-            decoration: BoxDecoration(
-              color: AppColors.pastelLavender,
-              borderRadius: BorderRadius.circular(2),
-            ),
-          ),
-          const SizedBox(width: AppConstants.space8),
-          Text(
-            title,
-            style: typography.title.copyWith(
-              fontWeight: FontWeight.w700,
-              color: AppColors.pastelLavender,
-              letterSpacing: 0.5,
-            ),
-          ),
-        ],
-      ),
     );
   }
 
@@ -529,12 +502,15 @@ class _AboutScreenState extends State<AboutScreen> {
           // Platform selector
           Column(
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+              // Wrap, not Row: at large system font sizes the two buttons
+              // no longer fit side by side.
+              Wrap(
+                alignment: WrapAlignment.center,
+                spacing: spacing.cardSpacing,
+                runSpacing: spacing.cardSpacing,
                 children: [
                   _buildPlatformButton('public', l10n.aboutPlatformAndroidFull,
                       spacing, sizing, typography),
-                  SizedBox(width: spacing.cardSpacing),
                   _buildPlatformButton('play_store',
                       l10n.aboutPlatformPlayStore, spacing, sizing, typography),
                 ],

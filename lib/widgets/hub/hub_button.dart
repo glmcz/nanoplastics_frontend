@@ -105,31 +105,43 @@ class HubButton extends StatelessWidget {
                       ]
                     : null,
               ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  isActive
-                      ? Icon(icon, size: iconSize, color: activeColor)
-                      : Opacity(
-                          opacity: 0.6,
-                          child: Icon(
-                            icon,
-                            size: iconSize,
-                            color: AppColors.hubTextInactive,
+              // At a large system font size the label no longer fits the button's
+              // fixed height: scale the content down, keeping its width so a long
+              // label still ends in an ellipsis.
+              child: LayoutBuilder(
+                builder: (context, constraints) => FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: SizedBox(
+                    width: constraints.maxWidth,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        isActive
+                            ? Icon(icon, size: iconSize, color: activeColor)
+                            : Opacity(
+                                opacity: 0.6,
+                                child: Icon(
+                                  icon,
+                                  size: iconSize,
+                                  color: AppColors.hubTextInactive,
+                                ),
+                              ),
+                        SizedBox(height: internalGap),
+                        Text(
+                          label.toUpperCase(),
+                          style: textStyle.copyWith(
+                            color: isActive
+                                ? Colors.white
+                                : AppColors.hubTextInactive,
                           ),
+                          textAlign: TextAlign.center,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                         ),
-                  SizedBox(height: internalGap),
-                  Text(
-                    label.toUpperCase(),
-                    style: textStyle.copyWith(
-                      color:
-                          isActive ? Colors.white : AppColors.hubTextInactive,
+                      ],
                     ),
-                    textAlign: TextAlign.center,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
                   ),
-                ],
+                ),
               ),
             ),
           ),

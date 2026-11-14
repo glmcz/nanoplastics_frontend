@@ -68,23 +68,38 @@ class FakeDigestService extends Fake implements DigestService {
       [];
 
   /// What fetchPreferences returns. Null means the user is not on the server yet.
-  ({bool enabled, int digestHour, bool emailEnabled})? preferences;
+  ({
+    bool enabled,
+    int digestHour,
+    bool emailEnabled,
+    bool monthlyEnabled
+  })? preferences;
 
   /// The emailEnabled value of the last updatePreferences call.
   bool? savedEmailEnabled;
 
+  /// The monthlyEnabled value of the last updatePreferences call.
+  bool? savedMonthlyEnabled;
+
   @override
-  Future<({bool enabled, int digestHour, bool emailEnabled})?>
-      fetchPreferences() async => preferences;
+  Future<
+      ({
+        bool enabled,
+        int digestHour,
+        bool emailEnabled,
+        bool monthlyEnabled
+      })?> fetchPreferences() async => preferences;
 
   @override
   Future<bool> updatePreferences({
     bool? enabled,
     int? digestHour,
     bool? emailEnabled,
+    bool? monthlyEnabled,
     List<String>? keywords,
   }) async {
     savedEmailEnabled = emailEnabled;
+    savedMonthlyEnabled = monthlyEnabled;
     return true;
   }
 

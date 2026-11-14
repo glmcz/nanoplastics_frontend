@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_timezone/flutter_timezone.dart';
 import '../models/digest_paper.dart';
 import 'api_service.dart';
 import 'http/app_http_client.dart';
@@ -135,6 +136,7 @@ class DigestService {
     bool? enabled,
     int? digestHour,
     bool? emailEnabled,
+    bool? monthlyEnabled,
     List<String>? keywords,
   }) async {
     final email = _settings.email;
@@ -151,6 +153,12 @@ class DigestService {
         body['digest_hour'] = digestHour;
       }
       if (emailEnabled != null) body['email_digest_enabled'] = emailEnabled;
+      if (monthlyEnabled != null) {
+        body['monthly_summary_enabled'] = monthlyEnabled;
+      }
+      // digest_hour is read on this clock, so it travels with every save.
+      final timezone = await _localTimezone();
+      if (timezone != null) body['timezone'] = timezone;
       if (keywords != null) body['search_keywords'] = keywords;
 
       final url = '${_api.baseUrl}/api/users/preferences';
@@ -180,14 +188,29 @@ class DigestService {
     }
   }
 
+  /// The device's IANA zone, e.g. "Europe/Prague"; null if the platform won't say.
+  Future<String?> _localTimezone() async {
+    try {
+      return (await FlutterTimezone.getLocalTimezone()).identifier;
+    } catch (e, st) {
+      LoggerService().logError('localTimezone', e, st);
+      return null;
+    }
+  }
+
   List<String> getKeywords() {
     return _settings.digestKeywords;
   }
 
   /// Fetches the user's current digest preferences from the server, or
   /// null if the user doesn't exist yet / the request fails.
-  Future<({bool enabled, int digestHour, bool emailEnabled})?>
-      fetchPreferences() async {
+  Future<
+      ({
+        bool enabled,
+        int digestHour,
+        bool emailEnabled,
+        bool monthlyEnabled
+      })?> fetchPreferences() async {
     final email = _settings.email;
     if (email.isEmpty) return null;
 
@@ -203,6 +226,7 @@ class DigestService {
         enabled: json['daily_digest_enabled'] as bool? ?? false,
         digestHour: json['digest_hour'] as int? ?? 9,
         emailEnabled: json['email_digest_enabled'] as bool? ?? false,
+        monthlyEnabled: json['monthly_summary_enabled'] as bool? ?? false,
       );
     } catch (_) {
       return null;

@@ -11,6 +11,7 @@ import 'privacy_policy_screen.dart';
 import 'terms_of_service_screen.dart';
 import '../../widgets/nanosolve_logo.dart';
 import '../../widgets/glowing_header_separator.dart';
+import '../../widgets/shared/section_title.dart';
 import '../../utils/app_theme_colors.dart';
 
 class PrivacySecurityScreen extends StatefulWidget {
@@ -163,8 +164,8 @@ class _PrivacySecurityScreenState extends State<PrivacySecurityScreen> {
         children: [
           _buildTitleSection(titleStyle, subtitleStyle),
           SizedBox(height: cardSpace * 2),
-          _buildSectionTitle(AppLocalizations.of(context)!.privacyDataAnalytics,
-              AppColors.pastelMint, cardTitleStyle),
+          SectionTitle(AppLocalizations.of(context)!.privacyDataAnalytics,
+              color: AppColors.pastelMint),
           SizedBox(height: cardSpace),
           _buildToggleItem(
             title: AppLocalizations.of(context)!.privacyAnalytics,
@@ -181,8 +182,8 @@ class _PrivacySecurityScreenState extends State<PrivacySecurityScreen> {
             onChanged: _updateAnalytics,
           ),
           SizedBox(height: cardSpace * 2),
-          _buildSectionTitle(AppLocalizations.of(context)!.privacyNotifications,
-              AppColors.pastelAqua, cardTitleStyle),
+          SectionTitle(AppLocalizations.of(context)!.privacyNotifications,
+              color: AppColors.pastelAqua),
           SizedBox(height: cardSpace),
           _buildToggleItem(
             title: AppLocalizations.of(context)!.privacyUpdateNotifications,
@@ -200,8 +201,8 @@ class _PrivacySecurityScreenState extends State<PrivacySecurityScreen> {
             onChanged: _setUpdateNotifications,
           ),
           SizedBox(height: cardSpace * 2),
-          _buildSectionTitle(AppLocalizations.of(context)!.privacySecurity,
-              AppColors.pastelLavender, cardTitleStyle),
+          SectionTitle(AppLocalizations.of(context)!.privacySecurity,
+              color: AppColors.pastelLavender),
 
           /// TODO later not important since no confidential information is stored.
           // SizedBox(height: cardSpace),
@@ -231,8 +232,8 @@ class _PrivacySecurityScreenState extends State<PrivacySecurityScreen> {
             subtitleStyle: subtitleStyle,
           ),
           SizedBox(height: cardSpace * 2),
-          _buildSectionTitle(AppLocalizations.of(context)!.privacyLegal,
-              AppColors.pastelAqua, cardTitleStyle),
+          SectionTitle(AppLocalizations.of(context)!.privacyLegal,
+              color: AppColors.pastelAqua),
           SizedBox(height: cardSpace),
           _buildLinkItem(
             title: AppLocalizations.of(context)!.privacyPolicy,
@@ -289,33 +290,6 @@ class _PrivacySecurityScreenState extends State<PrivacySecurityScreen> {
           AppLocalizations.of(context)!.privacySubtitle,
           style: subtitleStyle.copyWith(
             color: AppThemeColors.of(context).textMuted,
-          ),
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-        ),
-      ],
-    );
-  }
-
-  Widget _buildSectionTitle(
-      String title, Color color, TextStyle cardTitleStyle) {
-    return Row(
-      children: [
-        Container(
-          width: 4,
-          height: 20,
-          decoration: BoxDecoration(
-            color: color,
-            borderRadius: BorderRadius.circular(2),
-          ),
-        ),
-        const SizedBox(width: AppConstants.space8),
-        Text(
-          title,
-          style: cardTitleStyle.copyWith(
-            fontWeight: FontWeight.w700,
-            color: color,
-            letterSpacing: 0.5,
           ),
           maxLines: 1,
           overflow: TextOverflow.ellipsis,

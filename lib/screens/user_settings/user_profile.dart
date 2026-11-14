@@ -14,6 +14,7 @@ import '../../services/settings_manager.dart';
 import '../../services/service_locator.dart';
 import '../../widgets/nanosolve_logo.dart';
 import '../../widgets/glowing_header_separator.dart';
+import '../../widgets/shared/section_title.dart';
 import '../../utils/app_theme_colors.dart';
 import '../../main.dart';
 
@@ -244,8 +245,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
           const SizedBox(height: AppConstants.space30),
           _buildAvatarSection(sizing, typography),
           const SizedBox(height: AppConstants.space30),
-          _buildSectionTitle(AppLocalizations.of(context)!.profilePersonalInfo,
-              AppColors.pastelMint, spacing, typography),
+          SectionTitle(AppLocalizations.of(context)!.profilePersonalInfo,
+              color: AppColors.pastelMint),
           const SizedBox(height: AppConstants.space16),
           _buildTextField(
             controller: _displayNameController,
@@ -279,8 +280,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
             typography: typography,
           ),
           const SizedBox(height: AppConstants.space30),
-          _buildSectionTitle(AppLocalizations.of(context)!.profileAppearance,
-              AppColors.pastelLavender, spacing, typography),
+          SectionTitle(AppLocalizations.of(context)!.profileAppearance,
+              color: AppColors.pastelLavender),
           const SizedBox(height: AppConstants.space16),
           _buildToggleItem(
             title: AppLocalizations.of(context)!.profileDarkMode,
@@ -298,8 +299,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
             },
           ),
           const SizedBox(height: AppConstants.space30),
-          _buildSectionTitle(AppLocalizations.of(context)!.profileNotifications,
-              AppColors.pastelAqua, spacing, typography),
+          SectionTitle(AppLocalizations.of(context)!.profileNotifications,
+              color: AppColors.pastelAqua),
           const SizedBox(height: AppConstants.space16),
           _buildDangerZone(spacing, sizing, typography),
           const SizedBox(height: AppConstants.space40),
@@ -386,31 +387,6 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
           ),
         ],
       ),
-    );
-  }
-
-  Widget _buildSectionTitle(
-      String title, Color color, AppSpacing spacing, AppTypography typography) {
-    return Row(
-      children: [
-        Container(
-          width: spacing.xs,
-          height: spacing.xl,
-          decoration: BoxDecoration(
-            color: color,
-            borderRadius: BorderRadius.circular(2),
-          ),
-        ),
-        const SizedBox(width: AppConstants.space8),
-        Text(
-          title,
-          style: typography.title.copyWith(
-            fontWeight: FontWeight.w700,
-            color: color,
-            letterSpacing: 0.5,
-          ),
-        ),
-      ],
     );
   }
 
@@ -552,12 +528,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildSectionTitle(
-          'Danger Zone',
-          AppColors.neonCrimson,
-          spacing,
-          typography,
-        ),
+        SectionTitle(AppLocalizations.of(context)!.profileDangerZone,
+            color: AppColors.neonCrimson),
         const SizedBox(height: AppConstants.space16),
         Container(
           padding: EdgeInsets.all(spacing.cardPadding),
@@ -572,8 +544,9 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
           child: Column(
             children: [
               _buildDangerButton(
-                title: 'Reset Settings',
-                subtitle: 'Reset all settings to default values',
+                title: AppLocalizations.of(context)!.profileResetSettings,
+                subtitle:
+                    AppLocalizations.of(context)!.profileResetSettingsDesc,
                 icon: Icons.refresh,
                 spacing: spacing,
                 sizing: sizing,
@@ -582,8 +555,9 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               ),
               const SizedBox(height: AppConstants.space16),
               _buildDangerButton(
-                title: 'Delete Account',
-                subtitle: 'Permanently delete your account and data',
+                title: AppLocalizations.of(context)!.profileDeleteAccount,
+                subtitle:
+                    AppLocalizations.of(context)!.profileDeleteAccountDesc,
                 icon: Icons.delete_forever,
                 spacing: spacing,
                 sizing: sizing,
@@ -751,20 +725,20 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
         backgroundColor: AppThemeColors.of(context).cardBackground,
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(AppConstants.radiusXL)),
-        title: const Text(
-          'Reset Settings?',
-          style: TextStyle(
+        title: Text(
+          AppLocalizations.of(context)!.profileResetConfirmTitle,
+          style: const TextStyle(
               color: AppColors.neonCrimson, fontWeight: FontWeight.w700),
         ),
-        content: const Text(
-          'This will reset all settings to their default values. This action cannot be undone.',
-          style: TextStyle(color: AppColors.textMuted),
+        content: Text(
+          AppLocalizations.of(context)!.profileResetConfirmBody,
+          style: const TextStyle(color: AppColors.textMuted),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel',
-                style: TextStyle(color: AppColors.textMuted)),
+            child: Text(AppLocalizations.of(context)!.cancel,
+                style: const TextStyle(color: AppColors.textMuted)),
           ),
           TextButton(
             onPressed: () async {
@@ -776,8 +750,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                 setState(() {});
               }
             },
-            child: const Text('Reset',
-                style: TextStyle(color: AppColors.neonCrimson)),
+            child: Text(AppLocalizations.of(context)!.profileResetConfirmAction,
+                style: const TextStyle(color: AppColors.neonCrimson)),
           ),
         ],
       ),
@@ -791,20 +765,20 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
         backgroundColor: AppThemeColors.of(context).cardBackground,
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(AppConstants.radiusXL)),
-        title: const Text(
-          'Delete Account?',
-          style: TextStyle(
+        title: Text(
+          AppLocalizations.of(context)!.profileDeleteConfirmTitle,
+          style: const TextStyle(
               color: AppColors.neonCrimson, fontWeight: FontWeight.w700),
         ),
-        content: const Text(
-          'This will permanently delete your account and all associated data. This action cannot be undone.',
-          style: TextStyle(color: AppColors.textMuted),
+        content: Text(
+          AppLocalizations.of(context)!.profileDeleteConfirmBody,
+          style: const TextStyle(color: AppColors.textMuted),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel',
-                style: TextStyle(color: AppColors.textMuted)),
+            child: Text(AppLocalizations.of(context)!.cancel,
+                style: const TextStyle(color: AppColors.textMuted)),
           ),
           TextButton(
             onPressed: () async {
@@ -815,8 +789,9 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                 nav.popUntil((route) => route.isFirst);
               }
             },
-            child: const Text('Delete',
-                style: TextStyle(color: AppColors.neonCrimson)),
+            child: Text(
+                AppLocalizations.of(context)!.profileDeleteConfirmAction,
+                style: const TextStyle(color: AppColors.neonCrimson)),
           ),
         ],
       ),
