@@ -169,15 +169,12 @@ jobs:
           }
 
           FULL_APK_PATH="build/app/outputs/flutter-apk/nanoplastics_app.apk"
-          REPO="glmcz/nanoplastics_frontend"
 
           FULL_APK_SIZE_BYTES=$(stat -c%s "$FULL_APK_PATH")
           FULL_APK_SIZE=$(format_mb "$FULL_APK_SIZE_BYTES")
-          FULL_APK_URL="https://github.com/$REPO/releases/download/$RELEASE_TAG/nanoplastics_app.apk"
 
           echo "RELEASE_TAG=$RELEASE_TAG" >> $GITHUB_ENV
           echo "FULL_APK_SIZE=$FULL_APK_SIZE" >> $GITHUB_ENV
-          echo "FULL_APK_URL=$FULL_APK_URL" >> $GITHUB_ENV
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
@@ -204,33 +201,6 @@ jobs:
 
             Play Store build (AAB): available in Google Play Console.
 
-      - name: Render docs download page
-        run: |
-          export FULL_APK_URL FULL_APK_SIZE
-          perl -0pi -e 's|<a id="full-apk-download" href="[^"]*" class="btn btn-primary">.*?</a>|<a id="full-apk-download" href="$ENV{FULL_APK_URL}" class="btn btn-primary">📱 Download Full ($ENV{FULL_APK_SIZE})</a>|g' docs/index.html
-          cp docs/index.html /tmp/nanoplastics-docs-index.html
-
-      - name: Persist generated docs to main
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
-          if [ "${{ github.ref_type }}" = "tag" ]; then
-            git restore docs/index.html
-            git fetch origin main:main
-            git switch main
-            cp /tmp/nanoplastics-docs-index.html docs/index.html
-          fi
-
-          if git diff --quiet -- docs/index.html; then
-            echo "No docs changes to commit"
-            exit 0
-          fi
-
-          git add docs/index.html
-          git commit -m "docs: update release download sizes"
-          git push origin HEAD:main
-
       # ---------------- NOTIFY BACKEND ----------------
       - name: Notify backend of new release
         if: env.WEBHOOK_SECRET != '' && env.BACKEND_URL != ''
@@ -240,8 +210,7 @@ jobs:
         run: |
           # Strip leading 'v' for the version field
           VERSION="${RELEASE_TAG#v}"
-          REPO="glmcz/nanoplastics_frontend"
-          FULL_URL="https://github.com/$REPO/releases/download/$RELEASE_TAG/nanoplastics_app.apk"
+          FULL_URL="https://github.com/${{ github.repository }}/releases/download/$RELEASE_TAG/nanoplastics_app.apk"
           curl -sf -X POST "$BACKEND_URL/api/release" \
             -H "Authorization: Bearer $WEBHOOK_SECRET" \
             -H "Content-Type: application/json" \

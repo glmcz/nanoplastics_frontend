@@ -15,7 +15,7 @@ Available on **Android** (APK) · Built with **Flutter** · Supports **5 languag
 | Full | ~122 MB | EN · CS · ES · FR · RU | [nanoplastics_app.apk](https://github.com/glmcz/nanoplastics_frontend/releases/latest/download/nanoplastics_app.apk) |
 
 All releases (including older versions): **[GitHub Releases](https://github.com/glmcz/nanoplastics_frontend/releases)**
-Download page with version history: **[GitHub Pages](https://glmcz.github.io/nanoplastics_frontend/)**
+Website: **[web.nanosolve.org](https://web.nanosolve.org)** · iPhone: **[App Store](https://apps.apple.com/us/app/nanosolve-hive/id6760934677)**
 
 ---
 

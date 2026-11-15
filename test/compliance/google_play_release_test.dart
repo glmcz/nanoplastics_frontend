@@ -1,14 +1,16 @@
 @TestOn('vm')
 library;
 
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:nanoplastics_app/config/store_links.dart';
 
 void main() {
   final playManifest = File('android/app/src/play/AndroidManifest.xml');
   final buildGradle = File('android/app/build.gradle.kts');
-  final privacyIndex = File('docs/privacy/index.html');
+  final webPolicy = File('assets/l10n_web/web_en.arb');
 
   group('Google Play release compliance checks', () {
     test('Play flavor removes restricted storage and install permissions', () {
@@ -49,20 +51,11 @@ void main() {
       );
     });
 
-    test('Privacy policy page is present for Google Play store listing', () {
-      expect(
-        privacyIndex.existsSync(),
-        isTrue,
-        reason:
-            'Google Play requires a public privacy policy, so the docs should contain it',
-      );
-      final htmlContent = privacyIndex.readAsStringSync().toLowerCase();
-      expect(
-        htmlContent.contains('privacy policy'),
-        isTrue,
-        reason:
-            'The privacy page should include the phrase "privacy policy" so reviewers can verify intent',
-      );
+    // The store listings link here; the web app serves it under /privacy.
+    test('Privacy policy is public at web.nanosolve.org/privacy', () {
+      expect(StoreLinks.privacy, 'https://web.nanosolve.org/privacy');
+      final policy = jsonDecode(webPolicy.readAsStringSync()) as Map;
+      expect(policy['privacyPageTitle'], 'Privacy Policy');
     });
   });
 }
